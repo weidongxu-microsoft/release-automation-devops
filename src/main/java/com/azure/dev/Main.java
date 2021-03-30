@@ -122,8 +122,8 @@ public class Main {
                 System.out.println("approved release: " + nextRelease.name);
             }
 
-            System.out.println("wait 10 minutes");
-            Thread.sleep(10 * 60 * 1000);
+            System.out.println("wait 5 minutes");
+            Thread.sleep(5 * 60 * 1000);
         }
     }
 
