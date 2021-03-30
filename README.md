@@ -5,6 +5,10 @@ Define environment variables:
 - `PAT` personal access token from Azure DevOps
 - `BUILD_ID` the build ID
 
+## Swagger specs
+
+https://github.com/MicrosoftDocs/vsts-rest-api-specs
+
 ## Configuration for autorest
 
 > see https://aka.ms/autorest
