@@ -1,4 +1,11 @@
-# Dev
+# Usage
+
+Define environment variables:
+- `USER` username
+- `PAT` personal access token from Azure DevOps
+- `BUILD_ID` the build ID
+
+## Configuration for autorest
 
 > see https://aka.ms/autorest
 

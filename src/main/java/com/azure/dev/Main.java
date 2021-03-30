@@ -33,7 +33,7 @@ public class Main {
     private static final String ORGANIZATION = "azure-sdk";
     private static final String PROJECT = "internal";
 
-    private static final int BUILD_ID = 812133;
+    private static final int BUILD_ID = Integer.parseInt(Configuration.getGlobalConfiguration().get("BUILD_ID"));
 
     private static class BasicAuthAuthenticationPolicy implements HttpPipelinePolicy {
         private static final String AUTHORIZATION_HEADER = "Authorization";
