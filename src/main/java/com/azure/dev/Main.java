@@ -108,7 +108,7 @@ public class Main {
 
             System.out.println("count of in progress release: " + countInProgress);
 
-            if (countInProgress <= 2) {
+            if (countInProgress <= 1) {
                 List<ReleaseState> remains = states.stream()
                         .filter(s -> s.state == TimelineRecordState.PENDING)
                         .sorted(Comparator.comparingInt(o -> o.name.length()))
