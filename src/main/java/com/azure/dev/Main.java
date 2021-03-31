@@ -142,6 +142,7 @@ public class Main {
                 UUID checkpointId = checkpointRecord.id();
                 List<TimelineRecord> checkpointApprovalRecords = timeline.records().stream()
                         .filter(r -> checkpointId.equals(r.parentId()) && r.name().equals("Checkpoint.Approval") && r.type().equals("Checkpoint.Approval"))
+                        .filter(r -> r.state() == TimelineRecordState.PENDING)
                         .collect(Collectors.toList());
 
                 state.approvalIds.addAll(checkpointApprovalRecords.stream().map(TimelineRecord::id).collect(Collectors.toList()));
