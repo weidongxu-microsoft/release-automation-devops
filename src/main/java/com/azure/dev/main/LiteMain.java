@@ -143,7 +143,7 @@ public class LiteMain {
                 state = getReleaseState(timeline);
             }
 
-            // trigger new release
+            // approve new release
             System.out.println("prepare to release: " + state.getName());
             Utils.approve(state.getApprovalIds(), manager, ORGANIZATION, PROJECT);
             System.out.println("approved release: " + state.getName());
