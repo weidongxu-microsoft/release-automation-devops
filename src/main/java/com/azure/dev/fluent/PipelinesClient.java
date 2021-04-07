@@ -6,11 +6,11 @@ package com.azure.dev.fluent;
 
 import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceMethod;
+import com.azure.core.http.rest.PagedIterable;
 import com.azure.core.http.rest.Response;
 import com.azure.core.util.Context;
 import com.azure.dev.fluent.models.PipelineInner;
 import com.azure.dev.models.CreatePipelineParameters;
-import java.util.List;
 
 /** An instance of this class provides access to all the operations defined in PipelinesClient. */
 public interface PipelinesClient {
@@ -54,8 +54,8 @@ public interface PipelinesClient {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return a list of pipelines.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    List<PipelineInner> list(String organization, String project);
+    @ServiceMethod(returns = ReturnType.COLLECTION)
+    PagedIterable<PipelineInner> list(String organization, String project);
 
     /**
      * Get a list of pipelines.
@@ -71,8 +71,8 @@ public interface PipelinesClient {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return a list of pipelines.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<List<PipelineInner>> listWithResponse(
+    @ServiceMethod(returns = ReturnType.COLLECTION)
+    PagedIterable<PipelineInner> list(
         String organization, String project, String orderBy, Integer top, String continuationToken, Context context);
 
     /**

@@ -18,6 +18,10 @@ import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceInterface;
 import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.annotation.UnexpectedResponseExceptionType;
+import com.azure.core.http.rest.PagedFlux;
+import com.azure.core.http.rest.PagedIterable;
+import com.azure.core.http.rest.PagedResponse;
+import com.azure.core.http.rest.PagedResponseBase;
 import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.RestProxy;
 import com.azure.core.management.exception.ManagementException;
@@ -27,7 +31,7 @@ import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.fluent.PipelinesClient;
 import com.azure.dev.fluent.models.PipelineInner;
 import com.azure.dev.models.CreatePipelineParameters;
-import java.util.List;
+import com.azure.dev.models.PipelineListResult;
 import reactor.core.publisher.Mono;
 
 /** An instance of this class provides access to all the operations defined in PipelinesClient. */
@@ -75,7 +79,7 @@ public final class PipelinesClientImpl implements PipelinesClient {
         @Get("/{organization}/{project}/_apis/pipelines")
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<List<PipelineInner>>> list(
+        Mono<Response<PipelineListResult>> list(
             @HostParam("$host") String endpoint,
             @PathParam("organization") String organization,
             @PathParam("project") String project,
@@ -251,7 +255,7 @@ public final class PipelinesClientImpl implements PipelinesClient {
      * @return a list of pipelines.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<PipelineInner>>> listWithResponseAsync(
+    private Mono<PagedResponse<PipelineInner>> listSinglePageAsync(
         String organization, String project, String orderBy, Integer top, String continuationToken) {
         if (this.client.getEndpoint() == null) {
             return Mono
@@ -281,6 +285,10 @@ public final class PipelinesClientImpl implements PipelinesClient {
                             apiVersion,
                             accept,
                             context))
+            .<PagedResponse<PipelineInner>>map(
+                res ->
+                    new PagedResponseBase<>(
+                        res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(), null, null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
@@ -299,7 +307,7 @@ public final class PipelinesClientImpl implements PipelinesClient {
      * @return a list of pipelines.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<PipelineInner>>> listWithResponseAsync(
+    private Mono<PagedResponse<PipelineInner>> listSinglePageAsync(
         String organization, String project, String orderBy, Integer top, String continuationToken, Context context) {
         if (this.client.getEndpoint() == null) {
             return Mono
@@ -326,7 +334,11 @@ public final class PipelinesClientImpl implements PipelinesClient {
                 continuationToken,
                 apiVersion,
                 accept,
-                context);
+                context)
+            .map(
+                res ->
+                    new PagedResponseBase<>(
+                        res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(), null, null));
     }
 
     /**
@@ -342,18 +354,10 @@ public final class PipelinesClientImpl implements PipelinesClient {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return a list of pipelines.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<List<PipelineInner>> listAsync(
+    @ServiceMethod(returns = ReturnType.COLLECTION)
+    private PagedFlux<PipelineInner> listAsync(
         String organization, String project, String orderBy, Integer top, String continuationToken) {
-        return listWithResponseAsync(organization, project, orderBy, top, continuationToken)
-            .flatMap(
-                (Response<List<PipelineInner>> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+        return new PagedFlux<>(() -> listSinglePageAsync(organization, project, orderBy, top, continuationToken));
     }
 
     /**
@@ -366,38 +370,12 @@ public final class PipelinesClientImpl implements PipelinesClient {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return a list of pipelines.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<List<PipelineInner>> listAsync(String organization, String project) {
+    @ServiceMethod(returns = ReturnType.COLLECTION)
+    private PagedFlux<PipelineInner> listAsync(String organization, String project) {
         final String orderBy = null;
         final Integer top = null;
         final String continuationToken = null;
-        return listWithResponseAsync(organization, project, orderBy, top, continuationToken)
-            .flatMap(
-                (Response<List<PipelineInner>> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
-    }
-
-    /**
-     * Get a list of pipelines.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of pipelines.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public List<PipelineInner> list(String organization, String project) {
-        final String orderBy = null;
-        final Integer top = null;
-        final String continuationToken = null;
-        return listAsync(organization, project, orderBy, top, continuationToken).block();
+        return new PagedFlux<>(() -> listSinglePageAsync(organization, project, orderBy, top, continuationToken));
     }
 
     /**
@@ -414,10 +392,49 @@ public final class PipelinesClientImpl implements PipelinesClient {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return a list of pipelines.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<List<PipelineInner>> listWithResponse(
+    @ServiceMethod(returns = ReturnType.COLLECTION)
+    private PagedFlux<PipelineInner> listAsync(
         String organization, String project, String orderBy, Integer top, String continuationToken, Context context) {
-        return listWithResponseAsync(organization, project, orderBy, top, continuationToken, context).block();
+        return new PagedFlux<>(
+            () -> listSinglePageAsync(organization, project, orderBy, top, continuationToken, context));
+    }
+
+    /**
+     * Get a list of pipelines.
+     *
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return a list of pipelines.
+     */
+    @ServiceMethod(returns = ReturnType.COLLECTION)
+    public PagedIterable<PipelineInner> list(String organization, String project) {
+        final String orderBy = null;
+        final Integer top = null;
+        final String continuationToken = null;
+        return new PagedIterable<>(listAsync(organization, project, orderBy, top, continuationToken));
+    }
+
+    /**
+     * Get a list of pipelines.
+     *
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param orderBy A sort expression. Defaults to "name asc".
+     * @param top The maximum number of pipelines to return.
+     * @param continuationToken A continuation token from a previous request, to retrieve the next page of results.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return a list of pipelines.
+     */
+    @ServiceMethod(returns = ReturnType.COLLECTION)
+    public PagedIterable<PipelineInner> list(
+        String organization, String project, String orderBy, Integer top, String continuationToken, Context context) {
+        return new PagedIterable<>(listAsync(organization, project, orderBy, top, continuationToken, context));
     }
 
     /**

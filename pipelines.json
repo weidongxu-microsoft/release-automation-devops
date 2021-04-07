@@ -138,12 +138,12 @@
           "200": {
             "description": "successful operation",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Pipeline"
-              }
+              "$ref": "#/definitions/PipelineListResult"
             }
           }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": null
         }
       }
     },
@@ -1226,6 +1226,17 @@
         "count": {
           "type": "integer",
           "format": "int32"
+        }
+      }
+    },
+    "PipelineListResult": {
+      "properties": {
+        "value": {
+          "type": "array",
+          "readOnly": true,
+          "items": {
+            "$ref": "#/definitions/Pipeline"
+          }
         }
       }
     }

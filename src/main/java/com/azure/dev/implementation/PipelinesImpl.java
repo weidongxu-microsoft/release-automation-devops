@@ -4,6 +4,7 @@
 
 package com.azure.dev.implementation;
 
+import com.azure.core.http.rest.PagedIterable;
 import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.SimpleResponse;
 import com.azure.core.util.Context;
@@ -14,9 +15,6 @@ import com.azure.dev.models.CreatePipelineParameters;
 import com.azure.dev.models.Pipeline;
 import com.azure.dev.models.Pipelines;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public final class PipelinesImpl implements Pipelines {
     @JsonIgnore private final ClientLogger logger = new ClientLogger(PipelinesImpl.class);
@@ -53,37 +51,16 @@ public final class PipelinesImpl implements Pipelines {
         }
     }
 
-    public List<Pipeline> list(String organization, String project) {
-        List<PipelineInner> inner = this.serviceClient().list(organization, project);
-        if (inner != null) {
-            return Collections
-                .unmodifiableList(
-                    inner
-                        .stream()
-                        .map(inner1 -> new PipelineImpl(inner1, this.manager()))
-                        .collect(Collectors.toList()));
-        } else {
-            return Collections.emptyList();
-        }
+    public PagedIterable<Pipeline> list(String organization, String project) {
+        PagedIterable<PipelineInner> inner = this.serviceClient().list(organization, project);
+        return Utils.mapPage(inner, inner1 -> new PipelineImpl(inner1, this.manager()));
     }
 
-    public Response<List<Pipeline>> listWithResponse(
+    public PagedIterable<Pipeline> list(
         String organization, String project, String orderBy, Integer top, String continuationToken, Context context) {
-        Response<List<PipelineInner>> inner =
-            this.serviceClient().listWithResponse(organization, project, orderBy, top, continuationToken, context);
-        if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                inner
-                    .getValue()
-                    .stream()
-                    .map(inner1 -> new PipelineImpl(inner1, this.manager()))
-                    .collect(Collectors.toList()));
-        } else {
-            return null;
-        }
+        PagedIterable<PipelineInner> inner =
+            this.serviceClient().list(organization, project, orderBy, top, continuationToken, context);
+        return Utils.mapPage(inner, inner1 -> new PipelineImpl(inner1, this.manager()));
     }
 
     public Pipeline get(String organization, String project, int pipelineId) {

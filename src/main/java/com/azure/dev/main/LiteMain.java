@@ -8,6 +8,7 @@ import com.azure.core.management.AzureEnvironment;
 import com.azure.core.management.profile.AzureProfile;
 import com.azure.core.util.Configuration;
 import com.azure.dev.DevManager;
+import com.azure.dev.models.Pipeline;
 import com.azure.dev.models.Run;
 import com.azure.dev.models.RunPipelineParameters;
 import com.azure.dev.models.RunState;
@@ -27,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 public class LiteMain {
 
@@ -41,6 +43,8 @@ public class LiteMain {
 
     private static final int LITE_CODEGEN_PIPELINE_ID = 2238;
 
+    private static final String API_SPECS_YAML_PATH = "https://raw.githubusercontent.com/Azure/azure-sdk-for-java/master/eng/mgmt/automation/api-specs.yaml";
+
     public static void main(String[] args) throws Exception {
         TokenCredential tokenCredential = new BasicAuthenticationCredential(USER, PASS);
 
@@ -54,15 +58,18 @@ public class LiteMain {
         GitHubClient github = GitHubClient.create(new URI("https://api.github.com/"), GITHUB_TOKEN);
         RepositoryClient client = github.createRepositoryClient(GITHUB_ORGANIZATION, GITHUB_PROJECT);
 
-        String sdk = "cost-management";
+        String swagger = "cost-management";
+        String sdk = "costmanagement";  // TODO read from yaml
 
         Map<String, Variable> variables = new HashMap<>();
-        variables.put("README", new Variable().withValue(sdk));
+        variables.put("README", new Variable().withValue(swagger));
         variables.put("TAG", new Variable().withValue("package-2019-11"));
 
         //runLiteCodegen(manager, variables);
 
-        mergeGithubPR(client, sdk);
+        //mergeGithubPR(client, sdk);
+
+        runRelease(manager, sdk);
     }
 
     private static void runLiteCodegen(DevManager manager, Map<String, Variable> variables) throws InterruptedException {
@@ -104,6 +111,22 @@ public class LiteMain {
 
             prClient.merge(prNumber,
                     ImmutableMergeParameters.builder().sha(pr.head().sha()).mergeMethod(MergeMethod.squash).build()).get();
+        } else {
+            throw new IllegalStateException("github pull request not found");
+        }
+    }
+
+    private static void runRelease(DevManager manager, String sdk) {
+        String pipelineName = "java - " + sdk + " - mgmt";
+        List<Pipeline> pipelines = manager.pipelines().list(ORGANIZATION, PROJECT).stream().collect(Collectors.toList());
+        Pipeline pipeline = pipelines.stream()
+                .filter(p -> pipelineName.equals(p.name())).findFirst().orElse(null);
+
+        if (pipeline != null) {
+            Run run = manager.runs().runPipeline(ORGANIZATION, PROJECT, pipeline.id(), new RunPipelineParameters());
+            int runId = run.id();
+        } else {
+            throw new IllegalStateException("release pipeline not found: " + pipelineName);
         }
     }
 }

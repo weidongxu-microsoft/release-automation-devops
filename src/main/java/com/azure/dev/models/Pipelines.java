@@ -4,9 +4,9 @@
 
 package com.azure.dev.models;
 
+import com.azure.core.http.rest.PagedIterable;
 import com.azure.core.http.rest.Response;
 import com.azure.core.util.Context;
-import java.util.List;
 
 /** Resource collection API of Pipelines. */
 public interface Pipelines {
@@ -48,7 +48,7 @@ public interface Pipelines {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return a list of pipelines.
      */
-    List<Pipeline> list(String organization, String project);
+    PagedIterable<Pipeline> list(String organization, String project);
 
     /**
      * Get a list of pipelines.
@@ -64,7 +64,7 @@ public interface Pipelines {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return a list of pipelines.
      */
-    Response<List<Pipeline>> listWithResponse(
+    PagedIterable<Pipeline> list(
         String organization, String project, String orderBy, Integer top, String continuationToken, Context context);
 
     /**
