@@ -12,6 +12,7 @@ import com.azure.dev.models.Pipeline;
 import com.azure.dev.models.Run;
 import com.azure.dev.models.RunPipelineParameters;
 import com.azure.dev.models.RunState;
+import com.azure.dev.models.Timeline;
 import com.azure.dev.models.Variable;
 import com.spotify.github.v3.clients.GitHubClient;
 import com.spotify.github.v3.clients.PullRequestClient;
@@ -117,7 +118,7 @@ public class LiteMain {
     }
 
     private static void runRelease(DevManager manager, String sdk) {
-        String pipelineName = "java - " + sdk + " - mgmt";
+        String pipelineName = "java - " + sdk;
         List<Pipeline> pipelines = manager.pipelines().list(ORGANIZATION, PROJECT).stream().collect(Collectors.toList());
         Pipeline pipeline = pipelines.stream()
                 .filter(p -> pipelineName.equals(p.name())).findFirst().orElse(null);
@@ -125,6 +126,8 @@ public class LiteMain {
         if (pipeline != null) {
             Run run = manager.runs().runPipeline(ORGANIZATION, PROJECT, pipeline.id(), new RunPipelineParameters());
             int runId = run.id();
+
+            Timeline timeline = manager.timelines().get(ORGANIZATION, PROJECT, runId, null);
         } else {
             throw new IllegalStateException("release pipeline not found: " + pipelineName);
         }
