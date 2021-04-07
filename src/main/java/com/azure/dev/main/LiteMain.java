@@ -85,6 +85,7 @@ public class LiteMain {
     }
 
     private static void runLiteCodegen(DevManager manager, Map<String, Variable> variables) throws InterruptedException {
+        // run pipeline
         Run run = manager.runs().runPipeline(ORGANIZATION, PROJECT, LITE_CODEGEN_PIPELINE_ID,
                 new RunPipelineParameters().withVariables(variables));
         int runId = run.id();
@@ -137,15 +138,18 @@ public class LiteMain {
     }
 
     private static void runLiteRelease(DevManager manager, String sdk) throws InterruptedException {
+        // find pipeline
         String pipelineName = "java - " + sdk;
         List<Pipeline> pipelines = manager.pipelines().list(ORGANIZATION, PROJECT).stream().collect(Collectors.toList());
         Pipeline pipeline = pipelines.stream()
                 .filter(p -> pipelineName.equals(p.name())).findFirst().orElse(null);
 
         if (pipeline != null) {
+            // run pipeline
             Run run = manager.runs().runPipeline(ORGANIZATION, PROJECT, pipeline.id(), new RunPipelineParameters());
             int runId = run.id();
 
+            // poll status
             Timeline timeline = manager.timelines().get(ORGANIZATION, PROJECT, runId, null);
             ReleaseState state = getReleaseState(timeline);
             while (state.getApprovalIds().isEmpty()) {
