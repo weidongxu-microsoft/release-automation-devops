@@ -61,12 +61,12 @@ public class LiteMain {
         GitHubClient github = GitHubClient.create(new URI("https://api.github.com/"), GITHUB_TOKEN);
         RepositoryClient client = github.createRepositoryClient(GITHUB_ORGANIZATION, GITHUB_PROJECT);
 
-        String swagger = "cost-management";
-        String sdk = "costmanagement";  // TODO read from yaml
+        String swagger = "synapse";
+        String sdk = "synapse";  // TODO read from yaml
 
         Map<String, Variable> variables = new HashMap<>();
         variables.put("README", new Variable().withValue(swagger));
-        variables.put("TAG", new Variable().withValue("package-2019-11"));
+        //variables.put("TAG", new Variable().withValue("package-2019-11"));
 
         runLiteCodegen(manager, variables);
 
@@ -106,7 +106,7 @@ public class LiteMain {
             Review review = prClient.createReview(prItem.number(),
                     ImmutableReviewParameters.builder().event("APPROVE").build()).get();
 
-            // wait for merge
+            // wait for mergeable
             PullRequest pr = prClient.get(prNumber).get();
             while (!pr.mergeable().get()) {
                 System.out.println("pr number " + prNumber + ", mergeable " + pr.mergeable());
@@ -123,7 +123,7 @@ public class LiteMain {
         }
     }
 
-    private static void runLiteRelease(DevManager manager, String sdk) {
+    private static void runLiteRelease(DevManager manager, String sdk) throws InterruptedException {
         String pipelineName = "java - " + sdk;
         List<Pipeline> pipelines = manager.pipelines().list(ORGANIZATION, PROJECT).stream().collect(Collectors.toList());
         Pipeline pipeline = pipelines.stream()
@@ -134,24 +134,36 @@ public class LiteMain {
             int runId = run.id();
 
             Timeline timeline = manager.timelines().get(ORGANIZATION, PROJECT, runId, null);
+            ReleaseState state = getReleaseState(timeline);
+            while (state.getApprovalIds().isEmpty()) {
+                System.out.println("wait 1 minutes");
+                Thread.sleep(60 * 1000);
 
-            List<ReleaseState> states = new ArrayList<>();
-            for (TimelineRecord record : timeline.records()) {
-                if (record.name().startsWith("Release: azure-resourcemanager-")) {
-                    states.add(Utils.getReleaseState(record, timeline));
-                }
+                timeline = manager.timelines().get(ORGANIZATION, PROJECT, runId, null);
+                state = getReleaseState(timeline);
             }
 
-            if (states.size() == 1) {
-                ReleaseState state = states.iterator().next();
-
-                // trigger new release
-                System.out.println("prepare to release: " + state.getName());
-                Utils.approve(state.getApprovalIds(), manager, ORGANIZATION, PROJECT);
-                System.out.println("approved release: " + state.getName());
-            }
+            // trigger new release
+            System.out.println("prepare to release: " + state.getName());
+            Utils.approve(state.getApprovalIds(), manager, ORGANIZATION, PROJECT);
+            System.out.println("approved release: " + state.getName());
         } else {
             throw new IllegalStateException("release pipeline not found: " + pipelineName);
+        }
+    }
+
+    private static ReleaseState getReleaseState(Timeline timeline) {
+        List<ReleaseState> states = new ArrayList<>();
+        for (TimelineRecord record : timeline.records()) {
+            if (record.name().startsWith("Release: azure-resourcemanager-")) {
+                states.add(Utils.getReleaseState(record, timeline));
+            }
+        }
+
+        if (states.size() == 1) {
+            return states.iterator().next();
+        } else {
+            throw new IllegalStateException("release candidate not correct");
         }
     }
 }
