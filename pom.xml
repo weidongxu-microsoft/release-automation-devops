@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.azure.resourcemanager</groupId>
-    <artifactId>azure-resourcemanager-dev-generated</artifactId>
+    <artifactId>azure-resourcemanager-devops</artifactId>
     <version>1.0.0-beta.1</version> <!-- {x-version-update;com.azure.resourcemanager:azure-resourcemanager-dev-generated;current} -->
     <packaging>jar</packaging>
 
@@ -38,23 +38,29 @@
         <dependency>
             <groupId>com.azure</groupId>
             <artifactId>azure-core</artifactId>
-            <version>1.14.1</version> <!-- {x-version-update;com.azure:azure-core;dependency} -->
+            <version>1.15.0</version>
         </dependency>
         <dependency>
             <groupId>com.azure</groupId>
             <artifactId>azure-core-management</artifactId>
-            <version>1.2.0</version> <!-- {x-version-update;com.azure:azure-core-management;dependency} -->
+            <version>1.2.0</version>
         </dependency>
-
         <dependency>
             <groupId>com.azure</groupId>
             <artifactId>azure-core-http-netty</artifactId>
-            <version>1.9.0</version> <!-- {x-version-update;com.azure:azure-core-management;dependency} -->
+            <version>1.9.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.spotify</groupId>
+            <artifactId>github-client</artifactId>
+            <version>0.0.25</version>
+        </dependency>
+
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>1.7.30</version> <!-- {x-version-update;org.slf4j:slf4j-simple;external_dependency} -->
+            <version>1.7.30</version>
         </dependency>
     </dependencies>
     <build>
