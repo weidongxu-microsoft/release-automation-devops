@@ -13,6 +13,7 @@ import com.azure.dev.models.Run;
 import com.azure.dev.models.RunPipelineParameters;
 import com.azure.dev.models.RunState;
 import com.azure.dev.models.Timeline;
+import com.azure.dev.models.TimelineRecord;
 import com.azure.dev.models.Variable;
 import com.spotify.github.v3.clients.GitHubClient;
 import com.spotify.github.v3.clients.PullRequestClient;
@@ -25,6 +26,7 @@ import com.spotify.github.v3.prs.PullRequestItem;
 import com.spotify.github.v3.prs.Review;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,11 +68,11 @@ public class LiteMain {
         variables.put("README", new Variable().withValue(swagger));
         variables.put("TAG", new Variable().withValue("package-2019-11"));
 
-        //runLiteCodegen(manager, variables);
+        runLiteCodegen(manager, variables);
 
-        //mergeGithubPR(client, sdk);
+        mergeGithubPR(client, sdk);
 
-        runRelease(manager, sdk);
+        runLiteRelease(manager, sdk);
     }
 
     private static void runLiteCodegen(DevManager manager, Map<String, Variable> variables) throws InterruptedException {
@@ -99,9 +101,12 @@ public class LiteMain {
 
         if (prItem != null) {
             int prNumber = prItem.number();
+
+            // approve PR
             Review review = prClient.createReview(prItem.number(),
                     ImmutableReviewParameters.builder().event("APPROVE").build()).get();
 
+            // wait for merge
             PullRequest pr = prClient.get(prNumber).get();
             while (!pr.mergeable().get()) {
                 System.out.println("pr number " + prNumber + ", mergeable " + pr.mergeable());
@@ -110,6 +115,7 @@ public class LiteMain {
                 Thread.sleep(60 * 1000);
             }
 
+            // merge PR
             prClient.merge(prNumber,
                     ImmutableMergeParameters.builder().sha(pr.head().sha()).mergeMethod(MergeMethod.squash).build()).get();
         } else {
@@ -117,7 +123,7 @@ public class LiteMain {
         }
     }
 
-    private static void runRelease(DevManager manager, String sdk) {
+    private static void runLiteRelease(DevManager manager, String sdk) {
         String pipelineName = "java - " + sdk;
         List<Pipeline> pipelines = manager.pipelines().list(ORGANIZATION, PROJECT).stream().collect(Collectors.toList());
         Pipeline pipeline = pipelines.stream()
@@ -128,6 +134,22 @@ public class LiteMain {
             int runId = run.id();
 
             Timeline timeline = manager.timelines().get(ORGANIZATION, PROJECT, runId, null);
+
+            List<ReleaseState> states = new ArrayList<>();
+            for (TimelineRecord record : timeline.records()) {
+                if (record.name().startsWith("Release: azure-resourcemanager-")) {
+                    states.add(Utils.getReleaseState(record, timeline));
+                }
+            }
+
+            if (states.size() == 1) {
+                ReleaseState state = states.iterator().next();
+
+                // trigger new release
+                System.out.println("prepare to release: " + state.getName());
+                Utils.approve(state.getApprovalIds(), manager, ORGANIZATION, PROJECT);
+                System.out.println("approved release: " + state.getName());
+            }
         } else {
             throw new IllegalStateException("release pipeline not found: " + pipelineName);
         }

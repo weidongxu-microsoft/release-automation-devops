@@ -2,9 +2,6 @@ package com.azure.dev.main;
 
 import com.azure.core.credential.BasicAuthenticationCredential;
 import com.azure.core.credential.TokenCredential;
-import com.azure.core.http.HttpMethod;
-import com.azure.core.http.HttpRequest;
-import com.azure.core.http.HttpResponse;
 import com.azure.core.http.policy.HttpLogDetailLevel;
 import com.azure.core.http.policy.HttpLogOptions;
 import com.azure.core.management.AzureEnvironment;
@@ -19,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class PremiumMain {
@@ -30,21 +26,6 @@ public class PremiumMain {
     private static final String PROJECT = "internal";
 
     private static final int BUILD_ID = Integer.parseInt(Configuration.getGlobalConfiguration().get("BUILD_ID"));
-
-    private static class ReleaseState {
-        private String name;
-        private TimelineRecordState state;
-        private final List<UUID> approvalIds = new ArrayList<>();
-
-        @Override
-        public String toString() {
-            return "ReleaseState{" +
-                    "name='" + name + '\'' +
-                    ", state=" + state +
-                    ", approvalIds=" + approvalIds +
-                    '}';
-        }
-    }
 
     public static void main(String[] args) throws InterruptedException {
         TokenCredential tokenCredential = new BasicAuthenticationCredential(USER, PASS);
@@ -65,7 +46,7 @@ public class PremiumMain {
             for (TimelineRecord record : timeline.records()) {
                 if (record.name().startsWith("Release: azure-resourcemanager")
                         && !record.name().contains("azure-resourcemanager-samples")) {
-                    states.add(getReleaseState(record, timeline));
+                    states.add(Utils.getReleaseState(record, timeline));
                 }
             }
 
@@ -74,75 +55,33 @@ public class PremiumMain {
 //            }
 
             countPending = states.stream()
-                    .filter(s -> s.state == TimelineRecordState.PENDING)
+                    .filter(s -> s.getState() == TimelineRecordState.PENDING)
                     .count();
 
             System.out.println("count of pending release: " + countPending);
 
             long countInProgress = states.stream()
-                    .filter(s -> s.state == TimelineRecordState.IN_PROGRESS)
+                    .filter(s -> s.getState() == TimelineRecordState.IN_PROGRESS)
                     .count();
 
             System.out.println("count of in progress release: " + countInProgress);
 
             if (countInProgress <= 1) {
                 List<ReleaseState> remains = states.stream()
-                        .filter(s -> s.state == TimelineRecordState.PENDING)
-                        .sorted(Comparator.comparingInt(o -> o.name.length()))
+                        .filter(s -> s.getState() == TimelineRecordState.PENDING)
+                        .sorted(Comparator.comparingInt(o -> o.getName().length()))
                         .collect(Collectors.toList());
                 Collections.reverse(remains);
                 ReleaseState nextRelease = remains.iterator().next();
 
                 // trigger new release
-                System.out.println("prepare to release: " + nextRelease.name);
-                approve(nextRelease.approvalIds, manager);
-                System.out.println("approved release: " + nextRelease.name);
+                System.out.println("prepare to release: " + nextRelease.getName());
+                Utils.approve(nextRelease.getApprovalIds(), manager, ORGANIZATION, PROJECT);
+                System.out.println("approved release: " + nextRelease.getName());
             }
 
             System.out.println("wait 5 minutes");
             Thread.sleep(5 * 60 * 1000);
-        }
-    }
-
-    private static ReleaseState getReleaseState(TimelineRecord record, Timeline timeline) {
-        ReleaseState state = new ReleaseState();
-        state.name = record.name().substring("Release: ".length());
-        state.state = record.state();
-
-        if (state.state == TimelineRecordState.PENDING) {
-            UUID id = record.id();
-
-            TimelineRecord checkpointRecord = timeline.records().stream()
-                    .filter(r -> id.equals(r.parentId()) && r.name().equals("Checkpoint") && r.type().equals("Checkpoint"))
-                    .findAny().orElse(null);
-            if (checkpointRecord != null) {
-                UUID checkpointId = checkpointRecord.id();
-                List<TimelineRecord> checkpointApprovalRecords = timeline.records().stream()
-                        .filter(r -> checkpointId.equals(r.parentId()) && r.name().equals("Checkpoint.Approval") && r.type().equals("Checkpoint.Approval"))
-                        .filter(r -> r.state() == TimelineRecordState.PENDING)
-                        .collect(Collectors.toList());
-
-                state.approvalIds.addAll(checkpointApprovalRecords.stream().map(TimelineRecord::id).collect(Collectors.toList()));
-            }
-        }
-
-        return state;
-    }
-
-    private static void approve(List<UUID> approvalIds, DevManager manager) {
-        for (UUID approvalId : approvalIds) {
-            HttpRequest request = new HttpRequest(
-                    HttpMethod.PATCH,
-                    String.format("https://dev.azure.com/%s/%s/_apis/pipelines/approvals/%s?api-version=6.0-preview", ORGANIZATION, PROJECT, approvalId.toString()));
-            request.setBody(String.format("[{\"approvalId\": \"%s\", \"status\": 4, \"comment\": \"\"}]", approvalId.toString()));
-            request.setHeader("content-type", "application/json");
-            HttpResponse response = manager.serviceClient().getHttpPipeline().send(request).block();
-            System.out.println("response status code: " + response.getStatusCode());
-            if (response.getStatusCode() != 200) {
-                System.out.println("response body: " + response.getBodyAsString().block());
-
-                throw new IllegalStateException("failed to approve: " + approvalId);
-            }
         }
     }
 }
