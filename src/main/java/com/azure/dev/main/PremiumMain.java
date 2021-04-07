@@ -1,23 +1,19 @@
-package com.azure.dev;
+package com.azure.dev.main;
 
 import com.azure.core.credential.BasicAuthenticationCredential;
 import com.azure.core.credential.TokenCredential;
-import com.azure.core.credential.TokenRequestContext;
 import com.azure.core.http.HttpMethod;
-import com.azure.core.http.HttpPipelineCallContext;
-import com.azure.core.http.HttpPipelineNextPolicy;
 import com.azure.core.http.HttpRequest;
 import com.azure.core.http.HttpResponse;
 import com.azure.core.http.policy.HttpLogDetailLevel;
 import com.azure.core.http.policy.HttpLogOptions;
-import com.azure.core.http.policy.HttpPipelinePolicy;
 import com.azure.core.management.AzureEnvironment;
 import com.azure.core.management.profile.AzureProfile;
 import com.azure.core.util.Configuration;
+import com.azure.dev.DevManager;
 import com.azure.dev.models.Timeline;
 import com.azure.dev.models.TimelineRecord;
 import com.azure.dev.models.TimelineRecordState;
-import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,7 +22,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class Main {
+public class PremiumMain {
 
     private static final String USER = Configuration.getGlobalConfiguration().get("USER");
     private static final String PASS = Configuration.getGlobalConfiguration().get("PAT");
@@ -34,25 +30,6 @@ public class Main {
     private static final String PROJECT = "internal";
 
     private static final int BUILD_ID = Integer.parseInt(Configuration.getGlobalConfiguration().get("BUILD_ID"));
-
-    private static class BasicAuthAuthenticationPolicy implements HttpPipelinePolicy {
-        private static final String AUTHORIZATION_HEADER = "Authorization";
-        private static final String BASIC = "Basic";
-        private final String token;
-
-        private BasicAuthAuthenticationPolicy(TokenCredential tokenCredential) {
-            token = tokenCredential.getToken(new TokenRequestContext()).block().getToken();
-        }
-
-        @Override
-        public Mono<HttpResponse> process(HttpPipelineCallContext context, HttpPipelineNextPolicy next) {
-            if ("http".equals(context.getHttpRequest().getUrl().getProtocol())) {
-                return Mono.error(new RuntimeException("token credentials require a URL using the HTTPS protocol scheme"));
-            }
-            context.getHttpRequest().getHeaders().set(AUTHORIZATION_HEADER, BASIC + " " + token);
-            return next.process();
-        }
-    }
 
     private static class ReleaseState {
         private String name;
