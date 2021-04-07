@@ -136,8 +136,8 @@ public class LiteMain {
             Timeline timeline = manager.timelines().get(ORGANIZATION, PROJECT, runId, null);
             ReleaseState state = getReleaseState(timeline);
             while (state.getApprovalIds().isEmpty()) {
-                System.out.println("wait 1 minutes");
-                Thread.sleep(60 * 1000);
+                System.out.println("wait 5 minutes");
+                Thread.sleep(5 * 60 * 1000);
 
                 timeline = manager.timelines().get(ORGANIZATION, PROJECT, runId, null);
                 state = getReleaseState(timeline);
