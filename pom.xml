@@ -1,14 +1,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.azure.resourcemanager</groupId>
-    <artifactId>azure-resourcemanager-devops</artifactId>
+    <groupId>io.weidongxu.util</groupId>
+    <artifactId>release-automation-devops</artifactId>
     <version>1.0.0-beta.1</version> <!-- {x-version-update;com.azure.resourcemanager:azure-resourcemanager-dev-generated;current} -->
     <packaging>jar</packaging>
 
-    <name>Microsoft Azure SDK for Dev Management</name>
-    <description>This package contains Microsoft Azure SDK for Dev Management SDK. For documentation on how to use this package, please see https://aka.ms/azsdk/java/mgmt.  Package tag null.</description>
-    <url>https://github.com/Azure/azure-sdk-for-java</url>
+    <name>Release automation integrated with Azure DevOps and GitHub</name>
+    <url>https://github.com/weidongxu-microsoft/release-automation-devops</url>
 
     <licenses>
         <license>
@@ -18,18 +17,6 @@
         </license>
     </licenses>
 
-    <scm>
-        <url>https://github.com/Azure/azure-sdk-for-java</url>
-        <connection>scm:git:git@github.com:Azure/azure-sdk-for-java.git</connection>
-        <developerConnection>scm:git:git@github.com:Azure/azure-sdk-for-java.git</developerConnection>
-        <tag>HEAD</tag>
-    </scm>
-    <developers>
-        <developer>
-            <id>microsoft</id>
-            <name>Microsoft</name>
-        </developer>
-    </developers>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <legal><![CDATA[[INFO] Any downloads listed may be third party software.  Microsoft grants you no rights for third party software.]]></legal>

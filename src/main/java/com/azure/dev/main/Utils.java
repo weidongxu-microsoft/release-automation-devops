@@ -8,6 +8,9 @@ import com.azure.dev.models.Timeline;
 import com.azure.dev.models.TimelineRecord;
 import com.azure.dev.models.TimelineRecordState;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -53,6 +56,15 @@ public class Utils {
 
                 throw new IllegalStateException("failed to approve: " + approvalId);
             }
+        }
+    }
+
+    public static void promptMessageAndWait(InputStream in, PrintStream out, String message) {
+        out.println(message);
+        try {
+            in.read();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

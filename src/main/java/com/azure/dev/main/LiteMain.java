@@ -33,6 +33,8 @@ import com.spotify.github.v3.prs.PullRequestItem;
 import com.spotify.github.v3.prs.Review;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,6 +59,9 @@ public class LiteMain {
 
     private static final String API_SPECS_YAML_PATH = "https://raw.githubusercontent.com/Azure/azure-sdk-for-java/master/eng/mgmt/automation/api-specs.yaml";
 
+    private static final InputStream IN = System.in;
+    private static final PrintStream OUT = System.out;
+
     public static void main(String[] args) throws Exception {
         TokenCredential tokenCredential = new BasicAuthenticationCredential(USER, PASS);
 
@@ -70,11 +75,12 @@ public class LiteMain {
         GitHubClient github = GitHubClient.create(new URI("https://api.github.com/"), GITHUB_TOKEN);
         RepositoryClient client = github.createRepositoryClient(GITHUB_ORGANIZATION, GITHUB_PROJECT);
 
-        String swagger = "synapse";
-        String sdk = "synapse";  // TODO read from yaml
+        String swagger = "communication";
+        String sdk = swagger;  // TODO read from yaml
 
         Map<String, Variable> variables = new HashMap<>();
         variables.put("README", new Variable().withValue(swagger));
+        variables.put("VERSION", new Variable().withValue("1.0.0"));
         //variables.put("TAG", new Variable().withValue("package-2019-11"));
 
         runLiteCodegen(manager, variables);
@@ -112,12 +118,10 @@ public class LiteMain {
         if (pr != null) {
             int prNumber = pr.number();
 
-            // approve PR
-            Review review = prClient.createReview(pr.number(),
-                    ImmutableReviewParameters.builder().event("APPROVE").build()).get();
+            OUT.println("GitHub pull request: https://github.com/Azure/azure-sdk-for-java/pull/" + prNumber + "/files");
 
             // wait for CI
-            CheckRunListResult checkRunResult = getCheckRuns(pr.head().ref());
+            CheckRunListResult checkRunResult = getCheckRuns(pr.head().sha());
             boolean pass = isCheckEnforcerPass(checkRunResult.getCheckRuns());
             while (!pass) {
                 System.out.println("pr number " + prNumber + ", ci pass " + pass);
@@ -128,6 +132,13 @@ public class LiteMain {
                 checkRunResult = getCheckRuns(pr.head().sha());
                 pass = isCheckEnforcerPass(checkRunResult.getCheckRuns());
             }
+
+            Utils.promptMessageAndWait(IN, OUT,
+                    "Continue to approve and merge GitHub pull request: https://github.com/Azure/azure-sdk-for-java/pull/" + prNumber);
+
+            // approve PR
+            Review review = prClient.createReview(pr.number(),
+                    ImmutableReviewParameters.builder().event("APPROVE").build()).get();
 
             // merge PR
             prClient.merge(prNumber,
@@ -159,6 +170,9 @@ public class LiteMain {
                 timeline = manager.timelines().get(ORGANIZATION, PROJECT, runId, null);
                 state = getReleaseState(timeline);
             }
+
+            Utils.promptMessageAndWait(IN, OUT,
+                    "Continue to approve release: " + state.getName());
 
             // approve new release
             System.out.println("prepare to release: " + state.getName());
@@ -207,6 +221,6 @@ public class LiteMain {
         Optional<CheckRun> checkEnforcer = checkRuns.stream()
                 .filter(p -> p.getName().equals("check-enforcer")).findAny();
 
-        return checkEnforcer.map(checkRun -> checkRun.getConclusion().equals("success")).orElse(false);
+        return checkEnforcer.map(checkRun -> "success".equals(checkRun.getConclusion())).orElse(false);
     }
 }
