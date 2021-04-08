@@ -31,6 +31,8 @@ import com.spotify.github.v3.prs.ImmutableReviewParameters;
 import com.spotify.github.v3.prs.MergeMethod;
 import com.spotify.github.v3.prs.PullRequestItem;
 import com.spotify.github.v3.prs.Review;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,6 +47,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 public class LiteMain {
+
+    private static Logger logger = LoggerFactory.getLogger(LiteMain.class);
 
     private static final String USER = Configuration.getGlobalConfiguration().get("DEVOPS_USER");
     private static final String PASS = Configuration.getGlobalConfiguration().get("DEVOPS_PAT");
@@ -118,7 +122,9 @@ public class LiteMain {
         if (pr != null) {
             int prNumber = pr.number();
 
-            OUT.println("GitHub pull request: https://github.com/Azure/azure-sdk-for-java/pull/" + prNumber + "/files");
+            String prUrl = "https://github.com/Azure/azure-sdk-for-java/pull/" + prNumber + "/files";
+            OUT.println("GitHub pull request: " + prUrl);
+            Utils.openUrl(prUrl);
 
             // wait for CI
             CheckRunListResult checkRunResult = getCheckRuns(pr.head().sha());
@@ -134,7 +140,7 @@ public class LiteMain {
             }
 
             Utils.promptMessageAndWait(IN, OUT,
-                    "Continue to approve and merge GitHub pull request: https://github.com/Azure/azure-sdk-for-java/pull/" + prNumber);
+                    "'Yes' to approve and merge GitHub pull request: https://github.com/Azure/azure-sdk-for-java/pull/" + prNumber);
 
             // approve PR
             Review review = prClient.createReview(pr.number(),
@@ -158,21 +164,25 @@ public class LiteMain {
         if (pipeline != null) {
             // run pipeline
             Run run = manager.runs().runPipeline(ORGANIZATION, PROJECT, pipeline.id(), new RunPipelineParameters());
-            int runId = run.id();
+            int buildId = run.id();
+
+            String buildUrl = "https://dev.azure.com/azure-sdk/internal/_build/results?buildId=" + buildId;
+            OUT.println("DevOps build: " + buildUrl);
+            Utils.openUrl(buildUrl);
 
             // poll status
-            Timeline timeline = manager.timelines().get(ORGANIZATION, PROJECT, runId, null);
+            Timeline timeline = manager.timelines().get(ORGANIZATION, PROJECT, buildId, null);
             ReleaseState state = getReleaseState(timeline);
             while (state.getApprovalIds().isEmpty()) {
                 System.out.println("wait 5 minutes");
                 Thread.sleep(5 * 60 * 1000);
 
-                timeline = manager.timelines().get(ORGANIZATION, PROJECT, runId, null);
+                timeline = manager.timelines().get(ORGANIZATION, PROJECT, buildId, null);
                 state = getReleaseState(timeline);
             }
 
             Utils.promptMessageAndWait(IN, OUT,
-                    "Continue to approve release: " + state.getName());
+                    "'Yes' to approve release: " + state.getName());
 
             // approve new release
             System.out.println("prepare to release: " + state.getName());
@@ -213,6 +223,7 @@ public class LiteMain {
             String body = response.getBodyAsString().block();
             return JacksonAdapter.createDefaultSerializerAdapter().deserialize(body, CheckRunListResult.class, SerializerEncoding.JSON);
         } else {
+            logger.error("");
             throw new HttpResponseException(response);
         }
     }

@@ -7,15 +7,21 @@ import com.azure.dev.DevManager;
 import com.azure.dev.models.Timeline;
 import com.azure.dev.models.TimelineRecord;
 import com.azure.dev.models.TimelineRecordState;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.List;
+import java.util.Locale;
+import java.util.Scanner;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class Utils {
+
+    private static Logger logger = LoggerFactory.getLogger(Utils.class);
 
     public static ReleaseState getReleaseState(TimelineRecord record, Timeline timeline) {
         ReleaseState state = new ReleaseState();
@@ -61,10 +67,31 @@ public class Utils {
 
     public static void promptMessageAndWait(InputStream in, PrintStream out, String message) {
         out.println(message);
+        Scanner s = new Scanner(in);
+        while (true) {
+            String input = s.nextLine();
+            if ("y".equals(input.toLowerCase(Locale.ROOT)) || "yes".equals(input.toLowerCase(Locale.ROOT))) {
+                break;
+            }
+        }
+    }
+
+    public static void openUrl(String url) {
+        Runtime rt = Runtime.getRuntime();
+
         try {
-            in.read();
+            String os = System.getProperty("os.name").toLowerCase(Locale.ROOT);
+            if (os.contains("win")) {
+                rt.exec("rundll32 url.dll,FileProtocolHandler " + url);
+            } else if (os.contains("mac")) {
+                rt.exec("open " + url);
+            } else if (os.contains("nix") || os.contains("nux")) {
+                rt.exec("xdg-open " + url);
+            } else {
+                logger.error("Browser could not be opened - please open {} in a browser on this device.", url);
+            }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Browser could not be opened - please open {} in a browser on this device.", url);
         }
     }
 }
