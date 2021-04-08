@@ -24,12 +24,14 @@ import com.azure.dev.models.Timeline;
 import com.azure.dev.models.TimelineRecord;
 import com.azure.dev.models.Variable;
 import com.spotify.github.v3.clients.GitHubClient;
+import com.spotify.github.v3.clients.IssueClient;
 import com.spotify.github.v3.clients.PullRequestClient;
 import com.spotify.github.v3.clients.RepositoryClient;
 import com.spotify.github.v3.comment.Comment;
 import com.spotify.github.v3.prs.ImmutableMergeParameters;
 import com.spotify.github.v3.prs.ImmutableReviewParameters;
 import com.spotify.github.v3.prs.MergeMethod;
+import com.spotify.github.v3.prs.PullRequest;
 import com.spotify.github.v3.prs.PullRequestItem;
 import com.spotify.github.v3.prs.Review;
 import org.slf4j.Logger;
@@ -82,13 +84,13 @@ public class LiteMain {
         GitHubClient github = GitHubClient.create(new URI("https://api.github.com/"), GITHUB_TOKEN);
         RepositoryClient client = github.createRepositoryClient(GITHUB_ORGANIZATION, GITHUB_PROJECT);
 
-        String swagger = "resourcehealth";
+        String swagger = "databricks";
         String sdk = swagger;  // TODO read from yaml
 
         Map<String, Variable> variables = new HashMap<>();
         variables.put("README", new Variable().withValue(swagger));
-        //variables.put("VERSION", new Variable().withValue("1.0.0"));
-        //variables.put("TAG", new Variable().withValue("package-2019-11"));
+//        variables.put("VERSION", new Variable().withValue("1.0.0"));
+//        variables.put("TAG", new Variable().withValue("package-2018-07-01"));
 
         runLiteCodegen(manager, variables);
 
@@ -101,16 +103,16 @@ public class LiteMain {
         // run pipeline
         Run run = manager.runs().runPipeline(ORGANIZATION, PROJECT, LITE_CODEGEN_PIPELINE_ID,
                 new RunPipelineParameters().withVariables(variables));
-        int runId = run.id();
+        int buildId = run.id();
 
         // wait for complete
         while (run.state() != RunState.COMPLETED && run.state() != RunState.CANCELING) {
-            OUT.println("run id " + runId + ", state " + run.state());
+            OUT.println("build id: " + buildId + ", state: " + run.state());
 
             OUT.println("wait 1 minutes");
             Thread.sleep(60 * 1000);
 
-            run = manager.runs().get(ORGANIZATION, PROJECT, LITE_CODEGEN_PIPELINE_ID, runId);
+            run = manager.runs().get(ORGANIZATION, PROJECT, LITE_CODEGEN_PIPELINE_ID, buildId);
         }
     }
 
@@ -130,7 +132,7 @@ public class LiteMain {
             Utils.openUrl(prUrl);
 
             // wait for CI
-            waitForChecks(client, pr, sdk);
+            waitForChecks(client, prClient, prNumber, sdk);
 
             Utils.promptMessageAndWait(IN, OUT,
                     "'Yes' to approve and merge GitHub pull request: https://github.com/Azure/azure-sdk-for-java/pull/" + prNumber);
@@ -232,45 +234,69 @@ public class LiteMain {
                 .findAny().orElse(null);
     }
 
-    private static void waitForChecks(RepositoryClient client, PullRequestItem pr, String sdk) throws InterruptedException, ExecutionException {
+    private static void waitForChecks(RepositoryClient client, PullRequestClient prClient,
+                                      int prNumber, String sdk) throws InterruptedException, ExecutionException {
         // wait a few minutes for PR to init all CIs
-        OUT.println("wait 3 minutes");
-        Thread.sleep(3 * 60 * 1000);
+        OUT.println("wait 5 minutes");
+        Thread.sleep(5 * 60 * 1000);
 
         String javaSdkCheckName = "java - " + sdk + " - ci";
+
+        PullRequest pr = prClient.get(prNumber).get();
         CheckRunListResult checkRunResult = getCheckRuns(pr.head().sha());
         CheckRun check = getCheck(checkRunResult.getCheckRuns(), javaSdkCheckName);
         if (check == null) {
+            IssueClient issueClient = client.createIssueClient();
+
             // comment to create sdk CI
-            Comment comment = client.createIssueClient().createComment(pr.number(), "/azp run prepare-pipelines").get();
+            Comment comment = issueClient.createComment(prNumber, "/azp run prepare-pipelines").get();
 
             // wait for prepare pipelines
-            waitForCheckSuccess(pr, CI_PREPARE_PIPELINES_NAME);
+            pr = prClient.get(prNumber).get();
+            waitForCheckSuccess(prClient, prNumber, CI_PREPARE_PIPELINES_NAME, pr.head().sha());
 
             // comment to run the newly created sdk CI
-            comment = client.createIssueClient().createComment(pr.number(), javaSdkCheckName).get();
+            comment = issueClient.createComment(prNumber, javaSdkCheckName).get();
 
-            waitForCheckSuccess(pr, javaSdkCheckName);
+            // wait for sdk CI
+            waitForCheckSuccess(prClient, prNumber, javaSdkCheckName);
         }
 
         // wait for check enforcer
-        waitForCheckSuccess(pr, CI_CHECK_ENFORCER_NAME);
+        waitForCheckSuccess(prClient, prNumber, CI_CHECK_ENFORCER_NAME);
     }
 
-    private static void waitForCheckSuccess(PullRequestItem pr, String checkName) throws InterruptedException {
-        CheckRunListResult checkRunResult = getCheckRuns(pr.head().sha());
+    private static void waitForCheckSuccess(PullRequestClient prClient,
+                                            int prNumber, String checkName) throws InterruptedException, ExecutionException {
+        waitForCheckSuccess(prClient, prNumber, checkName, null);
+    }
+
+    private static void waitForCheckSuccess(PullRequestClient prClient,
+                                            int prNumber, String checkName, String fixedCommitSHA) throws InterruptedException, ExecutionException {
+        String commitSHA = fixedCommitSHA;
+        if (commitSHA == null) {
+            // refresh head commit
+            PullRequest pr = prClient.get(prNumber).get();
+            commitSHA = pr.head().sha();
+        }
+        CheckRunListResult checkRunResult = getCheckRuns(commitSHA);
         CheckRun check = getCheck(checkRunResult.getCheckRuns(), checkName);
         while (check == null || !"success".equals(check.getConclusion())) {
             if (check == null) {
-                OUT.println("pr number " + pr.number() + ", wait for " + checkName);
+                OUT.println("pr number: " + prNumber + ", wait for " + checkName);
             } else {
-                OUT.println("pr number " + pr.number() + ", " + checkName + " status " + check.getStatus() + ", conclusion " + check.getConclusion());
+                OUT.println("pr number: " + prNumber + ", " + checkName + " status: " + check.getStatus() + ", conclusion: " + check.getConclusion());
             }
 
             OUT.println("wait 1 minutes");
             Thread.sleep(60 * 1000);
 
-            checkRunResult = getCheckRuns(pr.head().sha());
+            if (fixedCommitSHA == null) {
+                // refresh head commit
+                PullRequest pr = prClient.get(prNumber).get();
+                commitSHA = pr.head().sha();
+            }
+            checkRunResult = getCheckRuns(commitSHA);
             check = getCheck(checkRunResult.getCheckRuns(), checkName);
         }
     }
