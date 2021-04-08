@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 public class Utils {
 
-    private static Logger logger = LoggerFactory.getLogger(Utils.class);
+    private static Logger LOGGER = LoggerFactory.getLogger(Utils.class);
 
     public static ReleaseState getReleaseState(TimelineRecord record, Timeline timeline) {
         ReleaseState state = new ReleaseState();
@@ -88,10 +88,10 @@ public class Utils {
             } else if (os.contains("nix") || os.contains("nux")) {
                 rt.exec("xdg-open " + url);
             } else {
-                logger.error("Browser could not be opened - please open {} in a browser on this device.", url);
+                LOGGER.error("Browser could not be opened - please open {} in a browser on this device.", url);
             }
         } catch (IOException e) {
-            logger.error("Browser could not be opened - please open {} in a browser on this device.", url);
+            LOGGER.error("Browser could not be opened - please open {} in a browser on this device.", url);
         }
     }
 }
