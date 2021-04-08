@@ -233,6 +233,10 @@ public class LiteMain {
     }
 
     private static void waitForChecks(RepositoryClient client, PullRequestItem pr, String sdk) throws InterruptedException, ExecutionException {
+        // wait a few minutes for PR to init all CIs
+        OUT.println("wait 3 minutes");
+        Thread.sleep(3 * 60 * 1000);
+
         String javaSdkCheckName = "java - " + sdk + " - ci";
         CheckRunListResult checkRunResult = getCheckRuns(pr.head().sha());
         CheckRun check = getCheck(checkRunResult.getCheckRuns(), javaSdkCheckName);
