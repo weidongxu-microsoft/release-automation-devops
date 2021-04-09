@@ -84,7 +84,7 @@ public class LiteMain {
         GitHubClient github = GitHubClient.create(new URI("https://api.github.com/"), GITHUB_TOKEN);
         RepositoryClient client = github.createRepositoryClient(GITHUB_ORGANIZATION, GITHUB_PROJECT);
 
-        String swagger = "databricks";
+        String swagger = "databoxedge";
         String sdk = swagger;  // TODO read from yaml
 
         Map<String, Variable> variables = new HashMap<>();
@@ -256,7 +256,7 @@ public class LiteMain {
             waitForCheckSuccess(prClient, prNumber, CI_PREPARE_PIPELINES_NAME, pr.head().sha());
 
             // comment to run the newly created sdk CI
-            comment = issueClient.createComment(prNumber, javaSdkCheckName).get();
+            comment = issueClient.createComment(prNumber, "/azp run " + javaSdkCheckName).get();
 
             // wait for sdk CI
             waitForCheckSuccess(prClient, prNumber, javaSdkCheckName);
