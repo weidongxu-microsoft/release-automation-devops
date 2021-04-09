@@ -53,14 +53,17 @@ public class Utils {
             HttpRequest request = new HttpRequest(
                     HttpMethod.PATCH,
                     String.format("https://dev.azure.com/%s/%s/_apis/pipelines/approvals/%s?api-version=6.0-preview", organization, project, approvalId.toString()));
-            request.setBody(String.format("[{\"approvalId\": \"%s\", \"status\": 4, \"comment\": \"\"}]", approvalId.toString()));
+            request.setBody(String.format("[{\"approvalId\": \"%s\", \"status\": 4, \"comment\": \"\"}]", approvalId));
             request.setHeader("content-type", "application/json");
             HttpResponse response = manager.serviceClient().getHttpPipeline().send(request).block();
             System.out.println("response status code: " + response.getStatusCode());
             if (response.getStatusCode() != 200) {
                 System.out.println("response body: " + response.getBodyAsString().block());
+                response.close();
 
                 throw new IllegalStateException("failed to approve: " + approvalId);
+            } else {
+                response.close();
             }
         }
     }

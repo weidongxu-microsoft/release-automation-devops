@@ -41,10 +41,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -68,11 +71,39 @@ public class LiteMain {
 
     private static final String API_SPECS_YAML_PATH = "https://raw.githubusercontent.com/Azure/azure-sdk-for-java/master/eng/mgmt/automation/api-specs.yaml";
 
+    private static final String SPEC_README_PATH_PREFIX = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master/specification/";
+
     private static final InputStream IN = System.in;
     private static final PrintStream OUT = System.out;
 
     public static void main(String[] args) throws Exception {
         TokenCredential tokenCredential = new BasicAuthenticationCredential(USER, PASS);
+
+        String swagger = "mixedreality";
+        String sdk = swagger;  // TODO read from yaml
+
+        ReadmeConfigure configure = ReadmeConfigure.parseReadme(HTTP_PIPELINE, new URL(SPEC_README_PATH_PREFIX + swagger + "/resource-manager/readme.md"));
+        configure.print(OUT, 3);
+
+        String tag = configure.getDefaultTag();
+        if (tag == null) {
+            tag = configure.getTagConfigures().iterator().next().getTagName();
+        }
+        if (tag.endsWith("-preview")) {
+            Optional<String> stableTag = configure.getTagConfigures().stream()
+                    .map(ReadmeConfigure.TagConfigure::getTagName)
+                    .filter(name -> !name.endsWith("-preview"))
+                    .findFirst();
+            if (stableTag.isPresent()) {
+                tag = stableTag.get();
+            }
+        }
+        OUT.println("choose tag: " + tag + ". Override?");
+        Scanner s = new Scanner(IN);
+        String input = s.nextLine();
+        if (!input.trim().isEmpty()) {
+            tag = input.trim();
+        }
 
         DevManager manager = DevManager.configure()
                 .withLogOptions(new HttpLogOptions().setLogLevel(HttpLogDetailLevel.BODY_AND_HEADERS))
@@ -84,13 +115,10 @@ public class LiteMain {
         GitHubClient github = GitHubClient.create(new URI("https://api.github.com/"), GITHUB_TOKEN);
         RepositoryClient client = github.createRepositoryClient(GITHUB_ORGANIZATION, GITHUB_PROJECT);
 
-        String swagger = "postgresql";
-        String sdk = swagger;  // TODO read from yaml
-
         Map<String, Variable> variables = new HashMap<>();
         variables.put("README", new Variable().withValue(swagger));
+        variables.put("TAG", new Variable().withValue(tag));
 //        variables.put("VERSION", new Variable().withValue("1.0.0"));
-//        variables.put("TAG", new Variable().withValue("package-2018-07-01"));
 
         runLiteCodegen(manager, variables);
 
@@ -222,9 +250,12 @@ public class LiteMain {
             } catch (IOException e) {
                 LOGGER.error("error in response body {}", body);
                 throw new HttpResponseException(response);
+            } finally {
+                response.close();
             }
         } else {
             LOGGER.error("error in response code {}, body {}", response.getStatusCode(), response.getBodyAsString().block());
+            response.close();
             throw new HttpResponseException(response);
         }
     }
