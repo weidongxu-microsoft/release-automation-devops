@@ -79,8 +79,9 @@ public class LiteMain {
     public static void main(String[] args) throws Exception {
         TokenCredential tokenCredential = new BasicAuthenticationCredential(USER, PASS);
 
-        String swagger = "mixedreality";
+        String swagger = "automation";
         String sdk = swagger;  // TODO read from yaml
+        boolean isGA = false;
 
         ReadmeConfigure configure = ReadmeConfigure.parseReadme(HTTP_PIPELINE, new URL(SPEC_README_PATH_PREFIX + swagger + "/resource-manager/readme.md"));
         configure.print(OUT, 3);
@@ -118,7 +119,9 @@ public class LiteMain {
         Map<String, Variable> variables = new HashMap<>();
         variables.put("README", new Variable().withValue(swagger));
         variables.put("TAG", new Variable().withValue(tag));
-//        variables.put("VERSION", new Variable().withValue("1.0.0"));
+        if (isGA) {
+            variables.put("VERSION", new Variable().withValue("1.0.0"));
+        }
 
         runLiteCodegen(manager, variables);
 
