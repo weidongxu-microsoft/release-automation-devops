@@ -84,7 +84,7 @@ public class LiteMain {
         GitHubClient github = GitHubClient.create(new URI("https://api.github.com/"), GITHUB_TOKEN);
         RepositoryClient client = github.createRepositoryClient(GITHUB_ORGANIZATION, GITHUB_PROJECT);
 
-        String swagger = "databoxedge";
+        String swagger = "postgresql";
         String sdk = swagger;  // TODO read from yaml
 
         Map<String, Variable> variables = new HashMap<>();
@@ -142,8 +142,9 @@ public class LiteMain {
                     ImmutableReviewParameters.builder().event("APPROVE").build()).get();
 
             // merge PR
+            PullRequest prRefreshed = prClient.get(prNumber).get();
             prClient.merge(prNumber,
-                    ImmutableMergeParameters.builder().sha(pr.head().sha()).mergeMethod(MergeMethod.squash).build()).get();
+                    ImmutableMergeParameters.builder().sha(prRefreshed.head().sha()).mergeMethod(MergeMethod.squash).build()).get();
         } else {
             throw new IllegalStateException("github pull request not found");
         }
