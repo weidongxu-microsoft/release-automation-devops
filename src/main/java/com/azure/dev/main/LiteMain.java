@@ -36,6 +36,7 @@ import com.spotify.github.v3.prs.PullRequestItem;
 import com.spotify.github.v3.prs.Review;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -80,7 +81,7 @@ public class LiteMain {
         TokenCredential tokenCredential = new BasicAuthenticationCredential(USER, PASS);
 
         String swagger = "automation";
-        String sdk = swagger;  // TODO read from yaml
+        String sdk = getSdkName(swagger);
         boolean isGA = false;
 
         ReadmeConfigure configure = ReadmeConfigure.parseReadme(HTTP_PIPELINE, new URL(SPEC_README_PATH_PREFIX + swagger + "/resource-manager/readme.md"));
@@ -333,6 +334,30 @@ public class LiteMain {
             }
             checkRunResult = getCheckRuns(commitSHA);
             check = getCheck(checkRunResult.getCheckRuns(), checkName);
+        }
+    }
+
+    private static String getSdkName(String swaggerName) {
+        HttpRequest request = new HttpRequest(HttpMethod.GET, API_SPECS_YAML_PATH);
+        HttpResponse response = HTTP_PIPELINE.send(request).block();
+        if (response.getStatusCode() == 200) {
+            String configYaml = response.getBodyAsString().block();
+            response.close();
+
+            Yaml yaml = new Yaml();
+            Map<String, Object> config = yaml.load(configYaml);
+
+            String sdkName = swaggerName;
+            if (config.containsKey(swaggerName)) {
+                Map<String, String> detail = (Map<String, String>) config.get(swaggerName);
+                if (detail.containsKey("service")) {
+                    sdkName = detail.get("service");
+                }
+            }
+            return sdkName;
+        } else {
+            response.close();
+            throw new HttpResponseException(response);
         }
     }
 }
