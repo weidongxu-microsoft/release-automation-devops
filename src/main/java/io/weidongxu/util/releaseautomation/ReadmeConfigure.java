@@ -66,7 +66,7 @@ public class ReadmeConfigure {
                 } else if (line.startsWith("```")) {
                     String compressedLine = line.replaceAll(" ", "");
                     if (compressedLine.startsWith("```yaml$(tag)=='")) {
-                        Matcher matcher = Pattern.compile("yaml\\$\\(tag\\)=='(.*)'").matcher(compressedLine);
+                        Matcher matcher = Pattern.compile("^yaml\\$\\(tag\\)=='(.*)'$").matcher(compressedLine);
                         if (matcher.find()) {
                             String tag = matcher.group(1);
                             currentTag = new TagConfigure(tag);

@@ -131,6 +131,8 @@ public class LiteRelease {
         mergeGithubPR(client, sdk);
 
         runLiteRelease(manager, sdk);
+
+        System.exit(0);
     }
 
     private static void runLiteCodegen(DevManager manager, Map<String, Variable> variables) throws InterruptedException {
