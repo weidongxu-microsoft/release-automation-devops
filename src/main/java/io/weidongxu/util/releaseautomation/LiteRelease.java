@@ -22,6 +22,7 @@ import com.azure.dev.models.RunPipelineParameters;
 import com.azure.dev.models.RunState;
 import com.azure.dev.models.Timeline;
 import com.azure.dev.models.TimelineRecord;
+import com.azure.dev.models.TimelineRecordState;
 import com.azure.dev.models.Variable;
 import com.spotify.github.v3.clients.GitHubClient;
 import com.spotify.github.v3.clients.IssueClient;
@@ -34,6 +35,8 @@ import com.spotify.github.v3.prs.MergeMethod;
 import com.spotify.github.v3.prs.PullRequest;
 import com.spotify.github.v3.prs.PullRequestItem;
 import com.spotify.github.v3.prs.Review;
+import com.spotify.github.v3.prs.requests.ImmutablePullRequestParameters;
+import com.spotify.github.v3.prs.requests.PullRequestParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
@@ -81,6 +84,12 @@ public class LiteRelease {
 
     private static final InputStream IN = System.in;
     private static final PrintStream OUT = System.out;
+
+    private static final PullRequestParameters PR_LIST_PARAMS = ImmutablePullRequestParameters.builder()
+            .state("open").page(1).per_page(10).build();
+    private static final long POLL_SHORT_INTERVAL_MINUTE = 1;
+    private static final long POLL_LONG_INTERVAL_MINUTE = 5;
+    private static final long MILLISECOND_PER_MINUTE = 60 * 1000;
 
     public static void main(String[] args) throws Exception {
         TokenCredential tokenCredential = new BasicAuthenticationCredential(USER, PASS);
@@ -137,6 +146,8 @@ public class LiteRelease {
 
         runLiteRelease(manager, sdk);
 
+        mergeGithubVersionPR(client, sdk);
+
         System.exit(0);
     }
 
@@ -151,7 +162,7 @@ public class LiteRelease {
             OUT.println("build id: " + buildId + ", state: " + run.state());
 
             OUT.println("wait 1 minutes");
-            Thread.sleep(60 * 1000);
+            Thread.sleep(POLL_SHORT_INTERVAL_MINUTE * MILLISECOND_PER_MINUTE);
 
             run = manager.runs().get(ORGANIZATION, PROJECT, LITE_CODEGEN_PIPELINE_ID, buildId);
         }
@@ -159,7 +170,7 @@ public class LiteRelease {
 
     private static void mergeGithubPR(RepositoryClient client, String sdk) throws InterruptedException, ExecutionException {
         PullRequestClient prClient = client.createPullRequestClient();
-        List<PullRequestItem> prs = prClient.list().get();
+        List<PullRequestItem> prs = prClient.list(PR_LIST_PARAMS).get();
 
         PullRequestItem pr = prs.stream()
                 .filter(p -> p.title().startsWith("[Automation]") && p.title().contains(sdk))
@@ -207,12 +218,12 @@ public class LiteRelease {
             OUT.println("DevOps build: " + buildUrl);
             Utils.openUrl(buildUrl);
 
-            // poll status
+            // poll until approval is available
             Timeline timeline = manager.timelines().get(ORGANIZATION, PROJECT, buildId, null);
             ReleaseState state = getReleaseState(timeline);
             while (state.getApprovalIds().isEmpty()) {
                 OUT.println("wait 5 minutes");
-                Thread.sleep(5 * 60 * 1000);
+                Thread.sleep(POLL_LONG_INTERVAL_MINUTE * MILLISECOND_PER_MINUTE);
 
                 timeline = manager.timelines().get(ORGANIZATION, PROJECT, buildId, null);
                 state = getReleaseState(timeline);
@@ -225,8 +236,48 @@ public class LiteRelease {
             OUT.println("prepare to release: " + state.getName());
             Utils.approve(state.getApprovalIds(), manager, ORGANIZATION, PROJECT);
             OUT.println("approved release: " + state.getName());
+
+            // poll until release completion
+            while (state.getState() != TimelineRecordState.COMPLETED) {
+                OUT.println("wait 5 minutes");
+                Thread.sleep(POLL_LONG_INTERVAL_MINUTE * MILLISECOND_PER_MINUTE);
+
+                timeline = manager.timelines().get(ORGANIZATION, PROJECT, buildId, null);
+                state = getReleaseState(timeline);
+            }
         } else {
             throw new IllegalStateException("release pipeline not found: " + pipelineName);
+        }
+    }
+
+    private static void mergeGithubVersionPR(RepositoryClient client, String sdk) throws InterruptedException, ExecutionException {
+        PullRequestClient prClient = client.createPullRequestClient();
+        List<PullRequestItem> prs = prClient.list(PR_LIST_PARAMS).get();
+
+        PullRequestItem pr = prs.stream()
+                .filter(p -> p.title().equals("Increment version for " + sdk + " releases"))
+                .findFirst().orElse(null);
+
+        if (pr != null) {
+            int prNumber = pr.number();
+
+            // approve PR
+            Review review = prClient.createReview(pr.number(),
+                    ImmutableReviewParameters.builder().event("APPROVE").build()).get();
+
+            String prUrl = "https://github.com/Azure/azure-sdk-for-java/pull/" + prNumber;
+            OUT.println("GitHub pull request: " + prUrl);
+            Utils.openUrl(prUrl);
+
+            // wait for check enforcer
+            waitForCheckSuccess(prClient, prNumber, CI_CHECK_ENFORCER_NAME);
+
+            // merge PR
+            PullRequest prRefreshed = prClient.get(prNumber).get();
+            prClient.merge(prNumber,
+                    ImmutableMergeParameters.builder().sha(prRefreshed.head().sha()).mergeMethod(MergeMethod.squash).build()).get();
+        } else {
+            throw new IllegalStateException("github pull request not found");
         }
     }
 
@@ -239,7 +290,9 @@ public class LiteRelease {
         }
 
         if (states.size() == 1) {
-            return states.iterator().next();
+            ReleaseState state = states.iterator().next();
+            OUT.println("release: " + state.getName() + ", state: " + state.getState());
+            return state;
         } else {
             throw new IllegalStateException("release candidate not correct");
         }
@@ -283,7 +336,7 @@ public class LiteRelease {
                                       int prNumber, String sdk) throws InterruptedException, ExecutionException {
         // wait a few minutes for PR to init all CIs
         OUT.println("wait 5 minutes");
-        Thread.sleep(5 * 60 * 1000);
+        Thread.sleep(POLL_LONG_INTERVAL_MINUTE * MILLISECOND_PER_MINUTE);
 
         String javaSdkCheckName = "java - " + sdk + " - ci";
 
@@ -334,7 +387,7 @@ public class LiteRelease {
             }
 
             OUT.println("wait 1 minutes");
-            Thread.sleep(60 * 1000);
+            Thread.sleep(POLL_SHORT_INTERVAL_MINUTE * MILLISECOND_PER_MINUTE);
 
             if (fixedCommitSHA == null) {
                 // refresh head commit
