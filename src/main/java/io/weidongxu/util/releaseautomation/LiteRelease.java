@@ -38,11 +38,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.net.URI;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -366,10 +371,18 @@ public class LiteRelease {
     }
 
     private static Configure getConfigure() throws IOException {
-        Configure configure;
+        Configure configure = null;
         Yaml yaml = new Yaml();
-        try (InputStream in = LiteRelease.class.getResourceAsStream("/configure.yml")) {
-            configure = yaml.loadAs(in, Configure.class);
+        Path configInPath = Paths.get("configure.yml");
+        if (Files.exists(configInPath)) {
+            try (InputStream in = new FileInputStream(configInPath.toFile())) {
+                configure = yaml.loadAs(in, Configure.class);
+            }
+        }
+        if (configure == null) {
+            try (InputStream in = LiteRelease.class.getResourceAsStream("/configure.yml")) {
+                configure = yaml.loadAs(in, Configure.class);
+            }
         }
         return configure;
     }
