@@ -1,4 +1,4 @@
-package com.azure.dev.main;
+package io.weidongxu.util.releaseautomation;
 
 public class CheckRun {
 

@@ -1,4 +1,4 @@
-package com.azure.dev.main;
+package io.weidongxu.util.releaseautomation;
 
 import com.azure.core.credential.BasicAuthenticationCredential;
 import com.azure.core.credential.TokenCredential;
@@ -18,7 +18,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class PremiumMain {
+public class PremiumRelease {
 
     private static final String USER = Configuration.getGlobalConfiguration().get("USER");
     private static final String PASS = Configuration.getGlobalConfiguration().get("PAT");

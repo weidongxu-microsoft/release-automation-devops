@@ -1,4 +1,4 @@
-package com.azure.dev.main;
+package io.weidongxu.util.releaseautomation;
 
 import com.azure.core.credential.BasicAuthenticationCredential;
 import com.azure.core.credential.TokenCredential;
@@ -52,9 +52,9 @@ import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
-public class LiteMain {
+public class LiteRelease {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(LiteMain.class);
+    private static Logger LOGGER = LoggerFactory.getLogger(LiteRelease.class);
 
     private static final String USER = Configuration.getGlobalConfiguration().get("DEVOPS_USER");
     private static final String PASS = Configuration.getGlobalConfiguration().get("DEVOPS_PAT");
@@ -80,19 +80,21 @@ public class LiteMain {
     public static void main(String[] args) throws Exception {
         TokenCredential tokenCredential = new BasicAuthenticationCredential(USER, PASS);
 
-        String swagger = "automation";
+        Configure configure = getConfigure();
+        String swagger = configure.getSwagger();
+        boolean isPreview = configure.isPreview();
         String sdk = getSdkName(swagger);
-        boolean isGA = false;
 
-        ReadmeConfigure configure = ReadmeConfigure.parseReadme(HTTP_PIPELINE, new URL(SPEC_README_PATH_PREFIX + swagger + "/resource-manager/readme.md"));
-        configure.print(OUT, 3);
+        ReadmeConfigure readmeConfigure = ReadmeConfigure.parseReadme(HTTP_PIPELINE,
+                new URL(SPEC_README_PATH_PREFIX + swagger + "/resource-manager/readme.md"));
+        readmeConfigure.print(OUT, 3);
 
-        String tag = configure.getDefaultTag();
+        String tag = readmeConfigure.getDefaultTag();
         if (tag == null) {
-            tag = configure.getTagConfigures().iterator().next().getTagName();
+            tag = readmeConfigure.getTagConfigures().iterator().next().getTagName();
         }
         if (tag.endsWith("-preview")) {
-            Optional<String> stableTag = configure.getTagConfigures().stream()
+            Optional<String> stableTag = readmeConfigure.getTagConfigures().stream()
                     .map(ReadmeConfigure.TagConfigure::getTagName)
                     .filter(name -> !name.endsWith("-preview"))
                     .findFirst();
@@ -120,7 +122,7 @@ public class LiteMain {
         Map<String, Variable> variables = new HashMap<>();
         variables.put("README", new Variable().withValue(swagger));
         variables.put("TAG", new Variable().withValue(tag));
-        if (isGA) {
+        if (!isPreview) {
             variables.put("VERSION", new Variable().withValue("1.0.0"));
         }
 
@@ -359,5 +361,14 @@ public class LiteMain {
             response.close();
             throw new HttpResponseException(response);
         }
+    }
+
+    private static Configure getConfigure() throws IOException {
+        Configure configure;
+        Yaml yaml = new Yaml();
+        try (InputStream in = LiteRelease.class.getResourceAsStream("/configure.yml")) {
+            configure = yaml.loadAs(in, Configure.class);
+        }
+        return configure;
     }
 }

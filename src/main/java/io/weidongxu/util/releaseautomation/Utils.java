@@ -1,4 +1,4 @@
-package com.azure.dev.main;
+package io.weidongxu.util.releaseautomation;
 
 import com.azure.core.http.HttpMethod;
 import com.azure.core.http.HttpRequest;

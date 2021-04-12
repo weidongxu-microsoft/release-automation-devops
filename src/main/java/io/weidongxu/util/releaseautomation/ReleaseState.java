@@ -1,4 +1,4 @@
-package com.azure.dev.main;
+package io.weidongxu.util.releaseautomation;
 
 import com.azure.dev.models.TimelineRecordState;
 
