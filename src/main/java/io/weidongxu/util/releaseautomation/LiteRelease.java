@@ -133,7 +133,7 @@ public class LiteRelease {
 
         runLiteCodegen(manager, variables);
 
-        mergeGithubPR(client, sdk);
+        mergeGithubPR(client, swagger, sdk);
 
         runLiteRelease(manager, sdk);
 
@@ -157,12 +157,12 @@ public class LiteRelease {
         }
     }
 
-    private static void mergeGithubPR(RepositoryClient client, String sdk) throws InterruptedException, ExecutionException {
+    private static void mergeGithubPR(RepositoryClient client, String swagger, String sdk) throws InterruptedException, ExecutionException {
         PullRequestClient prClient = client.createPullRequestClient();
         List<PullRequestItem> prs = prClient.list().get();
 
         PullRequestItem pr = prs.stream()
-                .filter(p -> p.title().startsWith("[Automation]") && p.title().contains(sdk))
+                .filter(p -> p.title().startsWith("[Automation]") && p.title().contains(swagger))
                 .findFirst().orElse(null);
 
         if (pr != null) {
