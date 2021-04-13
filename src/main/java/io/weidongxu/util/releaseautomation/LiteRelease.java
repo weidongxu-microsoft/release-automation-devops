@@ -201,6 +201,7 @@ public class LiteRelease {
             PullRequest prRefreshed = prClient.get(prNumber).get();
             prClient.merge(prNumber,
                     ImmutableMergeParameters.builder().sha(prRefreshed.head().sha()).mergeMethod(MergeMethod.squash).build()).get();
+            OUT.println("Pull request merged: " + prNumber);
         } else {
             throw new IllegalStateException("github pull request not found");
         }
@@ -282,6 +283,7 @@ public class LiteRelease {
             PullRequest prRefreshed = prClient.get(prNumber).get();
             prClient.merge(prNumber,
                     ImmutableMergeParameters.builder().sha(prRefreshed.head().sha()).mergeMethod(MergeMethod.squash).build()).get();
+            OUT.println("Pull request merged: " + prNumber);
         } else {
             throw new IllegalStateException("github pull request not found");
         }
