@@ -62,7 +62,7 @@ import java.util.stream.Collectors;
 
 public class LiteRelease {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(LiteRelease.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LiteRelease.class);
 
     private static final String USER = Configuration.getGlobalConfiguration().get("DEVOPS_USER");
     private static final String PASS = Configuration.getGlobalConfiguration().get("DEVOPS_PAT");
@@ -84,6 +84,8 @@ public class LiteRelease {
 
     private static final InputStream IN = System.in;
     private static final PrintStream OUT = System.out;
+
+    private static final boolean PROMPT_CONFIRMATION = true;
 
     private static final PullRequestParameters PR_LIST_PARAMS = ImmutablePullRequestParameters.builder()
             .state("open").page(1).per_page(10).build();
@@ -186,8 +188,10 @@ public class LiteRelease {
             // wait for CI
             waitForChecks(client, prClient, prNumber, sdk);
 
-            Utils.promptMessageAndWait(IN, OUT,
-                    "'Yes' to approve and merge GitHub pull request: https://github.com/Azure/azure-sdk-for-java/pull/" + prNumber);
+            if (PROMPT_CONFIRMATION) {
+                Utils.promptMessageAndWait(IN, OUT,
+                        "'Yes' to approve and merge GitHub pull request: https://github.com/Azure/azure-sdk-for-java/pull/" + prNumber);
+            }
 
             // approve PR
             Review review = prClient.createReview(pr.number(),
@@ -229,8 +233,10 @@ public class LiteRelease {
                 state = getReleaseState(timeline);
             }
 
-            Utils.promptMessageAndWait(IN, OUT,
-                    "'Yes' to approve release: " + state.getName());
+            if (PROMPT_CONFIRMATION) {
+                Utils.promptMessageAndWait(IN, OUT,
+                        "'Yes' to approve release: " + state.getName());
+            }
 
             // approve new release
             OUT.println("prepare to release: " + state.getName());
