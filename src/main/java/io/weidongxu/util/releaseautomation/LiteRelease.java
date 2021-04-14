@@ -143,6 +143,8 @@ public class LiteRelease {
         }
 
         runLiteCodegen(manager, variables);
+        OUT.println("wait 1 minutes");
+        Thread.sleep(POLL_SHORT_INTERVAL_MINUTE * MILLISECOND_PER_MINUTE);
 
         mergeGithubPR(client, swagger, sdk);
 
@@ -175,7 +177,7 @@ public class LiteRelease {
         List<PullRequestItem> prs = prClient.list(PR_LIST_PARAMS).get();
 
         PullRequestItem pr = prs.stream()
-                .filter(p -> p.title().startsWith("[Automation]") && p.title().contains(swagger))
+                .filter(p -> p.title().startsWith("[Automation] Generate Fluent Lite from") && p.title().contains(swagger))
                 .findFirst().orElse(null);
 
         if (pr != null) {
