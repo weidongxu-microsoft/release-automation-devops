@@ -103,6 +103,9 @@ public class LiteRelease {
         boolean isPreview = configure.isPreview();
         String sdk = getSdkName(swagger);
 
+        OUT.println("swagger: " + swagger);
+        OUT.println("sdk: " + sdk);
+
         ReadmeConfigure readmeConfigure = ReadmeConfigure.parseReadme(HTTP_PIPELINE,
                 new URL(SPEC_README_PATH_PREFIX + swagger + "/resource-manager/readme.md"));
         readmeConfigure.print(OUT, 3);
