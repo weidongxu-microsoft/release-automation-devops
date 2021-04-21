@@ -82,6 +82,8 @@ public class LiteRelease {
 
     private static final String SPEC_README_PATH_PREFIX = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master/specification/";
 
+    private static final String MAVEN_ARTIFACT_PATH_PREFIX = "https://search.maven.org/artifact/com.azure.resourcemanager/";
+
     private static final InputStream IN = System.in;
     private static final PrintStream OUT = System.out;
 
@@ -151,6 +153,9 @@ public class LiteRelease {
         runLiteRelease(manager, sdk);
 
         mergeGithubVersionPR(client, sdk);
+
+        String sdkMavenUrl = MAVEN_ARTIFACT_PATH_PREFIX + "azure-resourcemanager-" + sdk;
+        Utils.openUrl(sdkMavenUrl);
 
         System.exit(0);
     }
