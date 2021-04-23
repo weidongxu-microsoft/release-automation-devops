@@ -107,28 +107,31 @@ public class LiteRelease {
         OUT.println("swagger: " + swagger);
         OUT.println("sdk: " + sdk);
 
-        ReadmeConfigure readmeConfigure = ReadmeConfigure.parseReadme(HTTP_PIPELINE,
-                new URL(SPEC_README_PATH_PREFIX + swagger + "/resource-manager/readme.md"));
-        readmeConfigure.print(OUT, 3);
+        String tag = configure.getTag();
+        if (CoreUtils.isNullOrEmpty(tag)) {
+            ReadmeConfigure readmeConfigure = ReadmeConfigure.parseReadme(HTTP_PIPELINE,
+                    new URL(SPEC_README_PATH_PREFIX + swagger + "/resource-manager/readme.md"));
+            readmeConfigure.print(OUT, 3);
 
-        String tag = readmeConfigure.getDefaultTag();
-        if (tag == null) {
-            tag = readmeConfigure.getTagConfigures().iterator().next().getTagName();
-        }
-        if (tag.endsWith("-preview")) {
-            Optional<String> stableTag = readmeConfigure.getTagConfigures().stream()
-                    .map(ReadmeConfigure.TagConfigure::getTagName)
-                    .filter(name -> !name.endsWith("-preview"))
-                    .findFirst();
-            if (stableTag.isPresent()) {
-                tag = stableTag.get();
+            tag = readmeConfigure.getDefaultTag();
+            if (tag == null) {
+                tag = readmeConfigure.getTagConfigures().iterator().next().getTagName();
             }
-        }
-        OUT.println("choose tag: " + tag + ". Override?");
-        Scanner s = new Scanner(IN);
-        String input = s.nextLine();
-        if (!input.trim().isEmpty()) {
-            tag = input.trim();
+            if (tag.endsWith("-preview")) {
+                Optional<String> stableTag = readmeConfigure.getTagConfigures().stream()
+                        .map(ReadmeConfigure.TagConfigure::getTagName)
+                        .filter(name -> !name.endsWith("-preview"))
+                        .findFirst();
+                if (stableTag.isPresent()) {
+                    tag = stableTag.get();
+                }
+            }
+            OUT.println("choose tag: " + tag + ". Override?");
+            Scanner s = new Scanner(IN);
+            String input = s.nextLine();
+            if (!input.trim().isEmpty()) {
+                tag = input.trim();
+            }
         }
 
         DevManager manager = DevManager.configure()
