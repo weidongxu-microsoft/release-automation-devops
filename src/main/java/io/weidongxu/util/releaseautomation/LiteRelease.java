@@ -133,6 +133,7 @@ public class LiteRelease {
                 tag = input.trim();
             }
         }
+        OUT.println("tag: " + tag);
 
         DevManager manager = DevManager.configure()
                 .withLogOptions(new HttpLogOptions().setLogLevel(HttpLogDetailLevel.BODY_AND_HEADERS))
