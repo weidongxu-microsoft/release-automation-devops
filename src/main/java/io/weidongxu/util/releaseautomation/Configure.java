@@ -4,6 +4,7 @@ public class Configure {
 
     private String swagger;
     private boolean preview;
+    private String service;
 
     public String getSwagger() {
         return swagger;
@@ -19,5 +20,13 @@ public class Configure {
 
     public void setPreview(boolean preview) {
         this.preview = preview;
+    }
+
+    public String getService() {
+        return service;
+    }
+
+    public void setService(String service) {
+        this.service = service;
     }
 }

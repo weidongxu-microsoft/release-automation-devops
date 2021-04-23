@@ -13,6 +13,7 @@ import com.azure.core.http.policy.HttpLogOptions;
 import com.azure.core.management.AzureEnvironment;
 import com.azure.core.management.profile.AzureProfile;
 import com.azure.core.util.Configuration;
+import com.azure.core.util.CoreUtils;
 import com.azure.core.util.serializer.JacksonAdapter;
 import com.azure.core.util.serializer.SerializerEncoding;
 import com.azure.dev.DevManager;
@@ -145,6 +146,9 @@ public class LiteRelease {
         variables.put("TAG", new Variable().withValue(tag));
         if (!isPreview) {
             variables.put("VERSION", new Variable().withValue("1.0.0"));
+        }
+        if (!CoreUtils.isNullOrEmpty(configure.getService())) {
+            variables.put("SERVICE", new Variable().withValue(configure.getService()));
         }
 
         runLiteCodegen(manager, variables);
