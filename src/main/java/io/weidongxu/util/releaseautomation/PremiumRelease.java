@@ -20,8 +20,8 @@ import java.util.stream.Collectors;
 
 public class PremiumRelease {
 
-    private static final String USER = Configuration.getGlobalConfiguration().get("USER");
-    private static final String PASS = Configuration.getGlobalConfiguration().get("PAT");
+    private static final String USER = Configuration.getGlobalConfiguration().get("DEVOPS_USER");
+    private static final String PASS = Configuration.getGlobalConfiguration().get("DEVOPS_PAT");
     private static final String ORGANIZATION = "azure-sdk";
     private static final String PROJECT = "internal";
 
