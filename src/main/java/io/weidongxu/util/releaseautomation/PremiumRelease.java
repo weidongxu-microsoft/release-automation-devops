@@ -58,13 +58,23 @@ public class PremiumRelease {
                     .filter(s -> s.getState() == TimelineRecordState.PENDING)
                     .count();
 
-            System.out.println("count of pending release: " + countPending);
+            System.out.println("count of pending releases: " + countPending);
+
+            System.out.println("pending releases: " + states.stream()
+                    .filter(s -> s.getState() == TimelineRecordState.PENDING)
+                    .map(s -> {
+                        if ("azure-resourcemanager".equals(s.getName())) {
+                            return "AZURE";
+                        } else {
+                            return s.getName().substring("azure-resourcemanager-".length());
+                        }
+                    }).collect(Collectors.toList()));
 
             long countInProgress = states.stream()
                     .filter(s -> s.getState() == TimelineRecordState.IN_PROGRESS)
                     .count();
 
-            System.out.println("count of in progress release: " + countInProgress);
+            System.out.println("count of in progress releases: " + countInProgress);
 
             if (countInProgress <= 1) {
                 List<ReleaseState> remains = states.stream()
