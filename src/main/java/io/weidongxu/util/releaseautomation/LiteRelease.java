@@ -211,7 +211,7 @@ public class LiteRelease {
             }
 
             // approve PR
-            Review review = prClient.createReview(pr.number(),
+            Review review = prClient.createReview(prNumber,
                     ImmutableReviewParameters.builder().event("APPROVE").build()).get();
 
             // merge PR
