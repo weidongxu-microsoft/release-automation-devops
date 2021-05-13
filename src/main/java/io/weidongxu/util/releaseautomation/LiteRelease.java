@@ -67,7 +67,8 @@ public class LiteRelease {
     private static final String USER = Configuration.getGlobalConfiguration().get("DEVOPS_USER");
     private static final String PASS = Configuration.getGlobalConfiguration().get("DEVOPS_PAT");
     private static final String ORGANIZATION = "azure-sdk";
-    private static final String PROJECT = "internal";
+    private static final String PROJECT_INTERNAL = "internal";
+    private static final String PROJECT_PUBLIC = "public";
 
     private static final String GITHUB_TOKEN = Configuration.getGlobalConfiguration().get("GITHUB_PAT");
     private static final String GITHUB_ORGANIZATION = "Azure";
@@ -158,7 +159,7 @@ public class LiteRelease {
         OUT.println("wait 1 minutes");
         Thread.sleep(POLL_SHORT_INTERVAL_MINUTE * MILLISECOND_PER_MINUTE);
 
-        mergeGithubPR(client, swagger, sdk);
+        mergeGithubPR(client, manager, swagger, sdk);
 
         runLiteRelease(manager, sdk);
 
@@ -172,7 +173,7 @@ public class LiteRelease {
 
     private static void runLiteCodegen(DevManager manager, Map<String, Variable> variables) throws InterruptedException {
         // run pipeline
-        Run run = manager.runs().runPipeline(ORGANIZATION, PROJECT, LITE_CODEGEN_PIPELINE_ID,
+        Run run = manager.runs().runPipeline(ORGANIZATION, PROJECT_INTERNAL, LITE_CODEGEN_PIPELINE_ID,
                 new RunPipelineParameters().withVariables(variables));
         int buildId = run.id();
 
@@ -183,11 +184,11 @@ public class LiteRelease {
             OUT.println("wait 1 minutes");
             Thread.sleep(POLL_SHORT_INTERVAL_MINUTE * MILLISECOND_PER_MINUTE);
 
-            run = manager.runs().get(ORGANIZATION, PROJECT, LITE_CODEGEN_PIPELINE_ID, buildId);
+            run = manager.runs().get(ORGANIZATION, PROJECT_INTERNAL, LITE_CODEGEN_PIPELINE_ID, buildId);
         }
     }
 
-    private static void mergeGithubPR(RepositoryClient client, String swagger, String sdk) throws InterruptedException, ExecutionException {
+    private static void mergeGithubPR(RepositoryClient client, DevManager manager, String swagger, String sdk) throws InterruptedException, ExecutionException {
         PullRequestClient prClient = client.createPullRequestClient();
         List<PullRequestItem> prs = prClient.list(PR_LIST_PARAMS).get();
 
@@ -203,7 +204,7 @@ public class LiteRelease {
             Utils.openUrl(prUrl);
 
             // wait for CI
-            waitForChecks(client, prClient, prNumber, sdk);
+            waitForChecks(client, prClient, manager, prNumber, sdk);
 
             if (PROMPT_CONFIRMATION) {
                 Utils.promptMessageAndWait(IN, OUT,
@@ -227,13 +228,13 @@ public class LiteRelease {
     private static void runLiteRelease(DevManager manager, String sdk) throws InterruptedException {
         // find pipeline
         String pipelineName = "java - " + sdk;
-        List<Pipeline> pipelines = manager.pipelines().list(ORGANIZATION, PROJECT).stream().collect(Collectors.toList());
+        List<Pipeline> pipelines = manager.pipelines().list(ORGANIZATION, PROJECT_INTERNAL).stream().collect(Collectors.toList());
         Pipeline pipeline = pipelines.stream()
                 .filter(p -> pipelineName.equals(p.name())).findFirst().orElse(null);
 
         if (pipeline != null) {
             // run pipeline
-            Run run = manager.runs().runPipeline(ORGANIZATION, PROJECT, pipeline.id(), new RunPipelineParameters());
+            Run run = manager.runs().runPipeline(ORGANIZATION, PROJECT_INTERNAL, pipeline.id(), new RunPipelineParameters());
             int buildId = run.id();
 
             String buildUrl = "https://dev.azure.com/azure-sdk/internal/_build/results?buildId=" + buildId;
@@ -241,13 +242,13 @@ public class LiteRelease {
             Utils.openUrl(buildUrl);
 
             // poll until approval is available
-            Timeline timeline = manager.timelines().get(ORGANIZATION, PROJECT, buildId, null);
+            Timeline timeline = manager.timelines().get(ORGANIZATION, PROJECT_INTERNAL, buildId, null);
             ReleaseState state = getReleaseState(timeline);
             while (state.getApprovalIds().isEmpty()) {
                 OUT.println("wait 5 minutes");
                 Thread.sleep(POLL_LONG_INTERVAL_MINUTE * MILLISECOND_PER_MINUTE);
 
-                timeline = manager.timelines().get(ORGANIZATION, PROJECT, buildId, null);
+                timeline = manager.timelines().get(ORGANIZATION, PROJECT_INTERNAL, buildId, null);
                 state = getReleaseState(timeline);
             }
 
@@ -258,7 +259,7 @@ public class LiteRelease {
 
             // approve new release
             OUT.println("prepare to release: " + state.getName());
-            Utils.approve(state.getApprovalIds(), manager, ORGANIZATION, PROJECT);
+            Utils.approve(state.getApprovalIds(), manager, ORGANIZATION, PROJECT_INTERNAL);
             OUT.println("approved release: " + state.getName());
 
             // poll until release completion
@@ -266,7 +267,7 @@ public class LiteRelease {
                 OUT.println("wait 5 minutes");
                 Thread.sleep(POLL_LONG_INTERVAL_MINUTE * MILLISECOND_PER_MINUTE);
 
-                timeline = manager.timelines().get(ORGANIZATION, PROJECT, buildId, null);
+                timeline = manager.timelines().get(ORGANIZATION, PROJECT_INTERNAL, buildId, null);
                 state = getReleaseState(timeline);
             }
         } else {
@@ -357,33 +358,35 @@ public class LiteRelease {
                 .findAny().orElse(null);
     }
 
-    private static void waitForChecks(RepositoryClient client, PullRequestClient prClient,
+    private static void waitForChecks(RepositoryClient client, PullRequestClient prClient, DevManager manager,
                                       int prNumber, String sdk) throws InterruptedException, ExecutionException {
-        // wait a few minutes for PR to init all CIs
-        OUT.println("wait 5 minutes");
-        Thread.sleep(POLL_LONG_INTERVAL_MINUTE * MILLISECOND_PER_MINUTE);
+        // wait a bit
+        OUT.println("wait 1 minutes");
+        Thread.sleep(POLL_SHORT_INTERVAL_MINUTE * MILLISECOND_PER_MINUTE);
 
         String javaSdkCheckName = "java - " + sdk + " - ci";
 
-        PullRequest pr = prClient.get(prNumber).get();
-        CheckRunListResult checkRunResult = getCheckRuns(pr.head().sha());
-        CheckRun check = getCheck(checkRunResult.getCheckRuns(), javaSdkCheckName);
-        if (check == null) {
+        boolean ciPipelineReady = manager.pipelines().list(ORGANIZATION, PROJECT_PUBLIC).stream()
+                .anyMatch(p -> p.name().equals(javaSdkCheckName));
+
+        if (!ciPipelineReady) {
+            LOGGER.info("prepare pipeline");
+
             IssueClient issueClient = client.createIssueClient();
 
             // comment to create sdk CI
             Comment comment = issueClient.createComment(prNumber, "/azp run prepare-pipelines").get();
 
             // wait for prepare pipelines
-            pr = prClient.get(prNumber).get();
+            PullRequest pr = prClient.get(prNumber).get();
             waitForCheckSuccess(prClient, prNumber, CI_PREPARE_PIPELINES_NAME, pr.head().sha());
 
             // comment to run the newly created sdk CI
             comment = issueClient.createComment(prNumber, "/azp run " + javaSdkCheckName).get();
-
-            // wait for sdk CI
-            waitForCheckSuccess(prClient, prNumber, javaSdkCheckName);
         }
+
+        // wait for sdk CI
+        waitForCheckSuccess(prClient, prNumber, javaSdkCheckName);
 
         // wait for check enforcer
         waitForCheckSuccess(prClient, prNumber, CI_CHECK_ENFORCER_NAME);
