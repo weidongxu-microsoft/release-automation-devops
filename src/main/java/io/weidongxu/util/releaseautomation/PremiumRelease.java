@@ -82,6 +82,9 @@ public class PremiumRelease {
                         .sorted(Comparator.comparingInt(o -> o.getName().length()))
                         .collect(Collectors.toList());
                 Collections.reverse(remains);
+                if (remains.isEmpty()) {
+                    break;
+                }
                 ReleaseState nextRelease = remains.iterator().next();
 
                 // trigger new release
