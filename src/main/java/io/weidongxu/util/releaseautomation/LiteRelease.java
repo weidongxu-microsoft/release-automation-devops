@@ -148,6 +148,7 @@ public class LiteRelease {
         Map<String, Variable> variables = new HashMap<>();
         variables.put("README", new Variable().withValue(swagger));
         variables.put("TAG", new Variable().withValue(tag));
+        variables.put("AUTOREST_OPTIONS", new Variable().withValue("--generate-samples"));
         if (!isPreview) {
             variables.put("VERSION", new Variable().withValue("1.0.0"));
         }
