@@ -89,6 +89,7 @@ public class LiteRelease {
     private static final PrintStream OUT = System.out;
 
     private static final boolean PROMPT_CONFIRMATION = true;
+    private static final boolean PREFER_STABLE_TAG = false;
 
     private static final PullRequestParameters PR_LIST_PARAMS = ImmutablePullRequestParameters.builder()
             .state("open").page(1).per_page(10).build();
@@ -117,13 +118,15 @@ public class LiteRelease {
             if (tag == null) {
                 tag = readmeConfigure.getTagConfigures().iterator().next().getTagName();
             }
-            if (tag.endsWith("-preview")) {
-                Optional<String> stableTag = readmeConfigure.getTagConfigures().stream()
-                        .map(ReadmeConfigure.TagConfigure::getTagName)
-                        .filter(name -> !name.endsWith("-preview"))
-                        .findFirst();
-                if (stableTag.isPresent()) {
-                    tag = stableTag.get();
+            if (PREFER_STABLE_TAG) {
+                if (tag.endsWith("-preview")) {
+                    Optional<String> stableTag = readmeConfigure.getTagConfigures().stream()
+                            .map(ReadmeConfigure.TagConfigure::getTagName)
+                            .filter(name -> !name.endsWith("-preview"))
+                            .findFirst();
+                    if (stableTag.isPresent()) {
+                        tag = stableTag.get();
+                    }
                 }
             }
             OUT.println("choose tag: " + tag + ". Override?");
