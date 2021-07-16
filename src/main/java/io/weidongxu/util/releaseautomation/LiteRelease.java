@@ -152,6 +152,7 @@ public class LiteRelease {
         variables.put("README", new Variable().withValue(swagger));
         variables.put("TAG", new Variable().withValue(tag));
         variables.put("AUTOREST_OPTIONS", new Variable().withValue("--generate-samples"));
+        variables.put("DRAFT_PULL_REQUEST", new Variable().withValue("false"));
         if (!isPreview) {
             variables.put("VERSION", new Variable().withValue("1.0.0"));
         }
