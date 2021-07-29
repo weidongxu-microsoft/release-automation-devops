@@ -151,7 +151,7 @@ public class LiteRelease {
         Map<String, Variable> variables = new HashMap<>();
         variables.put("README", new Variable().withValue(swagger));
         variables.put("TAG", new Variable().withValue(tag));
-        variables.put("AUTOREST_OPTIONS", new Variable().withValue("--generate-samples"));
+        variables.put("AUTOREST_OPTIONS", new Variable().withValue("--pipeline.modelerfour.flatten-models=false --client-flattened-annotation-target=NONE --generate-samples"));
         variables.put("DRAFT_PULL_REQUEST", new Variable().withValue("false"));
         if (!isPreview) {
             variables.put("VERSION", new Variable().withValue("1.0.0"));
