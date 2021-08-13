@@ -1,9 +1,20 @@
 # Usage
 
-Define environment variables:
-- `USER` username
-- `PAT` personal access token from Azure DevOps
-- `BUILD_ID` the build ID
+Required environment variables:
+- `DEVOPS_USER` username from Azure DevOps
+- `DEVOPS_PAT` personal access token from Azure DevOps (permission for Build and Release)
+- `GITHUB_PAT` personal access token from GitHub (used for `LiteRelease`)
+- `BUILD_ID` the build ID (used for `PremiumRelease`)
+
+## Premium release
+1. Start the build and wait till Signing complete
+2. Note the `buildId` and set it to `BUILD_ID`
+3. Run `PremiumRelease.main()`
+
+## Lite release
+1. Edit `configure.yml` in project root (similar to `/src/main/resources/configure.yml`)
+2. Run with `mvn exec:java` (equivalent to `LiteRelease.main()`)
+3. Follow the prompt, choose the tag to release
 
 ## Swagger specs
 
