@@ -301,11 +301,15 @@ public class LiteRelease {
             // wait for check enforcer
             waitForCheckSuccess(prClient, prNumber, CI_CHECK_ENFORCER_NAME);
 
-            // merge PR
             PullRequest prRefreshed = prClient.get(prNumber).get();
-            prClient.merge(prNumber,
-                    ImmutableMergeParameters.builder().sha(prRefreshed.head().sha()).mergeMethod(MergeMethod.squash).build()).get();
-            OUT.println("Pull request merged: " + prNumber);
+            if (Boolean.TRUE.equals(prRefreshed.merged())) {
+                OUT.println("Pull request auto merged: " + prNumber);
+            } else {
+                // merge PR
+                prClient.merge(prNumber,
+                        ImmutableMergeParameters.builder().sha(prRefreshed.head().sha()).mergeMethod(MergeMethod.squash).build()).get();
+                OUT.println("Pull request merged: " + prNumber);
+            }
         } else {
             throw new IllegalStateException("github pull request not found");
         }
