@@ -243,12 +243,12 @@
           "200": {
             "description": "successful operation",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Run"
-              }
+              "$ref": "#/definitions/RunListResult"
             }
           }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": null
         }
       },
       "post": {
@@ -1236,6 +1236,17 @@
           "readOnly": true,
           "items": {
             "$ref": "#/definitions/Pipeline"
+          }
+        }
+      }
+    },
+    "RunListResult": {
+      "properties": {
+        "value": {
+          "type": "array",
+          "readOnly": true,
+          "items": {
+            "$ref": "#/definitions/Run"
           }
         }
       }

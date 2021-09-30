@@ -34,4 +34,15 @@ license-header: MICROSOFT_MIT_SMALL
 input-file:
 - build.json
 - pipelines.json
+
+output-folder: .
+
+regenerate-pom: false
+
+java: true
+fluent: LITE
+
+pipeline:
+  modelerfour:
+    additional-checks: true
 ```

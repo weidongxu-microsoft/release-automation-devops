@@ -9,9 +9,11 @@ import com.azure.core.management.profile.AzureProfile;
 import com.azure.core.util.Configuration;
 import com.azure.dev.DevManager;
 import com.azure.dev.models.Pipeline;
+import com.azure.dev.models.Run;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,6 +43,11 @@ public class ListPipeline {
 
         for (Pipeline pipeline : pipelines) {
             LOGGER.info(pipeline.name());
+
+            Run lastRun = manager.runs().list(ORGANIZATION, PROJECT_INTERNAL, pipeline.id())
+                    .stream().findFirst().orElse(null);
+            OffsetDateTime runDate = lastRun.createdDate();
+            LOGGER.info("" + runDate);
         }
 
         pipelines = manager.pipelines().list(ORGANIZATION, PROJECT_PUBLIC).stream()
