@@ -4,9 +4,9 @@
 
 package com.azure.dev.models;
 
+import com.azure.core.http.rest.PagedIterable;
 import com.azure.core.http.rest.Response;
 import com.azure.core.util.Context;
-import java.util.List;
 
 /** Resource collection API of Runs. */
 public interface Runs {
@@ -21,7 +21,7 @@ public interface Runs {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return top 10000 runs for a particular pipeline.
      */
-    List<Run> list(String organization, String project, int pipelineId);
+    PagedIterable<Run> list(String organization, String project, int pipelineId);
 
     /**
      * Gets top 10000 runs for a particular pipeline.
@@ -35,7 +35,7 @@ public interface Runs {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return top 10000 runs for a particular pipeline.
      */
-    Response<List<Run>> listWithResponse(String organization, String project, int pipelineId, Context context);
+    PagedIterable<Run> list(String organization, String project, int pipelineId, Context context);
 
     /**
      * Runs a pipeline.

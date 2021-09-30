@@ -23,6 +23,7 @@ import com.azure.dev.models.ReferenceLinks;
 import com.azure.dev.models.TaskOrchestrationPlanReference;
 import com.azure.dev.models.TeamProjectReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -284,6 +285,7 @@ public final class BuildInner {
      * Sourceprovider-specific information about what triggered the build
      */
     @JsonProperty(value = "triggerInfo")
+    @JsonInclude(value = JsonInclude.Include.NON_NULL, content = JsonInclude.Include.ALWAYS)
     private Map<String, String> triggerInfo;
 
     /*

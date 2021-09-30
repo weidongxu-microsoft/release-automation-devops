@@ -18,6 +18,10 @@ import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceInterface;
 import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.annotation.UnexpectedResponseExceptionType;
+import com.azure.core.http.rest.PagedFlux;
+import com.azure.core.http.rest.PagedIterable;
+import com.azure.core.http.rest.PagedResponse;
+import com.azure.core.http.rest.PagedResponseBase;
 import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.RestProxy;
 import com.azure.core.management.exception.ManagementException;
@@ -26,8 +30,8 @@ import com.azure.core.util.FluxUtil;
 import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.fluent.RunsClient;
 import com.azure.dev.fluent.models.RunInner;
+import com.azure.dev.models.RunListResult;
 import com.azure.dev.models.RunPipelineParameters;
-import java.util.List;
 import reactor.core.publisher.Mono;
 
 /** An instance of this class provides access to all the operations defined in RunsClient. */
@@ -60,7 +64,7 @@ public final class RunsClientImpl implements RunsClient {
         @Get("/{organization}/{project}/_apis/pipelines/{pipelineId}/runs")
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<List<RunInner>>> list(
+        Mono<Response<RunListResult>> list(
             @HostParam("$host") String endpoint,
             @PathParam("organization") String organization,
             @PathParam("project") String project,
@@ -111,7 +115,7 @@ public final class RunsClientImpl implements RunsClient {
      * @return top 10000 runs for a particular pipeline.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<RunInner>>> listWithResponseAsync(String organization, String project, int pipelineId) {
+    private Mono<PagedResponse<RunInner>> listSinglePageAsync(String organization, String project, int pipelineId) {
         if (this.client.getEndpoint() == null) {
             return Mono
                 .error(
@@ -132,6 +136,10 @@ public final class RunsClientImpl implements RunsClient {
                     service
                         .list(
                             this.client.getEndpoint(), organization, project, pipelineId, apiVersion, accept, context))
+            .<PagedResponse<RunInner>>map(
+                res ->
+                    new PagedResponseBase<>(
+                        res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(), null, null))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
@@ -148,7 +156,7 @@ public final class RunsClientImpl implements RunsClient {
      * @return top 10000 runs for a particular pipeline.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<RunInner>>> listWithResponseAsync(
+    private Mono<PagedResponse<RunInner>> listSinglePageAsync(
         String organization, String project, int pipelineId, Context context) {
         if (this.client.getEndpoint() == null) {
             return Mono
@@ -165,7 +173,12 @@ public final class RunsClientImpl implements RunsClient {
         final String apiVersion = "6.0-preview";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service.list(this.client.getEndpoint(), organization, project, pipelineId, apiVersion, accept, context);
+        return service
+            .list(this.client.getEndpoint(), organization, project, pipelineId, apiVersion, accept, context)
+            .map(
+                res ->
+                    new PagedResponseBase<>(
+                        res.getRequest(), res.getStatusCode(), res.getHeaders(), res.getValue().value(), null, null));
     }
 
     /**
@@ -179,33 +192,9 @@ public final class RunsClientImpl implements RunsClient {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return top 10000 runs for a particular pipeline.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<List<RunInner>> listAsync(String organization, String project, int pipelineId) {
-        return listWithResponseAsync(organization, project, pipelineId)
-            .flatMap(
-                (Response<List<RunInner>> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
-    }
-
-    /**
-     * Gets top 10000 runs for a particular pipeline.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param pipelineId The pipeline id.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return top 10000 runs for a particular pipeline.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public List<RunInner> list(String organization, String project, int pipelineId) {
-        return listAsync(organization, project, pipelineId).block();
+    @ServiceMethod(returns = ReturnType.COLLECTION)
+    private PagedFlux<RunInner> listAsync(String organization, String project, int pipelineId) {
+        return new PagedFlux<>(() -> listSinglePageAsync(organization, project, pipelineId));
     }
 
     /**
@@ -220,10 +209,42 @@ public final class RunsClientImpl implements RunsClient {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return top 10000 runs for a particular pipeline.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<List<RunInner>> listWithResponse(
-        String organization, String project, int pipelineId, Context context) {
-        return listWithResponseAsync(organization, project, pipelineId, context).block();
+    @ServiceMethod(returns = ReturnType.COLLECTION)
+    private PagedFlux<RunInner> listAsync(String organization, String project, int pipelineId, Context context) {
+        return new PagedFlux<>(() -> listSinglePageAsync(organization, project, pipelineId, context));
+    }
+
+    /**
+     * Gets top 10000 runs for a particular pipeline.
+     *
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param pipelineId The pipeline id.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return top 10000 runs for a particular pipeline.
+     */
+    @ServiceMethod(returns = ReturnType.COLLECTION)
+    public PagedIterable<RunInner> list(String organization, String project, int pipelineId) {
+        return new PagedIterable<>(listAsync(organization, project, pipelineId));
+    }
+
+    /**
+     * Gets top 10000 runs for a particular pipeline.
+     *
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param pipelineId The pipeline id.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return top 10000 runs for a particular pipeline.
+     */
+    @ServiceMethod(returns = ReturnType.COLLECTION)
+    public PagedIterable<RunInner> list(String organization, String project, int pipelineId, Context context) {
+        return new PagedIterable<>(listAsync(organization, project, pipelineId, context));
     }
 
     /**

@@ -4,14 +4,14 @@
 
 package com.azure.dev.models;
 
-import com.azure.core.annotation.Immutable;
+import com.azure.core.annotation.Fluent;
 import com.azure.core.util.logging.ClientLogger;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import java.util.UUID;
 
 /** The BuildsDeletedEvent model. */
-@Immutable
+@Fluent
 public final class BuildsDeletedEvent extends BuildsDeletedEvent1 {
     @JsonIgnore private final ClientLogger logger = new ClientLogger(BuildsDeletedEvent.class);
 

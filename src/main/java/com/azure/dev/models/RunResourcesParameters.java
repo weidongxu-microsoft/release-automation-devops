@@ -7,6 +7,7 @@ package com.azure.dev.models;
 import com.azure.core.annotation.Fluent;
 import com.azure.core.util.logging.ClientLogger;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
 
@@ -19,30 +20,35 @@ public final class RunResourcesParameters {
      * Dictionary of <BuildResourceParameters>
      */
     @JsonProperty(value = "builds")
+    @JsonInclude(value = JsonInclude.Include.NON_NULL, content = JsonInclude.Include.ALWAYS)
     private Map<String, BuildResourceParameters> builds;
 
     /*
      * Dictionary of <ContainerResourceParameters>
      */
     @JsonProperty(value = "containers")
+    @JsonInclude(value = JsonInclude.Include.NON_NULL, content = JsonInclude.Include.ALWAYS)
     private Map<String, ContainerResourceParameters> containers;
 
     /*
      * Dictionary of <PackageResourceParameters>
      */
     @JsonProperty(value = "packages")
+    @JsonInclude(value = JsonInclude.Include.NON_NULL, content = JsonInclude.Include.ALWAYS)
     private Map<String, PackageResourceParameters> packages;
 
     /*
      * Dictionary of <PipelineResourceParameters>
      */
     @JsonProperty(value = "pipelines")
+    @JsonInclude(value = JsonInclude.Include.NON_NULL, content = JsonInclude.Include.ALWAYS)
     private Map<String, PipelineResourceParameters> pipelines;
 
     /*
      * Dictionary of <RepositoryResourceParameters>
      */
     @JsonProperty(value = "repositories")
+    @JsonInclude(value = JsonInclude.Include.NON_NULL, content = JsonInclude.Include.ALWAYS)
     private Map<String, RepositoryResourceParameters> repositories;
 
     /**

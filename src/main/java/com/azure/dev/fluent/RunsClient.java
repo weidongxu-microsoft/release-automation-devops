@@ -6,11 +6,11 @@ package com.azure.dev.fluent;
 
 import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceMethod;
+import com.azure.core.http.rest.PagedIterable;
 import com.azure.core.http.rest.Response;
 import com.azure.core.util.Context;
 import com.azure.dev.fluent.models.RunInner;
 import com.azure.dev.models.RunPipelineParameters;
-import java.util.List;
 
 /** An instance of this class provides access to all the operations defined in RunsClient. */
 public interface RunsClient {
@@ -25,8 +25,8 @@ public interface RunsClient {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return top 10000 runs for a particular pipeline.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    List<RunInner> list(String organization, String project, int pipelineId);
+    @ServiceMethod(returns = ReturnType.COLLECTION)
+    PagedIterable<RunInner> list(String organization, String project, int pipelineId);
 
     /**
      * Gets top 10000 runs for a particular pipeline.
@@ -40,8 +40,8 @@ public interface RunsClient {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return top 10000 runs for a particular pipeline.
      */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<List<RunInner>> listWithResponse(String organization, String project, int pipelineId, Context context);
+    @ServiceMethod(returns = ReturnType.COLLECTION)
+    PagedIterable<RunInner> list(String organization, String project, int pipelineId, Context context);
 
     /**
      * Runs a pipeline.

@@ -25,6 +25,7 @@ import com.azure.dev.models.RetentionPolicy;
 import com.azure.dev.models.TeamProjectReference;
 import com.azure.dev.models.VariableGroup;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -154,6 +155,7 @@ public final class BuildDefinitionInner extends BuildDefinitionReferenceInner {
      * Dictionary of <BuildDefinitionVariable>
      */
     @JsonProperty(value = "variables")
+    @JsonInclude(value = JsonInclude.Include.NON_NULL, content = JsonInclude.Include.ALWAYS)
     private Map<String, BuildDefinitionVariable> variables;
 
     /**

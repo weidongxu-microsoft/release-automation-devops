@@ -4,6 +4,7 @@
 
 package com.azure.dev.implementation;
 
+import com.azure.core.http.rest.PagedIterable;
 import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.SimpleResponse;
 import com.azure.core.util.Context;
@@ -14,9 +15,6 @@ import com.azure.dev.models.Run;
 import com.azure.dev.models.RunPipelineParameters;
 import com.azure.dev.models.Runs;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public final class RunsImpl implements Runs {
     @JsonIgnore private final ClientLogger logger = new ClientLogger(RunsImpl.class);
@@ -30,33 +28,14 @@ public final class RunsImpl implements Runs {
         this.serviceManager = serviceManager;
     }
 
-    public List<Run> list(String organization, String project, int pipelineId) {
-        List<RunInner> inner = this.serviceClient().list(organization, project, pipelineId);
-        if (inner != null) {
-            return Collections
-                .unmodifiableList(
-                    inner.stream().map(inner1 -> new RunImpl(inner1, this.manager())).collect(Collectors.toList()));
-        } else {
-            return Collections.emptyList();
-        }
+    public PagedIterable<Run> list(String organization, String project, int pipelineId) {
+        PagedIterable<RunInner> inner = this.serviceClient().list(organization, project, pipelineId);
+        return Utils.mapPage(inner, inner1 -> new RunImpl(inner1, this.manager()));
     }
 
-    public Response<List<Run>> listWithResponse(String organization, String project, int pipelineId, Context context) {
-        Response<List<RunInner>> inner =
-            this.serviceClient().listWithResponse(organization, project, pipelineId, context);
-        if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                inner
-                    .getValue()
-                    .stream()
-                    .map(inner1 -> new RunImpl(inner1, this.manager()))
-                    .collect(Collectors.toList()));
-        } else {
-            return null;
-        }
+    public PagedIterable<Run> list(String organization, String project, int pipelineId, Context context) {
+        PagedIterable<RunInner> inner = this.serviceClient().list(organization, project, pipelineId, context);
+        return Utils.mapPage(inner, inner1 -> new RunImpl(inner1, this.manager()));
     }
 
     public Run runPipeline(String organization, String project, int pipelineId, RunPipelineParameters body) {

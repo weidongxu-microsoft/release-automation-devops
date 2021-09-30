@@ -14,6 +14,7 @@ import com.azure.dev.models.RunResult;
 import com.azure.dev.models.RunState;
 import com.azure.dev.models.Variable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 import java.util.Map;
@@ -81,6 +82,7 @@ public final class RunInner extends RunReference {
      * Dictionary of <Variable>
      */
     @JsonProperty(value = "variables")
+    @JsonInclude(value = JsonInclude.Include.NON_NULL, content = JsonInclude.Include.ALWAYS)
     private Map<String, Variable> variables;
 
     /**

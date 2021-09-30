@@ -4,14 +4,14 @@
 
 package com.azure.dev.models;
 
-import com.azure.core.annotation.Immutable;
+import com.azure.core.annotation.Fluent;
 import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.fluent.models.BuildInner;
 import com.azure.dev.fluent.models.BuildUpdatedEventInner;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /** The BuildQueuedEvent model. */
-@Immutable
+@Fluent
 public final class BuildQueuedEvent extends BuildUpdatedEventInner {
     @JsonIgnore private final ClientLogger logger = new ClientLogger(BuildQueuedEvent.class);
 

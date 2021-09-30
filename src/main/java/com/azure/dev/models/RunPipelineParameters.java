@@ -7,6 +7,7 @@ package com.azure.dev.models;
 import com.azure.core.annotation.Fluent;
 import com.azure.core.util.logging.ClientLogger;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.Map;
@@ -39,12 +40,14 @@ public final class RunPipelineParameters {
      * Dictionary of <string>
      */
     @JsonProperty(value = "templateParameters")
+    @JsonInclude(value = JsonInclude.Include.NON_NULL, content = JsonInclude.Include.ALWAYS)
     private Map<String, String> templateParameters;
 
     /*
      * Dictionary of <Variable>
      */
     @JsonProperty(value = "variables")
+    @JsonInclude(value = JsonInclude.Include.NON_NULL, content = JsonInclude.Include.ALWAYS)
     private Map<String, Variable> variables;
 
     /*

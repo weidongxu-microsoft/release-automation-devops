@@ -4,12 +4,12 @@
 
 package com.azure.dev.models;
 
-import com.azure.core.annotation.Immutable;
+import com.azure.core.annotation.Fluent;
 import com.azure.core.util.logging.ClientLogger;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /** Represents the target for the docker build process. */
-@Immutable
+@Fluent
 public final class DockerProcessTarget extends DesignerProcessTarget {
     @JsonIgnore private final ClientLogger logger = new ClientLogger(DockerProcessTarget.class);
 

@@ -7,6 +7,7 @@ package com.azure.dev.models;
 import com.azure.core.annotation.Fluent;
 import com.azure.core.util.logging.ClientLogger;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
 
@@ -25,6 +26,7 @@ public final class AggregatedResultsAnalysis {
      * Dictionary of <AggregatedResultsByOutcome>
      */
     @JsonProperty(value = "notReportedResultsByOutcome")
+    @JsonInclude(value = JsonInclude.Include.NON_NULL, content = JsonInclude.Include.ALWAYS)
     private Map<String, AggregatedResultsByOutcome> notReportedResultsByOutcome;
 
     /*
@@ -37,6 +39,7 @@ public final class AggregatedResultsAnalysis {
      * Dictionary of <AggregatedResultsByOutcome>
      */
     @JsonProperty(value = "resultsByOutcome")
+    @JsonInclude(value = JsonInclude.Include.NON_NULL, content = JsonInclude.Include.ALWAYS)
     private Map<String, AggregatedResultsByOutcome> resultsByOutcome;
 
     /*
@@ -49,12 +52,14 @@ public final class AggregatedResultsAnalysis {
      * Dictionary of <AggregatedRunsByOutcome>
      */
     @JsonProperty(value = "runSummaryByOutcome")
+    @JsonInclude(value = JsonInclude.Include.NON_NULL, content = JsonInclude.Include.ALWAYS)
     private Map<String, AggregatedRunsByOutcome> runSummaryByOutcome;
 
     /*
      * Dictionary of <AggregatedRunsByState>
      */
     @JsonProperty(value = "runSummaryByState")
+    @JsonInclude(value = JsonInclude.Include.NON_NULL, content = JsonInclude.Include.ALWAYS)
     private Map<String, AggregatedRunsByState> runSummaryByState;
 
     /*

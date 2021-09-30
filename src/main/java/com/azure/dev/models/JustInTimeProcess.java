@@ -4,12 +4,12 @@
 
 package com.azure.dev.models;
 
-import com.azure.core.annotation.Immutable;
+import com.azure.core.annotation.Fluent;
 import com.azure.core.util.logging.ClientLogger;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /** The JustInTimeProcess model. */
-@Immutable
+@Fluent
 public final class JustInTimeProcess extends BuildProcess {
     @JsonIgnore private final ClientLogger logger = new ClientLogger(JustInTimeProcess.class);
 
