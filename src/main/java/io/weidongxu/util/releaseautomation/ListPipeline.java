@@ -56,6 +56,8 @@ public class ListPipeline {
             } else {
                 LOGGER.info("{} never run", pipeline.name());
             }
+
+//            manager.definitions().delete(ORGANIZATION, PROJECT_INTERNAL, pipeline.id());
         }
 
         pipelines = manager.pipelines().list(ORGANIZATION, PROJECT_PUBLIC).stream()
@@ -75,6 +77,8 @@ public class ListPipeline {
             } else {
                 LOGGER.info("{} never run", pipeline.name());
             }
+
+//            manager.definitions().delete(ORGANIZATION, PROJECT_PUBLIC, pipeline.id());
         }
     }
 }

@@ -110,7 +110,7 @@ public final class DefinitionsClientImpl implements DefinitionsClient {
 
         @Headers({"Accept: application/json;q=0.9", "Content-Type: application/json"})
         @Delete("/{organization}/{project}/_apis/build/definitions/{definitionId}")
-        @ExpectedResponses({200})
+        @ExpectedResponses({200, 204})
         @UnexpectedResponseExceptionType(ManagementException.class)
         Mono<Response<Void>> delete(
             @HostParam("$host") String endpoint,
