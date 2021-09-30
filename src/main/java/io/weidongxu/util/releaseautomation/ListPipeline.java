@@ -37,17 +37,25 @@ public class ListPipeline {
                         new BasicAuthenticationCredential(USER, PASS),
                         new AzureProfile(AzureEnvironment.AZURE));
 
+        final OffsetDateTime cutOffDate = OffsetDateTime.parse("2021-09-01T00:00:00Z");
+
         List<Pipeline> pipelines = manager.pipelines().list(ORGANIZATION, PROJECT_INTERNAL).stream()
-                .filter(p -> p.name().startsWith("java - ") && p.name().endsWith("- mgmt") && !p.name().contains("lite generation"))
+                .filter(p -> p.name().startsWith("java - ") && p.name().endsWith("- mgmt") && !p.name().contains("lite"))
                 .collect(Collectors.toList());
 
         for (Pipeline pipeline : pipelines) {
-            LOGGER.info(pipeline.name());
-
             Run lastRun = manager.runs().list(ORGANIZATION, PROJECT_INTERNAL, pipeline.id())
                     .stream().findFirst().orElse(null);
-            OffsetDateTime runDate = lastRun.createdDate();
-            LOGGER.info("" + runDate);
+            if (lastRun != null) {
+                OffsetDateTime runDate = lastRun.createdDate();
+                LOGGER.info("{} ran at {}", pipeline.name(), runDate);
+
+                if (runDate.isAfter(cutOffDate)) {
+                    throw new RuntimeException();
+                }
+            } else {
+                LOGGER.info("{} never run", pipeline.name());
+            }
         }
 
         pipelines = manager.pipelines().list(ORGANIZATION, PROJECT_PUBLIC).stream()
@@ -55,7 +63,18 @@ public class ListPipeline {
                 .collect(Collectors.toList());
 
         for (Pipeline pipeline : pipelines) {
-            LOGGER.info(pipeline.name());
+            Run lastRun = manager.runs().list(ORGANIZATION, PROJECT_PUBLIC, pipeline.id())
+                    .stream().findFirst().orElse(null);
+            if (lastRun != null) {
+                OffsetDateTime runDate = lastRun.createdDate();
+                LOGGER.info("{} ran at {}", pipeline.name(), runDate);
+
+                if (runDate.isAfter(cutOffDate)) {
+                    throw new RuntimeException();
+                }
+            } else {
+                LOGGER.info("{} never run", pipeline.name());
+            }
         }
     }
 }
