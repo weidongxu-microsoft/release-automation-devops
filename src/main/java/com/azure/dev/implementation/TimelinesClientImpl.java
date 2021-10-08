@@ -101,9 +101,9 @@ public final class TimelinesClientImpl implements TimelinesClient {
         if (project == null) {
             return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
         }
-        if (timelineId == null) {
-            return Mono.error(new IllegalArgumentException("Parameter timelineId is required and cannot be null."));
-        }
+//        if (timelineId == null) {
+//            return Mono.error(new IllegalArgumentException("Parameter timelineId is required and cannot be null."));
+//        }
         final String apiVersion = "6.0";
         final String accept = "application/json";
         return FluxUtil
@@ -160,9 +160,9 @@ public final class TimelinesClientImpl implements TimelinesClient {
         if (project == null) {
             return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
         }
-        if (timelineId == null) {
-            return Mono.error(new IllegalArgumentException("Parameter timelineId is required and cannot be null."));
-        }
+//        if (timelineId == null) {
+//            return Mono.error(new IllegalArgumentException("Parameter timelineId is required and cannot be null."));
+//        }
         final String apiVersion = "6.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
