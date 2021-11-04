@@ -13,7 +13,7 @@ import com.azure.dev.models.TimelineRecord;
 import com.azure.dev.models.TimelineRecordState;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,6 +26,33 @@ public class PremiumRelease {
     private static final String PROJECT = "internal";
 
     private static final int BUILD_ID = Integer.parseInt(Configuration.getGlobalConfiguration().get("BUILD_ID"));
+
+    private static final List<String> RELEASE_ORDER = Arrays.asList(
+            "azure-resourcemanager-resources",
+            "azure-resourcemanager-storage",
+            "azure-resourcemanager-authorization",
+            "azure-resourcemanager-keyvault",
+            "azure-resourcemanager-msi",
+            "azure-resourcemanager-network",
+            "azure-resourcemanager-compute",
+            "azure-resourcemanager-sql",
+            "azure-resourcemanager-dns",
+            "azure-resourcemanager-appservice",
+            "azure-resourcemanager-cosmos",
+            "azure-resourcemanager-containerservice",
+            "azure-resourcemanager-eventhubs",
+            "azure-resourcemanager-monitor",
+            "azure-resourcemanager-containerregistry",
+            "azure-resourcemanager-appplatform",
+            "azure-resourcemanager-containerinstance",
+            "azure-resourcemanager-privatedns",
+            "azure-resourcemanager-redis",
+            "azure-resourcemanager-trafficmanager",
+            "azure-resourcemanager-servicebus",
+            "azure-resourcemanager-cdn",
+            "azure-resourcemanager-search",
+            "azure-resourcemanager"
+    );
 
     public static void main(String[] args) throws InterruptedException {
         TokenCredential tokenCredential = new BasicAuthenticationCredential(USER, PASS);
@@ -79,9 +106,11 @@ public class PremiumRelease {
             if (countInProgress <= 1) {
                 List<ReleaseState> remains = states.stream()
                         .filter(s -> s.getState() == TimelineRecordState.PENDING)
-                        .sorted(Comparator.comparingInt(o -> o.getName().length()))
+                        .sorted(Comparator.comparingInt(o -> {
+                            int index = RELEASE_ORDER.indexOf(o.getName());
+                            return index == -1 ? 100 : index;
+                        }))
                         .collect(Collectors.toList());
-                Collections.reverse(remains);
                 if (remains.isEmpty()) {
                     break;
                 }
