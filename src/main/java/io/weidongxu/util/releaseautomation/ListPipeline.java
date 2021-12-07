@@ -80,5 +80,7 @@ public class ListPipeline {
 
 //            manager.definitions().delete(ORGANIZATION, PROJECT_PUBLIC, pipeline.id());
         }
+
+        System.exit(0);
     }
 }
