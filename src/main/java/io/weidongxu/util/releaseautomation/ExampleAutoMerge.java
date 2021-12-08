@@ -24,7 +24,7 @@ public class ExampleAutoMerge {
     private static final String GITHUB_PROJECT = "azure-rest-api-specs-examples";
 
     private static final PullRequestParameters PR_LIST_PARAMS = ImmutablePullRequestParameters.builder()
-            .state("open").build();
+            .page(1).per_page(50).state("open").build();
 
     public static void main(String[] args) throws Exception {
         GitHubClient github = GitHubClient.create(new URI("https://api.github.com/"), GITHUB_TOKEN);
