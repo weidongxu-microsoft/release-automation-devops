@@ -34,8 +34,10 @@ public class ExampleAutoMerge {
         List<PullRequestItem> prs = prClient.list(PR_LIST_PARAMS).get();
 
         for (PullRequestItem pr : prs) {
+            LOGGER.info("Merge PR {}", pr.title());
             prClient.merge(pr.number(),
                     ImmutableMergeParameters.builder().sha(pr.head().sha()).mergeMethod(MergeMethod.squash).build()).get();
+            Thread.sleep(10 * 1000);
         }
 
         System.exit(0);
