@@ -153,7 +153,7 @@ public class LiteRelease {
         variables.put("TAG", new Variable().withValue(tag));
         variables.put("DRAFT_PULL_REQUEST", new Variable().withValue("false"));
         if (!isPreview) {
-            variables.put("VERSION", new Variable().withValue("1.0.0"));
+            variables.put("VERSION", new Variable().withValue(configure.getVersion()));
         }
         if (!CoreUtils.isNullOrEmpty(configure.getService())) {
             variables.put("SERVICE", new Variable().withValue(configure.getService()));

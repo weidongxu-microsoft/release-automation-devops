@@ -4,6 +4,7 @@ public class Configure {
 
     private String swagger;
     private boolean preview;
+    private String version; // used if preview=false
     private String tag;
     private String service;
 
@@ -37,5 +38,13 @@ public class Configure {
 
     public void setService(String service) {
         this.service = service;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
     }
 }
