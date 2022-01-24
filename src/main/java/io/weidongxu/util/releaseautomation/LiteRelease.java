@@ -104,6 +104,9 @@ public class LiteRelease {
         String swagger = configure.getSwagger();
         boolean isPreview = configure.isPreview();
         String sdk = getSdkName(swagger);
+        if (!CoreUtils.isNullOrEmpty(configure.getService())) {
+            sdk = configure.getService();
+        }
 
         OUT.println("swagger: " + swagger);
         OUT.println("sdk: " + sdk);
