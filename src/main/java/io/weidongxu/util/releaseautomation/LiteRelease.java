@@ -79,9 +79,9 @@ public class LiteRelease {
     private static final String CI_CHECK_ENFORCER_NAME = "check-enforcer";
     private static final String CI_PREPARE_PIPELINES_NAME = "prepare-pipelines";
 
-    private static final String API_SPECS_YAML_PATH = "https://raw.githubusercontent.com/Azure/azure-sdk-for-java/master/eng/mgmt/automation/api-specs.yaml";
+    private static final String API_SPECS_YAML_PATH = "https://raw.githubusercontent.com/Azure/azure-sdk-for-java/main/eng/mgmt/automation/api-specs.yaml";
 
-    private static final String SPEC_README_PATH_PREFIX = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master/specification/";
+    private static final String SPEC_README_PATH_PREFIX = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/";
 
     private static final String MAVEN_ARTIFACT_PATH_PREFIX = "https://search.maven.org/artifact/com.azure.resourcemanager/";
 
