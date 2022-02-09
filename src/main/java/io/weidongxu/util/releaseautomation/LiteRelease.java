@@ -394,6 +394,16 @@ public class LiteRelease {
 
             // comment to run the newly created sdk CI
             comment = issueClient.createComment(prNumber, "/azp run " + javaSdkCheckName).get();
+        } else {
+            // trigger live tests, if available
+            String testPipelineName = "java - " + sdk + " - tests.mgmt";
+            boolean testPipelineAvailable = manager.pipelines().list(ORGANIZATION, PROJECT_INTERNAL).stream()
+                    .anyMatch(p -> p.name().equals(testPipelineName));
+            if (testPipelineAvailable) {
+                IssueClient issueClient = client.createIssueClient();
+                // comment to trigger tests.mgmt
+                Comment comment = issueClient.createComment(prNumber, "/azp run " + testPipelineName).get();
+            }
         }
 
         // wait for sdk CI
