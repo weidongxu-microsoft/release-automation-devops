@@ -14,8 +14,11 @@ import com.azure.dev.models.TimelineRecordState;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class PremiumRelease {
@@ -53,6 +56,14 @@ public class PremiumRelease {
             "azure-resourcemanager-search",
             "azure-resourcemanager"
     );
+
+    private static final Set<String> DEPENDENT_RELEASES = new HashSet<>(Arrays.asList(
+            "azure-resourcemanager-resources",
+            "azure-resourcemanager-authorization",
+            "azure-resourcemanager-network"
+    ));
+
+    private static final int RELEASE_CONCURRENCY = 2;
 
     public static void main(String[] args) throws InterruptedException {
         TokenCredential tokenCredential = new BasicAuthenticationCredential(USER, PASS);
@@ -97,13 +108,20 @@ public class PremiumRelease {
                         }
                     }).collect(Collectors.toList()));
 
-            long countInProgress = states.stream()
+            Set<String> inProgress = states.stream()
                     .filter(s -> s.getState() == TimelineRecordState.IN_PROGRESS)
-                    .count();
+                    .map(ReleaseState::getName)
+                    .collect(Collectors.toSet());
+            long countInProgress = inProgress.size();
 
             System.out.println("count of in progress releases: " + countInProgress);
 
-            if (countInProgress <= 1) {
+            int release_concurrency = RELEASE_CONCURRENCY;
+            if (!Collections.disjoint(DEPENDENT_RELEASES, inProgress)) {
+                release_concurrency = 1;
+            }
+
+            if (countInProgress < release_concurrency) {
                 List<ReleaseState> remains = states.stream()
                         .filter(s -> s.getState() == TimelineRecordState.PENDING)
                         .sorted(Comparator.comparingInt(o -> {
