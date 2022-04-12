@@ -8,9 +8,12 @@ import com.azure.core.management.AzureEnvironment;
 import com.azure.core.management.profile.AzureProfile;
 import com.azure.core.util.Configuration;
 import com.azure.dev.DevManager;
+import com.azure.dev.models.StageUpdateType;
+import com.azure.dev.models.TaskResult;
 import com.azure.dev.models.Timeline;
 import com.azure.dev.models.TimelineRecord;
 import com.azure.dev.models.TimelineRecordState;
+import com.azure.dev.models.UpdateStageParameters;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -88,9 +91,17 @@ public class PremiumRelease {
                 }
             }
 
-//            for (ReleaseState state : states) {
-//                System.out.println(state.toString());
-//            }
+            List<ReleaseState> failedReleases = states.stream()
+                    .filter(s -> s.getState() == TimelineRecordState.COMPLETED)
+                    .filter(s -> s.getResult() == TaskResult.FAILED)
+                    .collect(Collectors.toList());
+            if (!failedReleases.isEmpty()) {
+                for (ReleaseState state : failedReleases) {
+                    manager.stages().update(ORGANIZATION, BUILD_ID, state.getIdentifier(), PROJECT,
+                            new UpdateStageParameters().withState(StageUpdateType.RETRY));
+                }
+                Thread.sleep(60 * 1000);
+            }
 
             countPending = states.stream()
                     .filter(s -> s.getState() == TimelineRecordState.PENDING)

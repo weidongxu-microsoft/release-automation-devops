@@ -26,7 +26,9 @@ public class Utils {
     public static ReleaseState getReleaseState(TimelineRecord record, Timeline timeline) {
         ReleaseState state = new ReleaseState();
         state.setName(record.name().substring("Release: ".length()));
+        state.setIdentifier(record.identifier());
         state.setState(record.state());
+        state.setResult(record.result());
 
         if (state.getState() == TimelineRecordState.PENDING) {
             UUID id = record.id();

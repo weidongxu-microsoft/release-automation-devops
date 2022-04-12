@@ -55,7 +55,7 @@ public final class StagesClientImpl implements StagesClient {
     private interface StagesService {
         @Headers({"Accept: application/json;q=0.9", "Content-Type: application/json"})
         @Patch("/{organization}/{project}/_apis/build/builds/{buildId}/stages/{stageRefName}")
-        @ExpectedResponses({200})
+        @ExpectedResponses({200, 204})
         @UnexpectedResponseExceptionType(ManagementException.class)
         Mono<Response<Void>> update(
             @HostParam("$host") String endpoint,
