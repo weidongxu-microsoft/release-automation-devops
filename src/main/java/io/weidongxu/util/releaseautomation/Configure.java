@@ -2,10 +2,22 @@ package io.weidongxu.util.releaseautomation;
 
 public class Configure {
 
+    // the service name at https://github.com/Azure/azure-rest-api-specs/tree/main/specification
     private String swagger;
+
+    // preview release
     private boolean preview;
-    private String version; // used if preview=false
+
+    // used only if preview=false
+    // if preview=true, uses current next release version in https://github.com/Azure/azure-sdk-for-java/blob/main/eng/versioning/version_client.txt
+    private String version;
+
+    // tag in readme.md
+    // prompt in stdin, if not provided
     private String tag;
+
+    // the service name at https://github.com/Azure/azure-sdk-for-java/tree/main/sdk
+    // same as swagger, if not provided
     private String service;
 
     public String getSwagger() {
