@@ -69,92 +69,131 @@ public class PremiumRelease {
     private static final int RELEASE_CONCURRENCY = 2;
 
     public static void main(String[] args) throws InterruptedException {
+        DevManager manager = buildDevManager();
+
+        do {
+            resetFailedReleaseStates(manager);
+
+            List<ReleaseState> states = fetchCurrentReleases(manager);
+
+            printPendingReleases(states);
+
+            triggerNextReleaseIfPossible(manager, states);
+
+            wait5Minutes();
+        } while (hasUnfinishedReleases(manager));
+
+        System.exit(0);
+    }
+
+    private static DevManager buildDevManager() {
         TokenCredential tokenCredential = new BasicAuthenticationCredential(USER, PASS);
 
-        DevManager manager = DevManager.configure()
+        return DevManager.configure()
                 .withLogOptions(new HttpLogOptions().setLogLevel(HttpLogDetailLevel.BODY_AND_HEADERS))
                 .withPolicy(new BasicAuthAuthenticationPolicy(tokenCredential))
                 .authenticate(
                         new BasicAuthenticationCredential(USER, PASS),
                         new AzureProfile(AzureEnvironment.AZURE));
+    }
 
-        long countPending = Integer.MAX_VALUE;
+    private static void wait5Minutes() throws InterruptedException {
+        System.out.println("wait 5 minutes");
+        Thread.sleep(5 * 60 * 1000);
+    }
 
-        while (countPending > 0) {
-            Timeline timeline = manager.timelines().get(ORGANIZATION, PROJECT, BUILD_ID, null);
-
-            List<ReleaseState> states = new ArrayList<>();
-            for (TimelineRecord record : timeline.records()) {
-                if (record.name().startsWith("Release: azure-resourcemanager")
-                        && !record.name().contains("azure-resourcemanager-samples")) {
-                    states.add(Utils.getReleaseState(record, timeline));
-                }
-            }
-
-            List<ReleaseState> failedReleases = states.stream()
-                    .filter(s -> s.getState() == TimelineRecordState.COMPLETED)
-                    .filter(s -> s.getResult() == TaskResult.FAILED)
-                    .collect(Collectors.toList());
-            if (!failedReleases.isEmpty()) {
-                for (ReleaseState state : failedReleases) {
-                    manager.stages().update(ORGANIZATION, BUILD_ID, state.getIdentifier(), PROJECT,
-                            new UpdateStageParameters().withState(StageUpdateType.RETRY));
-                }
-                Thread.sleep(60 * 1000);
-            }
-
-            countPending = states.stream()
-                    .filter(s -> s.getState() == TimelineRecordState.PENDING)
-                    .count();
-
-            System.out.println("count of pending releases: " + countPending);
-
-            System.out.println("pending releases: " + states.stream()
-                    .filter(s -> s.getState() == TimelineRecordState.PENDING)
-                    .map(s -> {
-                        if ("azure-resourcemanager".equals(s.getName())) {
-                            return "AZURE";
-                        } else {
-                            return s.getName().substring("azure-resourcemanager-".length());
-                        }
-                    }).collect(Collectors.toList()));
-
-            Set<String> inProgress = states.stream()
-                    .filter(s -> s.getState() == TimelineRecordState.IN_PROGRESS)
-                    .map(ReleaseState::getName)
-                    .collect(Collectors.toSet());
-            long countInProgress = inProgress.size();
-
-            System.out.println("count of in progress releases: " + countInProgress);
-
-            int release_concurrency = RELEASE_CONCURRENCY;
-            if (!Collections.disjoint(DEPENDENT_RELEASES, inProgress)) {
-                release_concurrency = 1;
-            }
-
-            if (countInProgress < release_concurrency) {
-                List<ReleaseState> remains = states.stream()
-                        .filter(s -> s.getState() == TimelineRecordState.PENDING)
-                        .sorted(Comparator.comparingInt(o -> {
-                            int index = RELEASE_ORDER.indexOf(o.getName());
-                            return index == -1 ? 100 : index;
-                        }))
-                        .collect(Collectors.toList());
-                if (remains.isEmpty()) {
-                    break;
-                }
-                ReleaseState nextRelease = remains.iterator().next();
-
-                // trigger new release
-                System.out.println("prepare to release: " + nextRelease.getName());
-                Utils.approve(nextRelease.getApprovalIds(), manager, ORGANIZATION, PROJECT);
-                System.out.println("approved release: " + nextRelease.getName());
-            }
-
-            System.out.println("wait 5 minutes");
-            Thread.sleep(5 * 60 * 1000);
+    private static void triggerNextReleaseIfPossible(DevManager manager, List<ReleaseState> states) {
+        if (canTriggerNextRelease(states)) {
+            triggerNextRelease(manager, states);
         }
+    }
 
-        System.exit(0);
+    private static boolean hasUnfinishedReleases(DevManager manager) {
+        return fetchCurrentReleases(manager)
+                .stream()
+                .anyMatch(s -> s.getState() == TimelineRecordState.PENDING
+                                || s.getState() == TimelineRecordState.IN_PROGRESS);
+    }
+
+    private static void triggerNextRelease(DevManager manager, List<ReleaseState> states) {
+        List<ReleaseState> remains = states.stream()
+                .filter(s -> s.getState() == TimelineRecordState.PENDING)
+                .sorted(Comparator.comparingInt(o -> {
+                    int index = RELEASE_ORDER.indexOf(o.getName());
+                    return index == -1 ? 100 : index;
+                }))
+                .collect(Collectors.toList());
+        if (!remains.isEmpty()) {
+            ReleaseState nextRelease = remains.iterator().next();
+
+            // trigger new release
+            System.out.println("prepare to release: " + nextRelease.getName());
+            Utils.approve(nextRelease.getApprovalIds(), manager, ORGANIZATION, PROJECT);
+            System.out.println("approved release: " + nextRelease.getName());
+        }
+    }
+
+    private static boolean canTriggerNextRelease(List<ReleaseState> states) {
+        Set<String> inProgress = states.stream()
+                .filter(s -> s.getState() == TimelineRecordState.IN_PROGRESS)
+                .map(ReleaseState::getName)
+                .collect(Collectors.toSet());
+        long countInProgress = inProgress.size();
+
+        System.out.println("count of in progress releases: " + countInProgress);
+
+        int release_concurrency = RELEASE_CONCURRENCY;
+        if (!Collections.disjoint(DEPENDENT_RELEASES, inProgress)) {
+            release_concurrency = 1;
+        }
+        return countInProgress < release_concurrency;
+    }
+
+    private static void printPendingReleases(List<ReleaseState> states) {
+        long countPending = states.stream()
+                .filter(s -> s.getState() == TimelineRecordState.PENDING)
+                .count();
+
+        System.out.println("count of pending releases: " + countPending);
+
+        System.out.println("pending releases: " + states.stream()
+                .filter(s -> s.getState() == TimelineRecordState.PENDING)
+                .map(s -> {
+                    if ("azure-resourcemanager".equals(s.getName())) {
+                        return "AZURE";
+                    } else {
+                        return s.getName().substring("azure-resourcemanager-".length());
+                    }
+                }).collect(Collectors.toList()));
+    }
+
+    private static void resetFailedReleaseStates(DevManager manager) throws InterruptedException {
+        List<ReleaseState> states = fetchCurrentReleases(manager);
+
+        List<ReleaseState> failedReleases = states.stream()
+                .filter(s -> s.getState() == TimelineRecordState.COMPLETED)
+                .filter(s -> s.getResult() == TaskResult.FAILED)
+                .collect(Collectors.toList());
+        if (!failedReleases.isEmpty()) {
+            for (ReleaseState state : failedReleases) {
+                manager.stages().update(ORGANIZATION, BUILD_ID, state.getIdentifier(), PROJECT,
+                        new UpdateStageParameters().withState(StageUpdateType.RETRY));
+                System.out.println("retry failed release: " + state.getName().substring("azure-resourcemanager-".length()));
+            }
+            Thread.sleep(60 * 1000);
+        }
+    }
+
+    private static List<ReleaseState> fetchCurrentReleases(DevManager manager) {
+        Timeline timeline = manager.timelines().get(ORGANIZATION, PROJECT, BUILD_ID, null);
+
+        List<ReleaseState> states = new ArrayList<>();
+        for (TimelineRecord record : timeline.records()) {
+            if (record.name().startsWith("Release: azure-resourcemanager")
+                    && !record.name().contains("azure-resourcemanager-samples")) {
+                states.add(Utils.getReleaseState(record, timeline));
+            }
+        }
+        return states;
     }
 }
