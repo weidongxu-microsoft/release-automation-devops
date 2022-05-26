@@ -111,8 +111,8 @@ public class PremiumRelease {
     private static boolean hasUnfinishedReleases(DevManager manager) {
         return fetchCurrentReleases(manager)
                 .stream()
-                .anyMatch(s -> s.getState() == TimelineRecordState.PENDING
-                                || s.getState() == TimelineRecordState.IN_PROGRESS);
+                .anyMatch(s -> s.getState() != TimelineRecordState.COMPLETED
+                                || s.getResult() == TaskResult.FAILED);
     }
 
     private static void triggerNextRelease(DevManager manager, List<ReleaseState> states) {
