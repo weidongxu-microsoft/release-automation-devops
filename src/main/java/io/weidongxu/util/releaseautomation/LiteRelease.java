@@ -142,8 +142,9 @@ public class LiteRelease {
         OUT.println("tag: " + tag);
 
         DevManager manager = DevManager.configure()
-                .withLogOptions(new HttpLogOptions().setLogLevel(HttpLogDetailLevel.BODY_AND_HEADERS))
+                .withLogOptions(new HttpLogOptions().setLogLevel(HttpLogDetailLevel.NONE))
                 .withPolicy(new BasicAuthAuthenticationPolicy(tokenCredential))
+                .withPolicy(new HttpDebugLoggingPolicy())
                 .authenticate(
                         new BasicAuthenticationCredential(USER, PASS),
                         new AzureProfile(AzureEnvironment.AZURE));
@@ -233,15 +234,24 @@ public class LiteRelease {
     }
 
     private static void runLiteRelease(DevManager manager, String sdk) throws InterruptedException {
+        List<String> releaseTemplateParameters = getReleaseTemplateParameters(manager, GITHUB_ORGANIZATION, GITHUB_PROJECT, sdk);
+
         // find pipeline
         String pipelineName = "java - " + sdk;
         List<Pipeline> pipelines = manager.pipelines().list(ORGANIZATION, PROJECT_INTERNAL).stream().collect(Collectors.toList());
         Pipeline pipeline = pipelines.stream()
                 .filter(p -> pipelineName.equals(p.name())).findFirst().orElse(null);
 
-        if (pipeline != null) {
+        if (pipeline != null && !releaseTemplateParameters.isEmpty()) {
+            Map<String, String> templateParameters = new HashMap<>();
+            for (String releaseTemplateParameter : releaseTemplateParameters) {
+                templateParameters.put(releaseTemplateParameter,
+                        String.valueOf(releaseTemplateParameter.startsWith("release_azureresourcemanager")));
+            }
+
             // run pipeline
-            Run run = manager.runs().runPipeline(ORGANIZATION, PROJECT_INTERNAL, pipeline.id(), new RunPipelineParameters());
+            Run run = manager.runs().runPipeline(ORGANIZATION, PROJECT_INTERNAL, pipeline.id(),
+                    new RunPipelineParameters().withTemplateParameters(templateParameters));
             int buildId = run.id();
 
             String buildUrl = "https://dev.azure.com/azure-sdk/internal/_build/results?buildId=" + buildId;
@@ -321,7 +331,7 @@ public class LiteRelease {
     private static ReleaseState getReleaseState(Timeline timeline) {
         List<ReleaseState> states = new ArrayList<>();
         for (TimelineRecord record : timeline.records()) {
-            if (record.name().startsWith("Release: azure-resourcemanager-")) {
+            if ("Releasing: 1 libraries".equals(record.name()) && "stage1".equals(record.identifier())) {
                 states.add(Utils.getReleaseState(record, timeline));
             }
         }
@@ -487,5 +497,45 @@ public class LiteRelease {
             }
         }
         return configure;
+    }
+
+
+    private static List<String> getReleaseTemplateParameters(DevManager manager,
+                                                             String organization, String project, String sdk) {
+        List<String> releaseTemplateParameters = new ArrayList<>();
+
+        String ciUrl = String.format("https://raw.githubusercontent.com/%s/%s/main/sdk/%s/ci.yml",
+                organization, project, sdk);
+
+        HttpRequest request = new HttpRequest(HttpMethod.GET, ciUrl);
+        HttpResponse response = manager.serviceClient().getHttpPipeline().send(request).block();
+        System.out.println("response status code: " + response.getStatusCode());
+        if (response.getStatusCode() != 200) {
+            System.out.println("response body: " + response.getBodyAsString().block());
+            response.close();
+
+            throw new IllegalStateException("failed to get ci.yml: " + ciUrl);
+        } else {
+            String ciYml = response.getBodyAsString().block();
+            Yaml yaml = new Yaml();
+            Map<String, Object> ci = yaml.load(ciYml);
+            if (ci.containsKey("parameters") && ci.get("parameters") instanceof List) {
+                List<Object> parameters = (List<Object>) ci.get("parameters");
+                for (Object parameterObj : parameters) {
+                    if (parameterObj instanceof Map) {
+                        Map<String, Object> parameter = (Map<String, Object>) parameterObj;
+                        if (parameter.containsKey("name") && parameter.get("name") instanceof String) {
+                            String parameterName = (String) parameter.get("name");
+                            if (parameterName.startsWith("release_")) {
+                                releaseTemplateParameters.add(parameterName);
+                            }
+                        }
+                    }
+                }
+            }
+            response.close();
+        }
+
+        return releaseTemplateParameters;
     }
 }
