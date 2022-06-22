@@ -300,7 +300,7 @@ public class LiteRelease {
         List<PullRequestItem> prs = prClient.list(PR_LIST_PARAMS).get();
 
         PullRequestItem pr = prs.stream()
-                .filter(p -> p.title().equals("Increment version for " + sdk + " releases"))
+                .filter(p -> p.title().equals("Increment versions for " + sdk + " releases"))
                 .findFirst().orElse(null);
 
         if (pr != null) {
