@@ -235,6 +235,9 @@ public class LiteRelease {
 
     private static void runLiteRelease(DevManager manager, String sdk) throws InterruptedException {
         List<String> releaseTemplateParameters = getReleaseTemplateParameters(manager, GITHUB_ORGANIZATION, GITHUB_PROJECT, sdk);
+        if (releaseTemplateParameters.isEmpty()) {
+            LOGGER.warn("release parameters not found in ci.yml");
+        }
 
         // find pipeline
         String pipelineName = "java - " + sdk;
@@ -242,7 +245,7 @@ public class LiteRelease {
         Pipeline pipeline = pipelines.stream()
                 .filter(p -> pipelineName.equals(p.name())).findFirst().orElse(null);
 
-        if (pipeline != null && !releaseTemplateParameters.isEmpty()) {
+        if (pipeline != null) {
             Map<String, String> templateParameters = new HashMap<>();
             for (String releaseTemplateParameter : releaseTemplateParameters) {
                 templateParameters.put(releaseTemplateParameter,
