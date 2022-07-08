@@ -300,7 +300,8 @@ public class LiteRelease {
         List<PullRequestItem> prs = prClient.list(PR_LIST_PARAMS).get();
 
         PullRequestItem pr = prs.stream()
-                .filter(p -> p.title().equals("Increment versions for " + sdk + " releases"))
+                .filter(p -> p.title().equals("Increment versions for " + sdk + " releases")
+                        || p.title().equals("Increment version for " + sdk + " releases"))
                 .findFirst().orElse(null);
 
         if (pr != null) {
@@ -334,7 +335,8 @@ public class LiteRelease {
     private static ReleaseState getReleaseState(Timeline timeline) {
         List<ReleaseState> states = new ArrayList<>();
         for (TimelineRecord record : timeline.records()) {
-            if ("Releasing: 1 libraries".equals(record.name()) && "stage1".equals(record.identifier())) {
+            if ("Releasing: 1 libraries".equals(record.name()) && "stage1".equals(record.identifier())
+                    || record.name().startsWith("Release: azure-resourcemanager-")) {
                 states.add(Utils.getReleaseState(record, timeline));
             }
         }
