@@ -162,6 +162,9 @@ public class LiteRelease {
         if (!CoreUtils.isNullOrEmpty(configure.getService())) {
             variables.put("SERVICE", new Variable().withValue(configure.getService()));
         }
+        if (configure.getTests() == Boolean.TRUE) {
+            variables.put("AUTOREST_OPTIONS", new Variable().withValue("--generate-tests"));
+        }
 
         runLiteCodegen(manager, variables);
         OUT.println("wait 1 minutes");

@@ -20,6 +20,9 @@ public class Configure {
     // same as swagger, if not provided
     private String service;
 
+    // generate tests
+    private Boolean tests;
+
     public String getSwagger() {
         return swagger;
     }
@@ -58,5 +61,13 @@ public class Configure {
 
     public void setVersion(String version) {
         this.version = version;
+    }
+
+    public Boolean getTests() {
+        return tests;
+    }
+
+    public void setTests(Boolean tests) {
+        this.tests = tests;
     }
 }
