@@ -265,13 +265,12 @@ public class LiteRelease {
             Utils.openUrl(buildUrl);
 
             // poll until approval is available
-            Timeline timeline = manager.timelines().get(ORGANIZATION, PROJECT_INTERNAL, buildId, null);
-            ReleaseState state = getReleaseState(timeline);
-            while (state.getApprovalIds().isEmpty()) {
+            ReleaseState state = null;
+            while (state == null || state.getApprovalIds().isEmpty()) {
                 OUT.println("wait 5 minutes");
                 Thread.sleep(POLL_LONG_INTERVAL_MINUTE * MILLISECOND_PER_MINUTE);
 
-                timeline = manager.timelines().get(ORGANIZATION, PROJECT_INTERNAL, buildId, null);
+                Timeline timeline = manager.timelines().get(ORGANIZATION, PROJECT_INTERNAL, buildId, null);
                 state = getReleaseState(timeline);
             }
 
@@ -290,7 +289,7 @@ public class LiteRelease {
                 OUT.println("wait 5 minutes");
                 Thread.sleep(POLL_LONG_INTERVAL_MINUTE * MILLISECOND_PER_MINUTE);
 
-                timeline = manager.timelines().get(ORGANIZATION, PROJECT_INTERNAL, buildId, null);
+                Timeline timeline = manager.timelines().get(ORGANIZATION, PROJECT_INTERNAL, buildId, null);
                 state = getReleaseState(timeline);
             }
         } else {
