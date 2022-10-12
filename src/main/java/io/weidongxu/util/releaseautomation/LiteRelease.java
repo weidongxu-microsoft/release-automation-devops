@@ -145,7 +145,7 @@ public class LiteRelease {
         DevManager manager = DevManager.configure()
                 .withLogOptions(new HttpLogOptions().setLogLevel(HttpLogDetailLevel.NONE))
                 .withPolicy(new BasicAuthAuthenticationPolicy(tokenCredential))
-                .withPolicy(new HttpDebugLoggingPolicy())
+//                .withPolicy(new HttpDebugLoggingPolicy())
                 .authenticate(
                         new BasicAuthenticationCredential(USER, PASS),
                         new AzureProfile(AzureEnvironment.AZURE));
