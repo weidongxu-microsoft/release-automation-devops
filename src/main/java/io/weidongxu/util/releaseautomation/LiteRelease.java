@@ -52,6 +52,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,7 +77,7 @@ public class LiteRelease {
 
     private static final int LITE_CODEGEN_PIPELINE_ID = 2238;
 
-    private static final String CI_CHECK_ENFORCER_NAME = "check-enforcer";
+    private static final String CI_CHECK_ENFORCER_NAME = "https://aka.ms/azsdk/checkenforcer";
     private static final String CI_PREPARE_PIPELINES_NAME = "prepare-pipelines";
 
     private static final String API_SPECS_YAML_PATH = "https://raw.githubusercontent.com/Azure/azure-sdk-for-java/main/eng/mgmt/automation/api-specs.yaml";
@@ -318,7 +319,7 @@ public class LiteRelease {
             Utils.openUrl(prUrl);
 
             // wait for check enforcer
-            waitForCheckSuccess(prClient, prNumber, CI_CHECK_ENFORCER_NAME);
+            waitForCommitSuccess(prClient, prNumber);
 
             PullRequest prRefreshed = prClient.get(prNumber).get();
             if (Boolean.TRUE.equals(prRefreshed.merged())) {
@@ -427,7 +428,64 @@ public class LiteRelease {
         waitForCheckSuccess(prClient, prNumber, javaSdkCheckName);
 
         // wait for check enforcer
-        waitForCheckSuccess(prClient, prNumber, CI_CHECK_ENFORCER_NAME);
+        waitForCommitSuccess(prClient, prNumber);
+    }
+
+    private static CommitStatus getCommitStatusForCheckEnforcer(String sha) {
+        return Arrays.stream(getCommitStatuses(sha))
+                .filter(s -> CI_CHECK_ENFORCER_NAME.equals(s.getContext()))
+                .findFirst().orElse(null);
+    }
+
+    private static CommitStatus[] getCommitStatuses(String sha) {
+        CommitStatus[] statuses = {};
+
+        HttpRequest request = new HttpRequest(HttpMethod.GET,
+                "https://api.github.com/repos/Azure/azure-sdk-for-java/statuses/" + sha);
+        request.setHeader("Authorization", "token " + GITHUB_TOKEN)
+                .setHeader("Accept", "application/json")
+                .setHeader("Content-Type", "application/json");
+
+        HttpResponse response = HTTP_PIPELINE.send(request).block();
+
+        if (response.getStatusCode() == 200) {
+            String body = response.getBodyAsString().block();
+            try {
+                statuses = JacksonAdapter.createDefaultSerializerAdapter().deserialize(body, statuses.getClass(), SerializerEncoding.JSON);
+                return statuses;
+            } catch (IOException e) {
+                LOGGER.error("error in response body {}", body);
+                throw new HttpResponseException(response);
+            } finally {
+                response.close();
+            }
+        } else {
+            LOGGER.error("error in response code {}, body {}", response.getStatusCode(), response.getBodyAsString().block());
+            response.close();
+            throw new HttpResponseException(response);
+        }
+    }
+
+    private static void waitForCommitSuccess(PullRequestClient prClient, int prNumber) throws ExecutionException, InterruptedException {
+        PullRequest pr = prClient.get(prNumber).get();
+        String commitSHA = pr.head().sha();
+
+        CommitStatus status = getCommitStatusForCheckEnforcer(commitSHA);
+        while (status == null || !"success".equals(status.getState())) {
+            if (status == null) {
+                OUT.println("pr number: " + prNumber + ", wait for " + CI_CHECK_ENFORCER_NAME);
+            } else {
+                OUT.println("pr number: " + prNumber + ", " + CI_CHECK_ENFORCER_NAME + " state: " + status.getState());
+            }
+
+            OUT.println("wait 1 minutes");
+            Thread.sleep(POLL_SHORT_INTERVAL_MINUTE * MILLISECOND_PER_MINUTE);
+
+            // refresh head commit
+            pr = prClient.get(prNumber).get();
+            commitSHA = pr.head().sha();
+            status = getCommitStatusForCheckEnforcer(commitSHA);
+        }
     }
 
     private static void waitForCheckSuccess(PullRequestClient prClient,
