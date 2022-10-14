@@ -414,7 +414,7 @@ public class LiteRelease {
             comment = issueClient.createComment(prNumber, "/azp run " + javaSdkCheckName).get();
         } else {
             // trigger live tests, if available
-            String testPipelineName = "java - " + sdk + " - tests.mgmt";
+            String testPipelineName = "java - " + sdk + " - mgmt - tests";
             boolean testPipelineAvailable = manager.pipelines().list(ORGANIZATION, PROJECT_INTERNAL).stream()
                     .anyMatch(p -> p.name().equals(testPipelineName));
             if (testPipelineAvailable) {
