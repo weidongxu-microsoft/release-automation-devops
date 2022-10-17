@@ -265,6 +265,8 @@ public class LiteRelease {
             OUT.println("DevOps build: " + buildUrl);
             Utils.openUrl(buildUrl);
 
+            OUT.println("wait 5 minutes");
+            Thread.sleep(POLL_LONG_INTERVAL_MINUTE * MILLISECOND_PER_MINUTE);
             // poll until approval is available
             ReleaseState state = null;
             while (state == null || state.getApprovalIds().isEmpty()) {
