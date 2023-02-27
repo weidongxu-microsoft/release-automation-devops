@@ -84,7 +84,7 @@ public class LiteRelease {
 
     private static final String SPEC_README_PATH_PREFIX = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/";
 
-    private static final String MAVEN_ARTIFACT_PATH_PREFIX = "https://search.maven.org/artifact/com.azure.resourcemanager/";
+    private static final String MAVEN_ARTIFACT_PATH_PREFIX = "https://central.sonatype.com/artifact/com.azure.resourcemanager/";
 
     private static final InputStream IN = System.in;
     private static final PrintStream OUT = System.out;
