@@ -177,7 +177,7 @@ public class LiteRelease {
 
         mergeGithubVersionPR(client, sdk);
 
-        String sdkMavenUrl = MAVEN_ARTIFACT_PATH_PREFIX + "azure-resourcemanager-" + sdk;
+        String sdkMavenUrl = MAVEN_ARTIFACT_PATH_PREFIX + "azure-resourcemanager-" + sdk + "/1.0.0-beta.1/versions";
         Utils.openUrl(sdkMavenUrl);
 
         System.exit(0);
