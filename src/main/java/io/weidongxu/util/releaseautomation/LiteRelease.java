@@ -103,7 +103,6 @@ public class LiteRelease {
 
         Configure configure = getConfigure();
         String swagger = configure.getSwagger();
-        boolean isPreview = configure.isPreview();
         String sdk = getSdkName(swagger);
         if (!CoreUtils.isNullOrEmpty(configure.getService())) {
             sdk = configure.getService();
@@ -142,6 +141,18 @@ public class LiteRelease {
         }
         OUT.println("tag: " + tag);
 
+        if (configure.isPreview() && !tag.contains("preview") && !tag.contains("composite")) {
+            // if stable is released, and current tag is also stable
+            VersionConfigure.parseVersion(HTTP_PIPELINE, sdk).ifPresent(sdkVersion -> {
+                if (sdkVersion.isStableReleased()) {
+                    configure.setPreview(false);
+                    configure.setVersion(sdkVersion.getCurrentVersionAsStable());
+
+                    OUT.println("release for stable: " + configure.getVersion());
+                }
+            });
+        }
+
         DevManager manager = DevManager.configure()
                 .withLogOptions(new HttpLogOptions().setLogLevel(HttpLogDetailLevel.NONE))
                 .withPolicy(new BasicAuthAuthenticationPolicy(tokenCredential))
@@ -157,7 +168,7 @@ public class LiteRelease {
         variables.put("README", new Variable().withValue(swagger));
         variables.put("TAG", new Variable().withValue(tag));
         variables.put("DRAFT_PULL_REQUEST", new Variable().withValue("false"));
-        if (!isPreview) {
+        if (!configure.isPreview()) {
             variables.put("VERSION", new Variable().withValue(configure.getVersion()));
         }
         if (!CoreUtils.isNullOrEmpty(configure.getService())) {
