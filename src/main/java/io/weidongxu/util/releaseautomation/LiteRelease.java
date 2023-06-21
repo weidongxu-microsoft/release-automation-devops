@@ -55,10 +55,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class LiteRelease {
@@ -82,7 +85,8 @@ public class LiteRelease {
 
     private static final String API_SPECS_YAML_PATH = "https://raw.githubusercontent.com/Azure/azure-sdk-for-java/main/eng/mgmt/automation/api-specs.yaml";
 
-    private static final String SPEC_README_PATH_PREFIX = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/";
+    private static final String SPEC_REPO_PATH_PREFIX = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/";
+    private static final String SPEC_REPO_SPEC_PATH_PREFIX = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/";
 
     private static final String MAVEN_ARTIFACT_PATH_PREFIX = "https://central.sonatype.com/artifact/com.azure.resourcemanager/";
 
@@ -113,8 +117,10 @@ public class LiteRelease {
 
         String tag = configure.getTag();
         if (CoreUtils.isNullOrEmpty(tag)) {
-            ReadmeConfigure readmeConfigure = ReadmeConfigure.parseReadme(HTTP_PIPELINE,
-                    new URL(SPEC_README_PATH_PREFIX + swagger + "/resource-manager/readme.md"));
+            String readmeUrl = swagger.contains("/")
+                    ? SPEC_REPO_PATH_PREFIX + swagger
+                    : SPEC_REPO_SPEC_PATH_PREFIX + swagger + "/resource-manager/readme.md";
+            ReadmeConfigure readmeConfigure = ReadmeConfigure.parseReadme(HTTP_PIPELINE, new URL(readmeUrl));
             readmeConfigure.print(OUT, 3);
 
             tag = readmeConfigure.getDefaultTag();
@@ -537,6 +543,16 @@ public class LiteRelease {
     }
 
     private static String getSdkName(String swaggerName) {
+        Matcher matcher = Pattern.compile("specification/([^/]+)/resource-manager(/.*)*/readme.md")
+                .matcher(swaggerName);
+        if (matcher.matches()) {
+            swaggerName = matcher.group(1);
+            String subspec = matcher.group(2);
+            if (!CoreUtils.isNullOrEmpty(subspec)) {
+                swaggerName += subspec;
+            }
+        }
+
         HttpRequest request = new HttpRequest(HttpMethod.GET, API_SPECS_YAML_PATH);
         HttpResponse response = HTTP_PIPELINE.send(request).block();
         if (response.getStatusCode() == 200) {
@@ -553,6 +569,9 @@ public class LiteRelease {
                     sdkName = detail.get("service");
                 }
             }
+
+            sdkName = sdkName.toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9_]", "");
+
             return sdkName;
         } else {
             response.close();
