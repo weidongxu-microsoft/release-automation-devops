@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-class ReleaseState {
+public class ReleaseState {
     private String name;
     private String identifier;
     private TimelineRecordState state;
