@@ -1,6 +1,7 @@
 package io.weidongxu.util.releaseautomation;
 
 import com.azure.core.http.HttpMethod;
+import com.azure.core.http.HttpPipeline;
 import com.azure.core.http.HttpRequest;
 import com.azure.core.http.HttpResponse;
 import com.azure.dev.DevManager;
@@ -13,6 +14,8 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
@@ -21,7 +24,7 @@ import java.util.stream.Collectors;
 
 public class Utils {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(Utils.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Utils.class);
 
     public static ReleaseState getReleaseState(TimelineRecord record, Timeline timeline) {
         ReleaseState state = new ReleaseState();
@@ -98,5 +101,15 @@ public class Utils {
         } catch (IOException e) {
             LOGGER.error("Browser could not be opened - please open {} in a browser on this device.", url);
         }
+    }
+
+    private static final String SPEC_REPO_PATH_PREFIX = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/";
+    private static final String SPEC_REPO_SPEC_PATH_PREFIX = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/";
+
+    public static ReadmeConfigure getReadmeConfigure(HttpPipeline httpPipeline, String swagger) throws MalformedURLException {
+        String readmeUrl = swagger.contains("/")
+                ? SPEC_REPO_PATH_PREFIX + swagger
+                : SPEC_REPO_SPEC_PATH_PREFIX + swagger + "/resource-manager/readme.md";
+        return ReadmeConfigure.parseReadme(httpPipeline, new URL(readmeUrl));
     }
 }

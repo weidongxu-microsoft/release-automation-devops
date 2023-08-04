@@ -57,6 +57,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
@@ -84,9 +85,6 @@ public class LiteRelease {
     private static final String CI_PREPARE_PIPELINES_NAME = "prepare-pipelines";
 
     private static final String API_SPECS_YAML_PATH = "https://raw.githubusercontent.com/Azure/azure-sdk-for-java/main/eng/mgmt/automation/api-specs.yaml";
-
-    private static final String SPEC_REPO_PATH_PREFIX = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/";
-    private static final String SPEC_REPO_SPEC_PATH_PREFIX = "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/";
 
     private static final String MAVEN_ARTIFACT_PATH_PREFIX = "https://central.sonatype.com/artifact/com.azure.resourcemanager/";
 
@@ -117,10 +115,7 @@ public class LiteRelease {
 
         String tag = configure.getTag();
         if (CoreUtils.isNullOrEmpty(tag)) {
-            String readmeUrl = swagger.contains("/")
-                    ? SPEC_REPO_PATH_PREFIX + swagger
-                    : SPEC_REPO_SPEC_PATH_PREFIX + swagger + "/resource-manager/readme.md";
-            ReadmeConfigure readmeConfigure = ReadmeConfigure.parseReadme(HTTP_PIPELINE, new URL(readmeUrl));
+            ReadmeConfigure readmeConfigure = Utils.getReadmeConfigure(HTTP_PIPELINE, swagger);
             readmeConfigure.print(OUT, 3);
 
             tag = readmeConfigure.getDefaultTag();
@@ -147,16 +142,26 @@ public class LiteRelease {
         }
         OUT.println("tag: " + tag);
 
-        if (configure.isAutoVersioning() && !tag.contains("preview")) {
-            // if stable is released, and current tag is also stable
-            VersionConfigure.parseVersion(HTTP_PIPELINE, sdk).ifPresent(sdkVersion -> {
-                if (sdkVersion.isStableReleased()) {
-                    configure.setAutoVersioning(false);
-                    configure.setVersion(sdkVersion.getCurrentVersionAsStable());
+        if (configure.isAutoVersioning() && !tag.contains("-preview")) {
+            ReadmeConfigure readmeConfigure = Utils.getReadmeConfigure(HTTP_PIPELINE, swagger);
+            final String tagToRelease = tag;
+            Optional<ReadmeConfigure.TagConfigure> tagConfigure = readmeConfigure.getTagConfigures().stream()
+                    .filter(t -> Objects.equals(tagToRelease, t.getTagName()))
+                    .findFirst();
+            boolean previewInputFileInTag = tagConfigure.isPresent()
+                    && tagConfigure.get().getInputFiles().stream().anyMatch(f -> f.contains("/preview/"));
 
-                    OUT.println("release for stable: " + configure.getVersion());
-                }
-            });
+            if (!previewInputFileInTag) {
+                // if stable is released, and current tag is also stable
+                VersionConfigure.parseVersion(HTTP_PIPELINE, sdk).ifPresent(sdkVersion -> {
+                    if (sdkVersion.isStableReleased()) {
+                        configure.setAutoVersioning(false);
+                        configure.setVersion(sdkVersion.getCurrentVersionAsStable());
+
+                        OUT.println("release for stable: " + configure.getVersion());
+                    }
+                });
+            }
         }
 
         DevManager manager = DevManager.configure()
