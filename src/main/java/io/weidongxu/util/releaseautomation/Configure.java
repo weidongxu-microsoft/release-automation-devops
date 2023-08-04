@@ -6,7 +6,7 @@ public class Configure {
     private String swagger;
 
     // preview release
-    private boolean autoVersioning;
+    private boolean autoVersioning = true;
 
     // used only if preview=false
     // if preview=true, uses current next release version in https://github.com/Azure/azure-sdk-for-java/blob/main/eng/versioning/version_client.txt
