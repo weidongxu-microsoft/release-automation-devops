@@ -147,11 +147,11 @@ public class LiteRelease {
         }
         OUT.println("tag: " + tag);
 
-        if (configure.isPreview() && !tag.contains("preview") && !tag.contains("composite")) {
+        if (configure.isAutoVersioning() && !tag.contains("preview")) {
             // if stable is released, and current tag is also stable
             VersionConfigure.parseVersion(HTTP_PIPELINE, sdk).ifPresent(sdkVersion -> {
                 if (sdkVersion.isStableReleased()) {
-                    configure.setPreview(false);
+                    configure.setAutoVersioning(false);
                     configure.setVersion(sdkVersion.getCurrentVersionAsStable());
 
                     OUT.println("release for stable: " + configure.getVersion());
@@ -174,7 +174,7 @@ public class LiteRelease {
         variables.put("README", new Variable().withValue(swagger));
         variables.put("TAG", new Variable().withValue(tag));
         variables.put("DRAFT_PULL_REQUEST", new Variable().withValue("false"));
-        if (!configure.isPreview()) {
+        if (!configure.isAutoVersioning()) {
             variables.put("VERSION", new Variable().withValue(configure.getVersion()));
         }
         if (!CoreUtils.isNullOrEmpty(configure.getService())) {

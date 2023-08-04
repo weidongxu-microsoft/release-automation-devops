@@ -1,4 +1,4 @@
 swagger: mediaservices
-preview: true
+autoVersioning: true
 version: 1.0.0
 tests: true
