@@ -47,7 +47,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.net.URI;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -184,6 +183,9 @@ public class LiteRelease {
         }
         if (!CoreUtils.isNullOrEmpty(configure.getService())) {
             variables.put("SERVICE", new Variable().withValue(configure.getService()));
+        }
+        if (!CoreUtils.isNullOrEmpty(configure.getSuffix())) {
+            variables.put("SUFFIX", new Variable().withValue(configure.getSuffix()));
         }
         if (configure.getTests() == Boolean.TRUE) {
             variables.put("AUTOREST_OPTIONS", new Variable().withValue("--generate-tests"));

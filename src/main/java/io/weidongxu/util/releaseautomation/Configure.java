@@ -20,6 +20,9 @@ public class Configure {
     // same as swagger, if not provided
     private String service;
 
+    // e.g. "containers" for namespace "com.azure.resourcemanager.hdinsight.containers"
+    private String suffix;
+
     // generate tests
     private Boolean tests;
 
@@ -53,6 +56,14 @@ public class Configure {
 
     public void setService(String service) {
         this.service = service;
+    }
+
+    public String getSuffix() {
+        return suffix;
+    }
+
+    public void setSuffix(String suffix) {
+        this.suffix = suffix;
     }
 
     public String getVersion() {
