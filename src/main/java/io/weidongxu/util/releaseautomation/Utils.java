@@ -19,7 +19,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.io.UncheckedIOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
@@ -70,13 +69,13 @@ public class Utils {
             request.setHeader(HttpHeaderName.CONTENT_TYPE, "application/json");
             HttpResponse response = manager.serviceClient().getHttpPipeline().send(request).block();
             System.out.println("response status code: " + response.getStatusCode());
-            if (response.getStatusCode() != 200) {
+            if (response.getStatusCode() == 200) {
+                response.close();
+            } else {
                 System.out.println("response body: " + response.getBodyAsString().block());
                 response.close();
 
                 throw new IllegalStateException("failed to approve: " + approvalId);
-            } else {
-                response.close();
             }
         }
     }
@@ -157,7 +156,9 @@ public class Utils {
                 Map<String, Object> json = SERIALIZER_ADAPTER.deserialize(body, Map.class, SerializerEncoding.JSON);
                 id = ((Map<String, String>) ((Map<String, Object>) ((Map<String, Object>) json.get("data")).get("repository")).get("pullRequest")).get("id");
             } catch (IOException e) {
-                throw new UncheckedIOException(e);
+                throw new HttpResponseException(e);
+            } finally {
+                response.close();
             }
         } else {
             LOGGER.error("error in response code {}, body {}", response.getStatusCode(), response.getBodyAsString().block());
@@ -176,7 +177,9 @@ public class Utils {
 
         response = httpPipeline.send(request).block();
 
-        if (response.getStatusCode() != 200) {
+        if (response.getStatusCode() == 200) {
+            response.close();
+        } else {
             LOGGER.error("error in response code {}, body {}", response.getStatusCode(), response.getBodyAsString().block());
             response.close();
             throw new HttpResponseException(response);
