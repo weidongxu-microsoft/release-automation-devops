@@ -156,7 +156,7 @@ public class Utils {
                 Map<String, Object> json = SERIALIZER_ADAPTER.deserialize(body, Map.class, SerializerEncoding.JSON);
                 id = ((Map<String, String>) ((Map<String, Object>) ((Map<String, Object>) json.get("data")).get("repository")).get("pullRequest")).get("id");
             } catch (IOException e) {
-                throw new HttpResponseException(e);
+                throw new HttpResponseException(response);
             } finally {
                 response.close();
             }
