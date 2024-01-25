@@ -14,8 +14,6 @@ import com.azure.core.management.AzureEnvironment;
 import com.azure.core.management.profile.AzureProfile;
 import com.azure.core.util.Configuration;
 import com.azure.core.util.CoreUtils;
-import com.azure.core.util.serializer.JacksonAdapter;
-import com.azure.core.util.serializer.SerializerEncoding;
 import com.azure.dev.DevManager;
 import com.azure.dev.models.Pipeline;
 import com.azure.dev.models.Run;
@@ -177,7 +175,7 @@ public class LiteRelease {
         Map<String, Variable> variables = new HashMap<>();
         variables.put("README", new Variable().withValue(swagger));
         variables.put("TAG", new Variable().withValue(tag));
-        variables.put("DRAFT_PULL_REQUEST", new Variable().withValue("false"));
+//        variables.put("DRAFT_PULL_REQUEST", new Variable().withValue("false"));
         if (!configure.isAutoVersioning()) {
             variables.put("VERSION", new Variable().withValue(configure.getVersion()));
         }
@@ -246,6 +244,10 @@ public class LiteRelease {
                 Utils.promptMessageAndWait(IN, OUT,
                         "'Yes' to approve and merge GitHub pull request: https://github.com/Azure/azure-sdk-for-java/pull/" + prNumber);
             }
+
+            // make PR ready
+            Utils.prReady(HTTP_PIPELINE, GITHUB_TOKEN, prNumber);
+            Thread.sleep(POLL_SHORT_INTERVAL_MINUTE * MILLISECOND_PER_MINUTE);
 
             // approve PR
             Review review = prClient.createReview(prNumber,
@@ -381,32 +383,6 @@ public class LiteRelease {
 
     private static final HttpPipeline HTTP_PIPELINE = new HttpPipelineBuilder().build();
 
-    private static CheckRunListResult getCheckRuns(String sha) {
-        HttpRequest request = new HttpRequest(HttpMethod.GET,
-                "https://api.github.com/repos/Azure/azure-sdk-for-java/commits/" + sha + "/check-runs");
-        request.setHeader("Authorization", "token " + GITHUB_TOKEN)
-                .setHeader("Accept", "application/json")
-                .setHeader("Content-Type", "application/json");
-
-        HttpResponse response = HTTP_PIPELINE.send(request).block();
-
-        if (response.getStatusCode() == 200) {
-            String body = response.getBodyAsString().block();
-            try {
-                return JacksonAdapter.createDefaultSerializerAdapter().deserialize(body, CheckRunListResult.class, SerializerEncoding.JSON);
-            } catch (IOException e) {
-                LOGGER.error("error in response body {}", body);
-                throw new HttpResponseException(response);
-            } finally {
-                response.close();
-            }
-        } else {
-            LOGGER.error("error in response code {}, body {}", response.getStatusCode(), response.getBodyAsString().block());
-            response.close();
-            throw new HttpResponseException(response);
-        }
-    }
-
     private static CheckRun getCheck(List<CheckRun> checkRuns, String name) {
         return checkRuns.stream()
                 .filter(p -> p.getName().equals(name))
@@ -458,38 +434,9 @@ public class LiteRelease {
     }
 
     private static CommitStatus getCommitStatusForCheckEnforcer(String sha) {
-        return Arrays.stream(getCommitStatuses(sha))
+        return Arrays.stream(Utils.getCommitStatuses(HTTP_PIPELINE, GITHUB_TOKEN, sha))
                 .filter(s -> CI_CHECK_ENFORCER_NAME.equals(s.getContext()))
                 .findFirst().orElse(null);
-    }
-
-    private static CommitStatus[] getCommitStatuses(String sha) {
-        CommitStatus[] statuses = {};
-
-        HttpRequest request = new HttpRequest(HttpMethod.GET,
-                "https://api.github.com/repos/Azure/azure-sdk-for-java/statuses/" + sha);
-        request.setHeader("Authorization", "token " + GITHUB_TOKEN)
-                .setHeader("Accept", "application/json")
-                .setHeader("Content-Type", "application/json");
-
-        HttpResponse response = HTTP_PIPELINE.send(request).block();
-
-        if (response.getStatusCode() == 200) {
-            String body = response.getBodyAsString().block();
-            try {
-                statuses = JacksonAdapter.createDefaultSerializerAdapter().deserialize(body, statuses.getClass(), SerializerEncoding.JSON);
-                return statuses;
-            } catch (IOException e) {
-                LOGGER.error("error in response body {}", body);
-                throw new HttpResponseException(response);
-            } finally {
-                response.close();
-            }
-        } else {
-            LOGGER.error("error in response code {}, body {}", response.getStatusCode(), response.getBodyAsString().block());
-            response.close();
-            throw new HttpResponseException(response);
-        }
     }
 
     private static void waitForCommitSuccess(PullRequestClient prClient, int prNumber) throws ExecutionException, InterruptedException {
@@ -527,7 +474,7 @@ public class LiteRelease {
             PullRequest pr = prClient.get(prNumber).get();
             commitSHA = pr.head().sha();
         }
-        CheckRunListResult checkRunResult = getCheckRuns(commitSHA);
+        CheckRunListResult checkRunResult = Utils.getCheckRuns(HTTP_PIPELINE, GITHUB_TOKEN, commitSHA);
         CheckRun check = getCheck(checkRunResult.getCheckRuns(), checkName);
         while (check == null || !"success".equals(check.getConclusion())) {
             if (check == null) {
@@ -544,7 +491,7 @@ public class LiteRelease {
                 PullRequest pr = prClient.get(prNumber).get();
                 commitSHA = pr.head().sha();
             }
-            checkRunResult = getCheckRuns(commitSHA);
+            checkRunResult = Utils.getCheckRuns(HTTP_PIPELINE, GITHUB_TOKEN, commitSHA);
             check = getCheck(checkRunResult.getCheckRuns(), checkName);
         }
     }
