@@ -270,10 +270,7 @@ public class LiteRelease {
         }
 
         // find pipeline
-        String pipelineName = "java - " + sdk;
-        List<Pipeline> pipelines = manager.pipelines().list(ORGANIZATION, PROJECT_INTERNAL).stream().collect(Collectors.toList());
-        Pipeline pipeline = pipelines.stream()
-                .filter(p -> pipelineName.equals(p.name())).findFirst().orElse(null);
+        Pipeline pipeline = findSdkPipeline(manager, sdk, false);
 
         if (pipeline != null) {
             Map<String, String> templateParameters = new HashMap<>();
@@ -322,7 +319,7 @@ public class LiteRelease {
                 state = getReleaseState(timeline);
             }
         } else {
-            throw new IllegalStateException("release pipeline not found: " + pipelineName);
+            throw new IllegalStateException("release pipeline not found for sdk: " + sdk);
         }
     }
 
@@ -395,10 +392,10 @@ public class LiteRelease {
         OUT.println("wait 1 minutes");
         Thread.sleep(POLL_SHORT_INTERVAL_MINUTE * MILLISECOND_PER_MINUTE);
 
-        String javaSdkCheckName = "java - " + sdk + " - ci";
+        Pipeline pipeline = findSdkPipeline(manager, sdk, true);
+        String javaSdkCheckName = pipeline != null ? pipeline.name() : ("java - " + sdk + " - ci");
 
-        boolean ciPipelineReady = manager.pipelines().list(ORGANIZATION, PROJECT_PUBLIC).stream()
-                .anyMatch(p -> p.name().equals(javaSdkCheckName));
+        boolean ciPipelineReady = pipeline != null;
 
         if (!ciPipelineReady) {
             LOGGER.info("prepare pipeline");
@@ -588,5 +585,25 @@ public class LiteRelease {
         }
 
         return releaseTemplateParameters;
+    }
+
+    private static Pipeline findSdkPipeline(DevManager manager, String sdk, boolean publicPipeline) {
+        List<Pipeline> pipelines = manager.pipelines().list(ORGANIZATION, publicPipeline ? PROJECT_PUBLIC : PROJECT_INTERNAL)
+                .stream().collect(Collectors.toList());
+
+        // find pipeline
+        String pipelineName = "java - azure-resourcemanager-" + sdk + (publicPipeline ? " - ci" : "");
+        final String pipelineName1 = pipelineName;
+        Pipeline pipeline = pipelines.stream()
+                .filter(p -> pipelineName1.equals(p.name())).findFirst().orElse(null);
+
+        if (pipeline == null) {
+            pipelineName = "java - " + sdk + (publicPipeline ? " - ci" : "");
+            final String pipelineName2 = pipelineName;
+            pipeline = pipelines.stream()
+                    .filter(p -> pipelineName2.equals(p.name())).findFirst().orElse(null);
+        }
+
+        return pipeline;
     }
 }
