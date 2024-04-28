@@ -550,10 +550,28 @@ public class LiteRelease {
 
     private static List<String> getReleaseTemplateParameters(DevManager manager,
                                                              String organization, String project, String sdk) {
+        List<String> releaseTemplateParameters;
+
+        String ciUrl = String.format("https://raw.githubusercontent.com/%1$s/%2$s/main/sdk/%3$s/azure-resourcemanager-%3$s/ci.yml",
+                organization, project, sdk);
+        releaseTemplateParameters = getReleaseTemplateParameters(manager, ciUrl);
+        if (releaseTemplateParameters == null) {
+            ciUrl = String.format("https://raw.githubusercontent.com/%1$s/%2$s/main/sdk/%3$s/ci.yml",
+                    organization, project, sdk);
+            releaseTemplateParameters = getReleaseTemplateParameters(manager, ciUrl);
+        }
+
+        if (releaseTemplateParameters == null) {
+            throw new IllegalStateException("failed to get ci.yml: " + ciUrl);
+        }
+
+        return releaseTemplateParameters;
+    }
+
+    private static List<String> getReleaseTemplateParameters(DevManager manager, String url) {
         List<String> releaseTemplateParameters = new ArrayList<>();
 
-        String ciUrl = String.format("https://raw.githubusercontent.com/%s/%s/main/sdk/%s/ci.yml",
-                organization, project, sdk);
+        String ciUrl = String.format(url);
 
         HttpRequest request = new HttpRequest(HttpMethod.GET, ciUrl);
         HttpResponse response = manager.serviceClient().getHttpPipeline().send(request).block();
@@ -561,8 +579,7 @@ public class LiteRelease {
         if (response.getStatusCode() != 200) {
             System.out.println("response body: " + response.getBodyAsString().block());
             response.close();
-
-            throw new IllegalStateException("failed to get ci.yml: " + ciUrl);
+            return null;
         } else {
             String ciYml = response.getBodyAsString().block();
             Yaml yaml = new Yaml();
