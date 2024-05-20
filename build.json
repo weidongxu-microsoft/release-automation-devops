@@ -9639,6 +9639,7 @@
     "BuildTrigger": {
       "description": "Represents a trigger for a buld definition.",
       "type": "object",
+      "additionalProperties": true,
       "properties": {
         "triggerType": {
           "description": "The type of the trigger.",
