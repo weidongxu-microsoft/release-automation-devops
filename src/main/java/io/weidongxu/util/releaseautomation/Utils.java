@@ -9,6 +9,7 @@ import com.azure.core.http.HttpResponse;
 import com.azure.core.util.serializer.JacksonAdapter;
 import com.azure.core.util.serializer.SerializerAdapter;
 import com.azure.core.util.serializer.SerializerEncoding;
+import com.azure.core.util.serializer.TypeReference;
 import com.azure.dev.DevManager;
 import com.azure.dev.models.Timeline;
 import com.azure.dev.models.TimelineRecord;
@@ -19,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.io.UncheckedIOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
@@ -64,7 +66,7 @@ public class Utils {
         for (UUID approvalId : approvalIds) {
             HttpRequest request = new HttpRequest(
                     HttpMethod.PATCH,
-                    String.format("https://dev.azure.com/%s/%s/_apis/pipelines/approvals/%s?api-version=6.0-preview", organization, project, approvalId.toString()));
+                    String.format("https://dev.azure.com/%s/%s/_apis/pipelines/approvals/%s?api-version=7.2-preview", organization, project, approvalId.toString()));
             request.setBody(String.format("[{\"approvalId\": \"%s\", \"status\": 4, \"comment\": \"\"}]", approvalId));
             request.setHeader(HttpHeaderName.CONTENT_TYPE, "application/json");
             HttpResponse response = manager.serviceClient().getHttpPipeline().send(request).block();
@@ -133,6 +135,58 @@ public class Utils {
             LOGGER.error("error in response code {}, body {}", response.getStatusCode(), response.getBodyAsString().block());
             response.close();
             throw new HttpResponseException(response);
+        }
+    }
+
+    private static final TypeReference<Map<String, Object>> DICT
+            = new TypeReference<Map<String, Object>>() { };
+    public static Map<String, Object> getDefinition(DevManager manager, String organization, String project, Integer id) {
+        HttpRequest request = new HttpRequest(
+                HttpMethod.GET,
+                String.format("https://dev.azure.com/%s/%s/_apis/build/definitions/%s?api-version=7.2-preview", organization, project, id.toString()));
+        request.setHeader(HttpHeaderName.CONTENT_TYPE, "application/json");
+        HttpResponse response = manager.serviceClient().getHttpPipeline().send(request).block();
+        System.out.println("response status code: " + response.getStatusCode());
+        if (response.getStatusCode() == 200) {
+            String body = response.getBodyAsString().block();
+            response.close();
+            try {
+                return SERIALIZER_ADAPTER.deserialize(body, DICT.getJavaType(), SerializerEncoding.JSON);
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+        } else {
+            System.out.println("response body: " + response.getBodyAsString().block());
+            response.close();
+
+            throw new IllegalStateException("failed to get definition: " + id);
+        }
+    }
+
+    public static boolean isDefinitionEnabled(Map<String, Object> definition) {
+        return ("enabled".equalsIgnoreCase(definition.get("queueStatus").toString()));
+    }
+
+    public static void enableDefinition(DevManager manager, String organization, String project, Integer id, Map<String, Object> definition) {
+        definition.put("queueStatus", "enabled");
+        HttpRequest request = new HttpRequest(
+                HttpMethod.PUT,
+                String.format("https://dev.azure.com/%s/%s/_apis/build/definitions/%s?api-version=7.2-preview", organization, project, id.toString()));
+        request.setHeader(HttpHeaderName.CONTENT_TYPE, "application/json");
+        try {
+            request.setBody(SERIALIZER_ADAPTER.serialize(definition, SerializerEncoding.JSON));
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+        HttpResponse response = manager.serviceClient().getHttpPipeline().send(request).block();
+        System.out.println("response status code: " + response.getStatusCode());
+        if (response.getStatusCode() == 200) {
+            response.close();
+        } else {
+            System.out.println("response body: " + response.getBodyAsString().block());
+            response.close();
+
+            throw new IllegalStateException("failed to update definition: " + id);
         }
     }
 

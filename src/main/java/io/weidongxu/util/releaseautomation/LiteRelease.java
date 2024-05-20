@@ -15,8 +15,6 @@ import com.azure.core.management.profile.AzureProfile;
 import com.azure.core.util.Configuration;
 import com.azure.core.util.CoreUtils;
 import com.azure.dev.DevManager;
-import com.azure.dev.models.BuildDefinition;
-import com.azure.dev.models.DefinitionQueueStatus;
 import com.azure.dev.models.Pipeline;
 import com.azure.dev.models.Run;
 import com.azure.dev.models.RunPipelineParameters;
@@ -274,9 +272,9 @@ public class LiteRelease {
         Pipeline pipeline = findSdkPipeline(manager, sdk, false);
 
         if (pipeline != null) {
-            BuildDefinition buildDefinition = manager.definitions().get(ORGANIZATION, PROJECT_INTERNAL, pipeline.id());
-            if (buildDefinition.queueStatus() != DefinitionQueueStatus.ENABLED) {
-                manager.definitions().update(ORGANIZATION, PROJECT_INTERNAL, pipeline.id(), buildDefinition.innerModel().withQueueStatus(DefinitionQueueStatus.ENABLED));
+            Map<String, Object> buildDefinition = Utils.getDefinition(manager, ORGANIZATION, PROJECT_INTERNAL, pipeline.id());
+            if (!Utils.isDefinitionEnabled(buildDefinition)) {
+                Utils.enableDefinition(manager, ORGANIZATION, PROJECT_INTERNAL, pipeline.id(), buildDefinition);
             }
 
             Map<String, String> templateParameters = new HashMap<>();
@@ -405,10 +403,10 @@ public class LiteRelease {
         boolean ciPipelineEnabled = true;
 
         if (ciPipelineReady) {
-            BuildDefinition buildDefinition = manager.definitions().get(ORGANIZATION, PROJECT_PUBLIC, pipeline.id());
-            if (buildDefinition.queueStatus() != DefinitionQueueStatus.ENABLED) {
+            Map<String, Object> buildDefinition = Utils.getDefinition(manager, ORGANIZATION, PROJECT_PUBLIC, pipeline.id());
+            if (!Utils.isDefinitionEnabled(buildDefinition)) {
                 ciPipelineEnabled = false;
-                manager.definitions().update(ORGANIZATION, PROJECT_PUBLIC, pipeline.id(), buildDefinition.innerModel().withQueueStatus(DefinitionQueueStatus.ENABLED));
+                Utils.enableDefinition(manager, ORGANIZATION, PROJECT_PUBLIC, pipeline.id(), buildDefinition);
             }
         }
 
