@@ -2203,12 +2203,7 @@
               "vso.build_execute"
             ]
           }
-        ],
-        "x-ms-examples": {
-          "": {
-            "$ref": "./httpExamples/tags/POST_build_addBuildTag.json"
-          }
-        }
+        ]
       },
       "get": {
         "tags": [
@@ -3552,12 +3547,7 @@
               "vso.build_execute"
             ]
           }
-        ],
-        "x-ms-examples": {
-          "": {
-            "$ref": "./httpExamples/properties/PATCH_build_updateDefinitionProperties.json"
-          }
-        }
+        ]
       }
     },
     "/{organization}/{project}/_apis/build/definitions/{definitionId}/resources": {
@@ -3757,7 +3747,7 @@
         ]
       }
     },
-    "/{organization}/{project}/_apis/build/definitions/{DefinitionId}/tags": {
+    "/{organization}/{project}/_apis/build/definitions/{definitionId}/tags": {
       "post": {
         "tags": [
           "Tags"
@@ -3971,7 +3961,7 @@
         ]
       }
     },
-    "/{organization}/{project}/_apis/build/definitions/{DefinitionId}/tags/{tag}": {
+    "/{organization}/{project}/_apis/build/definitions/{definitionId}/tags/{tag}": {
       "put": {
         "tags": [
           "Tags"
@@ -10436,16 +10426,7 @@
     },
     "JsonPatchDocument": {
       "description": "The JSON model for JSON Patch Operations",
-      "type": "object",
-      "allOf": [
-        {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/JsonPatchOperation"
-          }
-        }
-      ],
-      "properties": {}
+      "type": "object"
     },
     "JsonPatchOperation": {
       "description": "The JSON model for a JSON Patch operation",
@@ -10784,7 +10765,7 @@
         }
       }
     },
-    "PipelineReference": {
+    "PipelineReferenceInBuild": {
       "description": "Pipeline reference",
       "type": "object",
       "properties": {
@@ -12090,7 +12071,7 @@
           }
         },
         "pipelineReference": {
-          "$ref": "#/definitions/PipelineReference"
+          "$ref": "#/definitions/PipelineReferenceInBuild"
         },
         "release": {
           "$ref": "#/definitions/ReleaseReference"
