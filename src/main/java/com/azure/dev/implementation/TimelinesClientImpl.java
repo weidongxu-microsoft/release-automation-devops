@@ -96,9 +96,9 @@ public final class TimelinesClientImpl implements TimelinesClient {
         if (project == null) {
             return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
         }
-        if (timelineId == null) {
-            return Mono.error(new IllegalArgumentException("Parameter timelineId is required and cannot be null."));
-        }
+//        if (timelineId == null) {
+//            return Mono.error(new IllegalArgumentException("Parameter timelineId is required and cannot be null."));
+//        }
         final String accept = "application/json";
         return FluxUtil
             .withContext(context -> service.get(this.client.getEndpoint(), organization, project, buildId, timelineId,
@@ -134,9 +134,9 @@ public final class TimelinesClientImpl implements TimelinesClient {
         if (project == null) {
             return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
         }
-        if (timelineId == null) {
-            return Mono.error(new IllegalArgumentException("Parameter timelineId is required and cannot be null."));
-        }
+//        if (timelineId == null) {
+//            return Mono.error(new IllegalArgumentException("Parameter timelineId is required and cannot be null."));
+//        }
         final String accept = "application/json";
         context = this.client.mergeContext(context);
         return service.get(this.client.getEndpoint(), organization, project, buildId, timelineId, changeId, planId,
