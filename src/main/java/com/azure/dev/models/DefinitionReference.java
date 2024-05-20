@@ -5,16 +5,14 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 
-/** Represents a reference to a definition. */
+/**
+ * Represents a reference to a definition.
+ */
 @Fluent
 public class DefinitionReference {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(DefinitionReference.class);
-
     /*
      * The date this version of the definition was created.
      */
@@ -46,8 +44,7 @@ public class DefinitionReference {
     private TeamProjectReference project;
 
     /*
-     * A value that indicates whether builds can be queued against this
-     * definition.
+     * A value that indicates whether builds can be queued against this definition.
      */
     @JsonProperty(value = "queueStatus")
     private DefinitionQueueStatus queueStatus;
@@ -77,8 +74,14 @@ public class DefinitionReference {
     private String url;
 
     /**
+     * Creates an instance of DefinitionReference class.
+     */
+    public DefinitionReference() {
+    }
+
+    /**
      * Get the createdDate property: The date this version of the definition was created.
-     *
+     * 
      * @return the createdDate value.
      */
     public OffsetDateTime createdDate() {
@@ -87,7 +90,7 @@ public class DefinitionReference {
 
     /**
      * Set the createdDate property: The date this version of the definition was created.
-     *
+     * 
      * @param createdDate the createdDate value to set.
      * @return the DefinitionReference object itself.
      */
@@ -98,7 +101,7 @@ public class DefinitionReference {
 
     /**
      * Get the id property: The ID of the referenced definition.
-     *
+     * 
      * @return the id value.
      */
     public Integer id() {
@@ -107,7 +110,7 @@ public class DefinitionReference {
 
     /**
      * Set the id property: The ID of the referenced definition.
-     *
+     * 
      * @param id the id value to set.
      * @return the DefinitionReference object itself.
      */
@@ -118,7 +121,7 @@ public class DefinitionReference {
 
     /**
      * Get the name property: The name of the referenced definition.
-     *
+     * 
      * @return the name value.
      */
     public String name() {
@@ -127,7 +130,7 @@ public class DefinitionReference {
 
     /**
      * Set the name property: The name of the referenced definition.
-     *
+     * 
      * @param name the name value to set.
      * @return the DefinitionReference object itself.
      */
@@ -138,7 +141,7 @@ public class DefinitionReference {
 
     /**
      * Get the path property: The folder path of the definition.
-     *
+     * 
      * @return the path value.
      */
     public String path() {
@@ -147,7 +150,7 @@ public class DefinitionReference {
 
     /**
      * Set the path property: The folder path of the definition.
-     *
+     * 
      * @param path the path value to set.
      * @return the DefinitionReference object itself.
      */
@@ -158,7 +161,7 @@ public class DefinitionReference {
 
     /**
      * Get the project property: A reference to the project.
-     *
+     * 
      * @return the project value.
      */
     public TeamProjectReference project() {
@@ -167,7 +170,7 @@ public class DefinitionReference {
 
     /**
      * Set the project property: A reference to the project.
-     *
+     * 
      * @param project the project value to set.
      * @return the DefinitionReference object itself.
      */
@@ -178,7 +181,7 @@ public class DefinitionReference {
 
     /**
      * Get the queueStatus property: A value that indicates whether builds can be queued against this definition.
-     *
+     * 
      * @return the queueStatus value.
      */
     public DefinitionQueueStatus queueStatus() {
@@ -187,7 +190,7 @@ public class DefinitionReference {
 
     /**
      * Set the queueStatus property: A value that indicates whether builds can be queued against this definition.
-     *
+     * 
      * @param queueStatus the queueStatus value to set.
      * @return the DefinitionReference object itself.
      */
@@ -198,7 +201,7 @@ public class DefinitionReference {
 
     /**
      * Get the revision property: The definition revision number.
-     *
+     * 
      * @return the revision value.
      */
     public Integer revision() {
@@ -207,7 +210,7 @@ public class DefinitionReference {
 
     /**
      * Set the revision property: The definition revision number.
-     *
+     * 
      * @param revision the revision value to set.
      * @return the DefinitionReference object itself.
      */
@@ -218,7 +221,7 @@ public class DefinitionReference {
 
     /**
      * Get the type property: The type of the definition.
-     *
+     * 
      * @return the type value.
      */
     public DefinitionType type() {
@@ -227,7 +230,7 @@ public class DefinitionReference {
 
     /**
      * Set the type property: The type of the definition.
-     *
+     * 
      * @param type the type value to set.
      * @return the DefinitionReference object itself.
      */
@@ -238,7 +241,7 @@ public class DefinitionReference {
 
     /**
      * Get the uri property: The definition's URI.
-     *
+     * 
      * @return the uri value.
      */
     public String uri() {
@@ -247,7 +250,7 @@ public class DefinitionReference {
 
     /**
      * Set the uri property: The definition's URI.
-     *
+     * 
      * @param uri the uri value to set.
      * @return the DefinitionReference object itself.
      */
@@ -258,7 +261,7 @@ public class DefinitionReference {
 
     /**
      * Get the url property: The REST URL of the definition.
-     *
+     * 
      * @return the url value.
      */
     public String url() {
@@ -267,7 +270,7 @@ public class DefinitionReference {
 
     /**
      * Set the url property: The REST URL of the definition.
-     *
+     * 
      * @param url the url value to set.
      * @return the DefinitionReference object itself.
      */
@@ -278,7 +281,7 @@ public class DefinitionReference {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

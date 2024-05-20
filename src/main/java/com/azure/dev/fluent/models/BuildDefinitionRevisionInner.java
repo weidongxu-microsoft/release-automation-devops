@@ -5,18 +5,16 @@
 package com.azure.dev.fluent.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.models.AuditAction;
 import com.azure.dev.models.IdentityRef;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 
-/** Represents a revision of a build definition. */
+/**
+ * Represents a revision of a build definition.
+ */
 @Fluent
 public final class BuildDefinitionRevisionInner {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(BuildDefinitionRevisionInner.class);
-
     /*
      * The identity of the person or process that changed the definition.
      */
@@ -60,8 +58,14 @@ public final class BuildDefinitionRevisionInner {
     private Integer revision;
 
     /**
+     * Creates an instance of BuildDefinitionRevisionInner class.
+     */
+    public BuildDefinitionRevisionInner() {
+    }
+
+    /**
      * Get the changedBy property: The identity of the person or process that changed the definition.
-     *
+     * 
      * @return the changedBy value.
      */
     public IdentityRef changedBy() {
@@ -70,7 +74,7 @@ public final class BuildDefinitionRevisionInner {
 
     /**
      * Set the changedBy property: The identity of the person or process that changed the definition.
-     *
+     * 
      * @param changedBy the changedBy value to set.
      * @return the BuildDefinitionRevisionInner object itself.
      */
@@ -81,7 +85,7 @@ public final class BuildDefinitionRevisionInner {
 
     /**
      * Get the changedDate property: The date and time that the definition was changed.
-     *
+     * 
      * @return the changedDate value.
      */
     public OffsetDateTime changedDate() {
@@ -90,7 +94,7 @@ public final class BuildDefinitionRevisionInner {
 
     /**
      * Set the changedDate property: The date and time that the definition was changed.
-     *
+     * 
      * @param changedDate the changedDate value to set.
      * @return the BuildDefinitionRevisionInner object itself.
      */
@@ -101,7 +105,7 @@ public final class BuildDefinitionRevisionInner {
 
     /**
      * Get the changeType property: The change type (add, edit, delete).
-     *
+     * 
      * @return the changeType value.
      */
     public AuditAction changeType() {
@@ -110,7 +114,7 @@ public final class BuildDefinitionRevisionInner {
 
     /**
      * Set the changeType property: The change type (add, edit, delete).
-     *
+     * 
      * @param changeType the changeType value to set.
      * @return the BuildDefinitionRevisionInner object itself.
      */
@@ -121,7 +125,7 @@ public final class BuildDefinitionRevisionInner {
 
     /**
      * Get the comment property: The comment associated with the change.
-     *
+     * 
      * @return the comment value.
      */
     public String comment() {
@@ -130,7 +134,7 @@ public final class BuildDefinitionRevisionInner {
 
     /**
      * Set the comment property: The comment associated with the change.
-     *
+     * 
      * @param comment the comment value to set.
      * @return the BuildDefinitionRevisionInner object itself.
      */
@@ -141,7 +145,7 @@ public final class BuildDefinitionRevisionInner {
 
     /**
      * Get the definitionUrl property: A link to the definition at this revision.
-     *
+     * 
      * @return the definitionUrl value.
      */
     public String definitionUrl() {
@@ -150,7 +154,7 @@ public final class BuildDefinitionRevisionInner {
 
     /**
      * Set the definitionUrl property: A link to the definition at this revision.
-     *
+     * 
      * @param definitionUrl the definitionUrl value to set.
      * @return the BuildDefinitionRevisionInner object itself.
      */
@@ -161,7 +165,7 @@ public final class BuildDefinitionRevisionInner {
 
     /**
      * Get the name property: The name of the definition.
-     *
+     * 
      * @return the name value.
      */
     public String name() {
@@ -170,7 +174,7 @@ public final class BuildDefinitionRevisionInner {
 
     /**
      * Set the name property: The name of the definition.
-     *
+     * 
      * @param name the name value to set.
      * @return the BuildDefinitionRevisionInner object itself.
      */
@@ -181,7 +185,7 @@ public final class BuildDefinitionRevisionInner {
 
     /**
      * Get the revision property: The revision number.
-     *
+     * 
      * @return the revision value.
      */
     public Integer revision() {
@@ -190,7 +194,7 @@ public final class BuildDefinitionRevisionInner {
 
     /**
      * Set the revision property: The revision number.
-     *
+     * 
      * @param revision the revision value to set.
      * @return the BuildDefinitionRevisionInner object itself.
      */
@@ -201,7 +205,7 @@ public final class BuildDefinitionRevisionInner {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

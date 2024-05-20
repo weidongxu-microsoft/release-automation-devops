@@ -5,16 +5,14 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** Represents a YAML process. */
+/**
+ * Represents a YAML process.
+ */
 @Fluent
 public final class YamlProcess extends BuildProcess {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(YamlProcess.class);
-
     /*
      * The errors property.
      */
@@ -34,8 +32,14 @@ public final class YamlProcess extends BuildProcess {
     private String yamlFilename;
 
     /**
+     * Creates an instance of YamlProcess class.
+     */
+    public YamlProcess() {
+    }
+
+    /**
      * Get the errors property: The errors property.
-     *
+     * 
      * @return the errors value.
      */
     public List<String> errors() {
@@ -44,7 +48,7 @@ public final class YamlProcess extends BuildProcess {
 
     /**
      * Set the errors property: The errors property.
-     *
+     * 
      * @param errors the errors value to set.
      * @return the YamlProcess object itself.
      */
@@ -55,7 +59,7 @@ public final class YamlProcess extends BuildProcess {
 
     /**
      * Get the resources property: The resources used by the build definition.
-     *
+     * 
      * @return the resources value.
      */
     public BuildProcessResources resources() {
@@ -64,7 +68,7 @@ public final class YamlProcess extends BuildProcess {
 
     /**
      * Set the resources property: The resources used by the build definition.
-     *
+     * 
      * @param resources the resources value to set.
      * @return the YamlProcess object itself.
      */
@@ -75,7 +79,7 @@ public final class YamlProcess extends BuildProcess {
 
     /**
      * Get the yamlFilename property: The YAML filename.
-     *
+     * 
      * @return the yamlFilename value.
      */
     public String yamlFilename() {
@@ -84,7 +88,7 @@ public final class YamlProcess extends BuildProcess {
 
     /**
      * Set the yamlFilename property: The YAML filename.
-     *
+     * 
      * @param yamlFilename the yamlFilename value to set.
      * @return the YamlProcess object itself.
      */
@@ -93,7 +97,9 @@ public final class YamlProcess extends BuildProcess {
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public YamlProcess withType(Integer type) {
         super.withType(type);
@@ -102,7 +108,7 @@ public final class YamlProcess extends BuildProcess {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     @Override

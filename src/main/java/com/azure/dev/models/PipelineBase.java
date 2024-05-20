@@ -5,15 +5,13 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** The PipelineBase model. */
+/**
+ * The PipelineBase model.
+ */
 @Fluent
 public class PipelineBase {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(PipelineBase.class);
-
     /*
      * Pipeline folder
      */
@@ -39,8 +37,14 @@ public class PipelineBase {
     private Integer revision;
 
     /**
+     * Creates an instance of PipelineBase class.
+     */
+    public PipelineBase() {
+    }
+
+    /**
      * Get the folder property: Pipeline folder.
-     *
+     * 
      * @return the folder value.
      */
     public String folder() {
@@ -49,7 +53,7 @@ public class PipelineBase {
 
     /**
      * Set the folder property: Pipeline folder.
-     *
+     * 
      * @param folder the folder value to set.
      * @return the PipelineBase object itself.
      */
@@ -60,7 +64,7 @@ public class PipelineBase {
 
     /**
      * Get the id property: Pipeline ID.
-     *
+     * 
      * @return the id value.
      */
     public Integer id() {
@@ -69,7 +73,7 @@ public class PipelineBase {
 
     /**
      * Set the id property: Pipeline ID.
-     *
+     * 
      * @param id the id value to set.
      * @return the PipelineBase object itself.
      */
@@ -80,7 +84,7 @@ public class PipelineBase {
 
     /**
      * Get the name property: Pipeline name.
-     *
+     * 
      * @return the name value.
      */
     public String name() {
@@ -89,7 +93,7 @@ public class PipelineBase {
 
     /**
      * Set the name property: Pipeline name.
-     *
+     * 
      * @param name the name value to set.
      * @return the PipelineBase object itself.
      */
@@ -100,7 +104,7 @@ public class PipelineBase {
 
     /**
      * Get the revision property: Revision number.
-     *
+     * 
      * @return the revision value.
      */
     public Integer revision() {
@@ -109,7 +113,7 @@ public class PipelineBase {
 
     /**
      * Set the revision property: Revision number.
-     *
+     * 
      * @param revision the revision value to set.
      * @return the PipelineBase object itself.
      */
@@ -120,7 +124,7 @@ public class PipelineBase {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

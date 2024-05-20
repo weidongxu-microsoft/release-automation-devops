@@ -5,14 +5,24 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** The UpdateStageParameters model. */
+/**
+ * The UpdateStageParameters model.
+ */
 @Fluent
 public final class UpdateStageParameters {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(UpdateStageParameters.class);
+    /*
+     * The forceRetryAllJobs property.
+     */
+    @JsonProperty(value = "forceRetryAllJobs")
+    private Boolean forceRetryAllJobs;
+
+    /*
+     * The retryDependencies property.
+     */
+    @JsonProperty(value = "retryDependencies")
+    private Boolean retryDependencies;
 
     /*
      * The state property.
@@ -21,8 +31,54 @@ public final class UpdateStageParameters {
     private StageUpdateType state;
 
     /**
+     * Creates an instance of UpdateStageParameters class.
+     */
+    public UpdateStageParameters() {
+    }
+
+    /**
+     * Get the forceRetryAllJobs property: The forceRetryAllJobs property.
+     * 
+     * @return the forceRetryAllJobs value.
+     */
+    public Boolean forceRetryAllJobs() {
+        return this.forceRetryAllJobs;
+    }
+
+    /**
+     * Set the forceRetryAllJobs property: The forceRetryAllJobs property.
+     * 
+     * @param forceRetryAllJobs the forceRetryAllJobs value to set.
+     * @return the UpdateStageParameters object itself.
+     */
+    public UpdateStageParameters withForceRetryAllJobs(Boolean forceRetryAllJobs) {
+        this.forceRetryAllJobs = forceRetryAllJobs;
+        return this;
+    }
+
+    /**
+     * Get the retryDependencies property: The retryDependencies property.
+     * 
+     * @return the retryDependencies value.
+     */
+    public Boolean retryDependencies() {
+        return this.retryDependencies;
+    }
+
+    /**
+     * Set the retryDependencies property: The retryDependencies property.
+     * 
+     * @param retryDependencies the retryDependencies value to set.
+     * @return the UpdateStageParameters object itself.
+     */
+    public UpdateStageParameters withRetryDependencies(Boolean retryDependencies) {
+        this.retryDependencies = retryDependencies;
+        return this;
+    }
+
+    /**
      * Get the state property: The state property.
-     *
+     * 
      * @return the state value.
      */
     public StageUpdateType state() {
@@ -31,7 +87,7 @@ public final class UpdateStageParameters {
 
     /**
      * Set the state property: The state property.
-     *
+     * 
      * @param state the state value to set.
      * @return the UpdateStageParameters object itself.
      */
@@ -42,7 +98,7 @@ public final class UpdateStageParameters {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

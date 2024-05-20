@@ -5,15 +5,13 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** The Repository model. */
+/**
+ * The Repository model.
+ */
 @Fluent
 public final class Repository {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(Repository.class);
-
     /*
      * The type property.
      */
@@ -21,8 +19,14 @@ public final class Repository {
     private RepositoryType type;
 
     /**
+     * Creates an instance of Repository class.
+     */
+    public Repository() {
+    }
+
+    /**
      * Get the type property: The type property.
-     *
+     * 
      * @return the type value.
      */
     public RepositoryType type() {
@@ -31,7 +35,7 @@ public final class Repository {
 
     /**
      * Set the type property: The type property.
-     *
+     * 
      * @param type the type value to set.
      * @return the Repository object itself.
      */
@@ -42,7 +46,7 @@ public final class Repository {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

@@ -5,17 +5,15 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
 
-/** Represents a repository returned from a source provider. */
+/**
+ * Represents a repository returned from a source provider.
+ */
 @Fluent
 public final class SourceRepository {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(SourceRepository.class);
-
     /*
      * The name of the default branch.
      */
@@ -60,8 +58,14 @@ public final class SourceRepository {
     private String url;
 
     /**
+     * Creates an instance of SourceRepository class.
+     */
+    public SourceRepository() {
+    }
+
+    /**
      * Get the defaultBranch property: The name of the default branch.
-     *
+     * 
      * @return the defaultBranch value.
      */
     public String defaultBranch() {
@@ -70,7 +74,7 @@ public final class SourceRepository {
 
     /**
      * Set the defaultBranch property: The name of the default branch.
-     *
+     * 
      * @param defaultBranch the defaultBranch value to set.
      * @return the SourceRepository object itself.
      */
@@ -81,7 +85,7 @@ public final class SourceRepository {
 
     /**
      * Get the fullName property: The full name of the repository.
-     *
+     * 
      * @return the fullName value.
      */
     public String fullName() {
@@ -90,7 +94,7 @@ public final class SourceRepository {
 
     /**
      * Set the fullName property: The full name of the repository.
-     *
+     * 
      * @param fullName the fullName value to set.
      * @return the SourceRepository object itself.
      */
@@ -101,7 +105,7 @@ public final class SourceRepository {
 
     /**
      * Get the id property: The ID of the repository.
-     *
+     * 
      * @return the id value.
      */
     public String id() {
@@ -110,7 +114,7 @@ public final class SourceRepository {
 
     /**
      * Set the id property: The ID of the repository.
-     *
+     * 
      * @param id the id value to set.
      * @return the SourceRepository object itself.
      */
@@ -121,7 +125,7 @@ public final class SourceRepository {
 
     /**
      * Get the name property: The friendly name of the repository.
-     *
+     * 
      * @return the name value.
      */
     public String name() {
@@ -130,7 +134,7 @@ public final class SourceRepository {
 
     /**
      * Set the name property: The friendly name of the repository.
-     *
+     * 
      * @param name the name value to set.
      * @return the SourceRepository object itself.
      */
@@ -141,7 +145,7 @@ public final class SourceRepository {
 
     /**
      * Get the properties property: Dictionary of &lt;string&gt;.
-     *
+     * 
      * @return the properties value.
      */
     public Map<String, String> properties() {
@@ -150,7 +154,7 @@ public final class SourceRepository {
 
     /**
      * Set the properties property: Dictionary of &lt;string&gt;.
-     *
+     * 
      * @param properties the properties value to set.
      * @return the SourceRepository object itself.
      */
@@ -161,7 +165,7 @@ public final class SourceRepository {
 
     /**
      * Get the sourceProviderName property: The name of the source provider the repository is from.
-     *
+     * 
      * @return the sourceProviderName value.
      */
     public String sourceProviderName() {
@@ -170,7 +174,7 @@ public final class SourceRepository {
 
     /**
      * Set the sourceProviderName property: The name of the source provider the repository is from.
-     *
+     * 
      * @param sourceProviderName the sourceProviderName value to set.
      * @return the SourceRepository object itself.
      */
@@ -181,7 +185,7 @@ public final class SourceRepository {
 
     /**
      * Get the url property: The URL of the repository.
-     *
+     * 
      * @return the url value.
      */
     public String url() {
@@ -190,7 +194,7 @@ public final class SourceRepository {
 
     /**
      * Set the url property: The URL of the repository.
-     *
+     * 
      * @param url the url value to set.
      * @return the SourceRepository object itself.
      */
@@ -201,7 +205,7 @@ public final class SourceRepository {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

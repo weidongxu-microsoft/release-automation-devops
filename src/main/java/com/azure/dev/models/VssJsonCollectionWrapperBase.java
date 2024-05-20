@@ -5,24 +5,28 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** The VssJsonCollectionWrapperBase model. */
+/**
+ * The VssJsonCollectionWrapperBase model.
+ */
 @Fluent
 public class VssJsonCollectionWrapperBase {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(VssJsonCollectionWrapperBase.class);
-
     /*
-     * The count property.
+     * The number of serialized items.
      */
     @JsonProperty(value = "count")
     private Integer count;
 
     /**
-     * Get the count property: The count property.
-     *
+     * Creates an instance of VssJsonCollectionWrapperBase class.
+     */
+    public VssJsonCollectionWrapperBase() {
+    }
+
+    /**
+     * Get the count property: The number of serialized items.
+     * 
      * @return the count value.
      */
     public Integer count() {
@@ -30,8 +34,8 @@ public class VssJsonCollectionWrapperBase {
     }
 
     /**
-     * Set the count property: The count property.
-     *
+     * Set the count property: The number of serialized items.
+     * 
      * @param count the count value to set.
      * @return the VssJsonCollectionWrapperBase object itself.
      */
@@ -42,7 +46,7 @@ public class VssJsonCollectionWrapperBase {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

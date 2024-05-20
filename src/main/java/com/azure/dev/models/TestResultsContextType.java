@@ -7,18 +7,28 @@ package com.azure.dev.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/** Defines values for TestResultsContextType. */
+/**
+ * Defines values for TestResultsContextType.
+ */
 public enum TestResultsContextType {
-    /** Enum value build. */
+    /**
+     * Enum value build.
+     */
     BUILD("build"),
 
-    /** Enum value release. */
+    /**
+     * Enum value release.
+     */
     RELEASE("release"),
 
-    /** Enum value pipeline. */
+    /**
+     * Enum value pipeline.
+     */
     PIPELINE("pipeline");
 
-    /** The actual serialized value for a TestResultsContextType instance. */
+    /**
+     * The actual serialized value for a TestResultsContextType instance.
+     */
     private final String value;
 
     TestResultsContextType(String value) {
@@ -27,12 +37,15 @@ public enum TestResultsContextType {
 
     /**
      * Parses a serialized value to a TestResultsContextType instance.
-     *
+     * 
      * @param value the serialized value to parse.
      * @return the parsed TestResultsContextType object, or null if unable to parse.
      */
     @JsonCreator
     public static TestResultsContextType fromString(String value) {
+        if (value == null) {
+            return null;
+        }
         TestResultsContextType[] items = TestResultsContextType.values();
         for (TestResultsContextType item : items) {
             if (item.toString().equalsIgnoreCase(value)) {
@@ -42,6 +55,9 @@ public enum TestResultsContextType {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @JsonValue
     @Override
     public String toString() {

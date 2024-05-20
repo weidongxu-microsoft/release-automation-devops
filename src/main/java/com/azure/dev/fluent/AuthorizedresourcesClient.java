@@ -11,22 +11,13 @@ import com.azure.core.util.Context;
 import com.azure.dev.fluent.models.DefinitionResourceReferenceInner;
 import java.util.List;
 
-/** An instance of this class provides access to all the operations defined in AuthorizedresourcesClient. */
+/**
+ * An instance of this class provides access to all the operations defined in AuthorizedresourcesClient.
+ */
 public interface AuthorizedresourcesClient {
     /**
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param body Array of DefinitionResourceReference.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of DefinitionResourceReference.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    List<DefinitionResourceReferenceInner> authorizeProjectResources(
-        String organization, String project, List<DefinitionResourceReferenceInner> body);
-
-    /**
+     * The authorizeProjectResources operation.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param body Array of DefinitionResourceReference.
@@ -34,13 +25,47 @@ public interface AuthorizedresourcesClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return array of DefinitionResourceReference along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Response<List<DefinitionResourceReferenceInner>> authorizeProjectResourcesWithResponse(String organization,
+        String project, List<DefinitionResourceReferenceInner> body, Context context);
+
+    /**
+     * The authorizeProjectResources operation.
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param body Array of DefinitionResourceReference.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return array of DefinitionResourceReference.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<List<DefinitionResourceReferenceInner>> authorizeProjectResourcesWithResponse(
-        String organization, String project, List<DefinitionResourceReferenceInner> body, Context context);
+    List<DefinitionResourceReferenceInner> authorizeProjectResources(String organization, String project,
+        List<DefinitionResourceReferenceInner> body);
 
     /**
+     * The list operation.
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param type The type parameter.
+     * @param id The id parameter.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return array of DefinitionResourceReference along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Response<List<DefinitionResourceReferenceInner>> listWithResponse(String organization, String project, String type,
+        String id, Context context);
+
+    /**
+     * The list operation.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -50,19 +75,4 @@ public interface AuthorizedresourcesClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     List<DefinitionResourceReferenceInner> list(String organization, String project);
-
-    /**
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param type The type parameter.
-     * @param id The id parameter.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of DefinitionResourceReference.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<List<DefinitionResourceReferenceInner>> listWithResponse(
-        String organization, String project, String type, String id, Context context);
 }

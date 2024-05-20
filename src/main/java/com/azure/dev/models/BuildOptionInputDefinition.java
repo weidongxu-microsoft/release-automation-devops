@@ -5,17 +5,15 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
 
-/** Represents an input for a build option. */
+/**
+ * Represents an input for a build option.
+ */
 @Fluent
 public final class BuildOptionInputDefinition {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(BuildOptionInputDefinition.class);
-
     /*
      * The default value.
      */
@@ -67,15 +65,20 @@ public final class BuildOptionInputDefinition {
     private BuildOptionInputType type;
 
     /*
-     * The rule that is applied to determine whether the input is visible in
-     * the UI.
+     * The rule that is applied to determine whether the input is visible in the UI.
      */
     @JsonProperty(value = "visibleRule")
     private String visibleRule;
 
     /**
+     * Creates an instance of BuildOptionInputDefinition class.
+     */
+    public BuildOptionInputDefinition() {
+    }
+
+    /**
      * Get the defaultValue property: The default value.
-     *
+     * 
      * @return the defaultValue value.
      */
     public String defaultValue() {
@@ -84,7 +87,7 @@ public final class BuildOptionInputDefinition {
 
     /**
      * Set the defaultValue property: The default value.
-     *
+     * 
      * @param defaultValue the defaultValue value to set.
      * @return the BuildOptionInputDefinition object itself.
      */
@@ -95,7 +98,7 @@ public final class BuildOptionInputDefinition {
 
     /**
      * Get the groupName property: The name of the input group that this input belongs to.
-     *
+     * 
      * @return the groupName value.
      */
     public String groupName() {
@@ -104,7 +107,7 @@ public final class BuildOptionInputDefinition {
 
     /**
      * Set the groupName property: The name of the input group that this input belongs to.
-     *
+     * 
      * @param groupName the groupName value to set.
      * @return the BuildOptionInputDefinition object itself.
      */
@@ -115,7 +118,7 @@ public final class BuildOptionInputDefinition {
 
     /**
      * Get the help property: Dictionary of &lt;string&gt;.
-     *
+     * 
      * @return the help value.
      */
     public Map<String, String> help() {
@@ -124,7 +127,7 @@ public final class BuildOptionInputDefinition {
 
     /**
      * Set the help property: Dictionary of &lt;string&gt;.
-     *
+     * 
      * @param help the help value to set.
      * @return the BuildOptionInputDefinition object itself.
      */
@@ -135,7 +138,7 @@ public final class BuildOptionInputDefinition {
 
     /**
      * Get the label property: The label for the input.
-     *
+     * 
      * @return the label value.
      */
     public String label() {
@@ -144,7 +147,7 @@ public final class BuildOptionInputDefinition {
 
     /**
      * Set the label property: The label for the input.
-     *
+     * 
      * @param label the label value to set.
      * @return the BuildOptionInputDefinition object itself.
      */
@@ -155,7 +158,7 @@ public final class BuildOptionInputDefinition {
 
     /**
      * Get the name property: The name of the input.
-     *
+     * 
      * @return the name value.
      */
     public String name() {
@@ -164,7 +167,7 @@ public final class BuildOptionInputDefinition {
 
     /**
      * Set the name property: The name of the input.
-     *
+     * 
      * @param name the name value to set.
      * @return the BuildOptionInputDefinition object itself.
      */
@@ -175,7 +178,7 @@ public final class BuildOptionInputDefinition {
 
     /**
      * Get the options property: Dictionary of &lt;string&gt;.
-     *
+     * 
      * @return the options value.
      */
     public Map<String, String> options() {
@@ -184,7 +187,7 @@ public final class BuildOptionInputDefinition {
 
     /**
      * Set the options property: Dictionary of &lt;string&gt;.
-     *
+     * 
      * @param options the options value to set.
      * @return the BuildOptionInputDefinition object itself.
      */
@@ -195,7 +198,7 @@ public final class BuildOptionInputDefinition {
 
     /**
      * Get the required property: Indicates whether the input is required to have a value.
-     *
+     * 
      * @return the required value.
      */
     public Boolean required() {
@@ -204,7 +207,7 @@ public final class BuildOptionInputDefinition {
 
     /**
      * Set the required property: Indicates whether the input is required to have a value.
-     *
+     * 
      * @param required the required value to set.
      * @return the BuildOptionInputDefinition object itself.
      */
@@ -215,7 +218,7 @@ public final class BuildOptionInputDefinition {
 
     /**
      * Get the type property: Indicates the type of the input value.
-     *
+     * 
      * @return the type value.
      */
     public BuildOptionInputType type() {
@@ -224,7 +227,7 @@ public final class BuildOptionInputDefinition {
 
     /**
      * Set the type property: Indicates the type of the input value.
-     *
+     * 
      * @param type the type value to set.
      * @return the BuildOptionInputDefinition object itself.
      */
@@ -235,7 +238,7 @@ public final class BuildOptionInputDefinition {
 
     /**
      * Get the visibleRule property: The rule that is applied to determine whether the input is visible in the UI.
-     *
+     * 
      * @return the visibleRule value.
      */
     public String visibleRule() {
@@ -244,7 +247,7 @@ public final class BuildOptionInputDefinition {
 
     /**
      * Set the visibleRule property: The rule that is applied to determine whether the input is visible in the UI.
-     *
+     * 
      * @param visibleRule the visibleRule value to set.
      * @return the BuildOptionInputDefinition object itself.
      */
@@ -255,7 +258,7 @@ public final class BuildOptionInputDefinition {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

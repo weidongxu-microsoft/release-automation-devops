@@ -5,15 +5,13 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** The ContainerResourceParameters model. */
+/**
+ * The ContainerResourceParameters model.
+ */
 @Fluent
 public final class ContainerResourceParameters {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(ContainerResourceParameters.class);
-
     /*
      * The version property.
      */
@@ -21,8 +19,14 @@ public final class ContainerResourceParameters {
     private String version;
 
     /**
+     * Creates an instance of ContainerResourceParameters class.
+     */
+    public ContainerResourceParameters() {
+    }
+
+    /**
      * Get the version property: The version property.
-     *
+     * 
      * @return the version value.
      */
     public String version() {
@@ -31,7 +35,7 @@ public final class ContainerResourceParameters {
 
     /**
      * Set the version property: The version property.
-     *
+     * 
      * @param version the version value to set.
      * @return the ContainerResourceParameters object itself.
      */
@@ -42,7 +46,7 @@ public final class ContainerResourceParameters {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

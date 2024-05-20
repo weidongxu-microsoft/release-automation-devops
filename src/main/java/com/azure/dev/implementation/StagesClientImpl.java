@@ -21,24 +21,27 @@ import com.azure.core.http.rest.RestProxy;
 import com.azure.core.management.exception.ManagementException;
 import com.azure.core.util.Context;
 import com.azure.core.util.FluxUtil;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.fluent.StagesClient;
 import com.azure.dev.models.UpdateStageParameters;
 import reactor.core.publisher.Mono;
 
-/** An instance of this class provides access to all the operations defined in StagesClient. */
+/**
+ * An instance of this class provides access to all the operations defined in StagesClient.
+ */
 public final class StagesClientImpl implements StagesClient {
-    private final ClientLogger logger = new ClientLogger(StagesClientImpl.class);
-
-    /** The proxy service used to perform REST calls. */
+    /**
+     * The proxy service used to perform REST calls.
+     */
     private final StagesService service;
 
-    /** The service client containing this operation class. */
+    /**
+     * The service client containing this operation class.
+     */
     private final DevClientImpl client;
 
     /**
      * Initializes an instance of StagesClientImpl.
-     *
+     * 
      * @param client the instance of the service client containing this operation class.
      */
     StagesClientImpl(DevClientImpl client) {
@@ -52,25 +55,20 @@ public final class StagesClientImpl implements StagesClient {
      */
     @Host("{$host}")
     @ServiceInterface(name = "DevClientStages")
-    private interface StagesService {
-        @Headers({"Accept: application/json;q=0.9", "Content-Type: application/json"})
+    public interface StagesService {
+        @Headers({ "Accept: application/json;q=0.9", "Content-Type: application/json" })
         @Patch("/{organization}/{project}/_apis/build/builds/{buildId}/stages/{stageRefName}")
-        @ExpectedResponses({200, 204})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Void>> update(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("buildId") int buildId,
-            @PathParam("stageRefName") String stageRefName,
-            @PathParam("project") String project,
-            @QueryParam("api-version") String apiVersion,
-            @BodyParam("application/json") UpdateStageParameters body,
-            Context context);
+        Mono<Response<Void>> update(@HostParam("$host") String endpoint, @PathParam("organization") String organization,
+            @PathParam("buildId") int buildId, @PathParam("stageRefName") String stageRefName,
+            @PathParam("project") String project, @QueryParam("api-version") String apiVersion,
+            @BodyParam("application/json") UpdateStageParameters body, Context context);
     }
 
     /**
      * Update a build stage.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param buildId The buildId parameter.
      * @param stageRefName The stageRefName parameter.
@@ -79,16 +77,14 @@ public final class StagesClientImpl implements StagesClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the completion.
+     * @return the {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Void>> updateWithResponseAsync(
-        String organization, int buildId, String stageRefName, String project, UpdateStageParameters body) {
+    private Mono<Response<Void>> updateWithResponseAsync(String organization, int buildId, String stageRefName,
+        String project, UpdateStageParameters body) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -104,26 +100,15 @@ public final class StagesClientImpl implements StagesClient {
         } else {
             body.validate();
         }
-        final String apiVersion = "6.0";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .update(
-                            this.client.getEndpoint(),
-                            organization,
-                            buildId,
-                            stageRefName,
-                            project,
-                            apiVersion,
-                            body,
-                            context))
+            .withContext(context -> service.update(this.client.getEndpoint(), organization, buildId, stageRefName,
+                project, this.client.getApiVersion(), body, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Update a build stage.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param buildId The buildId parameter.
      * @param stageRefName The stageRefName parameter.
@@ -133,21 +118,14 @@ public final class StagesClientImpl implements StagesClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the completion.
+     * @return the {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Void>> updateWithResponseAsync(
-        String organization,
-        int buildId,
-        String stageRefName,
-        String project,
-        UpdateStageParameters body,
-        Context context) {
+    private Mono<Response<Void>> updateWithResponseAsync(String organization, int buildId, String stageRefName,
+        String project, UpdateStageParameters body, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -163,15 +141,14 @@ public final class StagesClientImpl implements StagesClient {
         } else {
             body.validate();
         }
-        final String apiVersion = "6.0";
         context = this.client.mergeContext(context);
-        return service
-            .update(this.client.getEndpoint(), organization, buildId, stageRefName, project, apiVersion, body, context);
+        return service.update(this.client.getEndpoint(), organization, buildId, stageRefName, project,
+            this.client.getApiVersion(), body, context);
     }
 
     /**
      * Update a build stage.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param buildId The buildId parameter.
      * @param stageRefName The stageRefName parameter.
@@ -180,36 +157,18 @@ public final class StagesClientImpl implements StagesClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the completion.
+     * @return A {@link Mono} that completes when a successful response is received.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Void> updateAsync(
-        String organization, int buildId, String stageRefName, String project, UpdateStageParameters body) {
+    private Mono<Void> updateAsync(String organization, int buildId, String stageRefName, String project,
+        UpdateStageParameters body) {
         return updateWithResponseAsync(organization, buildId, stageRefName, project, body)
-            .flatMap((Response<Void> res) -> Mono.empty());
+            .flatMap(ignored -> Mono.empty());
     }
 
     /**
      * Update a build stage.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param buildId The buildId parameter.
-     * @param stageRefName The stageRefName parameter.
-     * @param project Project ID or project name.
-     * @param body The body parameter.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public void update(
-        String organization, int buildId, String stageRefName, String project, UpdateStageParameters body) {
-        updateAsync(organization, buildId, stageRefName, project, body).block();
-    }
-
-    /**
-     * Update a build stage.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param buildId The buildId parameter.
      * @param stageRefName The stageRefName parameter.
@@ -219,16 +178,29 @@ public final class StagesClientImpl implements StagesClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response.
+     * @return the {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<Void> updateWithResponse(
-        String organization,
-        int buildId,
-        String stageRefName,
-        String project,
-        UpdateStageParameters body,
-        Context context) {
+    public Response<Void> updateWithResponse(String organization, int buildId, String stageRefName, String project,
+        UpdateStageParameters body, Context context) {
         return updateWithResponseAsync(organization, buildId, stageRefName, project, body, context).block();
+    }
+
+    /**
+     * Update a build stage.
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param buildId The buildId parameter.
+     * @param stageRefName The stageRefName parameter.
+     * @param project Project ID or project name.
+     * @param body The body parameter.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public void update(String organization, int buildId, String stageRefName, String project,
+        UpdateStageParameters body) {
+        updateWithResponse(organization, buildId, stageRefName, project, body, Context.NONE);
     }
 }

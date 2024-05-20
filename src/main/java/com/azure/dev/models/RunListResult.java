@@ -5,17 +5,15 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Immutable;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.fluent.models.RunInner;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** The RunListResult model. */
+/**
+ * The RunListResult model.
+ */
 @Immutable
 public final class RunListResult {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(RunListResult.class);
-
     /*
      * The value property.
      */
@@ -23,8 +21,14 @@ public final class RunListResult {
     private List<RunInner> value;
 
     /**
+     * Creates an instance of RunListResult class.
+     */
+    public RunListResult() {
+    }
+
+    /**
      * Get the value property: The value property.
-     *
+     * 
      * @return the value value.
      */
     public List<RunInner> value() {
@@ -33,7 +37,7 @@ public final class RunListResult {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

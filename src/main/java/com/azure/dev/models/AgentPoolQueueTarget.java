@@ -5,16 +5,14 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** Describes how a phase should run against an agent queue. */
+/**
+ * Describes how a phase should run against an agent queue.
+ */
 @Fluent
 public final class AgentPoolQueueTarget extends PhaseTarget {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(AgentPoolQueueTarget.class);
-
     /*
      * Agent specification of the target.
      */
@@ -22,8 +20,7 @@ public final class AgentPoolQueueTarget extends PhaseTarget {
     private AgentSpecification agentSpecification;
 
     /*
-     * Enables scripts and other processes launched while executing phase to
-     * access the OAuth token
+     * Enables scripts and other processes launched while executing phase to access the OAuth token
      */
     @JsonProperty(value = "allowScriptsAuthAccessOption")
     private Boolean allowScriptsAuthAccessOption;
@@ -47,8 +44,14 @@ public final class AgentPoolQueueTarget extends PhaseTarget {
     private AgentPoolQueue queue;
 
     /**
+     * Creates an instance of AgentPoolQueueTarget class.
+     */
+    public AgentPoolQueueTarget() {
+    }
+
+    /**
      * Get the agentSpecification property: Agent specification of the target.
-     *
+     * 
      * @return the agentSpecification value.
      */
     public AgentSpecification agentSpecification() {
@@ -57,7 +60,7 @@ public final class AgentPoolQueueTarget extends PhaseTarget {
 
     /**
      * Set the agentSpecification property: Agent specification of the target.
-     *
+     * 
      * @param agentSpecification the agentSpecification value to set.
      * @return the AgentPoolQueueTarget object itself.
      */
@@ -69,7 +72,7 @@ public final class AgentPoolQueueTarget extends PhaseTarget {
     /**
      * Get the allowScriptsAuthAccessOption property: Enables scripts and other processes launched while executing phase
      * to access the OAuth token.
-     *
+     * 
      * @return the allowScriptsAuthAccessOption value.
      */
     public Boolean allowScriptsAuthAccessOption() {
@@ -79,7 +82,7 @@ public final class AgentPoolQueueTarget extends PhaseTarget {
     /**
      * Set the allowScriptsAuthAccessOption property: Enables scripts and other processes launched while executing phase
      * to access the OAuth token.
-     *
+     * 
      * @param allowScriptsAuthAccessOption the allowScriptsAuthAccessOption value to set.
      * @return the AgentPoolQueueTarget object itself.
      */
@@ -90,7 +93,7 @@ public final class AgentPoolQueueTarget extends PhaseTarget {
 
     /**
      * Get the demands property: The demands property.
-     *
+     * 
      * @return the demands value.
      */
     public List<Demand> demands() {
@@ -99,7 +102,7 @@ public final class AgentPoolQueueTarget extends PhaseTarget {
 
     /**
      * Set the demands property: The demands property.
-     *
+     * 
      * @param demands the demands value to set.
      * @return the AgentPoolQueueTarget object itself.
      */
@@ -110,7 +113,7 @@ public final class AgentPoolQueueTarget extends PhaseTarget {
 
     /**
      * Get the executionOptions property: The execution options.
-     *
+     * 
      * @return the executionOptions value.
      */
     public AgentTargetExecutionOptions executionOptions() {
@@ -119,7 +122,7 @@ public final class AgentPoolQueueTarget extends PhaseTarget {
 
     /**
      * Set the executionOptions property: The execution options.
-     *
+     * 
      * @param executionOptions the executionOptions value to set.
      * @return the AgentPoolQueueTarget object itself.
      */
@@ -130,7 +133,7 @@ public final class AgentPoolQueueTarget extends PhaseTarget {
 
     /**
      * Get the queue property: The queue.
-     *
+     * 
      * @return the queue value.
      */
     public AgentPoolQueue queue() {
@@ -139,7 +142,7 @@ public final class AgentPoolQueueTarget extends PhaseTarget {
 
     /**
      * Set the queue property: The queue.
-     *
+     * 
      * @param queue the queue value to set.
      * @return the AgentPoolQueueTarget object itself.
      */
@@ -148,7 +151,9 @@ public final class AgentPoolQueueTarget extends PhaseTarget {
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public AgentPoolQueueTarget withType(Integer type) {
         super.withType(type);
@@ -157,7 +162,7 @@ public final class AgentPoolQueueTarget extends PhaseTarget {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     @Override

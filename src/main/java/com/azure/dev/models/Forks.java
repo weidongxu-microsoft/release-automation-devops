@@ -5,33 +5,63 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Represents the ability to build forks of the selected repository. */
+/**
+ * Represents the ability to build forks of the selected repository.
+ */
 @Fluent
 public final class Forks {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(Forks.class);
+    /*
+     * Indicates whether a build should allow a full access token or scope it down when building forks of the selected repository.
+     */
+    @JsonProperty(value = "allowFullAccessToken")
+    private Boolean allowFullAccessToken;
 
     /*
-     * Indicates whether a build should use secrets when building forks of the
-     * selected repository.
+     * Indicates whether a build should use secrets when building forks of the selected repository.
      */
     @JsonProperty(value = "allowSecrets")
     private Boolean allowSecrets;
 
     /*
-     * Indicates whether the trigger should queue builds for forks of the
-     * selected repository.
+     * Indicates whether the trigger should queue builds for forks of the selected repository.
      */
     @JsonProperty(value = "enabled")
     private Boolean enabled;
 
     /**
+     * Creates an instance of Forks class.
+     */
+    public Forks() {
+    }
+
+    /**
+     * Get the allowFullAccessToken property: Indicates whether a build should allow a full access token or scope it
+     * down when building forks of the selected repository.
+     * 
+     * @return the allowFullAccessToken value.
+     */
+    public Boolean allowFullAccessToken() {
+        return this.allowFullAccessToken;
+    }
+
+    /**
+     * Set the allowFullAccessToken property: Indicates whether a build should allow a full access token or scope it
+     * down when building forks of the selected repository.
+     * 
+     * @param allowFullAccessToken the allowFullAccessToken value to set.
+     * @return the Forks object itself.
+     */
+    public Forks withAllowFullAccessToken(Boolean allowFullAccessToken) {
+        this.allowFullAccessToken = allowFullAccessToken;
+        return this;
+    }
+
+    /**
      * Get the allowSecrets property: Indicates whether a build should use secrets when building forks of the selected
      * repository.
-     *
+     * 
      * @return the allowSecrets value.
      */
     public Boolean allowSecrets() {
@@ -41,7 +71,7 @@ public final class Forks {
     /**
      * Set the allowSecrets property: Indicates whether a build should use secrets when building forks of the selected
      * repository.
-     *
+     * 
      * @param allowSecrets the allowSecrets value to set.
      * @return the Forks object itself.
      */
@@ -52,7 +82,7 @@ public final class Forks {
 
     /**
      * Get the enabled property: Indicates whether the trigger should queue builds for forks of the selected repository.
-     *
+     * 
      * @return the enabled value.
      */
     public Boolean enabled() {
@@ -61,7 +91,7 @@ public final class Forks {
 
     /**
      * Set the enabled property: Indicates whether the trigger should queue builds for forks of the selected repository.
-     *
+     * 
      * @param enabled the enabled value to set.
      * @return the Forks object itself.
      */
@@ -72,7 +102,7 @@ public final class Forks {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

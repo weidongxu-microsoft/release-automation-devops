@@ -5,15 +5,21 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
-/** The JustInTimeProcess model. */
+/**
+ * The JustInTimeProcess model.
+ */
 @Fluent
 public final class JustInTimeProcess extends BuildProcess {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(JustInTimeProcess.class);
+    /**
+     * Creates an instance of JustInTimeProcess class.
+     */
+    public JustInTimeProcess() {
+    }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public JustInTimeProcess withType(Integer type) {
         super.withType(type);
@@ -22,7 +28,7 @@ public final class JustInTimeProcess extends BuildProcess {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     @Override

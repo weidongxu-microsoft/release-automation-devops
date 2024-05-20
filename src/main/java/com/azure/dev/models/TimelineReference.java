@@ -5,16 +5,14 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.UUID;
 
-/** Represents a reference to a timeline. */
+/**
+ * Represents a reference to a timeline.
+ */
 @Fluent
 public class TimelineReference {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(TimelineReference.class);
-
     /*
      * The change ID.
      */
@@ -34,8 +32,14 @@ public class TimelineReference {
     private String url;
 
     /**
+     * Creates an instance of TimelineReference class.
+     */
+    public TimelineReference() {
+    }
+
+    /**
      * Get the changeId property: The change ID.
-     *
+     * 
      * @return the changeId value.
      */
     public Integer changeId() {
@@ -44,7 +48,7 @@ public class TimelineReference {
 
     /**
      * Set the changeId property: The change ID.
-     *
+     * 
      * @param changeId the changeId value to set.
      * @return the TimelineReference object itself.
      */
@@ -55,7 +59,7 @@ public class TimelineReference {
 
     /**
      * Get the id property: The ID of the timeline.
-     *
+     * 
      * @return the id value.
      */
     public UUID id() {
@@ -64,7 +68,7 @@ public class TimelineReference {
 
     /**
      * Set the id property: The ID of the timeline.
-     *
+     * 
      * @param id the id value to set.
      * @return the TimelineReference object itself.
      */
@@ -75,7 +79,7 @@ public class TimelineReference {
 
     /**
      * Get the url property: The REST URL of the timeline.
-     *
+     * 
      * @return the url value.
      */
     public String url() {
@@ -84,7 +88,7 @@ public class TimelineReference {
 
     /**
      * Set the url property: The REST URL of the timeline.
-     *
+     * 
      * @param url the url value to set.
      * @return the TimelineReference object itself.
      */
@@ -95,7 +99,7 @@ public class TimelineReference {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

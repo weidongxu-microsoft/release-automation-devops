@@ -7,15 +7,23 @@ package com.azure.dev.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/** Defines values for BuildAuthorizationScope. */
+/**
+ * The job authorization scope for builds queued against this definition.
+ */
 public enum BuildAuthorizationScope {
-    /** Enum value projectCollection. */
+    /**
+     * Enum value projectCollection.
+     */
     PROJECT_COLLECTION("projectCollection"),
 
-    /** Enum value project. */
+    /**
+     * Enum value project.
+     */
     PROJECT("project");
 
-    /** The actual serialized value for a BuildAuthorizationScope instance. */
+    /**
+     * The actual serialized value for a BuildAuthorizationScope instance.
+     */
     private final String value;
 
     BuildAuthorizationScope(String value) {
@@ -24,12 +32,15 @@ public enum BuildAuthorizationScope {
 
     /**
      * Parses a serialized value to a BuildAuthorizationScope instance.
-     *
+     * 
      * @param value the serialized value to parse.
      * @return the parsed BuildAuthorizationScope object, or null if unable to parse.
      */
     @JsonCreator
     public static BuildAuthorizationScope fromString(String value) {
+        if (value == null) {
+            return null;
+        }
         BuildAuthorizationScope[] items = BuildAuthorizationScope.values();
         for (BuildAuthorizationScope item : items) {
             if (item.toString().equalsIgnoreCase(value)) {
@@ -39,6 +50,9 @@ public enum BuildAuthorizationScope {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @JsonValue
     @Override
     public String toString() {

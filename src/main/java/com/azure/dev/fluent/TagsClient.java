@@ -8,17 +8,37 @@ import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.http.rest.Response;
 import com.azure.core.util.Context;
+import com.azure.dev.models.UpdateTagParameters;
 import java.util.List;
 
-/** An instance of this class provides access to all the operations defined in TagsClient. */
+/**
+ * An instance of this class provides access to all the operations defined in TagsClient.
+ */
 public interface TagsClient {
     /**
      * Adds tags to a build.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
-     * @param body The tags to add.
+     * @param body The tags to add. Request body is composed directly from listed tags.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return array of Post200ApplicationJsonItemsItem along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Response<List<String>> addBuildTagsWithResponse(String organization, String project, int buildId, List<String> body,
+        Context context);
+
+    /**
+     * Adds tags to a build.
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param buildId The ID of the build.
+     * @param body The tags to add. Request body is composed directly from listed tags.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -28,25 +48,23 @@ public interface TagsClient {
     List<String> addBuildTags(String organization, String project, int buildId, List<String> body);
 
     /**
-     * Adds tags to a build.
-     *
+     * Gets the tags for a build.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
-     * @param body The tags to add.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of Post200ApplicationJsonItemsItem.
+     * @return the tags for a build along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<List<String>> addBuildTagsWithResponse(
-        String organization, String project, int buildId, List<String> body, Context context);
+    Response<List<String>> getBuildTagsWithResponse(String organization, String project, int buildId, Context context);
 
     /**
      * Gets the tags for a build.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
@@ -59,23 +77,57 @@ public interface TagsClient {
     List<String> getBuildTags(String organization, String project, int buildId);
 
     /**
-     * Gets the tags for a build.
-     *
+     * Adds/Removes tags from a build.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
+     * @param body The tags to add/remove.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the tags for a build.
+     * @return array of Patch200ApplicationJsonItemsItem along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<List<String>> getBuildTagsWithResponse(String organization, String project, int buildId, Context context);
+    Response<List<String>> updateBuildTagsWithResponse(String organization, String project, int buildId,
+        UpdateTagParameters body, Context context);
+
+    /**
+     * Adds/Removes tags from a build.
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param buildId The ID of the build.
+     * @param body The tags to add/remove.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return array of Patch200ApplicationJsonItemsItem.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    List<String> updateBuildTags(String organization, String project, int buildId, UpdateTagParameters body);
 
     /**
      * Adds a tag to a build.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param buildId The ID of the build.
+     * @param tag The tag to add.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return array of Put200ApplicationJsonItemsItem along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Response<List<String>> addBuildTagWithResponse(String organization, String project, int buildId, String tag,
+        Context context);
+
+    /**
+     * Adds a tag to a build.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
@@ -89,25 +141,27 @@ public interface TagsClient {
     List<String> addBuildTag(String organization, String project, int buildId, String tag);
 
     /**
-     * Adds a tag to a build.
-     *
+     * Removes a tag from a build. NOTE: This API will not work for tags with special characters. To remove tags with
+     * special characters, use the PATCH method instead (in 6.0+).
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
-     * @param tag The tag to add.
+     * @param tag The tag to remove.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of Put200ApplicationJsonItemsItem.
+     * @return array of Delete200ApplicationJsonItemsItem along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<List<String>> addBuildTagWithResponse(
-        String organization, String project, int buildId, String tag, Context context);
+    Response<List<String>> deleteBuildTagWithResponse(String organization, String project, int buildId, String tag,
+        Context context);
 
     /**
-     * Removes a tag from a build.
-     *
+     * Removes a tag from a build. NOTE: This API will not work for tags with special characters. To remove tags with
+     * special characters, use the PATCH method instead (in 6.0+).
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
@@ -121,25 +175,25 @@ public interface TagsClient {
     List<String> deleteBuildTag(String organization, String project, int buildId, String tag);
 
     /**
-     * Removes a tag from a build.
-     *
+     * Adds multiple tags to a definition.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
-     * @param buildId The ID of the build.
-     * @param tag The tag to remove.
+     * @param definitionId The ID of the definition.
+     * @param body The tags to add.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of Delete200ApplicationJsonItemsItem.
+     * @return array of String along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<List<String>> deleteBuildTagWithResponse(
-        String organization, String project, int buildId, String tag, Context context);
+    Response<List<String>> addDefinitionTagsWithResponse(String organization, String project, int definitionId,
+        List<String> body, Context context);
 
     /**
      * Adds multiple tags to a definition.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
@@ -153,25 +207,25 @@ public interface TagsClient {
     List<String> addDefinitionTags(String organization, String project, int definitionId, List<String> body);
 
     /**
-     * Adds multiple tags to a definition.
-     *
+     * Gets the tags for a definition.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
-     * @param body The tags to add.
+     * @param revision The definition revision number. If not specified, uses the latest revision of the definition.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of String.
+     * @return the tags for a definition along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<List<String>> addDefinitionTagsWithResponse(
-        String organization, String project, int definitionId, List<String> body, Context context);
+    Response<List<String>> getDefinitionTagsWithResponse(String organization, String project, int definitionId,
+        Integer revision, Context context);
 
     /**
      * Gets the tags for a definition.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
@@ -184,25 +238,57 @@ public interface TagsClient {
     List<String> getDefinitionTags(String organization, String project, int definitionId);
 
     /**
-     * Gets the tags for a definition.
-     *
+     * Adds/Removes tags from a definition.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
-     * @param revision The definition revision number. If not specified, uses the latest revision of the definition.
+     * @param body The tags to add/remove.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the tags for a definition.
+     * @return array of String along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<List<String>> getDefinitionTagsWithResponse(
-        String organization, String project, int definitionId, Integer revision, Context context);
+    Response<List<String>> updateDefinitionTagsWithResponse(String organization, String project, int definitionId,
+        UpdateTagParameters body, Context context);
+
+    /**
+     * Adds/Removes tags from a definition.
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param definitionId The ID of the definition.
+     * @param body The tags to add/remove.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return array of String.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    List<String> updateDefinitionTags(String organization, String project, int definitionId, UpdateTagParameters body);
 
     /**
      * Adds a tag to a definition.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param definitionId The ID of the definition.
+     * @param tag The tag to add.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return array of String along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Response<List<String>> addDefinitionTagWithResponse(String organization, String project, int definitionId,
+        String tag, Context context);
+
+    /**
+     * Adds a tag to a definition.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
@@ -216,25 +302,27 @@ public interface TagsClient {
     List<String> addDefinitionTag(String organization, String project, int definitionId, String tag);
 
     /**
-     * Adds a tag to a definition.
-     *
+     * Removes a tag from a definition. NOTE: This API will not work for tags with special characters. To remove tags
+     * with special characters, use the PATCH method instead (in 6.0+).
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
-     * @param tag The tag to add.
+     * @param tag The tag to remove.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of String.
+     * @return array of String along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<List<String>> addDefinitionTagWithResponse(
-        String organization, String project, int definitionId, String tag, Context context);
+    Response<List<String>> deleteDefinitionTagWithResponse(String organization, String project, int definitionId,
+        String tag, Context context);
 
     /**
-     * Removes a tag from a definition.
-     *
+     * Removes a tag from a definition. NOTE: This API will not work for tags with special characters. To remove tags
+     * with special characters, use the PATCH method instead (in 6.0+).
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
@@ -248,25 +336,22 @@ public interface TagsClient {
     List<String> deleteDefinitionTag(String organization, String project, int definitionId, String tag);
 
     /**
-     * Removes a tag from a definition.
-     *
+     * Gets a list of all build tags in the project.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
-     * @param definitionId The ID of the definition.
-     * @param tag The tag to remove.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of String.
+     * @return a list of all build tags in the project along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<List<String>> deleteDefinitionTagWithResponse(
-        String organization, String project, int definitionId, String tag, Context context);
+    Response<List<String>> getTagsWithResponse(String organization, String project, Context context);
 
     /**
      * Gets a list of all build tags in the project.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -278,22 +363,23 @@ public interface TagsClient {
     List<String> getTags(String organization, String project);
 
     /**
-     * Gets a list of all build tags in the project.
-     *
+     * Removes a tag from builds, definitions, and from the tag store.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
+     * @param tag The tag to remove.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of all build tags in the project.
+     * @return array of String along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<List<String>> getTagsWithResponse(String organization, String project, Context context);
+    Response<List<String>> deleteTagWithResponse(String organization, String project, String tag, Context context);
 
     /**
      * Removes a tag from builds, definitions, and from the tag store.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param tag The tag to remove.
@@ -304,19 +390,4 @@ public interface TagsClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     List<String> deleteTag(String organization, String project, String tag);
-
-    /**
-     * Removes a tag from builds, definitions, and from the tag store.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param tag The tag to remove.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of String.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<List<String>> deleteTagWithResponse(String organization, String project, String tag, Context context);
 }

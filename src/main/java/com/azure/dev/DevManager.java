@@ -8,12 +8,15 @@ import com.azure.core.credential.TokenCredential;
 import com.azure.core.http.HttpClient;
 import com.azure.core.http.HttpPipeline;
 import com.azure.core.http.HttpPipelineBuilder;
+import com.azure.core.http.HttpPipelinePosition;
 import com.azure.core.http.policy.AddDatePolicy;
-import com.azure.core.http.policy.HttpLogOptions;
+import com.azure.core.http.policy.AddHeadersFromContextPolicy;
 import com.azure.core.http.policy.HttpLoggingPolicy;
+import com.azure.core.http.policy.HttpLogOptions;
 import com.azure.core.http.policy.HttpPipelinePolicy;
 import com.azure.core.http.policy.HttpPolicyProviders;
 import com.azure.core.http.policy.RequestIdPolicy;
+import com.azure.core.http.policy.RetryOptions;
 import com.azure.core.http.policy.RetryPolicy;
 import com.azure.core.http.policy.UserAgentPolicy;
 import com.azure.core.management.http.policy.ArmChallengeAuthenticationPolicy;
@@ -31,16 +34,18 @@ import com.azure.dev.implementation.DefinitionsImpl;
 import com.azure.dev.implementation.DevClientBuilder;
 import com.azure.dev.implementation.FoldersImpl;
 import com.azure.dev.implementation.GeneralSettingsImpl;
+import com.azure.dev.implementation.HistoriesImpl;
 import com.azure.dev.implementation.LatestsImpl;
 import com.azure.dev.implementation.LeasesImpl;
 import com.azure.dev.implementation.LogsImpl;
 import com.azure.dev.implementation.MetricsImpl;
 import com.azure.dev.implementation.OptionsImpl;
 import com.azure.dev.implementation.PipelinesImpl;
+import com.azure.dev.implementation.PreviewsImpl;
 import com.azure.dev.implementation.PropertiesImpl;
 import com.azure.dev.implementation.ReportsImpl;
-import com.azure.dev.implementation.ResourceUsagesImpl;
 import com.azure.dev.implementation.ResourcesImpl;
+import com.azure.dev.implementation.ResourceUsagesImpl;
 import com.azure.dev.implementation.RetentionsImpl;
 import com.azure.dev.implementation.RunsImpl;
 import com.azure.dev.implementation.SettingsImpl;
@@ -50,6 +55,7 @@ import com.azure.dev.implementation.StatusImpl;
 import com.azure.dev.implementation.TagsImpl;
 import com.azure.dev.implementation.TemplatesImpl;
 import com.azure.dev.implementation.TimelinesImpl;
+import com.azure.dev.implementation.YamlsImpl;
 import com.azure.dev.models.Artifacts;
 import com.azure.dev.models.Attachments;
 import com.azure.dev.models.Authorizedresources;
@@ -59,16 +65,18 @@ import com.azure.dev.models.Controllers;
 import com.azure.dev.models.Definitions;
 import com.azure.dev.models.Folders;
 import com.azure.dev.models.GeneralSettings;
+import com.azure.dev.models.Histories;
 import com.azure.dev.models.Latests;
 import com.azure.dev.models.Leases;
 import com.azure.dev.models.Logs;
 import com.azure.dev.models.Metrics;
 import com.azure.dev.models.Options;
 import com.azure.dev.models.Pipelines;
+import com.azure.dev.models.Previews;
 import com.azure.dev.models.Properties;
 import com.azure.dev.models.Reports;
-import com.azure.dev.models.ResourceUsages;
 import com.azure.dev.models.Resources;
+import com.azure.dev.models.ResourceUsages;
 import com.azure.dev.models.Retentions;
 import com.azure.dev.models.Runs;
 import com.azure.dev.models.Settings;
@@ -78,17 +86,23 @@ import com.azure.dev.models.Status;
 import com.azure.dev.models.Tags;
 import com.azure.dev.models.Templates;
 import com.azure.dev.models.Timelines;
+import com.azure.dev.models.Yamls;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
-/** Entry point to DevManager. */
+/**
+ * Entry point to DevManager.
+ */
 public final class DevManager {
     private Controllers controllers;
 
     private ResourceUsages resourceUsages;
+
+    private Histories histories;
 
     private Badges badges;
 
@@ -116,6 +130,8 @@ public final class DevManager {
 
     private Resources resources;
 
+    private Yamls yamls;
+
     private Templates templates;
 
     private Folders folders;
@@ -138,6 +154,8 @@ public final class DevManager {
 
     private Pipelines pipelines;
 
+    private Previews previews;
+
     private Runs runs;
 
     private Logs logs;
@@ -147,17 +165,15 @@ public final class DevManager {
     private DevManager(HttpPipeline httpPipeline, AzureProfile profile, Duration defaultPollInterval) {
         Objects.requireNonNull(httpPipeline, "'httpPipeline' cannot be null.");
         Objects.requireNonNull(profile, "'profile' cannot be null.");
-        this.clientObject =
-            new DevClientBuilder()
-                .pipeline(httpPipeline)
-//                .endpoint(profile.getEnvironment().getResourceManagerEndpoint())
-//                .defaultPollInterval(defaultPollInterval)
-                .buildClient();
+        this.clientObject = new DevClientBuilder().pipeline(httpPipeline)
+//            .endpoint(profile.getEnvironment().getResourceManagerEndpoint())
+//            .defaultPollInterval(defaultPollInterval)
+            .buildClient();
     }
 
     /**
      * Creates an instance of Dev service API entry point.
-     *
+     * 
      * @param credential the credential to use.
      * @param profile the Azure profile for client.
      * @return the Dev service API instance.
@@ -169,23 +185,39 @@ public final class DevManager {
     }
 
     /**
+     * Creates an instance of Dev service API entry point.
+     * 
+     * @param httpPipeline the {@link HttpPipeline} configured with Azure authentication credential.
+     * @param profile the Azure profile for client.
+     * @return the Dev service API instance.
+     */
+    public static DevManager authenticate(HttpPipeline httpPipeline, AzureProfile profile) {
+        Objects.requireNonNull(httpPipeline, "'httpPipeline' cannot be null.");
+        Objects.requireNonNull(profile, "'profile' cannot be null.");
+        return new DevManager(httpPipeline, profile, null);
+    }
+
+    /**
      * Gets a Configurable instance that can be used to create DevManager with optional configuration.
-     *
+     * 
      * @return the Configurable instance allowing configurations.
      */
     public static Configurable configure() {
         return new DevManager.Configurable();
     }
 
-    /** The Configurable allowing configurations to be set. */
+    /**
+     * The Configurable allowing configurations to be set.
+     */
     public static final class Configurable {
-        private final ClientLogger logger = new ClientLogger(Configurable.class);
+        private static final ClientLogger LOGGER = new ClientLogger(Configurable.class);
 
         private HttpClient httpClient;
         private HttpLogOptions httpLogOptions;
         private final List<HttpPipelinePolicy> policies = new ArrayList<>();
         private final List<String> scopes = new ArrayList<>();
         private RetryPolicy retryPolicy;
+        private RetryOptions retryOptions;
         private Duration defaultPollInterval;
 
         private Configurable() {
@@ -247,15 +279,30 @@ public final class DevManager {
         }
 
         /**
+         * Sets the retry options for the HTTP pipeline retry policy.
+         * <p>
+         * This setting has no effect, if retry policy is set via {@link #withRetryPolicy(RetryPolicy)}.
+         *
+         * @param retryOptions the retry options for the HTTP pipeline retry policy.
+         * @return the configurable object itself.
+         */
+        public Configurable withRetryOptions(RetryOptions retryOptions) {
+            this.retryOptions = Objects.requireNonNull(retryOptions, "'retryOptions' cannot be null.");
+            return this;
+        }
+
+        /**
          * Sets the default poll interval, used when service does not provide "Retry-After" header.
          *
          * @param defaultPollInterval the default poll interval.
          * @return the configurable object itself.
          */
         public Configurable withDefaultPollInterval(Duration defaultPollInterval) {
-            this.defaultPollInterval = Objects.requireNonNull(defaultPollInterval, "'retryPolicy' cannot be null.");
+            this.defaultPollInterval
+                = Objects.requireNonNull(defaultPollInterval, "'defaultPollInterval' cannot be null.");
             if (this.defaultPollInterval.isNegative()) {
-                throw logger.logExceptionAsError(new IllegalArgumentException("'httpPipeline' cannot be negative"));
+                throw LOGGER
+                    .logExceptionAsError(new IllegalArgumentException("'defaultPollInterval' cannot be negative"));
             }
             return this;
         }
@@ -272,15 +319,13 @@ public final class DevManager {
             Objects.requireNonNull(profile, "'profile' cannot be null.");
 
             StringBuilder userAgentBuilder = new StringBuilder();
-            userAgentBuilder
-                .append("azsdk-java")
+            userAgentBuilder.append("azsdk-java")
                 .append("-")
                 .append("com.azure.dev")
                 .append("/")
                 .append("1.0.0-beta.1");
             if (!Configuration.getGlobalConfiguration().get("AZURE_TELEMETRY_DISABLED", false)) {
-                userAgentBuilder
-                    .append(" (")
+                userAgentBuilder.append(" (")
                     .append(Configuration.getGlobalConfiguration().get("java.version"))
                     .append("; ")
                     .append(Configuration.getGlobalConfiguration().get("os.name"))
@@ -295,28 +340,40 @@ public final class DevManager {
                 scopes.add(profile.getEnvironment().getManagementEndpoint() + "/.default");
             }
             if (retryPolicy == null) {
-                retryPolicy = new RetryPolicy("Retry-After", ChronoUnit.SECONDS);
+                if (retryOptions != null) {
+                    retryPolicy = new RetryPolicy(retryOptions);
+                } else {
+                    retryPolicy = new RetryPolicy("Retry-After", ChronoUnit.SECONDS);
+                }
             }
             List<HttpPipelinePolicy> policies = new ArrayList<>();
             policies.add(new UserAgentPolicy(userAgentBuilder.toString()));
+            policies.add(new AddHeadersFromContextPolicy());
             policies.add(new RequestIdPolicy());
+            policies.addAll(this.policies.stream()
+                .filter(p -> p.getPipelinePosition() == HttpPipelinePosition.PER_CALL)
+                .collect(Collectors.toList()));
             HttpPolicyProviders.addBeforeRetryPolicies(policies);
             policies.add(retryPolicy);
             policies.add(new AddDatePolicy());
             policies.add(new ArmChallengeAuthenticationPolicy(credential, scopes.toArray(new String[0])));
-            policies.addAll(this.policies);
+            policies.addAll(this.policies.stream()
+                .filter(p -> p.getPipelinePosition() == HttpPipelinePosition.PER_RETRY)
+                .collect(Collectors.toList()));
             HttpPolicyProviders.addAfterRetryPolicies(policies);
             policies.add(new HttpLoggingPolicy(httpLogOptions));
-            HttpPipeline httpPipeline =
-                new HttpPipelineBuilder()
-                    .httpClient(httpClient)
-                    .policies(policies.toArray(new HttpPipelinePolicy[0]))
-                    .build();
+            HttpPipeline httpPipeline = new HttpPipelineBuilder().httpClient(httpClient)
+                .policies(policies.toArray(new HttpPipelinePolicy[0]))
+                .build();
             return new DevManager(httpPipeline, profile, defaultPollInterval);
         }
     }
 
-    /** @return Resource collection API of Controllers. */
+    /**
+     * Gets the resource collection API of Controllers.
+     * 
+     * @return Resource collection API of Controllers.
+     */
     public Controllers controllers() {
         if (this.controllers == null) {
             this.controllers = new ControllersImpl(clientObject.getControllers(), this);
@@ -324,7 +381,11 @@ public final class DevManager {
         return controllers;
     }
 
-    /** @return Resource collection API of ResourceUsages. */
+    /**
+     * Gets the resource collection API of ResourceUsages.
+     * 
+     * @return Resource collection API of ResourceUsages.
+     */
     public ResourceUsages resourceUsages() {
         if (this.resourceUsages == null) {
             this.resourceUsages = new ResourceUsagesImpl(clientObject.getResourceUsages(), this);
@@ -332,7 +393,23 @@ public final class DevManager {
         return resourceUsages;
     }
 
-    /** @return Resource collection API of Badges. */
+    /**
+     * Gets the resource collection API of Histories.
+     * 
+     * @return Resource collection API of Histories.
+     */
+    public Histories histories() {
+        if (this.histories == null) {
+            this.histories = new HistoriesImpl(clientObject.getHistories(), this);
+        }
+        return histories;
+    }
+
+    /**
+     * Gets the resource collection API of Badges.
+     * 
+     * @return Resource collection API of Badges.
+     */
     public Badges badges() {
         if (this.badges == null) {
             this.badges = new BadgesImpl(clientObject.getBadges(), this);
@@ -340,7 +417,11 @@ public final class DevManager {
         return badges;
     }
 
-    /** @return Resource collection API of Authorizedresources. */
+    /**
+     * Gets the resource collection API of Authorizedresources.
+     * 
+     * @return Resource collection API of Authorizedresources.
+     */
     public Authorizedresources authorizedresources() {
         if (this.authorizedresources == null) {
             this.authorizedresources = new AuthorizedresourcesImpl(clientObject.getAuthorizedresources(), this);
@@ -348,7 +429,11 @@ public final class DevManager {
         return authorizedresources;
     }
 
-    /** @return Resource collection API of Builds. */
+    /**
+     * Gets the resource collection API of Builds.
+     * 
+     * @return Resource collection API of Builds.
+     */
     public Builds builds() {
         if (this.builds == null) {
             this.builds = new BuildsImpl(clientObject.getBuilds(), this);
@@ -356,7 +441,11 @@ public final class DevManager {
         return builds;
     }
 
-    /** @return Resource collection API of Attachments. */
+    /**
+     * Gets the resource collection API of Attachments.
+     * 
+     * @return Resource collection API of Attachments.
+     */
     public Attachments attachments() {
         if (this.attachments == null) {
             this.attachments = new AttachmentsImpl(clientObject.getAttachments(), this);
@@ -364,7 +453,11 @@ public final class DevManager {
         return attachments;
     }
 
-    /** @return Resource collection API of Artifacts. */
+    /**
+     * Gets the resource collection API of Artifacts.
+     * 
+     * @return Resource collection API of Artifacts.
+     */
     public Artifacts artifacts() {
         if (this.artifacts == null) {
             this.artifacts = new ArtifactsImpl(clientObject.getArtifacts(), this);
@@ -372,7 +465,11 @@ public final class DevManager {
         return artifacts;
     }
 
-    /** @return Resource collection API of Properties. */
+    /**
+     * Gets the resource collection API of Properties.
+     * 
+     * @return Resource collection API of Properties.
+     */
     public Properties properties() {
         if (this.properties == null) {
             this.properties = new PropertiesImpl(clientObject.getProperties(), this);
@@ -380,7 +477,11 @@ public final class DevManager {
         return properties;
     }
 
-    /** @return Resource collection API of Reports. */
+    /**
+     * Gets the resource collection API of Reports.
+     * 
+     * @return Resource collection API of Reports.
+     */
     public Reports reports() {
         if (this.reports == null) {
             this.reports = new ReportsImpl(clientObject.getReports(), this);
@@ -388,7 +489,11 @@ public final class DevManager {
         return reports;
     }
 
-    /** @return Resource collection API of Stages. */
+    /**
+     * Gets the resource collection API of Stages.
+     * 
+     * @return Resource collection API of Stages.
+     */
     public Stages stages() {
         if (this.stages == null) {
             this.stages = new StagesImpl(clientObject.getStages(), this);
@@ -396,7 +501,11 @@ public final class DevManager {
         return stages;
     }
 
-    /** @return Resource collection API of Tags. */
+    /**
+     * Gets the resource collection API of Tags.
+     * 
+     * @return Resource collection API of Tags.
+     */
     public Tags tags() {
         if (this.tags == null) {
             this.tags = new TagsImpl(clientObject.getTags(), this);
@@ -404,7 +513,11 @@ public final class DevManager {
         return tags;
     }
 
-    /** @return Resource collection API of Timelines. */
+    /**
+     * Gets the resource collection API of Timelines.
+     * 
+     * @return Resource collection API of Timelines.
+     */
     public Timelines timelines() {
         if (this.timelines == null) {
             this.timelines = new TimelinesImpl(clientObject.getTimelines(), this);
@@ -412,7 +525,11 @@ public final class DevManager {
         return timelines;
     }
 
-    /** @return Resource collection API of Definitions. */
+    /**
+     * Gets the resource collection API of Definitions.
+     * 
+     * @return Resource collection API of Definitions.
+     */
     public Definitions definitions() {
         if (this.definitions == null) {
             this.definitions = new DefinitionsImpl(clientObject.getDefinitions(), this);
@@ -420,7 +537,11 @@ public final class DevManager {
         return definitions;
     }
 
-    /** @return Resource collection API of Metrics. */
+    /**
+     * Gets the resource collection API of Metrics.
+     * 
+     * @return Resource collection API of Metrics.
+     */
     public Metrics metrics() {
         if (this.metrics == null) {
             this.metrics = new MetricsImpl(clientObject.getMetrics(), this);
@@ -428,7 +549,11 @@ public final class DevManager {
         return metrics;
     }
 
-    /** @return Resource collection API of Resources. */
+    /**
+     * Gets the resource collection API of Resources.
+     * 
+     * @return Resource collection API of Resources.
+     */
     public Resources resources() {
         if (this.resources == null) {
             this.resources = new ResourcesImpl(clientObject.getResources(), this);
@@ -436,7 +561,23 @@ public final class DevManager {
         return resources;
     }
 
-    /** @return Resource collection API of Templates. */
+    /**
+     * Gets the resource collection API of Yamls.
+     * 
+     * @return Resource collection API of Yamls.
+     */
+    public Yamls yamls() {
+        if (this.yamls == null) {
+            this.yamls = new YamlsImpl(clientObject.getYamls(), this);
+        }
+        return yamls;
+    }
+
+    /**
+     * Gets the resource collection API of Templates.
+     * 
+     * @return Resource collection API of Templates.
+     */
     public Templates templates() {
         if (this.templates == null) {
             this.templates = new TemplatesImpl(clientObject.getTemplates(), this);
@@ -444,7 +585,11 @@ public final class DevManager {
         return templates;
     }
 
-    /** @return Resource collection API of Folders. */
+    /**
+     * Gets the resource collection API of Folders.
+     * 
+     * @return Resource collection API of Folders.
+     */
     public Folders folders() {
         if (this.folders == null) {
             this.folders = new FoldersImpl(clientObject.getFolders(), this);
@@ -452,7 +597,11 @@ public final class DevManager {
         return folders;
     }
 
-    /** @return Resource collection API of GeneralSettings. */
+    /**
+     * Gets the resource collection API of GeneralSettings.
+     * 
+     * @return Resource collection API of GeneralSettings.
+     */
     public GeneralSettings generalSettings() {
         if (this.generalSettings == null) {
             this.generalSettings = new GeneralSettingsImpl(clientObject.getGeneralSettings(), this);
@@ -460,7 +609,11 @@ public final class DevManager {
         return generalSettings;
     }
 
-    /** @return Resource collection API of Latests. */
+    /**
+     * Gets the resource collection API of Latests.
+     * 
+     * @return Resource collection API of Latests.
+     */
     public Latests latests() {
         if (this.latests == null) {
             this.latests = new LatestsImpl(clientObject.getLatests(), this);
@@ -468,7 +621,11 @@ public final class DevManager {
         return latests;
     }
 
-    /** @return Resource collection API of Options. */
+    /**
+     * Gets the resource collection API of Options.
+     * 
+     * @return Resource collection API of Options.
+     */
     public Options options() {
         if (this.options == null) {
             this.options = new OptionsImpl(clientObject.getOptions(), this);
@@ -476,7 +633,11 @@ public final class DevManager {
         return options;
     }
 
-    /** @return Resource collection API of Retentions. */
+    /**
+     * Gets the resource collection API of Retentions.
+     * 
+     * @return Resource collection API of Retentions.
+     */
     public Retentions retentions() {
         if (this.retentions == null) {
             this.retentions = new RetentionsImpl(clientObject.getRetentions(), this);
@@ -484,7 +645,11 @@ public final class DevManager {
         return retentions;
     }
 
-    /** @return Resource collection API of Leases. */
+    /**
+     * Gets the resource collection API of Leases.
+     * 
+     * @return Resource collection API of Leases.
+     */
     public Leases leases() {
         if (this.leases == null) {
             this.leases = new LeasesImpl(clientObject.getLeases(), this);
@@ -492,7 +657,11 @@ public final class DevManager {
         return leases;
     }
 
-    /** @return Resource collection API of Settings. */
+    /**
+     * Gets the resource collection API of Settings.
+     * 
+     * @return Resource collection API of Settings.
+     */
     public Settings settings() {
         if (this.settings == null) {
             this.settings = new SettingsImpl(clientObject.getSettings(), this);
@@ -500,7 +669,11 @@ public final class DevManager {
         return settings;
     }
 
-    /** @return Resource collection API of Status. */
+    /**
+     * Gets the resource collection API of Status.
+     * 
+     * @return Resource collection API of Status.
+     */
     public Status status() {
         if (this.status == null) {
             this.status = new StatusImpl(clientObject.getStatus(), this);
@@ -508,7 +681,11 @@ public final class DevManager {
         return status;
     }
 
-    /** @return Resource collection API of SourceProviders. */
+    /**
+     * Gets the resource collection API of SourceProviders.
+     * 
+     * @return Resource collection API of SourceProviders.
+     */
     public SourceProviders sourceProviders() {
         if (this.sourceProviders == null) {
             this.sourceProviders = new SourceProvidersImpl(clientObject.getSourceProviders(), this);
@@ -516,7 +693,11 @@ public final class DevManager {
         return sourceProviders;
     }
 
-    /** @return Resource collection API of Pipelines. */
+    /**
+     * Gets the resource collection API of Pipelines.
+     * 
+     * @return Resource collection API of Pipelines.
+     */
     public Pipelines pipelines() {
         if (this.pipelines == null) {
             this.pipelines = new PipelinesImpl(clientObject.getPipelines(), this);
@@ -524,7 +705,23 @@ public final class DevManager {
         return pipelines;
     }
 
-    /** @return Resource collection API of Runs. */
+    /**
+     * Gets the resource collection API of Previews.
+     * 
+     * @return Resource collection API of Previews.
+     */
+    public Previews previews() {
+        if (this.previews == null) {
+            this.previews = new PreviewsImpl(clientObject.getPreviews(), this);
+        }
+        return previews;
+    }
+
+    /**
+     * Gets the resource collection API of Runs.
+     * 
+     * @return Resource collection API of Runs.
+     */
     public Runs runs() {
         if (this.runs == null) {
             this.runs = new RunsImpl(clientObject.getRuns(), this);
@@ -532,7 +729,11 @@ public final class DevManager {
         return runs;
     }
 
-    /** @return Resource collection API of Logs. */
+    /**
+     * Gets the resource collection API of Logs.
+     * 
+     * @return Resource collection API of Logs.
+     */
     public Logs logs() {
         if (this.logs == null) {
             this.logs = new LogsImpl(clientObject.getLogs(), this);
@@ -541,8 +742,10 @@ public final class DevManager {
     }
 
     /**
-     * @return Wrapped service client DevClient providing direct access to the underlying auto-generated API
-     *     implementation, based on Azure REST API.
+     * Gets wrapped service client DevClient providing direct access to the underlying auto-generated API
+     * implementation, based on Azure REST API.
+     * 
+     * @return Wrapped service client DevClient.
      */
     public DevClient serviceClient() {
         return this.clientObject;

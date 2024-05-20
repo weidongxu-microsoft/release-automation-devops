@@ -5,17 +5,15 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
 
-/** Represents a repository used by a build definition. */
+/**
+ * Represents a repository used by a build definition.
+ */
 @Fluent
 public final class BuildRepository {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(BuildRepository.class);
-
     /*
      * Indicates whether to checkout submodules.
      */
@@ -23,8 +21,7 @@ public final class BuildRepository {
     private Boolean checkoutSubmodules;
 
     /*
-     * Indicates whether to clean the target folder when getting code from the
-     * repository.
+     * Indicates whether to clean the target folder when getting code from the repository.
      */
     @JsonProperty(value = "clean")
     private String clean;
@@ -73,8 +70,14 @@ public final class BuildRepository {
     private String url;
 
     /**
+     * Creates an instance of BuildRepository class.
+     */
+    public BuildRepository() {
+    }
+
+    /**
      * Get the checkoutSubmodules property: Indicates whether to checkout submodules.
-     *
+     * 
      * @return the checkoutSubmodules value.
      */
     public Boolean checkoutSubmodules() {
@@ -83,7 +86,7 @@ public final class BuildRepository {
 
     /**
      * Set the checkoutSubmodules property: Indicates whether to checkout submodules.
-     *
+     * 
      * @param checkoutSubmodules the checkoutSubmodules value to set.
      * @return the BuildRepository object itself.
      */
@@ -94,7 +97,7 @@ public final class BuildRepository {
 
     /**
      * Get the clean property: Indicates whether to clean the target folder when getting code from the repository.
-     *
+     * 
      * @return the clean value.
      */
     public String clean() {
@@ -103,7 +106,7 @@ public final class BuildRepository {
 
     /**
      * Set the clean property: Indicates whether to clean the target folder when getting code from the repository.
-     *
+     * 
      * @param clean the clean value to set.
      * @return the BuildRepository object itself.
      */
@@ -114,7 +117,7 @@ public final class BuildRepository {
 
     /**
      * Get the defaultBranch property: The name of the default branch.
-     *
+     * 
      * @return the defaultBranch value.
      */
     public String defaultBranch() {
@@ -123,7 +126,7 @@ public final class BuildRepository {
 
     /**
      * Set the defaultBranch property: The name of the default branch.
-     *
+     * 
      * @param defaultBranch the defaultBranch value to set.
      * @return the BuildRepository object itself.
      */
@@ -134,7 +137,7 @@ public final class BuildRepository {
 
     /**
      * Get the id property: The ID of the repository.
-     *
+     * 
      * @return the id value.
      */
     public String id() {
@@ -143,7 +146,7 @@ public final class BuildRepository {
 
     /**
      * Set the id property: The ID of the repository.
-     *
+     * 
      * @param id the id value to set.
      * @return the BuildRepository object itself.
      */
@@ -154,7 +157,7 @@ public final class BuildRepository {
 
     /**
      * Get the name property: The friendly name of the repository.
-     *
+     * 
      * @return the name value.
      */
     public String name() {
@@ -163,7 +166,7 @@ public final class BuildRepository {
 
     /**
      * Set the name property: The friendly name of the repository.
-     *
+     * 
      * @param name the name value to set.
      * @return the BuildRepository object itself.
      */
@@ -174,7 +177,7 @@ public final class BuildRepository {
 
     /**
      * Get the properties property: Dictionary of &lt;string&gt;.
-     *
+     * 
      * @return the properties value.
      */
     public Map<String, String> properties() {
@@ -183,7 +186,7 @@ public final class BuildRepository {
 
     /**
      * Set the properties property: Dictionary of &lt;string&gt;.
-     *
+     * 
      * @param properties the properties value to set.
      * @return the BuildRepository object itself.
      */
@@ -194,7 +197,7 @@ public final class BuildRepository {
 
     /**
      * Get the rootFolder property: The root folder.
-     *
+     * 
      * @return the rootFolder value.
      */
     public String rootFolder() {
@@ -203,7 +206,7 @@ public final class BuildRepository {
 
     /**
      * Set the rootFolder property: The root folder.
-     *
+     * 
      * @param rootFolder the rootFolder value to set.
      * @return the BuildRepository object itself.
      */
@@ -214,7 +217,7 @@ public final class BuildRepository {
 
     /**
      * Get the type property: The type of the repository.
-     *
+     * 
      * @return the type value.
      */
     public String type() {
@@ -223,7 +226,7 @@ public final class BuildRepository {
 
     /**
      * Set the type property: The type of the repository.
-     *
+     * 
      * @param type the type value to set.
      * @return the BuildRepository object itself.
      */
@@ -234,7 +237,7 @@ public final class BuildRepository {
 
     /**
      * Get the url property: The URL of the repository.
-     *
+     * 
      * @return the url value.
      */
     public String url() {
@@ -243,7 +246,7 @@ public final class BuildRepository {
 
     /**
      * Set the url property: The URL of the repository.
-     *
+     * 
      * @param url the url value to set.
      * @return the BuildRepository object itself.
      */
@@ -254,7 +257,7 @@ public final class BuildRepository {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

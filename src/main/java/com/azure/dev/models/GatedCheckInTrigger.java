@@ -5,16 +5,14 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** Represents a gated check-in trigger. */
+/**
+ * Represents a gated check-in trigger.
+ */
 @Fluent
 public final class GatedCheckInTrigger extends BuildTrigger {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(GatedCheckInTrigger.class);
-
     /*
      * The pathFilters property.
      */
@@ -22,22 +20,26 @@ public final class GatedCheckInTrigger extends BuildTrigger {
     private List<String> pathFilters;
 
     /*
-     * Indicates whether CI triggers should run after the gated check-in
-     * succeeds.
+     * Indicates whether CI triggers should run after the gated check-in succeeds.
      */
     @JsonProperty(value = "runContinuousIntegration")
     private Boolean runContinuousIntegration;
 
     /*
-     * Indicates whether to take workspace mappings into account when
-     * determining whether a build should run.
+     * Indicates whether to take workspace mappings into account when determining whether a build should run.
      */
     @JsonProperty(value = "useWorkspaceMappings")
     private Boolean useWorkspaceMappings;
 
     /**
+     * Creates an instance of GatedCheckInTrigger class.
+     */
+    public GatedCheckInTrigger() {
+    }
+
+    /**
      * Get the pathFilters property: The pathFilters property.
-     *
+     * 
      * @return the pathFilters value.
      */
     public List<String> pathFilters() {
@@ -46,7 +48,7 @@ public final class GatedCheckInTrigger extends BuildTrigger {
 
     /**
      * Set the pathFilters property: The pathFilters property.
-     *
+     * 
      * @param pathFilters the pathFilters value to set.
      * @return the GatedCheckInTrigger object itself.
      */
@@ -58,7 +60,7 @@ public final class GatedCheckInTrigger extends BuildTrigger {
     /**
      * Get the runContinuousIntegration property: Indicates whether CI triggers should run after the gated check-in
      * succeeds.
-     *
+     * 
      * @return the runContinuousIntegration value.
      */
     public Boolean runContinuousIntegration() {
@@ -68,7 +70,7 @@ public final class GatedCheckInTrigger extends BuildTrigger {
     /**
      * Set the runContinuousIntegration property: Indicates whether CI triggers should run after the gated check-in
      * succeeds.
-     *
+     * 
      * @param runContinuousIntegration the runContinuousIntegration value to set.
      * @return the GatedCheckInTrigger object itself.
      */
@@ -80,7 +82,7 @@ public final class GatedCheckInTrigger extends BuildTrigger {
     /**
      * Get the useWorkspaceMappings property: Indicates whether to take workspace mappings into account when determining
      * whether a build should run.
-     *
+     * 
      * @return the useWorkspaceMappings value.
      */
     public Boolean useWorkspaceMappings() {
@@ -90,7 +92,7 @@ public final class GatedCheckInTrigger extends BuildTrigger {
     /**
      * Set the useWorkspaceMappings property: Indicates whether to take workspace mappings into account when determining
      * whether a build should run.
-     *
+     * 
      * @param useWorkspaceMappings the useWorkspaceMappings value to set.
      * @return the GatedCheckInTrigger object itself.
      */
@@ -99,7 +101,9 @@ public final class GatedCheckInTrigger extends BuildTrigger {
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public GatedCheckInTrigger withTriggerType(DefinitionTriggerType triggerType) {
         super.withTriggerType(triggerType);
@@ -108,7 +112,7 @@ public final class GatedCheckInTrigger extends BuildTrigger {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     @Override

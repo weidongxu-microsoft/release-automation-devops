@@ -6,39 +6,41 @@ package com.azure.dev.models;
 
 import com.azure.dev.fluent.models.BuildResourceUsageInner;
 
-/** An immutable client-side representation of BuildResourceUsage. */
+/**
+ * An immutable client-side representation of BuildResourceUsage.
+ */
 public interface BuildResourceUsage {
     /**
      * Gets the distributedTaskAgents property: The number of build agents.
-     *
+     * 
      * @return the distributedTaskAgents value.
      */
     Integer distributedTaskAgents();
 
     /**
      * Gets the paidPrivateAgentSlots property: The number of paid private agent slots.
-     *
+     * 
      * @return the paidPrivateAgentSlots value.
      */
     Integer paidPrivateAgentSlots();
 
     /**
      * Gets the totalUsage property: The total usage.
-     *
+     * 
      * @return the totalUsage value.
      */
     Integer totalUsage();
 
     /**
      * Gets the xamlControllers property: The number of XAML controllers.
-     *
+     * 
      * @return the xamlControllers value.
      */
     Integer xamlControllers();
 
     /**
      * Gets the inner com.azure.dev.fluent.models.BuildResourceUsageInner object.
-     *
+     * 
      * @return the inner object.
      */
     BuildResourceUsageInner innerModel();

@@ -7,7 +7,6 @@ package com.azure.dev.implementation;
 import com.azure.core.annotation.ServiceClientBuilder;
 import com.azure.core.http.HttpPipeline;
 import com.azure.core.http.HttpPipelineBuilder;
-import com.azure.core.http.policy.CookiePolicy;
 import com.azure.core.http.policy.RetryPolicy;
 import com.azure.core.http.policy.UserAgentPolicy;
 import com.azure.core.management.AzureEnvironment;
@@ -15,8 +14,10 @@ import com.azure.core.management.serializer.SerializerFactory;
 import com.azure.core.util.serializer.SerializerAdapter;
 import java.time.Duration;
 
-/** A builder for creating a new instance of the DevClientImpl type. */
-@ServiceClientBuilder(serviceClients = {DevClientImpl.class})
+/**
+ * A builder for creating a new instance of the DevClientImpl type.
+ */
+@ServiceClientBuilder(serviceClients = { DevClientImpl.class })
 public final class DevClientBuilder {
     /*
      * server parameter
@@ -25,7 +26,7 @@ public final class DevClientBuilder {
 
     /**
      * Sets server parameter.
-     *
+     * 
      * @param endpoint the endpoint value.
      * @return the DevClientBuilder.
      */
@@ -41,28 +42,12 @@ public final class DevClientBuilder {
 
     /**
      * Sets The environment to connect to.
-     *
+     * 
      * @param environment the environment value.
      * @return the DevClientBuilder.
      */
     public DevClientBuilder environment(AzureEnvironment environment) {
         this.environment = environment;
-        return this;
-    }
-
-    /*
-     * The default poll interval for long-running operation
-     */
-    private Duration defaultPollInterval;
-
-    /**
-     * Sets The default poll interval for long-running operation.
-     *
-     * @param defaultPollInterval the defaultPollInterval value.
-     * @return the DevClientBuilder.
-     */
-    public DevClientBuilder defaultPollInterval(Duration defaultPollInterval) {
-        this.defaultPollInterval = defaultPollInterval;
         return this;
     }
 
@@ -73,12 +58,28 @@ public final class DevClientBuilder {
 
     /**
      * Sets The HTTP pipeline to send requests through.
-     *
+     * 
      * @param pipeline the pipeline value.
      * @return the DevClientBuilder.
      */
     public DevClientBuilder pipeline(HttpPipeline pipeline) {
         this.pipeline = pipeline;
+        return this;
+    }
+
+    /*
+     * The default poll interval for long-running operation
+     */
+    private Duration defaultPollInterval;
+
+    /**
+     * Sets The default poll interval for long-running operation.
+     * 
+     * @param defaultPollInterval the defaultPollInterval value.
+     * @return the DevClientBuilder.
+     */
+    public DevClientBuilder defaultPollInterval(Duration defaultPollInterval) {
+        this.defaultPollInterval = defaultPollInterval;
         return this;
     }
 
@@ -89,7 +90,7 @@ public final class DevClientBuilder {
 
     /**
      * Sets The serializer to serialize an object into a string.
-     *
+     * 
      * @param serializerAdapter the serializerAdapter value.
      * @return the DevClientBuilder.
      */
@@ -100,30 +101,22 @@ public final class DevClientBuilder {
 
     /**
      * Builds an instance of DevClientImpl with the provided parameters.
-     *
+     * 
      * @return an instance of DevClientImpl.
      */
     public DevClientImpl buildClient() {
-        if (endpoint == null) {
-            this.endpoint = "https://dev.azure.com";
-        }
-        if (environment == null) {
-            this.environment = AzureEnvironment.AZURE;
-        }
-        if (defaultPollInterval == null) {
-            this.defaultPollInterval = Duration.ofSeconds(30);
-        }
-        if (pipeline == null) {
-            this.pipeline =
-                new HttpPipelineBuilder()
-                    .policies(new UserAgentPolicy(), new RetryPolicy(), new CookiePolicy())
-                    .build();
-        }
-        if (serializerAdapter == null) {
-            this.serializerAdapter = SerializerFactory.createDefaultManagementSerializerAdapter();
-        }
-        DevClientImpl client =
-            new DevClientImpl(pipeline, serializerAdapter, defaultPollInterval, environment, endpoint);
+        String localEndpoint = (endpoint != null) ? endpoint : "https://dev.azure.com";
+        AzureEnvironment localEnvironment = (environment != null) ? environment : AzureEnvironment.AZURE;
+        HttpPipeline localPipeline = (pipeline != null)
+            ? pipeline
+            : new HttpPipelineBuilder().policies(new UserAgentPolicy(), new RetryPolicy()).build();
+        Duration localDefaultPollInterval
+            = (defaultPollInterval != null) ? defaultPollInterval : Duration.ofSeconds(30);
+        SerializerAdapter localSerializerAdapter = (serializerAdapter != null)
+            ? serializerAdapter
+            : SerializerFactory.createDefaultManagementSerializerAdapter();
+        DevClientImpl client = new DevClientImpl(localPipeline, localSerializerAdapter, localDefaultPollInterval,
+            localEnvironment, localEndpoint);
         return client;
     }
 }

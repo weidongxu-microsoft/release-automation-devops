@@ -45,9 +45,8 @@ public final class BuildCompletedEventImpl implements BuildCompletedEvent {
     public List<Change> changes() {
         List<ChangeInner> inner = this.innerModel().changes();
         if (inner != null) {
-            return Collections
-                .unmodifiableList(
-                    inner.stream().map(inner1 -> new ChangeImpl(inner1, this.manager())).collect(Collectors.toList()));
+            return Collections.unmodifiableList(
+                inner.stream().map(inner1 -> new ChangeImpl(inner1, this.manager())).collect(Collectors.toList()));
         } else {
             return Collections.emptyList();
         }

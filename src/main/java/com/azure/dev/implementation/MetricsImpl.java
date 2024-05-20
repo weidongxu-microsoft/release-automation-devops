@@ -12,14 +12,13 @@ import com.azure.dev.fluent.MetricsClient;
 import com.azure.dev.fluent.models.BuildMetricInner;
 import com.azure.dev.models.BuildMetric;
 import com.azure.dev.models.Metrics;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.OffsetDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public final class MetricsImpl implements Metrics {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(MetricsImpl.class);
+    private static final ClientLogger LOGGER = new ClientLogger(MetricsImpl.class);
 
     private final MetricsClient innerClient;
 
@@ -30,33 +29,38 @@ public final class MetricsImpl implements Metrics {
         this.serviceManager = serviceManager;
     }
 
+    public Response<List<BuildMetric>> getDefinitionMetricsWithResponse(String organization, String project,
+        int definitionId, OffsetDateTime minMetricsTime, Context context) {
+        Response<List<BuildMetricInner>> inner = this.serviceClient()
+            .getDefinitionMetricsWithResponse(organization, project, definitionId, minMetricsTime, context);
+        if (inner != null) {
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
+                inner.getValue()
+                    .stream()
+                    .map(inner1 -> new BuildMetricImpl(inner1, this.manager()))
+                    .collect(Collectors.toList()));
+        } else {
+            return null;
+        }
+    }
+
     public List<BuildMetric> getDefinitionMetrics(String organization, String project, int definitionId) {
         List<BuildMetricInner> inner = this.serviceClient().getDefinitionMetrics(organization, project, definitionId);
         if (inner != null) {
-            return Collections
-                .unmodifiableList(
-                    inner
-                        .stream()
-                        .map(inner1 -> new BuildMetricImpl(inner1, this.manager()))
-                        .collect(Collectors.toList()));
+            return Collections.unmodifiableList(
+                inner.stream().map(inner1 -> new BuildMetricImpl(inner1, this.manager())).collect(Collectors.toList()));
         } else {
             return Collections.emptyList();
         }
     }
 
-    public Response<List<BuildMetric>> getDefinitionMetricsWithResponse(
-        String organization, String project, int definitionId, OffsetDateTime minMetricsTime, Context context) {
-        Response<List<BuildMetricInner>> inner =
-            this
-                .serviceClient()
-                .getDefinitionMetricsWithResponse(organization, project, definitionId, minMetricsTime, context);
+    public Response<List<BuildMetric>> getProjectMetricsWithResponse(String organization, String project,
+        String metricAggregationType, OffsetDateTime minMetricsTime, Context context) {
+        Response<List<BuildMetricInner>> inner = this.serviceClient()
+            .getProjectMetricsWithResponse(organization, project, metricAggregationType, minMetricsTime, context);
         if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                inner
-                    .getValue()
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
+                inner.getValue()
                     .stream()
                     .map(inner1 -> new BuildMetricImpl(inner1, this.manager()))
                     .collect(Collectors.toList()));
@@ -66,42 +70,13 @@ public final class MetricsImpl implements Metrics {
     }
 
     public List<BuildMetric> getProjectMetrics(String organization, String project, String metricAggregationType) {
-        List<BuildMetricInner> inner =
-            this.serviceClient().getProjectMetrics(organization, project, metricAggregationType);
+        List<BuildMetricInner> inner
+            = this.serviceClient().getProjectMetrics(organization, project, metricAggregationType);
         if (inner != null) {
-            return Collections
-                .unmodifiableList(
-                    inner
-                        .stream()
-                        .map(inner1 -> new BuildMetricImpl(inner1, this.manager()))
-                        .collect(Collectors.toList()));
+            return Collections.unmodifiableList(
+                inner.stream().map(inner1 -> new BuildMetricImpl(inner1, this.manager())).collect(Collectors.toList()));
         } else {
             return Collections.emptyList();
-        }
-    }
-
-    public Response<List<BuildMetric>> getProjectMetricsWithResponse(
-        String organization,
-        String project,
-        String metricAggregationType,
-        OffsetDateTime minMetricsTime,
-        Context context) {
-        Response<List<BuildMetricInner>> inner =
-            this
-                .serviceClient()
-                .getProjectMetricsWithResponse(organization, project, metricAggregationType, minMetricsTime, context);
-        if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                inner
-                    .getValue()
-                    .stream()
-                    .map(inner1 -> new BuildMetricImpl(inner1, this.manager()))
-                    .collect(Collectors.toList()));
-        } else {
-            return null;
         }
     }
 

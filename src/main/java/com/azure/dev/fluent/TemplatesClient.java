@@ -11,11 +11,27 @@ import com.azure.core.util.Context;
 import com.azure.dev.fluent.models.BuildDefinitionTemplateInner;
 import java.util.List;
 
-/** An instance of this class provides access to all the operations defined in TemplatesClient. */
+/**
+ * An instance of this class provides access to all the operations defined in TemplatesClient.
+ */
 public interface TemplatesClient {
     /**
      * Gets all definition templates.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return all definition templates along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Response<List<BuildDefinitionTemplateInner>> listWithResponse(String organization, String project, Context context);
+
+    /**
+     * Gets all definition templates.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -27,22 +43,23 @@ public interface TemplatesClient {
     List<BuildDefinitionTemplateInner> list(String organization, String project);
 
     /**
-     * Gets all definition templates.
-     *
+     * Deletes a build definition template.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
+     * @param templateId The ID of the template.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return all definition templates.
+     * @return the {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<List<BuildDefinitionTemplateInner>> listWithResponse(String organization, String project, Context context);
+    Response<Void> deleteWithResponse(String organization, String project, String templateId, Context context);
 
     /**
      * Deletes a build definition template.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param templateId The ID of the template.
@@ -54,23 +71,24 @@ public interface TemplatesClient {
     void delete(String organization, String project, String templateId);
 
     /**
-     * Deletes a build definition template.
-     *
+     * Gets a specific build definition template.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
-     * @param templateId The ID of the template.
+     * @param templateId The ID of the requested template.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response.
+     * @return a specific build definition template along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<Void> deleteWithResponse(String organization, String project, String templateId, Context context);
+    Response<BuildDefinitionTemplateInner> getWithResponse(String organization, String project, String templateId,
+        Context context);
 
     /**
      * Gets a specific build definition template.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param templateId The ID of the requested template.
@@ -83,24 +101,25 @@ public interface TemplatesClient {
     BuildDefinitionTemplateInner get(String organization, String project, String templateId);
 
     /**
-     * Gets a specific build definition template.
-     *
+     * Updates an existing build definition template.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
-     * @param templateId The ID of the requested template.
+     * @param templateId The ID of the template.
+     * @param body The new version of the template.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a specific build definition template.
+     * @return represents a template from which new build definitions can be created along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<BuildDefinitionTemplateInner> getWithResponse(
-        String organization, String project, String templateId, Context context);
+    Response<BuildDefinitionTemplateInner> saveTemplateWithResponse(String organization, String project,
+        String templateId, BuildDefinitionTemplateInner body, Context context);
 
     /**
      * Updates an existing build definition template.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param templateId The ID of the template.
@@ -111,23 +130,6 @@ public interface TemplatesClient {
      * @return represents a template from which new build definitions can be created.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    BuildDefinitionTemplateInner saveTemplate(
-        String organization, String project, String templateId, BuildDefinitionTemplateInner body);
-
-    /**
-     * Updates an existing build definition template.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param templateId The ID of the template.
-     * @param body The new version of the template.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return represents a template from which new build definitions can be created.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<BuildDefinitionTemplateInner> saveTemplateWithResponse(
-        String organization, String project, String templateId, BuildDefinitionTemplateInner body, Context context);
+    BuildDefinitionTemplateInner saveTemplate(String organization, String project, String templateId,
+        BuildDefinitionTemplateInner body);
 }

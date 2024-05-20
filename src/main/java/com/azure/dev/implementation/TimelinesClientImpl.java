@@ -21,30 +21,33 @@ import com.azure.core.http.rest.RestProxy;
 import com.azure.core.management.exception.ManagementException;
 import com.azure.core.util.Context;
 import com.azure.core.util.FluxUtil;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.fluent.TimelinesClient;
 import com.azure.dev.fluent.models.TimelineInner;
 import java.util.UUID;
 import reactor.core.publisher.Mono;
 
-/** An instance of this class provides access to all the operations defined in TimelinesClient. */
+/**
+ * An instance of this class provides access to all the operations defined in TimelinesClient.
+ */
 public final class TimelinesClientImpl implements TimelinesClient {
-    private final ClientLogger logger = new ClientLogger(TimelinesClientImpl.class);
-
-    /** The proxy service used to perform REST calls. */
+    /**
+     * The proxy service used to perform REST calls.
+     */
     private final TimelinesService service;
 
-    /** The service client containing this operation class. */
+    /**
+     * The service client containing this operation class.
+     */
     private final DevClientImpl client;
 
     /**
      * Initializes an instance of TimelinesClientImpl.
-     *
+     * 
      * @param client the instance of the service client containing this operation class.
      */
     TimelinesClientImpl(DevClientImpl client) {
-        this.service =
-            RestProxy.create(TimelinesService.class, client.getHttpPipeline(), client.getSerializerAdapter());
+        this.service
+            = RestProxy.create(TimelinesService.class, client.getHttpPipeline(), client.getSerializerAdapter());
         this.client = client;
     }
 
@@ -54,27 +57,21 @@ public final class TimelinesClientImpl implements TimelinesClient {
      */
     @Host("{$host}")
     @ServiceInterface(name = "DevClientTimelines")
-    private interface TimelinesService {
-        @Headers({"Content-Type: application/json"})
+    public interface TimelinesService {
+        @Headers({ "Content-Type: application/json" })
         @Get("/{organization}/{project}/_apis/build/builds/{buildId}/timeline/{timelineId}")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<TimelineInner>> get(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
-            @PathParam("buildId") int buildId,
-            @PathParam("timelineId") UUID timelineId,
-            @QueryParam("changeId") Integer changeId,
-            @QueryParam("planId") UUID planId,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<TimelineInner>> get(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
+            @PathParam("buildId") int buildId, @PathParam("timelineId") UUID timelineId,
+            @QueryParam("changeId") Integer changeId, @QueryParam("planId") UUID planId,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
     }
 
     /**
      * Gets details for a build.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The buildId parameter.
@@ -84,16 +81,14 @@ public final class TimelinesClientImpl implements TimelinesClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return details for a build.
+     * @return details for a build along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<TimelineInner>> getWithResponseAsync(
-        String organization, String project, int buildId, UUID timelineId, Integer changeId, UUID planId) {
+    private Mono<Response<TimelineInner>> getWithResponseAsync(String organization, String project, int buildId,
+        UUID timelineId, Integer changeId, UUID planId) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -101,32 +96,19 @@ public final class TimelinesClientImpl implements TimelinesClient {
         if (project == null) {
             return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
         }
-//        if (timelineId == null) {
-//            return Mono.error(new IllegalArgumentException("Parameter timelineId is required and cannot be null."));
-//        }
-        final String apiVersion = "6.0";
+        if (timelineId == null) {
+            return Mono.error(new IllegalArgumentException("Parameter timelineId is required and cannot be null."));
+        }
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .get(
-                            this.client.getEndpoint(),
-                            organization,
-                            project,
-                            buildId,
-                            timelineId,
-                            changeId,
-                            planId,
-                            apiVersion,
-                            accept,
-                            context))
+            .withContext(context -> service.get(this.client.getEndpoint(), organization, project, buildId, timelineId,
+                changeId, planId, this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Gets details for a build.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The buildId parameter.
@@ -137,22 +119,14 @@ public final class TimelinesClientImpl implements TimelinesClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return details for a build.
+     * @return details for a build along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<TimelineInner>> getWithResponseAsync(
-        String organization,
-        String project,
-        int buildId,
-        UUID timelineId,
-        Integer changeId,
-        UUID planId,
-        Context context) {
+    private Mono<Response<TimelineInner>> getWithResponseAsync(String organization, String project, int buildId,
+        UUID timelineId, Integer changeId, UUID planId, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -160,57 +134,18 @@ public final class TimelinesClientImpl implements TimelinesClient {
         if (project == null) {
             return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
         }
-//        if (timelineId == null) {
-//            return Mono.error(new IllegalArgumentException("Parameter timelineId is required and cannot be null."));
-//        }
-        final String apiVersion = "6.0";
+        if (timelineId == null) {
+            return Mono.error(new IllegalArgumentException("Parameter timelineId is required and cannot be null."));
+        }
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .get(
-                this.client.getEndpoint(),
-                organization,
-                project,
-                buildId,
-                timelineId,
-                changeId,
-                planId,
-                apiVersion,
-                accept,
-                context);
+        return service.get(this.client.getEndpoint(), organization, project, buildId, timelineId, changeId, planId,
+            this.client.getApiVersion(), accept, context);
     }
 
     /**
      * Gets details for a build.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param buildId The buildId parameter.
-     * @param timelineId The timelineId parameter.
-     * @param changeId The changeId parameter.
-     * @param planId The planId parameter.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return details for a build.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<TimelineInner> getAsync(
-        String organization, String project, int buildId, UUID timelineId, Integer changeId, UUID planId) {
-        return getWithResponseAsync(organization, project, buildId, timelineId, changeId, planId)
-            .flatMap(
-                (Response<TimelineInner> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
-    }
-
-    /**
-     * Gets details for a build.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The buildId parameter.
@@ -218,26 +153,40 @@ public final class TimelinesClientImpl implements TimelinesClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return details for a build.
+     * @return details for a build on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<TimelineInner> getAsync(String organization, String project, int buildId, UUID timelineId) {
         final Integer changeId = null;
         final UUID planId = null;
         return getWithResponseAsync(organization, project, buildId, timelineId, changeId, planId)
-            .flatMap(
-                (Response<TimelineInner> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+            .flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Gets details for a build.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param buildId The buildId parameter.
+     * @param timelineId The timelineId parameter.
+     * @param changeId The changeId parameter.
+     * @param planId The planId parameter.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return details for a build along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<TimelineInner> getWithResponse(String organization, String project, int buildId, UUID timelineId,
+        Integer changeId, UUID planId, Context context) {
+        return getWithResponseAsync(organization, project, buildId, timelineId, changeId, planId, context).block();
+    }
+
+    /**
+     * Gets details for a build.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The buildId parameter.
@@ -251,33 +200,6 @@ public final class TimelinesClientImpl implements TimelinesClient {
     public TimelineInner get(String organization, String project, int buildId, UUID timelineId) {
         final Integer changeId = null;
         final UUID planId = null;
-        return getAsync(organization, project, buildId, timelineId, changeId, planId).block();
-    }
-
-    /**
-     * Gets details for a build.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param buildId The buildId parameter.
-     * @param timelineId The timelineId parameter.
-     * @param changeId The changeId parameter.
-     * @param planId The planId parameter.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return details for a build.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<TimelineInner> getWithResponse(
-        String organization,
-        String project,
-        int buildId,
-        UUID timelineId,
-        Integer changeId,
-        UUID planId,
-        Context context) {
-        return getWithResponseAsync(organization, project, buildId, timelineId, changeId, planId, context).block();
+        return getWithResponse(organization, project, buildId, timelineId, changeId, planId, Context.NONE).getValue();
     }
 }

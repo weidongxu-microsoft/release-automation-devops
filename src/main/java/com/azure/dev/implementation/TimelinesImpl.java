@@ -12,11 +12,10 @@ import com.azure.dev.fluent.TimelinesClient;
 import com.azure.dev.fluent.models.TimelineInner;
 import com.azure.dev.models.Timeline;
 import com.azure.dev.models.Timelines;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.UUID;
 
 public final class TimelinesImpl implements Timelines {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(TimelinesImpl.class);
+    private static final ClientLogger LOGGER = new ClientLogger(TimelinesImpl.class);
 
     private final TimelinesClient innerClient;
 
@@ -27,31 +26,22 @@ public final class TimelinesImpl implements Timelines {
         this.serviceManager = serviceManager;
     }
 
-    public Timeline get(String organization, String project, int buildId, UUID timelineId) {
-        TimelineInner inner = this.serviceClient().get(organization, project, buildId, timelineId);
+    public Response<Timeline> getWithResponse(String organization, String project, int buildId, UUID timelineId,
+        Integer changeId, UUID planId, Context context) {
+        Response<TimelineInner> inner = this.serviceClient()
+            .getWithResponse(organization, project, buildId, timelineId, changeId, planId, context);
         if (inner != null) {
-            return new TimelineImpl(inner, this.manager());
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
+                new TimelineImpl(inner.getValue(), this.manager()));
         } else {
             return null;
         }
     }
 
-    public Response<Timeline> getWithResponse(
-        String organization,
-        String project,
-        int buildId,
-        UUID timelineId,
-        Integer changeId,
-        UUID planId,
-        Context context) {
-        Response<TimelineInner> inner =
-            this.serviceClient().getWithResponse(organization, project, buildId, timelineId, changeId, planId, context);
+    public Timeline get(String organization, String project, int buildId, UUID timelineId) {
+        TimelineInner inner = this.serviceClient().get(organization, project, buildId, timelineId);
         if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                new TimelineImpl(inner.getValue(), this.manager()));
+            return new TimelineImpl(inner, this.manager());
         } else {
             return null;
         }

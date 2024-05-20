@@ -5,17 +5,15 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
 
-/** Represents a variable group. */
+/**
+ * Represents a variable group.
+ */
 @Fluent
 public final class VariableGroup extends VariableGroupReference {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(VariableGroup.class);
-
     /*
      * The description.
      */
@@ -42,8 +40,14 @@ public final class VariableGroup extends VariableGroupReference {
     private Map<String, BuildDefinitionVariable> variables;
 
     /**
+     * Creates an instance of VariableGroup class.
+     */
+    public VariableGroup() {
+    }
+
+    /**
      * Get the description property: The description.
-     *
+     * 
      * @return the description value.
      */
     public String description() {
@@ -52,7 +56,7 @@ public final class VariableGroup extends VariableGroupReference {
 
     /**
      * Set the description property: The description.
-     *
+     * 
      * @param description the description value to set.
      * @return the VariableGroup object itself.
      */
@@ -63,7 +67,7 @@ public final class VariableGroup extends VariableGroupReference {
 
     /**
      * Get the name property: The name of the variable group.
-     *
+     * 
      * @return the name value.
      */
     public String name() {
@@ -72,7 +76,7 @@ public final class VariableGroup extends VariableGroupReference {
 
     /**
      * Set the name property: The name of the variable group.
-     *
+     * 
      * @param name the name value to set.
      * @return the VariableGroup object itself.
      */
@@ -83,7 +87,7 @@ public final class VariableGroup extends VariableGroupReference {
 
     /**
      * Get the type property: The type of the variable group.
-     *
+     * 
      * @return the type value.
      */
     public String type() {
@@ -92,7 +96,7 @@ public final class VariableGroup extends VariableGroupReference {
 
     /**
      * Set the type property: The type of the variable group.
-     *
+     * 
      * @param type the type value to set.
      * @return the VariableGroup object itself.
      */
@@ -103,7 +107,7 @@ public final class VariableGroup extends VariableGroupReference {
 
     /**
      * Get the variables property: Dictionary of &lt;BuildDefinitionVariable&gt;.
-     *
+     * 
      * @return the variables value.
      */
     public Map<String, BuildDefinitionVariable> variables() {
@@ -112,7 +116,7 @@ public final class VariableGroup extends VariableGroupReference {
 
     /**
      * Set the variables property: Dictionary of &lt;BuildDefinitionVariable&gt;.
-     *
+     * 
      * @param variables the variables value to set.
      * @return the VariableGroup object itself.
      */
@@ -121,14 +125,18 @@ public final class VariableGroup extends VariableGroupReference {
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public VariableGroup withAlias(String alias) {
         super.withAlias(alias);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public VariableGroup withId(Integer id) {
         super.withId(id);
@@ -137,21 +145,18 @@ public final class VariableGroup extends VariableGroupReference {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     @Override
     public void validate() {
         super.validate();
         if (variables() != null) {
-            variables()
-                .values()
-                .forEach(
-                    e -> {
-                        if (e != null) {
-                            e.validate();
-                        }
-                    });
+            variables().values().forEach(e -> {
+                if (e != null) {
+                    e.validate();
+                }
+            });
         }
     }
 }

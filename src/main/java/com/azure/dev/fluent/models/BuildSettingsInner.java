@@ -5,16 +5,14 @@
 package com.azure.dev.fluent.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.models.RetentionPolicy;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Represents system-wide build settings. */
+/**
+ * Represents system-wide build settings.
+ */
 @Fluent
 public final class BuildSettingsInner {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(BuildSettingsInner.class);
-
     /*
      * The number of days to keep records of deleted builds.
      */
@@ -34,8 +32,14 @@ public final class BuildSettingsInner {
     private RetentionPolicy maximumRetentionPolicy;
 
     /**
+     * Creates an instance of BuildSettingsInner class.
+     */
+    public BuildSettingsInner() {
+    }
+
+    /**
      * Get the daysToKeepDeletedBuildsBeforeDestroy property: The number of days to keep records of deleted builds.
-     *
+     * 
      * @return the daysToKeepDeletedBuildsBeforeDestroy value.
      */
     public Integer daysToKeepDeletedBuildsBeforeDestroy() {
@@ -44,7 +48,7 @@ public final class BuildSettingsInner {
 
     /**
      * Set the daysToKeepDeletedBuildsBeforeDestroy property: The number of days to keep records of deleted builds.
-     *
+     * 
      * @param daysToKeepDeletedBuildsBeforeDestroy the daysToKeepDeletedBuildsBeforeDestroy value to set.
      * @return the BuildSettingsInner object itself.
      */
@@ -55,7 +59,7 @@ public final class BuildSettingsInner {
 
     /**
      * Get the defaultRetentionPolicy property: The default retention policy.
-     *
+     * 
      * @return the defaultRetentionPolicy value.
      */
     public RetentionPolicy defaultRetentionPolicy() {
@@ -64,7 +68,7 @@ public final class BuildSettingsInner {
 
     /**
      * Set the defaultRetentionPolicy property: The default retention policy.
-     *
+     * 
      * @param defaultRetentionPolicy the defaultRetentionPolicy value to set.
      * @return the BuildSettingsInner object itself.
      */
@@ -75,7 +79,7 @@ public final class BuildSettingsInner {
 
     /**
      * Get the maximumRetentionPolicy property: The maximum retention policy.
-     *
+     * 
      * @return the maximumRetentionPolicy value.
      */
     public RetentionPolicy maximumRetentionPolicy() {
@@ -84,7 +88,7 @@ public final class BuildSettingsInner {
 
     /**
      * Set the maximumRetentionPolicy property: The maximum retention policy.
-     *
+     * 
      * @param maximumRetentionPolicy the maximumRetentionPolicy value to set.
      * @return the BuildSettingsInner object itself.
      */
@@ -95,7 +99,7 @@ public final class BuildSettingsInner {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

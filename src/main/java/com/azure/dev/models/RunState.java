@@ -7,21 +7,33 @@ package com.azure.dev.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/** Defines values for RunState. */
+/**
+ * Defines values for RunState.
+ */
 public enum RunState {
-    /** Enum value unknown. */
+    /**
+     * Enum value unknown.
+     */
     UNKNOWN("unknown"),
 
-    /** Enum value inProgress. */
+    /**
+     * Enum value inProgress.
+     */
     IN_PROGRESS("inProgress"),
 
-    /** Enum value canceling. */
+    /**
+     * Enum value canceling.
+     */
     CANCELING("canceling"),
 
-    /** Enum value completed. */
+    /**
+     * Enum value completed.
+     */
     COMPLETED("completed");
 
-    /** The actual serialized value for a RunState instance. */
+    /**
+     * The actual serialized value for a RunState instance.
+     */
     private final String value;
 
     RunState(String value) {
@@ -30,12 +42,15 @@ public enum RunState {
 
     /**
      * Parses a serialized value to a RunState instance.
-     *
+     * 
      * @param value the serialized value to parse.
      * @return the parsed RunState object, or null if unable to parse.
      */
     @JsonCreator
     public static RunState fromString(String value) {
+        if (value == null) {
+            return null;
+        }
         RunState[] items = RunState.values();
         for (RunState item : items) {
             if (item.toString().equalsIgnoreCase(value)) {
@@ -45,6 +60,9 @@ public enum RunState {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @JsonValue
     @Override
     public String toString() {

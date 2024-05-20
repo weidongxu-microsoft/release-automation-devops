@@ -5,15 +5,13 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** The XamlBuildControllerReference model. */
+/**
+ * The XamlBuildControllerReference model.
+ */
 @Fluent
 public class XamlBuildControllerReference {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(XamlBuildControllerReference.class);
-
     /*
      * Id of the resource
      */
@@ -33,8 +31,14 @@ public class XamlBuildControllerReference {
     private String url;
 
     /**
+     * Creates an instance of XamlBuildControllerReference class.
+     */
+    public XamlBuildControllerReference() {
+    }
+
+    /**
      * Get the id property: Id of the resource.
-     *
+     * 
      * @return the id value.
      */
     public Integer id() {
@@ -43,7 +47,7 @@ public class XamlBuildControllerReference {
 
     /**
      * Set the id property: Id of the resource.
-     *
+     * 
      * @param id the id value to set.
      * @return the XamlBuildControllerReference object itself.
      */
@@ -54,7 +58,7 @@ public class XamlBuildControllerReference {
 
     /**
      * Get the name property: Name of the linked resource (definition name, controller name, etc.).
-     *
+     * 
      * @return the name value.
      */
     public String name() {
@@ -63,7 +67,7 @@ public class XamlBuildControllerReference {
 
     /**
      * Set the name property: Name of the linked resource (definition name, controller name, etc.).
-     *
+     * 
      * @param name the name value to set.
      * @return the XamlBuildControllerReference object itself.
      */
@@ -74,7 +78,7 @@ public class XamlBuildControllerReference {
 
     /**
      * Get the url property: Full http link to the resource.
-     *
+     * 
      * @return the url value.
      */
     public String url() {
@@ -83,7 +87,7 @@ public class XamlBuildControllerReference {
 
     /**
      * Set the url property: Full http link to the resource.
-     *
+     * 
      * @param url the url value to set.
      * @return the XamlBuildControllerReference object itself.
      */
@@ -94,7 +98,7 @@ public class XamlBuildControllerReference {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

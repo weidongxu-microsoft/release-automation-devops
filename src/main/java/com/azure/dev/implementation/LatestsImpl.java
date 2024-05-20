@@ -12,10 +12,9 @@ import com.azure.dev.fluent.LatestsClient;
 import com.azure.dev.fluent.models.BuildInner;
 import com.azure.dev.models.Build;
 import com.azure.dev.models.Latests;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public final class LatestsImpl implements Latests {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(LatestsImpl.class);
+    private static final ClientLogger LOGGER = new ClientLogger(LatestsImpl.class);
 
     private final LatestsClient innerClient;
 
@@ -26,25 +25,22 @@ public final class LatestsImpl implements Latests {
         this.serviceManager = serviceManager;
     }
 
-    public Build get(String organization, String project, String definition) {
-        BuildInner inner = this.serviceClient().get(organization, project, definition);
+    public Response<Build> getWithResponse(String organization, String project, String definition, String branchName,
+        Context context) {
+        Response<BuildInner> inner
+            = this.serviceClient().getWithResponse(organization, project, definition, branchName, context);
         if (inner != null) {
-            return new BuildImpl(inner, this.manager());
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
+                new BuildImpl(inner.getValue(), this.manager()));
         } else {
             return null;
         }
     }
 
-    public Response<Build> getWithResponse(
-        String organization, String project, String definition, String branchName, Context context) {
-        Response<BuildInner> inner =
-            this.serviceClient().getWithResponse(organization, project, definition, branchName, context);
+    public Build get(String organization, String project, String definition) {
+        BuildInner inner = this.serviceClient().get(organization, project, definition);
         if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                new BuildImpl(inner.getValue(), this.manager()));
+            return new BuildImpl(inner, this.manager());
         } else {
             return null;
         }

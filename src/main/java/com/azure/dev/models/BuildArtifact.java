@@ -6,25 +6,27 @@ package com.azure.dev.models;
 
 import com.azure.dev.fluent.models.BuildArtifactInner;
 
-/** An immutable client-side representation of BuildArtifact. */
+/**
+ * An immutable client-side representation of BuildArtifact.
+ */
 public interface BuildArtifact {
     /**
      * Gets the id property: The artifact ID.
-     *
+     * 
      * @return the id value.
      */
     Integer id();
 
     /**
      * Gets the name property: The name of the artifact.
-     *
+     * 
      * @return the name value.
      */
     String name();
 
     /**
      * Gets the resource property: The actual resource.
-     *
+     * 
      * @return the resource value.
      */
     ArtifactResource resource();
@@ -32,14 +34,14 @@ public interface BuildArtifact {
     /**
      * Gets the source property: The artifact source, which will be the ID of the job that produced this artifact. If an
      * artifact is associated with multiple sources, this points to the first source.
-     *
+     * 
      * @return the source value.
      */
     String source();
 
     /**
      * Gets the inner com.azure.dev.fluent.models.BuildArtifactInner object.
-     *
+     * 
      * @return the inner object.
      */
     BuildArtifactInner innerModel();

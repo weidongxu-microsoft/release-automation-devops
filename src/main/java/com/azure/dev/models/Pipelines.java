@@ -8,11 +8,28 @@ import com.azure.core.http.rest.PagedIterable;
 import com.azure.core.http.rest.Response;
 import com.azure.core.util.Context;
 
-/** Resource collection API of Pipelines. */
+/**
+ * Resource collection API of Pipelines.
+ */
 public interface Pipelines {
     /**
      * Create a pipeline.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param body Input parameters.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return definition of a pipeline along with {@link Response}.
+     */
+    Response<Pipeline> createWithResponse(String organization, String project, CreatePipelineParameters body,
+        Context context);
+
+    /**
+     * Create a pipeline.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param body Input parameters.
@@ -24,35 +41,20 @@ public interface Pipelines {
     Pipeline create(String organization, String project, CreatePipelineParameters body);
 
     /**
-     * Create a pipeline.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param body Input parameters.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return definition of a pipeline.
-     */
-    Response<Pipeline> createWithResponse(
-        String organization, String project, CreatePipelineParameters body, Context context);
-
-    /**
      * Get a list of pipelines.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of pipelines.
+     * @return a list of pipelines as paginated response with {@link PagedIterable}.
      */
     PagedIterable<Pipeline> list(String organization, String project);
 
     /**
      * Get a list of pipelines.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param orderBy A sort expression. Defaults to "name asc".
@@ -62,14 +64,30 @@ public interface Pipelines {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of pipelines.
+     * @return a list of pipelines as paginated response with {@link PagedIterable}.
      */
-    PagedIterable<Pipeline> list(
-        String organization, String project, String orderBy, Integer top, String continuationToken, Context context);
+    PagedIterable<Pipeline> list(String organization, String project, String orderBy, Integer top,
+        String continuationToken, Context context);
 
     /**
      * Gets a pipeline, optionally at the specified version.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param pipelineId The pipeline ID.
+     * @param pipelineVersion The pipeline version.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return a pipeline, optionally at the specified version along with {@link Response}.
+     */
+    Response<Pipeline> getWithResponse(String organization, String project, int pipelineId, Integer pipelineVersion,
+        Context context);
+
+    /**
+     * Gets a pipeline, optionally at the specified version.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param pipelineId The pipeline ID.
@@ -79,20 +97,4 @@ public interface Pipelines {
      * @return a pipeline, optionally at the specified version.
      */
     Pipeline get(String organization, String project, int pipelineId);
-
-    /**
-     * Gets a pipeline, optionally at the specified version.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param pipelineId The pipeline ID.
-     * @param pipelineVersion The pipeline version.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a pipeline, optionally at the specified version.
-     */
-    Response<Pipeline> getWithResponse(
-        String organization, String project, int pipelineId, Integer pipelineVersion, Context context);
 }

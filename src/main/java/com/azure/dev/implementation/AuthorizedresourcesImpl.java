@@ -12,13 +12,12 @@ import com.azure.dev.fluent.AuthorizedresourcesClient;
 import com.azure.dev.fluent.models.DefinitionResourceReferenceInner;
 import com.azure.dev.models.Authorizedresources;
 import com.azure.dev.models.DefinitionResourceReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public final class AuthorizedresourcesImpl implements Authorizedresources {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(AuthorizedresourcesImpl.class);
+    private static final ClientLogger LOGGER = new ClientLogger(AuthorizedresourcesImpl.class);
 
     private final AuthorizedresourcesClient innerClient;
 
@@ -29,33 +28,41 @@ public final class AuthorizedresourcesImpl implements Authorizedresources {
         this.serviceManager = serviceManager;
     }
 
-    public List<DefinitionResourceReference> authorizeProjectResources(
-        String organization, String project, List<DefinitionResourceReferenceInner> body) {
-        List<DefinitionResourceReferenceInner> inner =
-            this.serviceClient().authorizeProjectResources(organization, project, body);
+    public Response<List<DefinitionResourceReference>> authorizeProjectResourcesWithResponse(String organization,
+        String project, List<DefinitionResourceReferenceInner> body, Context context) {
+        Response<List<DefinitionResourceReferenceInner>> inner
+            = this.serviceClient().authorizeProjectResourcesWithResponse(organization, project, body, context);
         if (inner != null) {
-            return Collections
-                .unmodifiableList(
-                    inner
-                        .stream()
-                        .map(inner1 -> new DefinitionResourceReferenceImpl(inner1, this.manager()))
-                        .collect(Collectors.toList()));
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
+                inner.getValue()
+                    .stream()
+                    .map(inner1 -> new DefinitionResourceReferenceImpl(inner1, this.manager()))
+                    .collect(Collectors.toList()));
+        } else {
+            return null;
+        }
+    }
+
+    public List<DefinitionResourceReference> authorizeProjectResources(String organization, String project,
+        List<DefinitionResourceReferenceInner> body) {
+        List<DefinitionResourceReferenceInner> inner
+            = this.serviceClient().authorizeProjectResources(organization, project, body);
+        if (inner != null) {
+            return Collections.unmodifiableList(inner.stream()
+                .map(inner1 -> new DefinitionResourceReferenceImpl(inner1, this.manager()))
+                .collect(Collectors.toList()));
         } else {
             return Collections.emptyList();
         }
     }
 
-    public Response<List<DefinitionResourceReference>> authorizeProjectResourcesWithResponse(
-        String organization, String project, List<DefinitionResourceReferenceInner> body, Context context) {
-        Response<List<DefinitionResourceReferenceInner>> inner =
-            this.serviceClient().authorizeProjectResourcesWithResponse(organization, project, body, context);
+    public Response<List<DefinitionResourceReference>> listWithResponse(String organization, String project,
+        String type, String id, Context context) {
+        Response<List<DefinitionResourceReferenceInner>> inner
+            = this.serviceClient().listWithResponse(organization, project, type, id, context);
         if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                inner
-                    .getValue()
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
+                inner.getValue()
                     .stream()
                     .map(inner1 -> new DefinitionResourceReferenceImpl(inner1, this.manager()))
                     .collect(Collectors.toList()));
@@ -67,33 +74,11 @@ public final class AuthorizedresourcesImpl implements Authorizedresources {
     public List<DefinitionResourceReference> list(String organization, String project) {
         List<DefinitionResourceReferenceInner> inner = this.serviceClient().list(organization, project);
         if (inner != null) {
-            return Collections
-                .unmodifiableList(
-                    inner
-                        .stream()
-                        .map(inner1 -> new DefinitionResourceReferenceImpl(inner1, this.manager()))
-                        .collect(Collectors.toList()));
+            return Collections.unmodifiableList(inner.stream()
+                .map(inner1 -> new DefinitionResourceReferenceImpl(inner1, this.manager()))
+                .collect(Collectors.toList()));
         } else {
             return Collections.emptyList();
-        }
-    }
-
-    public Response<List<DefinitionResourceReference>> listWithResponse(
-        String organization, String project, String type, String id, Context context) {
-        Response<List<DefinitionResourceReferenceInner>> inner =
-            this.serviceClient().listWithResponse(organization, project, type, id, context);
-        if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                inner
-                    .getValue()
-                    .stream()
-                    .map(inner1 -> new DefinitionResourceReferenceImpl(inner1, this.manager()))
-                    .collect(Collectors.toList()));
-        } else {
-            return null;
         }
     }
 

@@ -12,10 +12,9 @@ import com.azure.dev.fluent.SettingsClient;
 import com.azure.dev.fluent.models.BuildSettingsInner;
 import com.azure.dev.models.BuildSettings;
 import com.azure.dev.models.Settings;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public final class SettingsImpl implements Settings {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(SettingsImpl.class);
+    private static final ClientLogger LOGGER = new ClientLogger(SettingsImpl.class);
 
     private final SettingsClient innerClient;
 
@@ -24,6 +23,16 @@ public final class SettingsImpl implements Settings {
     public SettingsImpl(SettingsClient innerClient, com.azure.dev.DevManager serviceManager) {
         this.innerClient = innerClient;
         this.serviceManager = serviceManager;
+    }
+
+    public Response<BuildSettings> getWithResponse(String organization, String project, Context context) {
+        Response<BuildSettingsInner> inner = this.serviceClient().getWithResponse(organization, project, context);
+        if (inner != null) {
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
+                new BuildSettingsImpl(inner.getValue(), this.manager()));
+        } else {
+            return null;
+        }
     }
 
     public BuildSettings get(String organization, String project) {
@@ -35,13 +44,12 @@ public final class SettingsImpl implements Settings {
         }
     }
 
-    public Response<BuildSettings> getWithResponse(String organization, String project, Context context) {
-        Response<BuildSettingsInner> inner = this.serviceClient().getWithResponse(organization, project, context);
+    public Response<BuildSettings> updateWithResponse(String organization, String project, BuildSettingsInner body,
+        Context context) {
+        Response<BuildSettingsInner> inner
+            = this.serviceClient().updateWithResponse(organization, project, body, context);
         if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
                 new BuildSettingsImpl(inner.getValue(), this.manager()));
         } else {
             return null;
@@ -52,21 +60,6 @@ public final class SettingsImpl implements Settings {
         BuildSettingsInner inner = this.serviceClient().update(organization, project, body);
         if (inner != null) {
             return new BuildSettingsImpl(inner, this.manager());
-        } else {
-            return null;
-        }
-    }
-
-    public Response<BuildSettings> updateWithResponse(
-        String organization, String project, BuildSettingsInner body, Context context) {
-        Response<BuildSettingsInner> inner =
-            this.serviceClient().updateWithResponse(organization, project, body, context);
-        if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                new BuildSettingsImpl(inner.getValue(), this.manager()));
         } else {
             return null;
         }

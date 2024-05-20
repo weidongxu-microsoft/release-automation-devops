@@ -23,7 +23,6 @@ import com.azure.core.http.rest.RestProxy;
 import com.azure.core.management.exception.ManagementException;
 import com.azure.core.util.Context;
 import com.azure.core.util.FluxUtil;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.fluent.SourceProvidersClient;
 import com.azure.dev.fluent.models.PullRequestInner;
 import com.azure.dev.fluent.models.RepositoryWebhookInner;
@@ -35,24 +34,28 @@ import java.util.List;
 import java.util.UUID;
 import reactor.core.publisher.Mono;
 
-/** An instance of this class provides access to all the operations defined in SourceProvidersClient. */
+/**
+ * An instance of this class provides access to all the operations defined in SourceProvidersClient.
+ */
 public final class SourceProvidersClientImpl implements SourceProvidersClient {
-    private final ClientLogger logger = new ClientLogger(SourceProvidersClientImpl.class);
-
-    /** The proxy service used to perform REST calls. */
+    /**
+     * The proxy service used to perform REST calls.
+     */
     private final SourceProvidersService service;
 
-    /** The service client containing this operation class. */
+    /**
+     * The service client containing this operation class.
+     */
     private final DevClientImpl client;
 
     /**
      * Initializes an instance of SourceProvidersClientImpl.
-     *
+     * 
      * @param client the instance of the service client containing this operation class.
      */
     SourceProvidersClientImpl(DevClientImpl client) {
-        this.service =
-            RestProxy.create(SourceProvidersService.class, client.getHttpPipeline(), client.getSerializerAdapter());
+        this.service
+            = RestProxy.create(SourceProvidersService.class, client.getHttpPipeline(), client.getSerializerAdapter());
         this.client = client;
     }
 
@@ -62,152 +65,106 @@ public final class SourceProvidersClientImpl implements SourceProvidersClient {
      */
     @Host("{$host}")
     @ServiceInterface(name = "DevClientSourceProvi")
-    private interface SourceProvidersService {
-        @Headers({"Content-Type: application/json"})
+    public interface SourceProvidersService {
+        @Headers({ "Content-Type: application/json" })
         @Get("/{organization}/{project}/_apis/sourceproviders")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<List<SourceProviderAttributesInner>>> list(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<List<SourceProviderAttributesInner>>> list(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
         @Get("/{organization}/{project}/_apis/sourceProviders/{providerName}/branches")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<List<String>>> listBranches(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
-            @PathParam("providerName") String providerName,
-            @QueryParam("serviceEndpointId") UUID serviceEndpointId,
-            @QueryParam("repository") String repository,
-            @QueryParam("branchName") String branchName,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<List<String>>> listBranches(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
+            @PathParam("providerName") String providerName, @QueryParam("serviceEndpointId") UUID serviceEndpointId,
+            @QueryParam("repository") String repository, @QueryParam("branchName") String branchName,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
         @Get("/{organization}/{project}/_apis/sourceProviders/{providerName}/filecontents")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<String>> getFileContents(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
-            @PathParam("providerName") String providerName,
-            @QueryParam("serviceEndpointId") UUID serviceEndpointId,
-            @QueryParam("repository") String repository,
-            @QueryParam("commitOrBranch") String commitOrBranch,
-            @QueryParam("path") String path,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<String>> getFileContents(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
+            @PathParam("providerName") String providerName, @QueryParam("serviceEndpointId") UUID serviceEndpointId,
+            @QueryParam("repository") String repository, @QueryParam("commitOrBranch") String commitOrBranch,
+            @QueryParam("path") String path, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
         @Get("/{organization}/{project}/_apis/sourceProviders/{providerName}/pathcontents")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<List<SourceRepositoryItemInner>>> getPathContents(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
-            @PathParam("providerName") String providerName,
-            @QueryParam("serviceEndpointId") UUID serviceEndpointId,
-            @QueryParam("repository") String repository,
-            @QueryParam("commitOrBranch") String commitOrBranch,
-            @QueryParam("path") String path,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<List<SourceRepositoryItemInner>>> getPathContents(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
+            @PathParam("providerName") String providerName, @QueryParam("serviceEndpointId") UUID serviceEndpointId,
+            @QueryParam("repository") String repository, @QueryParam("commitOrBranch") String commitOrBranch,
+            @QueryParam("path") String path, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
         @Get("/{organization}/{project}/_apis/sourceProviders/{providerName}/pullrequests/{pullRequestId}")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<PullRequestInner>> getPullRequest(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
-            @PathParam("providerName") String providerName,
-            @PathParam("pullRequestId") String pullRequestId,
-            @QueryParam("repositoryId") String repositoryId,
-            @QueryParam("serviceEndpointId") UUID serviceEndpointId,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<PullRequestInner>> getPullRequest(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
+            @PathParam("providerName") String providerName, @PathParam("pullRequestId") String pullRequestId,
+            @QueryParam("repositoryId") String repositoryId, @QueryParam("serviceEndpointId") UUID serviceEndpointId,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
         @Get("/{organization}/{project}/_apis/sourceProviders/{providerName}/repositories")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<SourceRepositoriesInner>> listRepositories(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
-            @PathParam("providerName") String providerName,
-            @QueryParam("serviceEndpointId") UUID serviceEndpointId,
-            @QueryParam("repository") String repository,
-            @QueryParam("resultSet") ResultSet resultSet,
-            @QueryParam("pageResults") Boolean pageResults,
-            @QueryParam("continuationToken") String continuationToken,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<SourceRepositoriesInner>> listRepositories(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
+            @PathParam("providerName") String providerName, @QueryParam("serviceEndpointId") UUID serviceEndpointId,
+            @QueryParam("repository") String repository, @QueryParam("resultSet") ResultSet resultSet,
+            @QueryParam("pageResults") Boolean pageResults, @QueryParam("continuationToken") String continuationToken,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Accept: application/json;q=0.9", "Content-Type: application/json"})
+        @Headers({ "Accept: application/json;q=0.9", "Content-Type: application/json" })
         @Post("/{organization}/{project}/_apis/sourceProviders/{providerName}/webhooks")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Void>> restoreWebhooks(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
-            @PathParam("providerName") String providerName,
-            @QueryParam("serviceEndpointId") UUID serviceEndpointId,
-            @QueryParam("repository") String repository,
-            @QueryParam("api-version") String apiVersion,
-            @BodyParam("application/json") List<String> body,
-            Context context);
+        Mono<Response<Void>> restoreWebhooks(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
+            @PathParam("providerName") String providerName, @QueryParam("serviceEndpointId") UUID serviceEndpointId,
+            @QueryParam("repository") String repository, @QueryParam("api-version") String apiVersion,
+            @BodyParam("application/json") List<String> body, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
         @Get("/{organization}/{project}/_apis/sourceProviders/{providerName}/webhooks")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<List<RepositoryWebhookInner>>> listWebhooks(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
-            @PathParam("providerName") String providerName,
-            @QueryParam("serviceEndpointId") UUID serviceEndpointId,
-            @QueryParam("repository") String repository,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<List<RepositoryWebhookInner>>> listWebhooks(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
+            @PathParam("providerName") String providerName, @QueryParam("serviceEndpointId") UUID serviceEndpointId,
+            @QueryParam("repository") String repository, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, Context context);
     }
 
     /**
      * Get a list of source providers and their capabilities.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of source providers and their capabilities.
+     * @return a list of source providers and their capabilities along with {@link Response} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<SourceProviderAttributesInner>>> listWithResponseAsync(
-        String organization, String project) {
+    private Mono<Response<List<SourceProviderAttributesInner>>> listWithResponseAsync(String organization,
+        String project) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -215,33 +172,31 @@ public final class SourceProvidersClientImpl implements SourceProvidersClient {
         if (project == null) {
             return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context -> service.list(this.client.getEndpoint(), organization, project, apiVersion, accept, context))
+            .withContext(context -> service.list(this.client.getEndpoint(), organization, project,
+                this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Get a list of source providers and their capabilities.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of source providers and their capabilities.
+     * @return a list of source providers and their capabilities along with {@link Response} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<SourceProviderAttributesInner>>> listWithResponseAsync(
-        String organization, String project, Context context) {
+    private Mono<Response<List<SourceProviderAttributesInner>>> listWithResponseAsync(String organization,
+        String project, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -249,38 +204,47 @@ public final class SourceProvidersClientImpl implements SourceProvidersClient {
         if (project == null) {
             return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service.list(this.client.getEndpoint(), organization, project, apiVersion, accept, context);
+        return service.list(this.client.getEndpoint(), organization, project, this.client.getApiVersion(), accept,
+            context);
     }
 
     /**
      * Get a list of source providers and their capabilities.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of source providers and their capabilities.
+     * @return a list of source providers and their capabilities on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<List<SourceProviderAttributesInner>> listAsync(String organization, String project) {
-        return listWithResponseAsync(organization, project)
-            .flatMap(
-                (Response<List<SourceProviderAttributesInner>> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+        return listWithResponseAsync(organization, project).flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Get a list of source providers and their capabilities.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return a list of source providers and their capabilities along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<List<SourceProviderAttributesInner>> listWithResponse(String organization, String project,
+        Context context) {
+        return listWithResponseAsync(organization, project, context).block();
+    }
+
+    /**
+     * Get a list of source providers and their capabilities.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -290,55 +254,32 @@ public final class SourceProvidersClientImpl implements SourceProvidersClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public List<SourceProviderAttributesInner> list(String organization, String project) {
-        return listAsync(organization, project).block();
-    }
-
-    /**
-     * Get a list of source providers and their capabilities.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of source providers and their capabilities.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<List<SourceProviderAttributesInner>> listWithResponse(
-        String organization, String project, Context context) {
-        return listWithResponseAsync(organization, project, context).block();
+        return listWithResponse(organization, project, Context.NONE).getValue();
     }
 
     /**
      * Gets a list of branches for the given source code repository.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param providerName The name of the source provider.
      * @param serviceEndpointId If specified, the ID of the service endpoint to query. Can only be omitted for providers
-     *     that do not use service endpoints, e.g. TFVC or TFGit.
+     * that do not use service endpoints, e.g. TFVC or TFGit.
      * @param repository The vendor-specific identifier or the name of the repository to get branches. Can only be
-     *     omitted for providers that do not support multiple repositories.
+     * omitted for providers that do not support multiple repositories.
      * @param branchName If supplied, the name of the branch to check for specifically.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of branches for the given source code repository.
+     * @return a list of branches for the given source code repository along with {@link Response} on successful
+     * completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<String>>> listBranchesWithResponseAsync(
-        String organization,
-        String project,
-        String providerName,
-        UUID serviceEndpointId,
-        String repository,
-        String branchName) {
+    private Mono<Response<List<String>>> listBranchesWithResponseAsync(String organization, String project,
+        String providerName, UUID serviceEndpointId, String repository, String branchName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -349,57 +290,37 @@ public final class SourceProvidersClientImpl implements SourceProvidersClient {
         if (providerName == null) {
             return Mono.error(new IllegalArgumentException("Parameter providerName is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .listBranches(
-                            this.client.getEndpoint(),
-                            organization,
-                            project,
-                            providerName,
-                            serviceEndpointId,
-                            repository,
-                            branchName,
-                            apiVersion,
-                            accept,
-                            context))
+            .withContext(context -> service.listBranches(this.client.getEndpoint(), organization, project, providerName,
+                serviceEndpointId, repository, branchName, this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Gets a list of branches for the given source code repository.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param providerName The name of the source provider.
      * @param serviceEndpointId If specified, the ID of the service endpoint to query. Can only be omitted for providers
-     *     that do not use service endpoints, e.g. TFVC or TFGit.
+     * that do not use service endpoints, e.g. TFVC or TFGit.
      * @param repository The vendor-specific identifier or the name of the repository to get branches. Can only be
-     *     omitted for providers that do not support multiple repositories.
+     * omitted for providers that do not support multiple repositories.
      * @param branchName If supplied, the name of the branch to check for specifically.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of branches for the given source code repository.
+     * @return a list of branches for the given source code repository along with {@link Response} on successful
+     * completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<String>>> listBranchesWithResponseAsync(
-        String organization,
-        String project,
-        String providerName,
-        UUID serviceEndpointId,
-        String repository,
-        String branchName,
-        Context context) {
+    private Mono<Response<List<String>>> listBranchesWithResponseAsync(String organization, String project,
+        String providerName, UUID serviceEndpointId, String repository, String branchName, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -410,90 +331,59 @@ public final class SourceProvidersClientImpl implements SourceProvidersClient {
         if (providerName == null) {
             return Mono.error(new IllegalArgumentException("Parameter providerName is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .listBranches(
-                this.client.getEndpoint(),
-                organization,
-                project,
-                providerName,
-                serviceEndpointId,
-                repository,
-                branchName,
-                apiVersion,
-                accept,
-                context);
+        return service.listBranches(this.client.getEndpoint(), organization, project, providerName, serviceEndpointId,
+            repository, branchName, this.client.getApiVersion(), accept, context);
     }
 
     /**
      * Gets a list of branches for the given source code repository.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param providerName The name of the source provider.
-     * @param serviceEndpointId If specified, the ID of the service endpoint to query. Can only be omitted for providers
-     *     that do not use service endpoints, e.g. TFVC or TFGit.
-     * @param repository The vendor-specific identifier or the name of the repository to get branches. Can only be
-     *     omitted for providers that do not support multiple repositories.
-     * @param branchName If supplied, the name of the branch to check for specifically.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of branches for the given source code repository.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<List<String>> listBranchesAsync(
-        String organization,
-        String project,
-        String providerName,
-        UUID serviceEndpointId,
-        String repository,
-        String branchName) {
-        return listBranchesWithResponseAsync(
-                organization, project, providerName, serviceEndpointId, repository, branchName)
-            .flatMap(
-                (Response<List<String>> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
-    }
-
-    /**
-     * Gets a list of branches for the given source code repository.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param providerName The name of the source provider.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of branches for the given source code repository.
+     * @return a list of branches for the given source code repository on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<List<String>> listBranchesAsync(String organization, String project, String providerName) {
         final UUID serviceEndpointId = null;
         final String repository = null;
         final String branchName = null;
-        return listBranchesWithResponseAsync(
-                organization, project, providerName, serviceEndpointId, repository, branchName)
-            .flatMap(
-                (Response<List<String>> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+        return listBranchesWithResponseAsync(organization, project, providerName, serviceEndpointId, repository,
+            branchName).flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Gets a list of branches for the given source code repository.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param providerName The name of the source provider.
+     * @param serviceEndpointId If specified, the ID of the service endpoint to query. Can only be omitted for providers
+     * that do not use service endpoints, e.g. TFVC or TFGit.
+     * @param repository The vendor-specific identifier or the name of the repository to get branches. Can only be
+     * omitted for providers that do not support multiple repositories.
+     * @param branchName If supplied, the name of the branch to check for specifically.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return a list of branches for the given source code repository along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<List<String>> listBranchesWithResponse(String organization, String project, String providerName,
+        UUID serviceEndpointId, String repository, String branchName, Context context) {
+        return listBranchesWithResponseAsync(organization, project, providerName, serviceEndpointId, repository,
+            branchName, context).block();
+    }
+
+    /**
+     * Gets a list of branches for the given source code repository.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param providerName The name of the source provider.
@@ -507,72 +397,34 @@ public final class SourceProvidersClientImpl implements SourceProvidersClient {
         final UUID serviceEndpointId = null;
         final String repository = null;
         final String branchName = null;
-        return listBranchesAsync(organization, project, providerName, serviceEndpointId, repository, branchName)
-            .block();
-    }
-
-    /**
-     * Gets a list of branches for the given source code repository.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param providerName The name of the source provider.
-     * @param serviceEndpointId If specified, the ID of the service endpoint to query. Can only be omitted for providers
-     *     that do not use service endpoints, e.g. TFVC or TFGit.
-     * @param repository The vendor-specific identifier or the name of the repository to get branches. Can only be
-     *     omitted for providers that do not support multiple repositories.
-     * @param branchName If supplied, the name of the branch to check for specifically.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of branches for the given source code repository.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<List<String>> listBranchesWithResponse(
-        String organization,
-        String project,
-        String providerName,
-        UUID serviceEndpointId,
-        String repository,
-        String branchName,
-        Context context) {
-        return listBranchesWithResponseAsync(
-                organization, project, providerName, serviceEndpointId, repository, branchName, context)
-            .block();
+        return listBranchesWithResponse(organization, project, providerName, serviceEndpointId, repository, branchName,
+            Context.NONE).getValue();
     }
 
     /**
      * Gets the contents of a file in the given source code repository.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param providerName The name of the source provider.
      * @param serviceEndpointId If specified, the ID of the service endpoint to query. Can only be omitted for providers
-     *     that do not use service endpoints, e.g. TFVC or TFGit.
+     * that do not use service endpoints, e.g. TFVC or TFGit.
      * @param repository If specified, the vendor-specific identifier or the name of the repository to get branches. Can
-     *     only be omitted for providers that do not support multiple repositories.
+     * only be omitted for providers that do not support multiple repositories.
      * @param commitOrBranch The identifier of the commit or branch from which a file's contents are retrieved.
      * @param path The path to the file to retrieve, relative to the root of the repository.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the contents of a file in the given source code repository.
+     * @return the contents of a file in the given source code repository along with {@link Response} on successful
+     * completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<String>> getFileContentsWithResponseAsync(
-        String organization,
-        String project,
-        String providerName,
-        UUID serviceEndpointId,
-        String repository,
-        String commitOrBranch,
-        String path) {
+    private Mono<Response<String>> getFileContentsWithResponseAsync(String organization, String project,
+        String providerName, UUID serviceEndpointId, String repository, String commitOrBranch, String path) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -583,60 +435,40 @@ public final class SourceProvidersClientImpl implements SourceProvidersClient {
         if (providerName == null) {
             return Mono.error(new IllegalArgumentException("Parameter providerName is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "text/plain";
         return FluxUtil
             .withContext(
-                context ->
-                    service
-                        .getFileContents(
-                            this.client.getEndpoint(),
-                            organization,
-                            project,
-                            providerName,
-                            serviceEndpointId,
-                            repository,
-                            commitOrBranch,
-                            path,
-                            apiVersion,
-                            accept,
-                            context))
+                context -> service.getFileContents(this.client.getEndpoint(), organization, project, providerName,
+                    serviceEndpointId, repository, commitOrBranch, path, this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Gets the contents of a file in the given source code repository.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param providerName The name of the source provider.
      * @param serviceEndpointId If specified, the ID of the service endpoint to query. Can only be omitted for providers
-     *     that do not use service endpoints, e.g. TFVC or TFGit.
+     * that do not use service endpoints, e.g. TFVC or TFGit.
      * @param repository If specified, the vendor-specific identifier or the name of the repository to get branches. Can
-     *     only be omitted for providers that do not support multiple repositories.
+     * only be omitted for providers that do not support multiple repositories.
      * @param commitOrBranch The identifier of the commit or branch from which a file's contents are retrieved.
      * @param path The path to the file to retrieve, relative to the root of the repository.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the contents of a file in the given source code repository.
+     * @return the contents of a file in the given source code repository along with {@link Response} on successful
+     * completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<String>> getFileContentsWithResponseAsync(
-        String organization,
-        String project,
-        String providerName,
-        UUID serviceEndpointId,
-        String repository,
-        String commitOrBranch,
-        String path,
+    private Mono<Response<String>> getFileContentsWithResponseAsync(String organization, String project,
+        String providerName, UUID serviceEndpointId, String repository, String commitOrBranch, String path,
         Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -647,72 +479,22 @@ public final class SourceProvidersClientImpl implements SourceProvidersClient {
         if (providerName == null) {
             return Mono.error(new IllegalArgumentException("Parameter providerName is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "text/plain";
         context = this.client.mergeContext(context);
-        return service
-            .getFileContents(
-                this.client.getEndpoint(),
-                organization,
-                project,
-                providerName,
-                serviceEndpointId,
-                repository,
-                commitOrBranch,
-                path,
-                apiVersion,
-                accept,
-                context);
+        return service.getFileContents(this.client.getEndpoint(), organization, project, providerName,
+            serviceEndpointId, repository, commitOrBranch, path, this.client.getApiVersion(), accept, context);
     }
 
     /**
      * Gets the contents of a file in the given source code repository.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param providerName The name of the source provider.
-     * @param serviceEndpointId If specified, the ID of the service endpoint to query. Can only be omitted for providers
-     *     that do not use service endpoints, e.g. TFVC or TFGit.
-     * @param repository If specified, the vendor-specific identifier or the name of the repository to get branches. Can
-     *     only be omitted for providers that do not support multiple repositories.
-     * @param commitOrBranch The identifier of the commit or branch from which a file's contents are retrieved.
-     * @param path The path to the file to retrieve, relative to the root of the repository.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the contents of a file in the given source code repository.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<String> getFileContentsAsync(
-        String organization,
-        String project,
-        String providerName,
-        UUID serviceEndpointId,
-        String repository,
-        String commitOrBranch,
-        String path) {
-        return getFileContentsWithResponseAsync(
-                organization, project, providerName, serviceEndpointId, repository, commitOrBranch, path)
-            .flatMap(
-                (Response<String> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
-    }
-
-    /**
-     * Gets the contents of a file in the given source code repository.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param providerName The name of the source provider.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the contents of a file in the given source code repository.
+     * @return the contents of a file in the given source code repository on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<String> getFileContentsAsync(String organization, String project, String providerName) {
@@ -720,21 +502,38 @@ public final class SourceProvidersClientImpl implements SourceProvidersClient {
         final String repository = null;
         final String commitOrBranch = null;
         final String path = null;
-        return getFileContentsWithResponseAsync(
-                organization, project, providerName, serviceEndpointId, repository, commitOrBranch, path)
-            .flatMap(
-                (Response<String> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+        return getFileContentsWithResponseAsync(organization, project, providerName, serviceEndpointId, repository,
+            commitOrBranch, path).flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Gets the contents of a file in the given source code repository.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param providerName The name of the source provider.
+     * @param serviceEndpointId If specified, the ID of the service endpoint to query. Can only be omitted for providers
+     * that do not use service endpoints, e.g. TFVC or TFGit.
+     * @param repository If specified, the vendor-specific identifier or the name of the repository to get branches. Can
+     * only be omitted for providers that do not support multiple repositories.
+     * @param commitOrBranch The identifier of the commit or branch from which a file's contents are retrieved.
+     * @param path The path to the file to retrieve, relative to the root of the repository.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the contents of a file in the given source code repository along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<String> getFileContentsWithResponse(String organization, String project, String providerName,
+        UUID serviceEndpointId, String repository, String commitOrBranch, String path, Context context) {
+        return getFileContentsWithResponseAsync(organization, project, providerName, serviceEndpointId, repository,
+            commitOrBranch, path, context).block();
+    }
+
+    /**
+     * Gets the contents of a file in the given source code repository.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param providerName The name of the source provider.
@@ -749,75 +548,35 @@ public final class SourceProvidersClientImpl implements SourceProvidersClient {
         final String repository = null;
         final String commitOrBranch = null;
         final String path = null;
-        return getFileContentsAsync(
-                organization, project, providerName, serviceEndpointId, repository, commitOrBranch, path)
-            .block();
-    }
-
-    /**
-     * Gets the contents of a file in the given source code repository.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param providerName The name of the source provider.
-     * @param serviceEndpointId If specified, the ID of the service endpoint to query. Can only be omitted for providers
-     *     that do not use service endpoints, e.g. TFVC or TFGit.
-     * @param repository If specified, the vendor-specific identifier or the name of the repository to get branches. Can
-     *     only be omitted for providers that do not support multiple repositories.
-     * @param commitOrBranch The identifier of the commit or branch from which a file's contents are retrieved.
-     * @param path The path to the file to retrieve, relative to the root of the repository.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the contents of a file in the given source code repository.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<String> getFileContentsWithResponse(
-        String organization,
-        String project,
-        String providerName,
-        UUID serviceEndpointId,
-        String repository,
-        String commitOrBranch,
-        String path,
-        Context context) {
-        return getFileContentsWithResponseAsync(
-                organization, project, providerName, serviceEndpointId, repository, commitOrBranch, path, context)
-            .block();
+        return getFileContentsWithResponse(organization, project, providerName, serviceEndpointId, repository,
+            commitOrBranch, path, Context.NONE).getValue();
     }
 
     /**
      * Gets the contents of a directory in the given source code repository.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param providerName The name of the source provider.
      * @param serviceEndpointId If specified, the ID of the service endpoint to query. Can only be omitted for providers
-     *     that do not use service endpoints, e.g. TFVC or TFGit.
+     * that do not use service endpoints, e.g. TFVC or TFGit.
      * @param repository If specified, the vendor-specific identifier or the name of the repository to get branches. Can
-     *     only be omitted for providers that do not support multiple repositories.
+     * only be omitted for providers that do not support multiple repositories.
      * @param commitOrBranch The identifier of the commit or branch from which a file's contents are retrieved.
      * @param path The path contents to list, relative to the root of the repository.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the contents of a directory in the given source code repository.
+     * @return the contents of a directory in the given source code repository along with {@link Response} on successful
+     * completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<SourceRepositoryItemInner>>> getPathContentsWithResponseAsync(
-        String organization,
-        String project,
-        String providerName,
-        UUID serviceEndpointId,
-        String repository,
-        String commitOrBranch,
+    private Mono<Response<List<SourceRepositoryItemInner>>> getPathContentsWithResponseAsync(String organization,
+        String project, String providerName, UUID serviceEndpointId, String repository, String commitOrBranch,
         String path) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -828,60 +587,40 @@ public final class SourceProvidersClientImpl implements SourceProvidersClient {
         if (providerName == null) {
             return Mono.error(new IllegalArgumentException("Parameter providerName is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         return FluxUtil
             .withContext(
-                context ->
-                    service
-                        .getPathContents(
-                            this.client.getEndpoint(),
-                            organization,
-                            project,
-                            providerName,
-                            serviceEndpointId,
-                            repository,
-                            commitOrBranch,
-                            path,
-                            apiVersion,
-                            accept,
-                            context))
+                context -> service.getPathContents(this.client.getEndpoint(), organization, project, providerName,
+                    serviceEndpointId, repository, commitOrBranch, path, this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Gets the contents of a directory in the given source code repository.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param providerName The name of the source provider.
      * @param serviceEndpointId If specified, the ID of the service endpoint to query. Can only be omitted for providers
-     *     that do not use service endpoints, e.g. TFVC or TFGit.
+     * that do not use service endpoints, e.g. TFVC or TFGit.
      * @param repository If specified, the vendor-specific identifier or the name of the repository to get branches. Can
-     *     only be omitted for providers that do not support multiple repositories.
+     * only be omitted for providers that do not support multiple repositories.
      * @param commitOrBranch The identifier of the commit or branch from which a file's contents are retrieved.
      * @param path The path contents to list, relative to the root of the repository.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the contents of a directory in the given source code repository.
+     * @return the contents of a directory in the given source code repository along with {@link Response} on successful
+     * completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<SourceRepositoryItemInner>>> getPathContentsWithResponseAsync(
-        String organization,
-        String project,
-        String providerName,
-        UUID serviceEndpointId,
-        String repository,
-        String commitOrBranch,
-        String path,
-        Context context) {
+    private Mono<Response<List<SourceRepositoryItemInner>>> getPathContentsWithResponseAsync(String organization,
+        String project, String providerName, UUID serviceEndpointId, String repository, String commitOrBranch,
+        String path, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -892,95 +631,63 @@ public final class SourceProvidersClientImpl implements SourceProvidersClient {
         if (providerName == null) {
             return Mono.error(new IllegalArgumentException("Parameter providerName is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .getPathContents(
-                this.client.getEndpoint(),
-                organization,
-                project,
-                providerName,
-                serviceEndpointId,
-                repository,
-                commitOrBranch,
-                path,
-                apiVersion,
-                accept,
-                context);
+        return service.getPathContents(this.client.getEndpoint(), organization, project, providerName,
+            serviceEndpointId, repository, commitOrBranch, path, this.client.getApiVersion(), accept, context);
     }
 
     /**
      * Gets the contents of a directory in the given source code repository.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param providerName The name of the source provider.
-     * @param serviceEndpointId If specified, the ID of the service endpoint to query. Can only be omitted for providers
-     *     that do not use service endpoints, e.g. TFVC or TFGit.
-     * @param repository If specified, the vendor-specific identifier or the name of the repository to get branches. Can
-     *     only be omitted for providers that do not support multiple repositories.
-     * @param commitOrBranch The identifier of the commit or branch from which a file's contents are retrieved.
-     * @param path The path contents to list, relative to the root of the repository.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the contents of a directory in the given source code repository.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<List<SourceRepositoryItemInner>> getPathContentsAsync(
-        String organization,
-        String project,
-        String providerName,
-        UUID serviceEndpointId,
-        String repository,
-        String commitOrBranch,
-        String path) {
-        return getPathContentsWithResponseAsync(
-                organization, project, providerName, serviceEndpointId, repository, commitOrBranch, path)
-            .flatMap(
-                (Response<List<SourceRepositoryItemInner>> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
-    }
-
-    /**
-     * Gets the contents of a directory in the given source code repository.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param providerName The name of the source provider.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the contents of a directory in the given source code repository.
+     * @return the contents of a directory in the given source code repository on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<List<SourceRepositoryItemInner>> getPathContentsAsync(
-        String organization, String project, String providerName) {
+    private Mono<List<SourceRepositoryItemInner>> getPathContentsAsync(String organization, String project,
+        String providerName) {
         final UUID serviceEndpointId = null;
         final String repository = null;
         final String commitOrBranch = null;
         final String path = null;
-        return getPathContentsWithResponseAsync(
-                organization, project, providerName, serviceEndpointId, repository, commitOrBranch, path)
-            .flatMap(
-                (Response<List<SourceRepositoryItemInner>> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+        return getPathContentsWithResponseAsync(organization, project, providerName, serviceEndpointId, repository,
+            commitOrBranch, path).flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Gets the contents of a directory in the given source code repository.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param providerName The name of the source provider.
+     * @param serviceEndpointId If specified, the ID of the service endpoint to query. Can only be omitted for providers
+     * that do not use service endpoints, e.g. TFVC or TFGit.
+     * @param repository If specified, the vendor-specific identifier or the name of the repository to get branches. Can
+     * only be omitted for providers that do not support multiple repositories.
+     * @param commitOrBranch The identifier of the commit or branch from which a file's contents are retrieved.
+     * @param path The path contents to list, relative to the root of the repository.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the contents of a directory in the given source code repository along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<List<SourceRepositoryItemInner>> getPathContentsWithResponse(String organization, String project,
+        String providerName, UUID serviceEndpointId, String repository, String commitOrBranch, String path,
+        Context context) {
+        return getPathContentsWithResponseAsync(organization, project, providerName, serviceEndpointId, repository,
+            commitOrBranch, path, context).block();
+    }
+
+    /**
+     * Gets the contents of a directory in the given source code repository.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param providerName The name of the source provider.
@@ -995,72 +702,32 @@ public final class SourceProvidersClientImpl implements SourceProvidersClient {
         final String repository = null;
         final String commitOrBranch = null;
         final String path = null;
-        return getPathContentsAsync(
-                organization, project, providerName, serviceEndpointId, repository, commitOrBranch, path)
-            .block();
-    }
-
-    /**
-     * Gets the contents of a directory in the given source code repository.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param providerName The name of the source provider.
-     * @param serviceEndpointId If specified, the ID of the service endpoint to query. Can only be omitted for providers
-     *     that do not use service endpoints, e.g. TFVC or TFGit.
-     * @param repository If specified, the vendor-specific identifier or the name of the repository to get branches. Can
-     *     only be omitted for providers that do not support multiple repositories.
-     * @param commitOrBranch The identifier of the commit or branch from which a file's contents are retrieved.
-     * @param path The path contents to list, relative to the root of the repository.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the contents of a directory in the given source code repository.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<List<SourceRepositoryItemInner>> getPathContentsWithResponse(
-        String organization,
-        String project,
-        String providerName,
-        UUID serviceEndpointId,
-        String repository,
-        String commitOrBranch,
-        String path,
-        Context context) {
-        return getPathContentsWithResponseAsync(
-                organization, project, providerName, serviceEndpointId, repository, commitOrBranch, path, context)
-            .block();
+        return getPathContentsWithResponse(organization, project, providerName, serviceEndpointId, repository,
+            commitOrBranch, path, Context.NONE).getValue();
     }
 
     /**
      * Gets a pull request object from source provider.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param providerName The name of the source provider.
      * @param pullRequestId Vendor-specific id of the pull request.
      * @param repositoryId Vendor-specific identifier or the name of the repository that contains the pull request.
      * @param serviceEndpointId If specified, the ID of the service endpoint to query. Can only be omitted for providers
-     *     that do not use service endpoints, e.g. TFVC or TFGit.
+     * that do not use service endpoints, e.g. TFVC or TFGit.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a pull request object from source provider.
+     * @return a pull request object from source provider along with {@link Response} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<PullRequestInner>> getPullRequestWithResponseAsync(
-        String organization,
-        String project,
-        String providerName,
-        String pullRequestId,
-        String repositoryId,
-        UUID serviceEndpointId) {
+    private Mono<Response<PullRequestInner>> getPullRequestWithResponseAsync(String organization, String project,
+        String providerName, String pullRequestId, String repositoryId, UUID serviceEndpointId) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -1074,56 +741,37 @@ public final class SourceProvidersClientImpl implements SourceProvidersClient {
         if (pullRequestId == null) {
             return Mono.error(new IllegalArgumentException("Parameter pullRequestId is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         return FluxUtil
             .withContext(
-                context ->
-                    service
-                        .getPullRequest(
-                            this.client.getEndpoint(),
-                            organization,
-                            project,
-                            providerName,
-                            pullRequestId,
-                            repositoryId,
-                            serviceEndpointId,
-                            apiVersion,
-                            accept,
-                            context))
+                context -> service.getPullRequest(this.client.getEndpoint(), organization, project, providerName,
+                    pullRequestId, repositoryId, serviceEndpointId, this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Gets a pull request object from source provider.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param providerName The name of the source provider.
      * @param pullRequestId Vendor-specific id of the pull request.
      * @param repositoryId Vendor-specific identifier or the name of the repository that contains the pull request.
      * @param serviceEndpointId If specified, the ID of the service endpoint to query. Can only be omitted for providers
-     *     that do not use service endpoints, e.g. TFVC or TFGit.
+     * that do not use service endpoints, e.g. TFVC or TFGit.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a pull request object from source provider.
+     * @return a pull request object from source provider along with {@link Response} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<PullRequestInner>> getPullRequestWithResponseAsync(
-        String organization,
-        String project,
-        String providerName,
-        String pullRequestId,
-        String repositoryId,
-        UUID serviceEndpointId,
-        Context context) {
+    private Mono<Response<PullRequestInner>> getPullRequestWithResponseAsync(String organization, String project,
+        String providerName, String pullRequestId, String repositoryId, UUID serviceEndpointId, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -1137,173 +785,104 @@ public final class SourceProvidersClientImpl implements SourceProvidersClient {
         if (pullRequestId == null) {
             return Mono.error(new IllegalArgumentException("Parameter pullRequestId is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .getPullRequest(
-                this.client.getEndpoint(),
-                organization,
-                project,
-                providerName,
-                pullRequestId,
-                repositoryId,
-                serviceEndpointId,
-                apiVersion,
-                accept,
-                context);
+        return service.getPullRequest(this.client.getEndpoint(), organization, project, providerName, pullRequestId,
+            repositoryId, serviceEndpointId, this.client.getApiVersion(), accept, context);
     }
 
     /**
      * Gets a pull request object from source provider.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param providerName The name of the source provider.
+     * @param pullRequestId Vendor-specific id of the pull request.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return a pull request object from source provider on successful completion of {@link Mono}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Mono<PullRequestInner> getPullRequestAsync(String organization, String project, String providerName,
+        String pullRequestId) {
+        final String repositoryId = null;
+        final UUID serviceEndpointId = null;
+        return getPullRequestWithResponseAsync(organization, project, providerName, pullRequestId, repositoryId,
+            serviceEndpointId).flatMap(res -> Mono.justOrEmpty(res.getValue()));
+    }
+
+    /**
+     * Gets a pull request object from source provider.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param providerName The name of the source provider.
      * @param pullRequestId Vendor-specific id of the pull request.
      * @param repositoryId Vendor-specific identifier or the name of the repository that contains the pull request.
      * @param serviceEndpointId If specified, the ID of the service endpoint to query. Can only be omitted for providers
-     *     that do not use service endpoints, e.g. TFVC or TFGit.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a pull request object from source provider.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PullRequestInner> getPullRequestAsync(
-        String organization,
-        String project,
-        String providerName,
-        String pullRequestId,
-        String repositoryId,
-        UUID serviceEndpointId) {
-        return getPullRequestWithResponseAsync(
-                organization, project, providerName, pullRequestId, repositoryId, serviceEndpointId)
-            .flatMap(
-                (Response<PullRequestInner> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
-    }
-
-    /**
-     * Gets a pull request object from source provider.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param providerName The name of the source provider.
-     * @param pullRequestId Vendor-specific id of the pull request.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a pull request object from source provider.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PullRequestInner> getPullRequestAsync(
-        String organization, String project, String providerName, String pullRequestId) {
-        final String repositoryId = null;
-        final UUID serviceEndpointId = null;
-        return getPullRequestWithResponseAsync(
-                organization, project, providerName, pullRequestId, repositoryId, serviceEndpointId)
-            .flatMap(
-                (Response<PullRequestInner> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
-    }
-
-    /**
-     * Gets a pull request object from source provider.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param providerName The name of the source provider.
-     * @param pullRequestId Vendor-specific id of the pull request.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a pull request object from source provider.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public PullRequestInner getPullRequest(
-        String organization, String project, String providerName, String pullRequestId) {
-        final String repositoryId = null;
-        final UUID serviceEndpointId = null;
-        return getPullRequestAsync(organization, project, providerName, pullRequestId, repositoryId, serviceEndpointId)
-            .block();
-    }
-
-    /**
-     * Gets a pull request object from source provider.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param providerName The name of the source provider.
-     * @param pullRequestId Vendor-specific id of the pull request.
-     * @param repositoryId Vendor-specific identifier or the name of the repository that contains the pull request.
-     * @param serviceEndpointId If specified, the ID of the service endpoint to query. Can only be omitted for providers
-     *     that do not use service endpoints, e.g. TFVC or TFGit.
+     * that do not use service endpoints, e.g. TFVC or TFGit.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return a pull request object from source provider along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<PullRequestInner> getPullRequestWithResponse(String organization, String project,
+        String providerName, String pullRequestId, String repositoryId, UUID serviceEndpointId, Context context) {
+        return getPullRequestWithResponseAsync(organization, project, providerName, pullRequestId, repositoryId,
+            serviceEndpointId, context).block();
+    }
+
+    /**
+     * Gets a pull request object from source provider.
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param providerName The name of the source provider.
+     * @param pullRequestId Vendor-specific id of the pull request.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return a pull request object from source provider.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<PullRequestInner> getPullRequestWithResponse(
-        String organization,
-        String project,
-        String providerName,
-        String pullRequestId,
-        String repositoryId,
-        UUID serviceEndpointId,
-        Context context) {
-        return getPullRequestWithResponseAsync(
-                organization, project, providerName, pullRequestId, repositoryId, serviceEndpointId, context)
-            .block();
+    public PullRequestInner getPullRequest(String organization, String project, String providerName,
+        String pullRequestId) {
+        final String repositoryId = null;
+        final UUID serviceEndpointId = null;
+        return getPullRequestWithResponse(organization, project, providerName, pullRequestId, repositoryId,
+            serviceEndpointId, Context.NONE).getValue();
     }
 
     /**
      * Gets a list of source code repositories.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param providerName The name of the source provider.
      * @param serviceEndpointId If specified, the ID of the service endpoint to query. Can only be omitted for providers
-     *     that do not use service endpoints, e.g. TFVC or TFGit.
+     * that do not use service endpoints, e.g. TFVC or TFGit.
      * @param repository If specified, the vendor-specific identifier or the name of a single repository to get.
      * @param resultSet 'top' for the repositories most relevant for the endpoint. If not set, all repositories are
-     *     returned. Ignored if 'repository' is set.
+     * returned. Ignored if 'repository' is set.
      * @param pageResults If set to true, this will limit the set of results and will return a continuation token to
-     *     continue the query.
+     * continue the query.
      * @param continuationToken When paging results, this is a continuation token, returned by a previous call to this
-     *     method, that can be used to return the next set of repositories.
+     * method, that can be used to return the next set of repositories.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of source code repositories.
+     * @return a list of source code repositories along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<SourceRepositoriesInner>> listRepositoriesWithResponseAsync(
-        String organization,
-        String project,
-        String providerName,
-        UUID serviceEndpointId,
-        String repository,
-        ResultSet resultSet,
-        Boolean pageResults,
-        String continuationToken) {
+    private Mono<Response<SourceRepositoriesInner>> listRepositoriesWithResponseAsync(String organization,
+        String project, String providerName, UUID serviceEndpointId, String repository, ResultSet resultSet,
+        Boolean pageResults, String continuationToken) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -1314,65 +893,42 @@ public final class SourceProvidersClientImpl implements SourceProvidersClient {
         if (providerName == null) {
             return Mono.error(new IllegalArgumentException("Parameter providerName is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .listRepositories(
-                            this.client.getEndpoint(),
-                            organization,
-                            project,
-                            providerName,
-                            serviceEndpointId,
-                            repository,
-                            resultSet,
-                            pageResults,
-                            continuationToken,
-                            apiVersion,
-                            accept,
-                            context))
+            .withContext(context -> service.listRepositories(this.client.getEndpoint(), organization, project,
+                providerName, serviceEndpointId, repository, resultSet, pageResults, continuationToken,
+                this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Gets a list of source code repositories.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param providerName The name of the source provider.
      * @param serviceEndpointId If specified, the ID of the service endpoint to query. Can only be omitted for providers
-     *     that do not use service endpoints, e.g. TFVC or TFGit.
+     * that do not use service endpoints, e.g. TFVC or TFGit.
      * @param repository If specified, the vendor-specific identifier or the name of a single repository to get.
      * @param resultSet 'top' for the repositories most relevant for the endpoint. If not set, all repositories are
-     *     returned. Ignored if 'repository' is set.
+     * returned. Ignored if 'repository' is set.
      * @param pageResults If set to true, this will limit the set of results and will return a continuation token to
-     *     continue the query.
+     * continue the query.
      * @param continuationToken When paging results, this is a continuation token, returned by a previous call to this
-     *     method, that can be used to return the next set of repositories.
+     * method, that can be used to return the next set of repositories.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of source code repositories.
+     * @return a list of source code repositories along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<SourceRepositoriesInner>> listRepositoriesWithResponseAsync(
-        String organization,
-        String project,
-        String providerName,
-        UUID serviceEndpointId,
-        String repository,
-        ResultSet resultSet,
-        Boolean pageResults,
-        String continuationToken,
-        Context context) {
+    private Mono<Response<SourceRepositoriesInner>> listRepositoriesWithResponseAsync(String organization,
+        String project, String providerName, UUID serviceEndpointId, String repository, ResultSet resultSet,
+        Boolean pageResults, String continuationToken, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -1383,115 +939,68 @@ public final class SourceProvidersClientImpl implements SourceProvidersClient {
         if (providerName == null) {
             return Mono.error(new IllegalArgumentException("Parameter providerName is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .listRepositories(
-                this.client.getEndpoint(),
-                organization,
-                project,
-                providerName,
-                serviceEndpointId,
-                repository,
-                resultSet,
-                pageResults,
-                continuationToken,
-                apiVersion,
-                accept,
-                context);
+        return service.listRepositories(this.client.getEndpoint(), organization, project, providerName,
+            serviceEndpointId, repository, resultSet, pageResults, continuationToken, this.client.getApiVersion(),
+            accept, context);
     }
 
     /**
      * Gets a list of source code repositories.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param providerName The name of the source provider.
-     * @param serviceEndpointId If specified, the ID of the service endpoint to query. Can only be omitted for providers
-     *     that do not use service endpoints, e.g. TFVC or TFGit.
-     * @param repository If specified, the vendor-specific identifier or the name of a single repository to get.
-     * @param resultSet 'top' for the repositories most relevant for the endpoint. If not set, all repositories are
-     *     returned. Ignored if 'repository' is set.
-     * @param pageResults If set to true, this will limit the set of results and will return a continuation token to
-     *     continue the query.
-     * @param continuationToken When paging results, this is a continuation token, returned by a previous call to this
-     *     method, that can be used to return the next set of repositories.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of source code repositories.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<SourceRepositoriesInner> listRepositoriesAsync(
-        String organization,
-        String project,
-        String providerName,
-        UUID serviceEndpointId,
-        String repository,
-        ResultSet resultSet,
-        Boolean pageResults,
-        String continuationToken) {
-        return listRepositoriesWithResponseAsync(
-                organization,
-                project,
-                providerName,
-                serviceEndpointId,
-                repository,
-                resultSet,
-                pageResults,
-                continuationToken)
-            .flatMap(
-                (Response<SourceRepositoriesInner> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
-    }
-
-    /**
-     * Gets a list of source code repositories.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param providerName The name of the source provider.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of source code repositories.
+     * @return a list of source code repositories on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<SourceRepositoriesInner> listRepositoriesAsync(
-        String organization, String project, String providerName) {
+    private Mono<SourceRepositoriesInner> listRepositoriesAsync(String organization, String project,
+        String providerName) {
         final UUID serviceEndpointId = null;
         final String repository = null;
         final ResultSet resultSet = null;
         final Boolean pageResults = null;
         final String continuationToken = null;
-        return listRepositoriesWithResponseAsync(
-                organization,
-                project,
-                providerName,
-                serviceEndpointId,
-                repository,
-                resultSet,
-                pageResults,
-                continuationToken)
-            .flatMap(
-                (Response<SourceRepositoriesInner> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+        return listRepositoriesWithResponseAsync(organization, project, providerName, serviceEndpointId, repository,
+            resultSet, pageResults, continuationToken).flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Gets a list of source code repositories.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param providerName The name of the source provider.
+     * @param serviceEndpointId If specified, the ID of the service endpoint to query. Can only be omitted for providers
+     * that do not use service endpoints, e.g. TFVC or TFGit.
+     * @param repository If specified, the vendor-specific identifier or the name of a single repository to get.
+     * @param resultSet 'top' for the repositories most relevant for the endpoint. If not set, all repositories are
+     * returned. Ignored if 'repository' is set.
+     * @param pageResults If set to true, this will limit the set of results and will return a continuation token to
+     * continue the query.
+     * @param continuationToken When paging results, this is a continuation token, returned by a previous call to this
+     * method, that can be used to return the next set of repositories.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return a list of source code repositories along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<SourceRepositoriesInner> listRepositoriesWithResponse(String organization, String project,
+        String providerName, UUID serviceEndpointId, String repository, ResultSet resultSet, Boolean pageResults,
+        String continuationToken, Context context) {
+        return listRepositoriesWithResponseAsync(organization, project, providerName, serviceEndpointId, repository,
+            resultSet, pageResults, continuationToken, context).block();
+    }
+
+    /**
+     * Gets a list of source code repositories.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param providerName The name of the source provider.
@@ -1507,92 +1016,32 @@ public final class SourceProvidersClientImpl implements SourceProvidersClient {
         final ResultSet resultSet = null;
         final Boolean pageResults = null;
         final String continuationToken = null;
-        return listRepositoriesAsync(
-                organization,
-                project,
-                providerName,
-                serviceEndpointId,
-                repository,
-                resultSet,
-                pageResults,
-                continuationToken)
-            .block();
-    }
-
-    /**
-     * Gets a list of source code repositories.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param providerName The name of the source provider.
-     * @param serviceEndpointId If specified, the ID of the service endpoint to query. Can only be omitted for providers
-     *     that do not use service endpoints, e.g. TFVC or TFGit.
-     * @param repository If specified, the vendor-specific identifier or the name of a single repository to get.
-     * @param resultSet 'top' for the repositories most relevant for the endpoint. If not set, all repositories are
-     *     returned. Ignored if 'repository' is set.
-     * @param pageResults If set to true, this will limit the set of results and will return a continuation token to
-     *     continue the query.
-     * @param continuationToken When paging results, this is a continuation token, returned by a previous call to this
-     *     method, that can be used to return the next set of repositories.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of source code repositories.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<SourceRepositoriesInner> listRepositoriesWithResponse(
-        String organization,
-        String project,
-        String providerName,
-        UUID serviceEndpointId,
-        String repository,
-        ResultSet resultSet,
-        Boolean pageResults,
-        String continuationToken,
-        Context context) {
-        return listRepositoriesWithResponseAsync(
-                organization,
-                project,
-                providerName,
-                serviceEndpointId,
-                repository,
-                resultSet,
-                pageResults,
-                continuationToken,
-                context)
-            .block();
+        return listRepositoriesWithResponse(organization, project, providerName, serviceEndpointId, repository,
+            resultSet, pageResults, continuationToken, Context.NONE).getValue();
     }
 
     /**
      * Recreates the webhooks for the specified triggers in the given source code repository.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param providerName The name of the source provider.
      * @param body The types of triggers to restore webhooks for.
      * @param serviceEndpointId If specified, the ID of the service endpoint to query. Can only be omitted for providers
-     *     that do not use service endpoints, e.g. TFVC or TFGit.
+     * that do not use service endpoints, e.g. TFVC or TFGit.
      * @param repository If specified, the vendor-specific identifier or the name of the repository to get webhooks. Can
-     *     only be omitted for providers that do not support multiple repositories.
+     * only be omitted for providers that do not support multiple repositories.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the completion.
+     * @return the {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Void>> restoreWebhooksWithResponseAsync(
-        String organization,
-        String project,
-        String providerName,
-        List<String> body,
-        UUID serviceEndpointId,
-        String repository) {
+    private Mono<Response<Void>> restoreWebhooksWithResponseAsync(String organization, String project,
+        String providerName, List<String> body, UUID serviceEndpointId, String repository) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -1606,55 +1055,35 @@ public final class SourceProvidersClientImpl implements SourceProvidersClient {
         if (body == null) {
             return Mono.error(new IllegalArgumentException("Parameter body is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .restoreWebhooks(
-                            this.client.getEndpoint(),
-                            organization,
-                            project,
-                            providerName,
-                            serviceEndpointId,
-                            repository,
-                            apiVersion,
-                            body,
-                            context))
+            .withContext(context -> service.restoreWebhooks(this.client.getEndpoint(), organization, project,
+                providerName, serviceEndpointId, repository, this.client.getApiVersion(), body, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Recreates the webhooks for the specified triggers in the given source code repository.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param providerName The name of the source provider.
      * @param body The types of triggers to restore webhooks for.
      * @param serviceEndpointId If specified, the ID of the service endpoint to query. Can only be omitted for providers
-     *     that do not use service endpoints, e.g. TFVC or TFGit.
+     * that do not use service endpoints, e.g. TFVC or TFGit.
      * @param repository If specified, the vendor-specific identifier or the name of the repository to get webhooks. Can
-     *     only be omitted for providers that do not support multiple repositories.
+     * only be omitted for providers that do not support multiple repositories.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the completion.
+     * @return the {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Void>> restoreWebhooksWithResponseAsync(
-        String organization,
-        String project,
-        String providerName,
-        List<String> body,
-        UUID serviceEndpointId,
-        String repository,
-        Context context) {
+    private Mono<Response<Void>> restoreWebhooksWithResponseAsync(String organization, String project,
+        String providerName, List<String> body, UUID serviceEndpointId, String repository, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -1668,75 +1097,59 @@ public final class SourceProvidersClientImpl implements SourceProvidersClient {
         if (body == null) {
             return Mono.error(new IllegalArgumentException("Parameter body is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         context = this.client.mergeContext(context);
-        return service
-            .restoreWebhooks(
-                this.client.getEndpoint(),
-                organization,
-                project,
-                providerName,
-                serviceEndpointId,
-                repository,
-                apiVersion,
-                body,
-                context);
+        return service.restoreWebhooks(this.client.getEndpoint(), organization, project, providerName,
+            serviceEndpointId, repository, this.client.getApiVersion(), body, context);
     }
 
     /**
      * Recreates the webhooks for the specified triggers in the given source code repository.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param providerName The name of the source provider.
+     * @param body The types of triggers to restore webhooks for.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return A {@link Mono} that completes when a successful response is received.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Mono<Void> restoreWebhooksAsync(String organization, String project, String providerName,
+        List<String> body) {
+        final UUID serviceEndpointId = null;
+        final String repository = null;
+        return restoreWebhooksWithResponseAsync(organization, project, providerName, body, serviceEndpointId,
+            repository).flatMap(ignored -> Mono.empty());
+    }
+
+    /**
+     * Recreates the webhooks for the specified triggers in the given source code repository.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param providerName The name of the source provider.
      * @param body The types of triggers to restore webhooks for.
      * @param serviceEndpointId If specified, the ID of the service endpoint to query. Can only be omitted for providers
-     *     that do not use service endpoints, e.g. TFVC or TFGit.
+     * that do not use service endpoints, e.g. TFVC or TFGit.
      * @param repository If specified, the vendor-specific identifier or the name of the repository to get webhooks. Can
-     *     only be omitted for providers that do not support multiple repositories.
+     * only be omitted for providers that do not support multiple repositories.
+     * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the completion.
+     * @return the {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Void> restoreWebhooksAsync(
-        String organization,
-        String project,
-        String providerName,
-        List<String> body,
-        UUID serviceEndpointId,
-        String repository) {
-        return restoreWebhooksWithResponseAsync(
-                organization, project, providerName, body, serviceEndpointId, repository)
-            .flatMap((Response<Void> res) -> Mono.empty());
+    public Response<Void> restoreWebhooksWithResponse(String organization, String project, String providerName,
+        List<String> body, UUID serviceEndpointId, String repository, Context context) {
+        return restoreWebhooksWithResponseAsync(organization, project, providerName, body, serviceEndpointId,
+            repository, context).block();
     }
 
     /**
      * Recreates the webhooks for the specified triggers in the given source code repository.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param providerName The name of the source provider.
-     * @param body The types of triggers to restore webhooks for.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the completion.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Void> restoreWebhooksAsync(
-        String organization, String project, String providerName, List<String> body) {
-        final UUID serviceEndpointId = null;
-        final String repository = null;
-        return restoreWebhooksWithResponseAsync(
-                organization, project, providerName, body, serviceEndpointId, repository)
-            .flatMap((Response<Void> res) -> Mono.empty());
-    }
-
-    /**
-     * Recreates the webhooks for the specified triggers in the given source code repository.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param providerName The name of the source provider.
@@ -1749,63 +1162,32 @@ public final class SourceProvidersClientImpl implements SourceProvidersClient {
     public void restoreWebhooks(String organization, String project, String providerName, List<String> body) {
         final UUID serviceEndpointId = null;
         final String repository = null;
-        restoreWebhooksAsync(organization, project, providerName, body, serviceEndpointId, repository).block();
-    }
-
-    /**
-     * Recreates the webhooks for the specified triggers in the given source code repository.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param providerName The name of the source provider.
-     * @param body The types of triggers to restore webhooks for.
-     * @param serviceEndpointId If specified, the ID of the service endpoint to query. Can only be omitted for providers
-     *     that do not use service endpoints, e.g. TFVC or TFGit.
-     * @param repository If specified, the vendor-specific identifier or the name of the repository to get webhooks. Can
-     *     only be omitted for providers that do not support multiple repositories.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<Void> restoreWebhooksWithResponse(
-        String organization,
-        String project,
-        String providerName,
-        List<String> body,
-        UUID serviceEndpointId,
-        String repository,
-        Context context) {
-        return restoreWebhooksWithResponseAsync(
-                organization, project, providerName, body, serviceEndpointId, repository, context)
-            .block();
+        restoreWebhooksWithResponse(organization, project, providerName, body, serviceEndpointId, repository,
+            Context.NONE);
     }
 
     /**
      * Gets a list of webhooks installed in the given source code repository.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param providerName The name of the source provider.
      * @param serviceEndpointId If specified, the ID of the service endpoint to query. Can only be omitted for providers
-     *     that do not use service endpoints, e.g. TFVC or TFGit.
+     * that do not use service endpoints, e.g. TFVC or TFGit.
      * @param repository If specified, the vendor-specific identifier or the name of the repository to get webhooks. Can
-     *     only be omitted for providers that do not support multiple repositories.
+     * only be omitted for providers that do not support multiple repositories.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of webhooks installed in the given source code repository.
+     * @return a list of webhooks installed in the given source code repository along with {@link Response} on
+     * successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<RepositoryWebhookInner>>> listWebhooksWithResponseAsync(
-        String organization, String project, String providerName, UUID serviceEndpointId, String repository) {
+    private Mono<Response<List<RepositoryWebhookInner>>> listWebhooksWithResponseAsync(String organization,
+        String project, String providerName, UUID serviceEndpointId, String repository) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -1816,54 +1198,36 @@ public final class SourceProvidersClientImpl implements SourceProvidersClient {
         if (providerName == null) {
             return Mono.error(new IllegalArgumentException("Parameter providerName is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .listWebhooks(
-                            this.client.getEndpoint(),
-                            organization,
-                            project,
-                            providerName,
-                            serviceEndpointId,
-                            repository,
-                            apiVersion,
-                            accept,
-                            context))
+            .withContext(context -> service.listWebhooks(this.client.getEndpoint(), organization, project, providerName,
+                serviceEndpointId, repository, this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Gets a list of webhooks installed in the given source code repository.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param providerName The name of the source provider.
      * @param serviceEndpointId If specified, the ID of the service endpoint to query. Can only be omitted for providers
-     *     that do not use service endpoints, e.g. TFVC or TFGit.
+     * that do not use service endpoints, e.g. TFVC or TFGit.
      * @param repository If specified, the vendor-specific identifier or the name of the repository to get webhooks. Can
-     *     only be omitted for providers that do not support multiple repositories.
+     * only be omitted for providers that do not support multiple repositories.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of webhooks installed in the given source code repository.
+     * @return a list of webhooks installed in the given source code repository along with {@link Response} on
+     * successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<RepositoryWebhookInner>>> listWebhooksWithResponseAsync(
-        String organization,
-        String project,
-        String providerName,
-        UUID serviceEndpointId,
-        String repository,
-        Context context) {
+    private Mono<Response<List<RepositoryWebhookInner>>> listWebhooksWithResponseAsync(String organization,
+        String project, String providerName, UUID serviceEndpointId, String repository, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -1874,81 +1238,59 @@ public final class SourceProvidersClientImpl implements SourceProvidersClient {
         if (providerName == null) {
             return Mono.error(new IllegalArgumentException("Parameter providerName is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .listWebhooks(
-                this.client.getEndpoint(),
-                organization,
-                project,
-                providerName,
-                serviceEndpointId,
-                repository,
-                apiVersion,
-                accept,
-                context);
+        return service.listWebhooks(this.client.getEndpoint(), organization, project, providerName, serviceEndpointId,
+            repository, this.client.getApiVersion(), accept, context);
     }
 
     /**
      * Gets a list of webhooks installed in the given source code repository.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param providerName The name of the source provider.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return a list of webhooks installed in the given source code repository on successful completion of
+     * {@link Mono}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Mono<List<RepositoryWebhookInner>> listWebhooksAsync(String organization, String project,
+        String providerName) {
+        final UUID serviceEndpointId = null;
+        final String repository = null;
+        return listWebhooksWithResponseAsync(organization, project, providerName, serviceEndpointId, repository)
+            .flatMap(res -> Mono.justOrEmpty(res.getValue()));
+    }
+
+    /**
+     * Gets a list of webhooks installed in the given source code repository.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param providerName The name of the source provider.
      * @param serviceEndpointId If specified, the ID of the service endpoint to query. Can only be omitted for providers
-     *     that do not use service endpoints, e.g. TFVC or TFGit.
+     * that do not use service endpoints, e.g. TFVC or TFGit.
      * @param repository If specified, the vendor-specific identifier or the name of the repository to get webhooks. Can
-     *     only be omitted for providers that do not support multiple repositories.
+     * only be omitted for providers that do not support multiple repositories.
+     * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of webhooks installed in the given source code repository.
+     * @return a list of webhooks installed in the given source code repository along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<List<RepositoryWebhookInner>> listWebhooksAsync(
-        String organization, String project, String providerName, UUID serviceEndpointId, String repository) {
-        return listWebhooksWithResponseAsync(organization, project, providerName, serviceEndpointId, repository)
-            .flatMap(
-                (Response<List<RepositoryWebhookInner>> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+    public Response<List<RepositoryWebhookInner>> listWebhooksWithResponse(String organization, String project,
+        String providerName, UUID serviceEndpointId, String repository, Context context) {
+        return listWebhooksWithResponseAsync(organization, project, providerName, serviceEndpointId, repository,
+            context).block();
     }
 
     /**
      * Gets a list of webhooks installed in the given source code repository.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param providerName The name of the source provider.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of webhooks installed in the given source code repository.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<List<RepositoryWebhookInner>> listWebhooksAsync(
-        String organization, String project, String providerName) {
-        final UUID serviceEndpointId = null;
-        final String repository = null;
-        return listWebhooksWithResponseAsync(organization, project, providerName, serviceEndpointId, repository)
-            .flatMap(
-                (Response<List<RepositoryWebhookInner>> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
-    }
-
-    /**
-     * Gets a list of webhooks installed in the given source code repository.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param providerName The name of the source provider.
@@ -1961,35 +1303,7 @@ public final class SourceProvidersClientImpl implements SourceProvidersClient {
     public List<RepositoryWebhookInner> listWebhooks(String organization, String project, String providerName) {
         final UUID serviceEndpointId = null;
         final String repository = null;
-        return listWebhooksAsync(organization, project, providerName, serviceEndpointId, repository).block();
-    }
-
-    /**
-     * Gets a list of webhooks installed in the given source code repository.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param providerName The name of the source provider.
-     * @param serviceEndpointId If specified, the ID of the service endpoint to query. Can only be omitted for providers
-     *     that do not use service endpoints, e.g. TFVC or TFGit.
-     * @param repository If specified, the vendor-specific identifier or the name of the repository to get webhooks. Can
-     *     only be omitted for providers that do not support multiple repositories.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of webhooks installed in the given source code repository.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<List<RepositoryWebhookInner>> listWebhooksWithResponse(
-        String organization,
-        String project,
-        String providerName,
-        UUID serviceEndpointId,
-        String repository,
-        Context context) {
-        return listWebhooksWithResponseAsync(
-                organization, project, providerName, serviceEndpointId, repository, context)
-            .block();
+        return listWebhooksWithResponse(organization, project, providerName, serviceEndpointId, repository,
+            Context.NONE).getValue();
     }
 }

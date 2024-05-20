@@ -5,15 +5,13 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Represents a variable used by a build definition. */
+/**
+ * Represents a variable used by a build definition.
+ */
 @Fluent
 public final class BuildDefinitionVariable {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(BuildDefinitionVariable.class);
-
     /*
      * Indicates whether the value can be set at queue time.
      */
@@ -33,8 +31,14 @@ public final class BuildDefinitionVariable {
     private String value;
 
     /**
+     * Creates an instance of BuildDefinitionVariable class.
+     */
+    public BuildDefinitionVariable() {
+    }
+
+    /**
      * Get the allowOverride property: Indicates whether the value can be set at queue time.
-     *
+     * 
      * @return the allowOverride value.
      */
     public Boolean allowOverride() {
@@ -43,7 +47,7 @@ public final class BuildDefinitionVariable {
 
     /**
      * Set the allowOverride property: Indicates whether the value can be set at queue time.
-     *
+     * 
      * @param allowOverride the allowOverride value to set.
      * @return the BuildDefinitionVariable object itself.
      */
@@ -54,7 +58,7 @@ public final class BuildDefinitionVariable {
 
     /**
      * Get the isSecret property: Indicates whether the variable's value is a secret.
-     *
+     * 
      * @return the isSecret value.
      */
     public Boolean isSecret() {
@@ -63,7 +67,7 @@ public final class BuildDefinitionVariable {
 
     /**
      * Set the isSecret property: Indicates whether the variable's value is a secret.
-     *
+     * 
      * @param isSecret the isSecret value to set.
      * @return the BuildDefinitionVariable object itself.
      */
@@ -74,7 +78,7 @@ public final class BuildDefinitionVariable {
 
     /**
      * Get the value property: The value of the variable.
-     *
+     * 
      * @return the value value.
      */
     public String value() {
@@ -83,7 +87,7 @@ public final class BuildDefinitionVariable {
 
     /**
      * Set the value property: The value of the variable.
-     *
+     * 
      * @param value the value value to set.
      * @return the BuildDefinitionVariable object itself.
      */
@@ -94,7 +98,7 @@ public final class BuildDefinitionVariable {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

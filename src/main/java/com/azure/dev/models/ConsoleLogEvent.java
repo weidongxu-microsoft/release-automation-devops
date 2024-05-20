@@ -5,17 +5,15 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.UUID;
 
-/** The ConsoleLogEvent model. */
+/**
+ * The ConsoleLogEvent model.
+ */
 @Fluent
 public final class ConsoleLogEvent extends RealtimeBuildEvent {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(ConsoleLogEvent.class);
-
     /*
      * The lines property.
      */
@@ -41,8 +39,14 @@ public final class ConsoleLogEvent extends RealtimeBuildEvent {
     private UUID timelineRecordId;
 
     /**
+     * Creates an instance of ConsoleLogEvent class.
+     */
+    public ConsoleLogEvent() {
+    }
+
+    /**
      * Get the lines property: The lines property.
-     *
+     * 
      * @return the lines value.
      */
     public List<String> lines() {
@@ -51,7 +55,7 @@ public final class ConsoleLogEvent extends RealtimeBuildEvent {
 
     /**
      * Set the lines property: The lines property.
-     *
+     * 
      * @param lines the lines value to set.
      * @return the ConsoleLogEvent object itself.
      */
@@ -62,7 +66,7 @@ public final class ConsoleLogEvent extends RealtimeBuildEvent {
 
     /**
      * Get the stepRecordId property: The stepRecordId property.
-     *
+     * 
      * @return the stepRecordId value.
      */
     public UUID stepRecordId() {
@@ -71,7 +75,7 @@ public final class ConsoleLogEvent extends RealtimeBuildEvent {
 
     /**
      * Set the stepRecordId property: The stepRecordId property.
-     *
+     * 
      * @param stepRecordId the stepRecordId value to set.
      * @return the ConsoleLogEvent object itself.
      */
@@ -82,7 +86,7 @@ public final class ConsoleLogEvent extends RealtimeBuildEvent {
 
     /**
      * Get the timelineId property: The timelineId property.
-     *
+     * 
      * @return the timelineId value.
      */
     public UUID timelineId() {
@@ -91,7 +95,7 @@ public final class ConsoleLogEvent extends RealtimeBuildEvent {
 
     /**
      * Set the timelineId property: The timelineId property.
-     *
+     * 
      * @param timelineId the timelineId value to set.
      * @return the ConsoleLogEvent object itself.
      */
@@ -102,7 +106,7 @@ public final class ConsoleLogEvent extends RealtimeBuildEvent {
 
     /**
      * Get the timelineRecordId property: The timelineRecordId property.
-     *
+     * 
      * @return the timelineRecordId value.
      */
     public UUID timelineRecordId() {
@@ -111,7 +115,7 @@ public final class ConsoleLogEvent extends RealtimeBuildEvent {
 
     /**
      * Set the timelineRecordId property: The timelineRecordId property.
-     *
+     * 
      * @param timelineRecordId the timelineRecordId value to set.
      * @return the ConsoleLogEvent object itself.
      */
@@ -120,7 +124,9 @@ public final class ConsoleLogEvent extends RealtimeBuildEvent {
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ConsoleLogEvent withBuildId(Integer buildId) {
         super.withBuildId(buildId);
@@ -129,7 +135,7 @@ public final class ConsoleLogEvent extends RealtimeBuildEvent {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     @Override

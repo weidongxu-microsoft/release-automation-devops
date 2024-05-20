@@ -7,15 +7,23 @@ package com.azure.dev.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/** Defines values for ProjectVisibility. */
+/**
+ * Project visibility.
+ */
 public enum ProjectVisibility {
-    /** Enum value private. */
+    /**
+     * Enum value private.
+     */
     PRIVATE("private"),
 
-    /** Enum value public. */
+    /**
+     * Enum value public.
+     */
     PUBLIC("public");
 
-    /** The actual serialized value for a ProjectVisibility instance. */
+    /**
+     * The actual serialized value for a ProjectVisibility instance.
+     */
     private final String value;
 
     ProjectVisibility(String value) {
@@ -24,12 +32,15 @@ public enum ProjectVisibility {
 
     /**
      * Parses a serialized value to a ProjectVisibility instance.
-     *
+     * 
      * @param value the serialized value to parse.
      * @return the parsed ProjectVisibility object, or null if unable to parse.
      */
     @JsonCreator
     public static ProjectVisibility fromString(String value) {
+        if (value == null) {
+            return null;
+        }
         ProjectVisibility[] items = ProjectVisibility.values();
         for (ProjectVisibility item : items) {
             if (item.toString().equalsIgnoreCase(value)) {
@@ -39,6 +50,9 @@ public enum ProjectVisibility {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @JsonValue
     @Override
     public String toString() {

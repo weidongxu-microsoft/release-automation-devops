@@ -5,15 +5,13 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Stage in pipeline. */
+/**
+ * Stage in pipeline.
+ */
 @Fluent
 public final class StageReference {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(StageReference.class);
-
     /*
      * Attempt number of stage
      */
@@ -27,8 +25,14 @@ public final class StageReference {
     private String stageName;
 
     /**
+     * Creates an instance of StageReference class.
+     */
+    public StageReference() {
+    }
+
+    /**
      * Get the attempt property: Attempt number of stage.
-     *
+     * 
      * @return the attempt value.
      */
     public Integer attempt() {
@@ -37,7 +41,7 @@ public final class StageReference {
 
     /**
      * Set the attempt property: Attempt number of stage.
-     *
+     * 
      * @param attempt the attempt value to set.
      * @return the StageReference object itself.
      */
@@ -48,7 +52,7 @@ public final class StageReference {
 
     /**
      * Get the stageName property: Name of the stage. Maximum supported length for name is 256 character.
-     *
+     * 
      * @return the stageName value.
      */
     public String stageName() {
@@ -57,7 +61,7 @@ public final class StageReference {
 
     /**
      * Set the stageName property: Name of the stage. Maximum supported length for name is 256 character.
-     *
+     * 
      * @param stageName the stageName value to set.
      * @return the StageReference object itself.
      */
@@ -68,7 +72,7 @@ public final class StageReference {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

@@ -14,10 +14,9 @@ import com.azure.dev.fluent.models.PipelineInner;
 import com.azure.dev.models.CreatePipelineParameters;
 import com.azure.dev.models.Pipeline;
 import com.azure.dev.models.Pipelines;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public final class PipelinesImpl implements Pipelines {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(PipelinesImpl.class);
+    private static final ClientLogger LOGGER = new ClientLogger(PipelinesImpl.class);
 
     private final PipelinesClient innerClient;
 
@@ -26,6 +25,17 @@ public final class PipelinesImpl implements Pipelines {
     public PipelinesImpl(PipelinesClient innerClient, com.azure.dev.DevManager serviceManager) {
         this.innerClient = innerClient;
         this.serviceManager = serviceManager;
+    }
+
+    public Response<Pipeline> createWithResponse(String organization, String project, CreatePipelineParameters body,
+        Context context) {
+        Response<PipelineInner> inner = this.serviceClient().createWithResponse(organization, project, body, context);
+        if (inner != null) {
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
+                new PipelineImpl(inner.getValue(), this.manager()));
+        } else {
+            return null;
+        }
     }
 
     public Pipeline create(String organization, String project, CreatePipelineParameters body) {
@@ -37,51 +47,34 @@ public final class PipelinesImpl implements Pipelines {
         }
     }
 
-    public Response<Pipeline> createWithResponse(
-        String organization, String project, CreatePipelineParameters body, Context context) {
-        Response<PipelineInner> inner = this.serviceClient().createWithResponse(organization, project, body, context);
+    public PagedIterable<Pipeline> list(String organization, String project) {
+        PagedIterable<PipelineInner> inner = this.serviceClient().list(organization, project);
+        return ResourceManagerUtils.mapPage(inner, inner1 -> new PipelineImpl(inner1, this.manager()));
+    }
+
+    public PagedIterable<Pipeline> list(String organization, String project, String orderBy, Integer top,
+        String continuationToken, Context context) {
+        PagedIterable<PipelineInner> inner
+            = this.serviceClient().list(organization, project, orderBy, top, continuationToken, context);
+        return ResourceManagerUtils.mapPage(inner, inner1 -> new PipelineImpl(inner1, this.manager()));
+    }
+
+    public Response<Pipeline> getWithResponse(String organization, String project, int pipelineId,
+        Integer pipelineVersion, Context context) {
+        Response<PipelineInner> inner
+            = this.serviceClient().getWithResponse(organization, project, pipelineId, pipelineVersion, context);
         if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
                 new PipelineImpl(inner.getValue(), this.manager()));
         } else {
             return null;
         }
-    }
-
-    public PagedIterable<Pipeline> list(String organization, String project) {
-        PagedIterable<PipelineInner> inner = this.serviceClient().list(organization, project);
-        return Utils.mapPage(inner, inner1 -> new PipelineImpl(inner1, this.manager()));
-    }
-
-    public PagedIterable<Pipeline> list(
-        String organization, String project, String orderBy, Integer top, String continuationToken, Context context) {
-        PagedIterable<PipelineInner> inner =
-            this.serviceClient().list(organization, project, orderBy, top, continuationToken, context);
-        return Utils.mapPage(inner, inner1 -> new PipelineImpl(inner1, this.manager()));
     }
 
     public Pipeline get(String organization, String project, int pipelineId) {
         PipelineInner inner = this.serviceClient().get(organization, project, pipelineId);
         if (inner != null) {
             return new PipelineImpl(inner, this.manager());
-        } else {
-            return null;
-        }
-    }
-
-    public Response<Pipeline> getWithResponse(
-        String organization, String project, int pipelineId, Integer pipelineVersion, Context context) {
-        Response<PipelineInner> inner =
-            this.serviceClient().getWithResponse(organization, project, pipelineId, pipelineVersion, context);
-        if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                new PipelineImpl(inner.getValue(), this.manager()));
         } else {
             return null;
         }

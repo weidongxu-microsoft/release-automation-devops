@@ -5,16 +5,14 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** Represents a retention policy for a build definition. */
+/**
+ * Represents a retention policy for a build definition.
+ */
 @Fluent
 public final class RetentionPolicy {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(RetentionPolicy.class);
-
     /*
      * The artifacts property.
      */
@@ -58,8 +56,14 @@ public final class RetentionPolicy {
     private Integer minimumToKeep;
 
     /**
+     * Creates an instance of RetentionPolicy class.
+     */
+    public RetentionPolicy() {
+    }
+
+    /**
      * Get the artifacts property: The artifacts property.
-     *
+     * 
      * @return the artifacts value.
      */
     public List<String> artifacts() {
@@ -68,7 +72,7 @@ public final class RetentionPolicy {
 
     /**
      * Set the artifacts property: The artifacts property.
-     *
+     * 
      * @param artifacts the artifacts value to set.
      * @return the RetentionPolicy object itself.
      */
@@ -79,7 +83,7 @@ public final class RetentionPolicy {
 
     /**
      * Get the artifactTypesToDelete property: The artifactTypesToDelete property.
-     *
+     * 
      * @return the artifactTypesToDelete value.
      */
     public List<String> artifactTypesToDelete() {
@@ -88,7 +92,7 @@ public final class RetentionPolicy {
 
     /**
      * Set the artifactTypesToDelete property: The artifactTypesToDelete property.
-     *
+     * 
      * @param artifactTypesToDelete the artifactTypesToDelete value to set.
      * @return the RetentionPolicy object itself.
      */
@@ -99,7 +103,7 @@ public final class RetentionPolicy {
 
     /**
      * Get the branches property: The branches property.
-     *
+     * 
      * @return the branches value.
      */
     public List<String> branches() {
@@ -108,7 +112,7 @@ public final class RetentionPolicy {
 
     /**
      * Set the branches property: The branches property.
-     *
+     * 
      * @param branches the branches value to set.
      * @return the RetentionPolicy object itself.
      */
@@ -119,7 +123,7 @@ public final class RetentionPolicy {
 
     /**
      * Get the daysToKeep property: The number of days to keep builds.
-     *
+     * 
      * @return the daysToKeep value.
      */
     public Integer daysToKeep() {
@@ -128,7 +132,7 @@ public final class RetentionPolicy {
 
     /**
      * Set the daysToKeep property: The number of days to keep builds.
-     *
+     * 
      * @param daysToKeep the daysToKeep value to set.
      * @return the RetentionPolicy object itself.
      */
@@ -139,7 +143,7 @@ public final class RetentionPolicy {
 
     /**
      * Get the deleteBuildRecord property: Indicates whether the build record itself should be deleted.
-     *
+     * 
      * @return the deleteBuildRecord value.
      */
     public Boolean deleteBuildRecord() {
@@ -148,7 +152,7 @@ public final class RetentionPolicy {
 
     /**
      * Set the deleteBuildRecord property: Indicates whether the build record itself should be deleted.
-     *
+     * 
      * @param deleteBuildRecord the deleteBuildRecord value to set.
      * @return the RetentionPolicy object itself.
      */
@@ -159,7 +163,7 @@ public final class RetentionPolicy {
 
     /**
      * Get the deleteTestResults property: Indicates whether to delete test results associated with the build.
-     *
+     * 
      * @return the deleteTestResults value.
      */
     public Boolean deleteTestResults() {
@@ -168,7 +172,7 @@ public final class RetentionPolicy {
 
     /**
      * Set the deleteTestResults property: Indicates whether to delete test results associated with the build.
-     *
+     * 
      * @param deleteTestResults the deleteTestResults value to set.
      * @return the RetentionPolicy object itself.
      */
@@ -179,7 +183,7 @@ public final class RetentionPolicy {
 
     /**
      * Get the minimumToKeep property: The minimum number of builds to keep.
-     *
+     * 
      * @return the minimumToKeep value.
      */
     public Integer minimumToKeep() {
@@ -188,7 +192,7 @@ public final class RetentionPolicy {
 
     /**
      * Set the minimumToKeep property: The minimum number of builds to keep.
-     *
+     * 
      * @param minimumToKeep the minimumToKeep value to set.
      * @return the RetentionPolicy object itself.
      */
@@ -199,7 +203,7 @@ public final class RetentionPolicy {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

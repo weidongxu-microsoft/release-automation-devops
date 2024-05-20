@@ -5,15 +5,13 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** The TaskSourceDefinitionBase model. */
+/**
+ * The TaskSourceDefinitionBase model.
+ */
 @Fluent
 public final class TaskSourceDefinitionBase {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(TaskSourceDefinitionBase.class);
-
     /*
      * The authKey property.
      */
@@ -45,8 +43,14 @@ public final class TaskSourceDefinitionBase {
     private String target;
 
     /**
+     * Creates an instance of TaskSourceDefinitionBase class.
+     */
+    public TaskSourceDefinitionBase() {
+    }
+
+    /**
      * Get the authKey property: The authKey property.
-     *
+     * 
      * @return the authKey value.
      */
     public String authKey() {
@@ -55,7 +59,7 @@ public final class TaskSourceDefinitionBase {
 
     /**
      * Set the authKey property: The authKey property.
-     *
+     * 
      * @param authKey the authKey value to set.
      * @return the TaskSourceDefinitionBase object itself.
      */
@@ -66,7 +70,7 @@ public final class TaskSourceDefinitionBase {
 
     /**
      * Get the endpoint property: The endpoint property.
-     *
+     * 
      * @return the endpoint value.
      */
     public String endpoint() {
@@ -75,7 +79,7 @@ public final class TaskSourceDefinitionBase {
 
     /**
      * Set the endpoint property: The endpoint property.
-     *
+     * 
      * @param endpoint the endpoint value to set.
      * @return the TaskSourceDefinitionBase object itself.
      */
@@ -86,7 +90,7 @@ public final class TaskSourceDefinitionBase {
 
     /**
      * Get the keySelector property: The keySelector property.
-     *
+     * 
      * @return the keySelector value.
      */
     public String keySelector() {
@@ -95,7 +99,7 @@ public final class TaskSourceDefinitionBase {
 
     /**
      * Set the keySelector property: The keySelector property.
-     *
+     * 
      * @param keySelector the keySelector value to set.
      * @return the TaskSourceDefinitionBase object itself.
      */
@@ -106,7 +110,7 @@ public final class TaskSourceDefinitionBase {
 
     /**
      * Get the selector property: The selector property.
-     *
+     * 
      * @return the selector value.
      */
     public String selector() {
@@ -115,7 +119,7 @@ public final class TaskSourceDefinitionBase {
 
     /**
      * Set the selector property: The selector property.
-     *
+     * 
      * @param selector the selector value to set.
      * @return the TaskSourceDefinitionBase object itself.
      */
@@ -126,7 +130,7 @@ public final class TaskSourceDefinitionBase {
 
     /**
      * Get the target property: The target property.
-     *
+     * 
      * @return the target value.
      */
     public String target() {
@@ -135,7 +139,7 @@ public final class TaskSourceDefinitionBase {
 
     /**
      * Set the target property: The target property.
-     *
+     * 
      * @param target the target value to set.
      * @return the TaskSourceDefinitionBase object itself.
      */
@@ -146,7 +150,7 @@ public final class TaskSourceDefinitionBase {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

@@ -8,53 +8,55 @@ import com.azure.dev.fluent.models.BuildOptionDefinitionInner;
 import java.util.List;
 import java.util.UUID;
 
-/** An immutable client-side representation of BuildOptionDefinition. */
+/**
+ * An immutable client-side representation of BuildOptionDefinition.
+ */
 public interface BuildOptionDefinition {
     /**
      * Gets the id property: The ID of the referenced build option.
-     *
+     * 
      * @return the id value.
      */
     UUID id();
 
     /**
      * Gets the description property: The description.
-     *
+     * 
      * @return the description value.
      */
     String description();
 
     /**
      * Gets the groups property: The list of input groups defined for the build option.
-     *
+     * 
      * @return the groups value.
      */
     List<BuildOptionGroupDefinition> groups();
 
     /**
      * Gets the inputs property: The list of inputs defined for the build option.
-     *
+     * 
      * @return the inputs value.
      */
     List<BuildOptionInputDefinition> inputs();
 
     /**
      * Gets the name property: The name of the build option.
-     *
+     * 
      * @return the name value.
      */
     String name();
 
     /**
      * Gets the ordinal property: A value that indicates the relative order in which the behavior should be applied.
-     *
+     * 
      * @return the ordinal value.
      */
     Integer ordinal();
 
     /**
      * Gets the inner com.azure.dev.fluent.models.BuildOptionDefinitionInner object.
-     *
+     * 
      * @return the inner object.
      */
     BuildOptionDefinitionInner innerModel();

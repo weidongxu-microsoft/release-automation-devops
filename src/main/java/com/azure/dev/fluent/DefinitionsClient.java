@@ -16,11 +16,31 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
-/** An instance of this class provides access to all the operations defined in DefinitionsClient. */
+/**
+ * An instance of this class provides access to all the operations defined in DefinitionsClient.
+ */
 public interface DefinitionsClient {
     /**
      * Creates a new definition.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param body The definition.
+     * @param definitionToCloneId The definitionToCloneId parameter.
+     * @param definitionToCloneRevision The definitionToCloneRevision parameter.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return represents a build definition along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Response<BuildDefinitionInner> createWithResponse(String organization, String project, BuildDefinitionInner body,
+        Integer definitionToCloneId, Integer definitionToCloneRevision, Context context);
+
+    /**
+     * Creates a new definition.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param body The definition.
@@ -33,31 +53,46 @@ public interface DefinitionsClient {
     BuildDefinitionInner create(String organization, String project, BuildDefinitionInner body);
 
     /**
-     * Creates a new definition.
-     *
+     * Gets a list of definitions.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
-     * @param body The definition.
-     * @param definitionToCloneId The definitionToCloneId parameter.
-     * @param definitionToCloneRevision The definitionToCloneRevision parameter.
+     * @param name If specified, filters to definitions whose names match this pattern.
+     * @param repositoryId A repository ID. If specified, filters to definitions that use this repository.
+     * @param repositoryType If specified, filters to definitions that have a repository of this type.
+     * @param queryOrder Indicates the order in which definitions should be returned.
+     * @param top The maximum number of definitions to return.
+     * @param continuationToken A continuation token, returned by a previous call to this method, that can be used to
+     * return the next set of definitions.
+     * @param minMetricsTime If specified, indicates the date from which metrics should be included.
+     * @param definitionIds A comma-delimited list that specifies the IDs of definitions to retrieve.
+     * @param path If specified, filters to definitions under this folder.
+     * @param builtAfter If specified, filters to definitions that have builds after this date.
+     * @param notBuiltAfter If specified, filters to definitions that do not have builds after this date.
+     * @param includeAllProperties Indicates whether the full definitions should be returned. By default, shallow
+     * representations of the definitions are returned.
+     * @param includeLatestBuilds Indicates whether to return the latest and latest completed builds for this
+     * definition.
+     * @param taskIdFilter If specified, filters to definitions that use the specified task.
+     * @param processType If specified, filters to definitions with the given process type.
+     * @param yamlFilename If specified, filters to YAML definitions that match the given filename. To use this filter
+     * includeAllProperties should be set to true.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return represents a build definition.
+     * @return a list of definitions along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<BuildDefinitionInner> createWithResponse(
-        String organization,
-        String project,
-        BuildDefinitionInner body,
-        Integer definitionToCloneId,
-        Integer definitionToCloneRevision,
-        Context context);
+    Response<List<BuildDefinitionReferenceInner>> listWithResponse(String organization, String project, String name,
+        String repositoryId, String repositoryType, DefinitionQueryOrder queryOrder, Integer top,
+        String continuationToken, OffsetDateTime minMetricsTime, String definitionIds, String path,
+        OffsetDateTime builtAfter, OffsetDateTime notBuiltAfter, Boolean includeAllProperties,
+        Boolean includeLatestBuilds, UUID taskIdFilter, Integer processType, String yamlFilename, Context context);
 
     /**
      * Gets a list of definitions.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -69,60 +104,23 @@ public interface DefinitionsClient {
     List<BuildDefinitionReferenceInner> list(String organization, String project);
 
     /**
-     * Gets a list of definitions.
-     *
+     * Deletes a definition and all associated builds.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
-     * @param name If specified, filters to definitions whose names match this pattern.
-     * @param repositoryId A repository ID. If specified, filters to definitions that use this repository.
-     * @param repositoryType If specified, filters to definitions that have a repository of this type.
-     * @param queryOrder Indicates the order in which definitions should be returned.
-     * @param top The maximum number of definitions to return.
-     * @param continuationToken A continuation token, returned by a previous call to this method, that can be used to
-     *     return the next set of definitions.
-     * @param minMetricsTime If specified, indicates the date from which metrics should be included.
-     * @param definitionIds A comma-delimited list that specifies the IDs of definitions to retrieve.
-     * @param path If specified, filters to definitions under this folder.
-     * @param builtAfter If specified, filters to definitions that have builds after this date.
-     * @param notBuiltAfter If specified, filters to definitions that do not have builds after this date.
-     * @param includeAllProperties Indicates whether the full definitions should be returned. By default, shallow
-     *     representations of the definitions are returned.
-     * @param includeLatestBuilds Indicates whether to return the latest and latest completed builds for this
-     *     definition.
-     * @param taskIdFilter If specified, filters to definitions that use the specified task.
-     * @param processType If specified, filters to definitions with the given process type.
-     * @param yamlFilename If specified, filters to YAML definitions that match the given filename.
+     * @param definitionId The ID of the definition.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of definitions.
+     * @return the {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<List<BuildDefinitionReferenceInner>> listWithResponse(
-        String organization,
-        String project,
-        String name,
-        String repositoryId,
-        String repositoryType,
-        DefinitionQueryOrder queryOrder,
-        Integer top,
-        String continuationToken,
-        OffsetDateTime minMetricsTime,
-        String definitionIds,
-        String path,
-        OffsetDateTime builtAfter,
-        OffsetDateTime notBuiltAfter,
-        Boolean includeAllProperties,
-        Boolean includeLatestBuilds,
-        UUID taskIdFilter,
-        Integer processType,
-        String yamlFilename,
-        Context context);
+    Response<Void> deleteWithResponse(String organization, String project, int definitionId, Context context);
 
     /**
      * Deletes a definition and all associated builds.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
@@ -134,23 +132,29 @@ public interface DefinitionsClient {
     void delete(String organization, String project, int definitionId);
 
     /**
-     * Deletes a definition and all associated builds.
-     *
+     * Gets a definition, optionally at a specific revision.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
+     * @param revision The revision number to retrieve. If this is not specified, the latest version will be returned.
+     * @param minMetricsTime If specified, indicates the date from which metrics should be included.
+     * @param propertyFilters A comma-delimited list of properties to include in the results.
+     * @param includeLatestBuilds The includeLatestBuilds parameter.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response.
+     * @return a definition, optionally at a specific revision along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<Void> deleteWithResponse(String organization, String project, int definitionId, Context context);
+    Response<BuildDefinitionInner> getWithResponse(String organization, String project, int definitionId,
+        Integer revision, OffsetDateTime minMetricsTime, String propertyFilters, Boolean includeLatestBuilds,
+        Context context);
 
     /**
      * Gets a definition, optionally at a specific revision.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
@@ -163,35 +167,25 @@ public interface DefinitionsClient {
     BuildDefinitionInner get(String organization, String project, int definitionId);
 
     /**
-     * Gets a definition, optionally at a specific revision.
-     *
+     * Restores a deleted definition.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
-     * @param definitionId The ID of the definition.
-     * @param revision The revision number to retrieve. If this is not specified, the latest version will be returned.
-     * @param minMetricsTime If specified, indicates the date from which metrics should be included.
-     * @param propertyFilters A comma-delimited list of properties to include in the results.
-     * @param includeLatestBuilds The includeLatestBuilds parameter.
+     * @param definitionId The identifier of the definition to restore.
+     * @param deleted When false, restores a deleted definition.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a definition, optionally at a specific revision.
+     * @return represents a build definition along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<BuildDefinitionInner> getWithResponse(
-        String organization,
-        String project,
-        int definitionId,
-        Integer revision,
-        OffsetDateTime minMetricsTime,
-        String propertyFilters,
-        Boolean includeLatestBuilds,
-        Context context);
+    Response<BuildDefinitionInner> restoreDefinitionWithResponse(String organization, String project, int definitionId,
+        boolean deleted, Context context);
 
     /**
      * Restores a deleted definition.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The identifier of the definition to restore.
@@ -205,29 +199,40 @@ public interface DefinitionsClient {
     BuildDefinitionInner restoreDefinition(String organization, String project, int definitionId, boolean deleted);
 
     /**
-     * Restores a deleted definition.
-     *
+     * Updates an existing build definition. In order for this operation to succeed, the value of the "Revision"
+     * property of the request body must match the existing build definition's. It is recommended that you obtain the
+     * existing build definition by using GET, modify the build definition as necessary, and then submit the modified
+     * definition with PUT.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
-     * @param definitionId The identifier of the definition to restore.
-     * @param deleted When false, restores a deleted definition.
+     * @param definitionId The ID of the definition.
+     * @param body The new version of the definition. Its "Revision" property must match the existing definition for the
+     * update to be accepted.
+     * @param secretsSourceDefinitionId The secretsSourceDefinitionId parameter.
+     * @param secretsSourceDefinitionRevision The secretsSourceDefinitionRevision parameter.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return represents a build definition.
+     * @return represents a build definition along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<BuildDefinitionInner> restoreDefinitionWithResponse(
-        String organization, String project, int definitionId, boolean deleted, Context context);
+    Response<BuildDefinitionInner> updateWithResponse(String organization, String project, int definitionId,
+        BuildDefinitionInner body, Integer secretsSourceDefinitionId, Integer secretsSourceDefinitionRevision,
+        Context context);
 
     /**
-     * Updates an existing definition.
-     *
+     * Updates an existing build definition. In order for this operation to succeed, the value of the "Revision"
+     * property of the request body must match the existing build definition's. It is recommended that you obtain the
+     * existing build definition by using GET, modify the build definition as necessary, and then submit the modified
+     * definition with PUT.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
-     * @param body The new version of the definition.
+     * @param body The new version of the definition. Its "Revision" property must match the existing definition for the
+     * update to be accepted.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -237,33 +242,24 @@ public interface DefinitionsClient {
     BuildDefinitionInner update(String organization, String project, int definitionId, BuildDefinitionInner body);
 
     /**
-     * Updates an existing definition.
-     *
+     * Gets all revisions of a definition.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
-     * @param body The new version of the definition.
-     * @param secretsSourceDefinitionId The secretsSourceDefinitionId parameter.
-     * @param secretsSourceDefinitionRevision The secretsSourceDefinitionRevision parameter.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return represents a build definition.
+     * @return all revisions of a definition along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<BuildDefinitionInner> updateWithResponse(
-        String organization,
-        String project,
-        int definitionId,
-        BuildDefinitionInner body,
-        Integer secretsSourceDefinitionId,
-        Integer secretsSourceDefinitionRevision,
-        Context context);
+    Response<List<BuildDefinitionRevisionInner>> getDefinitionRevisionsWithResponse(String organization, String project,
+        int definitionId, Context context);
 
     /**
      * Gets all revisions of a definition.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
@@ -274,20 +270,4 @@ public interface DefinitionsClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     List<BuildDefinitionRevisionInner> getDefinitionRevisions(String organization, String project, int definitionId);
-
-    /**
-     * Gets all revisions of a definition.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param definitionId The ID of the definition.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return all revisions of a definition.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<List<BuildDefinitionRevisionInner>> getDefinitionRevisionsWithResponse(
-        String organization, String project, int definitionId, Context context);
 }

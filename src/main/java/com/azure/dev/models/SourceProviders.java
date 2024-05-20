@@ -9,11 +9,26 @@ import com.azure.core.util.Context;
 import java.util.List;
 import java.util.UUID;
 
-/** Resource collection API of SourceProviders. */
+/**
+ * Resource collection API of SourceProviders.
+ */
 public interface SourceProviders {
     /**
      * Get a list of source providers and their capabilities.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return a list of source providers and their capabilities along with {@link Response}.
+     */
+    Response<List<SourceProviderAttributes>> listWithResponse(String organization, String project, Context context);
+
+    /**
+     * Get a list of source providers and their capabilities.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -24,21 +39,28 @@ public interface SourceProviders {
     List<SourceProviderAttributes> list(String organization, String project);
 
     /**
-     * Get a list of source providers and their capabilities.
-     *
+     * Gets a list of branches for the given source code repository.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
+     * @param providerName The name of the source provider.
+     * @param serviceEndpointId If specified, the ID of the service endpoint to query. Can only be omitted for providers
+     * that do not use service endpoints, e.g. TFVC or TFGit.
+     * @param repository The vendor-specific identifier or the name of the repository to get branches. Can only be
+     * omitted for providers that do not support multiple repositories.
+     * @param branchName If supplied, the name of the branch to check for specifically.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of source providers and their capabilities.
+     * @return a list of branches for the given source code repository along with {@link Response}.
      */
-    Response<List<SourceProviderAttributes>> listWithResponse(String organization, String project, Context context);
+    Response<List<String>> listBranchesWithResponse(String organization, String project, String providerName,
+        UUID serviceEndpointId, String repository, String branchName, Context context);
 
     /**
      * Gets a list of branches for the given source code repository.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param providerName The name of the source provider.
@@ -50,34 +72,29 @@ public interface SourceProviders {
     List<String> listBranches(String organization, String project, String providerName);
 
     /**
-     * Gets a list of branches for the given source code repository.
-     *
+     * Gets the contents of a file in the given source code repository.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param providerName The name of the source provider.
      * @param serviceEndpointId If specified, the ID of the service endpoint to query. Can only be omitted for providers
-     *     that do not use service endpoints, e.g. TFVC or TFGit.
-     * @param repository The vendor-specific identifier or the name of the repository to get branches. Can only be
-     *     omitted for providers that do not support multiple repositories.
-     * @param branchName If supplied, the name of the branch to check for specifically.
+     * that do not use service endpoints, e.g. TFVC or TFGit.
+     * @param repository If specified, the vendor-specific identifier or the name of the repository to get branches. Can
+     * only be omitted for providers that do not support multiple repositories.
+     * @param commitOrBranch The identifier of the commit or branch from which a file's contents are retrieved.
+     * @param path The path to the file to retrieve, relative to the root of the repository.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of branches for the given source code repository.
+     * @return the contents of a file in the given source code repository along with {@link Response}.
      */
-    Response<List<String>> listBranchesWithResponse(
-        String organization,
-        String project,
-        String providerName,
-        UUID serviceEndpointId,
-        String repository,
-        String branchName,
-        Context context);
+    Response<String> getFileContentsWithResponse(String organization, String project, String providerName,
+        UUID serviceEndpointId, String repository, String commitOrBranch, String path, Context context);
 
     /**
      * Gets the contents of a file in the given source code repository.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param providerName The name of the source provider.
@@ -89,36 +106,30 @@ public interface SourceProviders {
     String getFileContents(String organization, String project, String providerName);
 
     /**
-     * Gets the contents of a file in the given source code repository.
-     *
+     * Gets the contents of a directory in the given source code repository.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param providerName The name of the source provider.
      * @param serviceEndpointId If specified, the ID of the service endpoint to query. Can only be omitted for providers
-     *     that do not use service endpoints, e.g. TFVC or TFGit.
+     * that do not use service endpoints, e.g. TFVC or TFGit.
      * @param repository If specified, the vendor-specific identifier or the name of the repository to get branches. Can
-     *     only be omitted for providers that do not support multiple repositories.
+     * only be omitted for providers that do not support multiple repositories.
      * @param commitOrBranch The identifier of the commit or branch from which a file's contents are retrieved.
-     * @param path The path to the file to retrieve, relative to the root of the repository.
+     * @param path The path contents to list, relative to the root of the repository.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the contents of a file in the given source code repository.
+     * @return the contents of a directory in the given source code repository along with {@link Response}.
      */
-    Response<String> getFileContentsWithResponse(
-        String organization,
-        String project,
-        String providerName,
-        UUID serviceEndpointId,
-        String repository,
-        String commitOrBranch,
-        String path,
+    Response<List<SourceRepositoryItem>> getPathContentsWithResponse(String organization, String project,
+        String providerName, UUID serviceEndpointId, String repository, String commitOrBranch, String path,
         Context context);
 
     /**
      * Gets the contents of a directory in the given source code repository.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param providerName The name of the source provider.
@@ -130,36 +141,27 @@ public interface SourceProviders {
     List<SourceRepositoryItem> getPathContents(String organization, String project, String providerName);
 
     /**
-     * Gets the contents of a directory in the given source code repository.
-     *
+     * Gets a pull request object from source provider.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param providerName The name of the source provider.
+     * @param pullRequestId Vendor-specific id of the pull request.
+     * @param repositoryId Vendor-specific identifier or the name of the repository that contains the pull request.
      * @param serviceEndpointId If specified, the ID of the service endpoint to query. Can only be omitted for providers
-     *     that do not use service endpoints, e.g. TFVC or TFGit.
-     * @param repository If specified, the vendor-specific identifier or the name of the repository to get branches. Can
-     *     only be omitted for providers that do not support multiple repositories.
-     * @param commitOrBranch The identifier of the commit or branch from which a file's contents are retrieved.
-     * @param path The path contents to list, relative to the root of the repository.
+     * that do not use service endpoints, e.g. TFVC or TFGit.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the contents of a directory in the given source code repository.
+     * @return a pull request object from source provider along with {@link Response}.
      */
-    Response<List<SourceRepositoryItem>> getPathContentsWithResponse(
-        String organization,
-        String project,
-        String providerName,
-        UUID serviceEndpointId,
-        String repository,
-        String commitOrBranch,
-        String path,
-        Context context);
+    Response<PullRequest> getPullRequestWithResponse(String organization, String project, String providerName,
+        String pullRequestId, String repositoryId, UUID serviceEndpointId, Context context);
 
     /**
      * Gets a pull request object from source provider.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param providerName The name of the source provider.
@@ -172,33 +174,33 @@ public interface SourceProviders {
     PullRequest getPullRequest(String organization, String project, String providerName, String pullRequestId);
 
     /**
-     * Gets a pull request object from source provider.
-     *
+     * Gets a list of source code repositories.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param providerName The name of the source provider.
-     * @param pullRequestId Vendor-specific id of the pull request.
-     * @param repositoryId Vendor-specific identifier or the name of the repository that contains the pull request.
      * @param serviceEndpointId If specified, the ID of the service endpoint to query. Can only be omitted for providers
-     *     that do not use service endpoints, e.g. TFVC or TFGit.
+     * that do not use service endpoints, e.g. TFVC or TFGit.
+     * @param repository If specified, the vendor-specific identifier or the name of a single repository to get.
+     * @param resultSet 'top' for the repositories most relevant for the endpoint. If not set, all repositories are
+     * returned. Ignored if 'repository' is set.
+     * @param pageResults If set to true, this will limit the set of results and will return a continuation token to
+     * continue the query.
+     * @param continuationToken When paging results, this is a continuation token, returned by a previous call to this
+     * method, that can be used to return the next set of repositories.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a pull request object from source provider.
+     * @return a list of source code repositories along with {@link Response}.
      */
-    Response<PullRequest> getPullRequestWithResponse(
-        String organization,
-        String project,
-        String providerName,
-        String pullRequestId,
-        String repositoryId,
-        UUID serviceEndpointId,
+    Response<SourceRepositories> listRepositoriesWithResponse(String organization, String project, String providerName,
+        UUID serviceEndpointId, String repository, ResultSet resultSet, Boolean pageResults, String continuationToken,
         Context context);
 
     /**
      * Gets a list of source code repositories.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param providerName The name of the source provider.
@@ -210,40 +212,28 @@ public interface SourceProviders {
     SourceRepositories listRepositories(String organization, String project, String providerName);
 
     /**
-     * Gets a list of source code repositories.
-     *
+     * Recreates the webhooks for the specified triggers in the given source code repository.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param providerName The name of the source provider.
+     * @param body The types of triggers to restore webhooks for.
      * @param serviceEndpointId If specified, the ID of the service endpoint to query. Can only be omitted for providers
-     *     that do not use service endpoints, e.g. TFVC or TFGit.
-     * @param repository If specified, the vendor-specific identifier or the name of a single repository to get.
-     * @param resultSet 'top' for the repositories most relevant for the endpoint. If not set, all repositories are
-     *     returned. Ignored if 'repository' is set.
-     * @param pageResults If set to true, this will limit the set of results and will return a continuation token to
-     *     continue the query.
-     * @param continuationToken When paging results, this is a continuation token, returned by a previous call to this
-     *     method, that can be used to return the next set of repositories.
+     * that do not use service endpoints, e.g. TFVC or TFGit.
+     * @param repository If specified, the vendor-specific identifier or the name of the repository to get webhooks. Can
+     * only be omitted for providers that do not support multiple repositories.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of source code repositories.
+     * @return the {@link Response}.
      */
-    Response<SourceRepositories> listRepositoriesWithResponse(
-        String organization,
-        String project,
-        String providerName,
-        UUID serviceEndpointId,
-        String repository,
-        ResultSet resultSet,
-        Boolean pageResults,
-        String continuationToken,
-        Context context);
+    Response<Void> restoreWebhooksWithResponse(String organization, String project, String providerName,
+        List<String> body, UUID serviceEndpointId, String repository, Context context);
 
     /**
      * Recreates the webhooks for the specified triggers in the given source code repository.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param providerName The name of the source provider.
@@ -255,34 +245,27 @@ public interface SourceProviders {
     void restoreWebhooks(String organization, String project, String providerName, List<String> body);
 
     /**
-     * Recreates the webhooks for the specified triggers in the given source code repository.
-     *
+     * Gets a list of webhooks installed in the given source code repository.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param providerName The name of the source provider.
-     * @param body The types of triggers to restore webhooks for.
      * @param serviceEndpointId If specified, the ID of the service endpoint to query. Can only be omitted for providers
-     *     that do not use service endpoints, e.g. TFVC or TFGit.
+     * that do not use service endpoints, e.g. TFVC or TFGit.
      * @param repository If specified, the vendor-specific identifier or the name of the repository to get webhooks. Can
-     *     only be omitted for providers that do not support multiple repositories.
+     * only be omitted for providers that do not support multiple repositories.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response.
+     * @return a list of webhooks installed in the given source code repository along with {@link Response}.
      */
-    Response<Void> restoreWebhooksWithResponse(
-        String organization,
-        String project,
-        String providerName,
-        List<String> body,
-        UUID serviceEndpointId,
-        String repository,
-        Context context);
+    Response<List<RepositoryWebhook>> listWebhooksWithResponse(String organization, String project, String providerName,
+        UUID serviceEndpointId, String repository, Context context);
 
     /**
      * Gets a list of webhooks installed in the given source code repository.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param providerName The name of the source provider.
@@ -292,28 +275,4 @@ public interface SourceProviders {
      * @return a list of webhooks installed in the given source code repository.
      */
     List<RepositoryWebhook> listWebhooks(String organization, String project, String providerName);
-
-    /**
-     * Gets a list of webhooks installed in the given source code repository.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param providerName The name of the source provider.
-     * @param serviceEndpointId If specified, the ID of the service endpoint to query. Can only be omitted for providers
-     *     that do not use service endpoints, e.g. TFVC or TFGit.
-     * @param repository If specified, the vendor-specific identifier or the name of the repository to get webhooks. Can
-     *     only be omitted for providers that do not support multiple repositories.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of webhooks installed in the given source code repository.
-     */
-    Response<List<RepositoryWebhook>> listWebhooksWithResponse(
-        String organization,
-        String project,
-        String providerName,
-        UUID serviceEndpointId,
-        String repository,
-        Context context);
 }

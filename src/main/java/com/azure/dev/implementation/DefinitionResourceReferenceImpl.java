@@ -12,8 +12,8 @@ public final class DefinitionResourceReferenceImpl implements DefinitionResource
 
     private final com.azure.dev.DevManager serviceManager;
 
-    DefinitionResourceReferenceImpl(
-        DefinitionResourceReferenceInner innerObject, com.azure.dev.DevManager serviceManager) {
+    DefinitionResourceReferenceImpl(DefinitionResourceReferenceInner innerObject,
+        com.azure.dev.DevManager serviceManager) {
         this.innerObject = innerObject;
         this.serviceManager = serviceManager;
     }

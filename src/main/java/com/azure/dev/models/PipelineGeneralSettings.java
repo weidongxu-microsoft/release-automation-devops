@@ -6,20 +6,103 @@ package com.azure.dev.models;
 
 import com.azure.dev.fluent.models.PipelineGeneralSettingsInner;
 
-/** An immutable client-side representation of PipelineGeneralSettings. */
+/**
+ * An immutable client-side representation of PipelineGeneralSettings.
+ */
 public interface PipelineGeneralSettings {
     /**
-     * Gets the enforceJobAuthScope property: If enabled, scope of access for all pipelines reduces to the current
-     * project.
-     *
+     * Gets the auditEnforceSettableVar property: If enabled, audit logs will be generated whenever someone queues a
+     * pipeline run and defines variables that are not marked as "Settable at queue time".
+     * 
+     * @return the auditEnforceSettableVar value.
+     */
+    Boolean auditEnforceSettableVar();
+
+    /**
+     * Gets the buildsEnabledForForks property: Enable forked repositories to build pull requests.
+     * 
+     * @return the buildsEnabledForForks value.
+     */
+    Boolean buildsEnabledForForks();
+
+    /**
+     * Gets the disableClassicBuildPipelineCreation property: Disable classic build pipelines creation.
+     * 
+     * @return the disableClassicBuildPipelineCreation value.
+     */
+    Boolean disableClassicBuildPipelineCreation();
+
+    /**
+     * Gets the disableClassicPipelineCreation property: Disable classic pipelines creation.
+     * 
+     * @return the disableClassicPipelineCreation value.
+     */
+    Boolean disableClassicPipelineCreation();
+
+    /**
+     * Gets the disableClassicReleasePipelineCreation property: Disable classic release pipelines creation.
+     * 
+     * @return the disableClassicReleasePipelineCreation value.
+     */
+    Boolean disableClassicReleasePipelineCreation();
+
+    /**
+     * Gets the disableImpliedYamlCiTrigger property: Disable implied pipeline CI triggers if the trigger section in
+     * YAML is missing.
+     * 
+     * @return the disableImpliedYamlCiTrigger value.
+     */
+    Boolean disableImpliedYamlCiTrigger();
+
+    /**
+     * Gets the enableShellTasksArgsSanitizing property: Enable shell tasks args sanitizing.
+     * 
+     * @return the enableShellTasksArgsSanitizing value.
+     */
+    Boolean enableShellTasksArgsSanitizing();
+
+    /**
+     * Gets the enableShellTasksArgsSanitizingAudit property: Enable shell tasks args sanitizing preview.
+     * 
+     * @return the enableShellTasksArgsSanitizingAudit value.
+     */
+    Boolean enableShellTasksArgsSanitizingAudit();
+
+    /**
+     * Gets the enforceJobAuthScope property: If enabled, scope of access for all non-release pipelines reduces to the
+     * current project.
+     * 
      * @return the enforceJobAuthScope value.
      */
     Boolean enforceJobAuthScope();
 
     /**
+     * Gets the enforceJobAuthScopeForForks property: Enforce job auth scope for builds of forked repositories.
+     * 
+     * @return the enforceJobAuthScopeForForks value.
+     */
+    Boolean enforceJobAuthScopeForForks();
+
+    /**
+     * Gets the enforceJobAuthScopeForReleases property: If enabled, scope of access for all release pipelines reduces
+     * to the current project.
+     * 
+     * @return the enforceJobAuthScopeForReleases value.
+     */
+    Boolean enforceJobAuthScopeForReleases();
+
+    /**
+     * Gets the enforceNoAccessToSecretsFromForks property: Enforce no access to secrets for builds of forked
+     * repositories.
+     * 
+     * @return the enforceNoAccessToSecretsFromForks value.
+     */
+    Boolean enforceNoAccessToSecretsFromForks();
+
+    /**
      * Gets the enforceReferencedRepoScopedToken property: Restricts the scope of access for all pipelines to only
      * repositories explicitly referenced by the pipeline.
-     *
+     * 
      * @return the enforceReferencedRepoScopedToken value.
      */
     Boolean enforceReferencedRepoScopedToken();
@@ -27,29 +110,60 @@ public interface PipelineGeneralSettings {
     /**
      * Gets the enforceSettableVar property: If enabled, only those variables that are explicitly marked as "Settable at
      * queue time" can be set at queue time.
-     *
+     * 
      * @return the enforceSettableVar value.
      */
     Boolean enforceSettableVar();
 
     /**
+     * Gets the forkProtectionEnabled property: Enable settings that enforce certain levels of protection for building
+     * pull requests from forks globally.
+     * 
+     * @return the forkProtectionEnabled value.
+     */
+    Boolean forkProtectionEnabled();
+
+    /**
+     * Gets the isCommentRequiredForPullRequest property: Make comments required to have builds in all pull requests.
+     * 
+     * @return the isCommentRequiredForPullRequest value.
+     */
+    Boolean isCommentRequiredForPullRequest();
+
+    /**
      * Gets the publishPipelineMetadata property: Allows pipelines to record metadata.
-     *
+     * 
      * @return the publishPipelineMetadata value.
      */
     Boolean publishPipelineMetadata();
 
     /**
+     * Gets the requireCommentsForNonTeamMemberAndNonContributors property: Make comments required to have builds in
+     * pull requests from non-team members and non-contributors.
+     * 
+     * @return the requireCommentsForNonTeamMemberAndNonContributors value.
+     */
+    Boolean requireCommentsForNonTeamMemberAndNonContributors();
+
+    /**
+     * Gets the requireCommentsForNonTeamMembersOnly property: Make comments required to have builds in pull requests
+     * from non-team members.
+     * 
+     * @return the requireCommentsForNonTeamMembersOnly value.
+     */
+    Boolean requireCommentsForNonTeamMembersOnly();
+
+    /**
      * Gets the statusBadgesArePrivate property: Anonymous users can access the status badge API for all pipelines
      * unless this option is enabled.
-     *
+     * 
      * @return the statusBadgesArePrivate value.
      */
     Boolean statusBadgesArePrivate();
 
     /**
      * Gets the inner com.azure.dev.fluent.models.PipelineGeneralSettingsInner object.
-     *
+     * 
      * @return the inner object.
      */
     PipelineGeneralSettingsInner innerModel();

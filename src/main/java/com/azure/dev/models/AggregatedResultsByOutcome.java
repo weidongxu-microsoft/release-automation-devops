@@ -5,15 +5,13 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** The AggregatedResultsByOutcome model. */
+/**
+ * The AggregatedResultsByOutcome model.
+ */
 @Fluent
 public final class AggregatedResultsByOutcome {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(AggregatedResultsByOutcome.class);
-
     /*
      * The count property.
      */
@@ -51,8 +49,14 @@ public final class AggregatedResultsByOutcome {
     private Integer rerunResultCount;
 
     /**
+     * Creates an instance of AggregatedResultsByOutcome class.
+     */
+    public AggregatedResultsByOutcome() {
+    }
+
+    /**
      * Get the count property: The count property.
-     *
+     * 
      * @return the count value.
      */
     public Integer count() {
@@ -61,7 +65,7 @@ public final class AggregatedResultsByOutcome {
 
     /**
      * Set the count property: The count property.
-     *
+     * 
      * @param count the count value to set.
      * @return the AggregatedResultsByOutcome object itself.
      */
@@ -72,7 +76,7 @@ public final class AggregatedResultsByOutcome {
 
     /**
      * Get the duration property: The duration property.
-     *
+     * 
      * @return the duration value.
      */
     public String duration() {
@@ -81,7 +85,7 @@ public final class AggregatedResultsByOutcome {
 
     /**
      * Set the duration property: The duration property.
-     *
+     * 
      * @param duration the duration value to set.
      * @return the AggregatedResultsByOutcome object itself.
      */
@@ -92,7 +96,7 @@ public final class AggregatedResultsByOutcome {
 
     /**
      * Get the groupByField property: The groupByField property.
-     *
+     * 
      * @return the groupByField value.
      */
     public String groupByField() {
@@ -101,7 +105,7 @@ public final class AggregatedResultsByOutcome {
 
     /**
      * Set the groupByField property: The groupByField property.
-     *
+     * 
      * @param groupByField the groupByField value to set.
      * @return the AggregatedResultsByOutcome object itself.
      */
@@ -112,7 +116,7 @@ public final class AggregatedResultsByOutcome {
 
     /**
      * Get the groupByValue property: Any object.
-     *
+     * 
      * @return the groupByValue value.
      */
     public Object groupByValue() {
@@ -121,7 +125,7 @@ public final class AggregatedResultsByOutcome {
 
     /**
      * Set the groupByValue property: Any object.
-     *
+     * 
      * @param groupByValue the groupByValue value to set.
      * @return the AggregatedResultsByOutcome object itself.
      */
@@ -132,7 +136,7 @@ public final class AggregatedResultsByOutcome {
 
     /**
      * Get the outcome property: The outcome property.
-     *
+     * 
      * @return the outcome value.
      */
     public TestOutcome outcome() {
@@ -141,7 +145,7 @@ public final class AggregatedResultsByOutcome {
 
     /**
      * Set the outcome property: The outcome property.
-     *
+     * 
      * @param outcome the outcome value to set.
      * @return the AggregatedResultsByOutcome object itself.
      */
@@ -152,7 +156,7 @@ public final class AggregatedResultsByOutcome {
 
     /**
      * Get the rerunResultCount property: The rerunResultCount property.
-     *
+     * 
      * @return the rerunResultCount value.
      */
     public Integer rerunResultCount() {
@@ -161,7 +165,7 @@ public final class AggregatedResultsByOutcome {
 
     /**
      * Set the rerunResultCount property: The rerunResultCount property.
-     *
+     * 
      * @param rerunResultCount the rerunResultCount value to set.
      * @return the AggregatedResultsByOutcome object itself.
      */
@@ -172,7 +176,7 @@ public final class AggregatedResultsByOutcome {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

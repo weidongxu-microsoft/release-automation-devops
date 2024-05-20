@@ -5,9 +5,7 @@
 package com.azure.dev.fluent.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.models.SignedUrl;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -16,8 +14,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 @Fluent
 public final class ArtifactInner {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(ArtifactInner.class);
-
     /*
      * The name of the artifact.
      */
@@ -37,8 +33,14 @@ public final class ArtifactInner {
     private String url;
 
     /**
+     * Creates an instance of ArtifactInner class.
+     */
+    public ArtifactInner() {
+    }
+
+    /**
      * Get the name property: The name of the artifact.
-     *
+     * 
      * @return the name value.
      */
     public String name() {
@@ -47,7 +49,7 @@ public final class ArtifactInner {
 
     /**
      * Set the name property: The name of the artifact.
-     *
+     * 
      * @param name the name value to set.
      * @return the ArtifactInner object itself.
      */
@@ -58,7 +60,7 @@ public final class ArtifactInner {
 
     /**
      * Get the signedContent property: Signed url for downloading this artifact.
-     *
+     * 
      * @return the signedContent value.
      */
     public SignedUrl signedContent() {
@@ -67,7 +69,7 @@ public final class ArtifactInner {
 
     /**
      * Set the signedContent property: Signed url for downloading this artifact.
-     *
+     * 
      * @param signedContent the signedContent value to set.
      * @return the ArtifactInner object itself.
      */
@@ -78,7 +80,7 @@ public final class ArtifactInner {
 
     /**
      * Get the url property: Self-referential url.
-     *
+     * 
      * @return the url value.
      */
     public String url() {
@@ -87,7 +89,7 @@ public final class ArtifactInner {
 
     /**
      * Set the url property: Self-referential url.
-     *
+     * 
      * @param url the url value to set.
      * @return the ArtifactInner object itself.
      */
@@ -98,7 +100,7 @@ public final class ArtifactInner {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

@@ -21,24 +21,27 @@ import com.azure.core.http.rest.RestProxy;
 import com.azure.core.management.exception.ManagementException;
 import com.azure.core.util.Context;
 import com.azure.core.util.FluxUtil;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.fluent.LatestsClient;
 import com.azure.dev.fluent.models.BuildInner;
 import reactor.core.publisher.Mono;
 
-/** An instance of this class provides access to all the operations defined in LatestsClient. */
+/**
+ * An instance of this class provides access to all the operations defined in LatestsClient.
+ */
 public final class LatestsClientImpl implements LatestsClient {
-    private final ClientLogger logger = new ClientLogger(LatestsClientImpl.class);
-
-    /** The proxy service used to perform REST calls. */
+    /**
+     * The proxy service used to perform REST calls.
+     */
     private final LatestsService service;
 
-    /** The service client containing this operation class. */
+    /**
+     * The service client containing this operation class.
+     */
     private final DevClientImpl client;
 
     /**
      * Initializes an instance of LatestsClientImpl.
-     *
+     * 
      * @param client the instance of the service client containing this operation class.
      */
     LatestsClientImpl(DevClientImpl client) {
@@ -52,42 +55,37 @@ public final class LatestsClientImpl implements LatestsClient {
      */
     @Host("{$host}")
     @ServiceInterface(name = "DevClientLatests")
-    private interface LatestsService {
-        @Headers({"Content-Type: application/json"})
+    public interface LatestsService {
+        @Headers({ "Content-Type: application/json" })
         @Get("/{organization}/{project}/_apis/build/latest/{definition}")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<BuildInner>> get(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
-            @PathParam("definition") String definition,
-            @QueryParam("branchName") String branchName,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<BuildInner>> get(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
+            @PathParam("definition") String definition, @QueryParam("branchName") String branchName,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
     }
 
     /**
      * Gets the latest build for a definition, optionally scoped to a specific branch.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definition definition name with optional leading folder path, or the definition id.
-     * @param branchName optional parameter that indicates the specific branch to use.
+     * @param branchName optional parameter that indicates the specific branch to use. If not specified, the default
+     * branch is used.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the latest build for a definition, optionally scoped to a specific branch.
+     * @return the latest build for a definition, optionally scoped to a specific branch along with {@link Response} on
+     * successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<BuildInner>> getWithResponseAsync(
-        String organization, String project, String definition, String branchName) {
+    private Mono<Response<BuildInner>> getWithResponseAsync(String organization, String project, String definition,
+        String branchName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -98,45 +96,34 @@ public final class LatestsClientImpl implements LatestsClient {
         if (definition == null) {
             return Mono.error(new IllegalArgumentException("Parameter definition is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .get(
-                            this.client.getEndpoint(),
-                            organization,
-                            project,
-                            definition,
-                            branchName,
-                            apiVersion,
-                            accept,
-                            context))
+            .withContext(context -> service.get(this.client.getEndpoint(), organization, project, definition,
+                branchName, this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Gets the latest build for a definition, optionally scoped to a specific branch.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definition definition name with optional leading folder path, or the definition id.
-     * @param branchName optional parameter that indicates the specific branch to use.
+     * @param branchName optional parameter that indicates the specific branch to use. If not specified, the default
+     * branch is used.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the latest build for a definition, optionally scoped to a specific branch.
+     * @return the latest build for a definition, optionally scoped to a specific branch along with {@link Response} on
+     * successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<BuildInner>> getWithResponseAsync(
-        String organization, String project, String definition, String branchName, Context context) {
+    private Mono<Response<BuildInner>> getWithResponseAsync(String organization, String project, String definition,
+        String branchName, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -147,66 +134,54 @@ public final class LatestsClientImpl implements LatestsClient {
         if (definition == null) {
             return Mono.error(new IllegalArgumentException("Parameter definition is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .get(this.client.getEndpoint(), organization, project, definition, branchName, apiVersion, accept, context);
+        return service.get(this.client.getEndpoint(), organization, project, definition, branchName,
+            this.client.getApiVersion(), accept, context);
     }
 
     /**
      * Gets the latest build for a definition, optionally scoped to a specific branch.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param definition definition name with optional leading folder path, or the definition id.
-     * @param branchName optional parameter that indicates the specific branch to use.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the latest build for a definition, optionally scoped to a specific branch.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<BuildInner> getAsync(String organization, String project, String definition, String branchName) {
-        return getWithResponseAsync(organization, project, definition, branchName)
-            .flatMap(
-                (Response<BuildInner> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
-    }
-
-    /**
-     * Gets the latest build for a definition, optionally scoped to a specific branch.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definition definition name with optional leading folder path, or the definition id.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the latest build for a definition, optionally scoped to a specific branch.
+     * @return the latest build for a definition, optionally scoped to a specific branch on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<BuildInner> getAsync(String organization, String project, String definition) {
         final String branchName = null;
         return getWithResponseAsync(organization, project, definition, branchName)
-            .flatMap(
-                (Response<BuildInner> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+            .flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Gets the latest build for a definition, optionally scoped to a specific branch.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param definition definition name with optional leading folder path, or the definition id.
+     * @param branchName optional parameter that indicates the specific branch to use. If not specified, the default
+     * branch is used.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the latest build for a definition, optionally scoped to a specific branch along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<BuildInner> getWithResponse(String organization, String project, String definition,
+        String branchName, Context context) {
+        return getWithResponseAsync(organization, project, definition, branchName, context).block();
+    }
+
+    /**
+     * Gets the latest build for a definition, optionally scoped to a specific branch.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definition definition name with optional leading folder path, or the definition id.
@@ -218,25 +193,6 @@ public final class LatestsClientImpl implements LatestsClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public BuildInner get(String organization, String project, String definition) {
         final String branchName = null;
-        return getAsync(organization, project, definition, branchName).block();
-    }
-
-    /**
-     * Gets the latest build for a definition, optionally scoped to a specific branch.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param definition definition name with optional leading folder path, or the definition id.
-     * @param branchName optional parameter that indicates the specific branch to use.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the latest build for a definition, optionally scoped to a specific branch.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<BuildInner> getWithResponse(
-        String organization, String project, String definition, String branchName, Context context) {
-        return getWithResponseAsync(organization, project, definition, branchName, context).block();
+        return getWithResponse(organization, project, definition, branchName, Context.NONE).getValue();
     }
 }

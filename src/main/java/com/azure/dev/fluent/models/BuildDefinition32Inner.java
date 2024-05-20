@@ -5,7 +5,6 @@
 package com.azure.dev.fluent.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.models.AgentPoolQueue;
 import com.azure.dev.models.BuildAuthorizationScope;
 import com.azure.dev.models.BuildDefinitionReference32;
@@ -24,18 +23,17 @@ import com.azure.dev.models.ProcessParameters;
 import com.azure.dev.models.ReferenceLinks;
 import com.azure.dev.models.RetentionPolicy;
 import com.azure.dev.models.TeamProjectReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 
-/** For back-compat with extensions that use the old Steps format instead of Process and Phases. */
+/**
+ * For back-compat with extensions that use the old Steps format instead of Process and Phases.
+ */
 @Fluent
 public final class BuildDefinition32Inner extends BuildDefinitionReference32 {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(BuildDefinition32Inner.class);
-
     /*
      * Indicates whether badges are enabled for this definition
      */
@@ -79,22 +77,19 @@ public final class BuildDefinition32Inner extends BuildDefinitionReference32 {
     private String dropLocation;
 
     /*
-     * The job authorization scope for builds which are queued against this
-     * definition
+     * The job authorization scope for builds which are queued against this definition
      */
     @JsonProperty(value = "jobAuthorizationScope")
     private BuildAuthorizationScope jobAuthorizationScope;
 
     /*
-     * The job cancel timeout in minutes for builds which are cancelled by user
-     * for this definition
+     * The job cancel timeout in minutes for builds which are cancelled by user for this definition
      */
     @JsonProperty(value = "jobCancelTimeoutInMinutes")
     private Integer jobCancelTimeoutInMinutes;
 
     /*
-     * The job execution timeout in minutes for builds which are queued against
-     * this definition
+     * The job execution timeout in minutes for builds which are queued against this definition
      */
     @JsonProperty(value = "jobTimeoutInMinutes")
     private Integer jobTimeoutInMinutes;
@@ -124,12 +119,7 @@ public final class BuildDefinition32Inner extends BuildDefinitionReference32 {
     private ProcessParameters processParameters;
 
     /*
-     * The class represents a property bag as a collection of key-value pairs.
-     * Values of all primitive types (any type with a `TypeCode !=
-     * TypeCode.Object`) except for `DBNull` are accepted. Values of type
-     * Byte[], Int32, Double, DateType and String preserve their type, other
-     * primitives are retuned as a String. Byte[] expected as base64 encoded
-     * string.
+     * The class represents a property bag as a collection of key-value pairs. Values of all primitive types (any type with a `TypeCode != TypeCode.Object`) except for `DBNull` are accepted. Values of type Byte[], Int32, Double, DateType and String preserve their type, other primitives are retuned as a String. Byte[] expected as base64 encoded string.
      */
     @JsonProperty(value = "properties")
     private PropertiesCollectionInner properties;
@@ -166,8 +156,14 @@ public final class BuildDefinition32Inner extends BuildDefinitionReference32 {
     private Map<String, BuildDefinitionVariable> variables;
 
     /**
+     * Creates an instance of BuildDefinition32Inner class.
+     */
+    public BuildDefinition32Inner() {
+    }
+
+    /**
      * Get the badgeEnabled property: Indicates whether badges are enabled for this definition.
-     *
+     * 
      * @return the badgeEnabled value.
      */
     public Boolean badgeEnabled() {
@@ -176,7 +172,7 @@ public final class BuildDefinition32Inner extends BuildDefinitionReference32 {
 
     /**
      * Set the badgeEnabled property: Indicates whether badges are enabled for this definition.
-     *
+     * 
      * @param badgeEnabled the badgeEnabled value to set.
      * @return the BuildDefinition32Inner object itself.
      */
@@ -187,7 +183,7 @@ public final class BuildDefinition32Inner extends BuildDefinitionReference32 {
 
     /**
      * Get the build property: The build property.
-     *
+     * 
      * @return the build value.
      */
     public List<BuildDefinitionStep> build() {
@@ -196,7 +192,7 @@ public final class BuildDefinition32Inner extends BuildDefinitionReference32 {
 
     /**
      * Set the build property: The build property.
-     *
+     * 
      * @param build the build value to set.
      * @return the BuildDefinition32Inner object itself.
      */
@@ -207,7 +203,7 @@ public final class BuildDefinition32Inner extends BuildDefinitionReference32 {
 
     /**
      * Get the buildNumberFormat property: The build number format.
-     *
+     * 
      * @return the buildNumberFormat value.
      */
     public String buildNumberFormat() {
@@ -216,7 +212,7 @@ public final class BuildDefinition32Inner extends BuildDefinitionReference32 {
 
     /**
      * Set the buildNumberFormat property: The build number format.
-     *
+     * 
      * @param buildNumberFormat the buildNumberFormat value to set.
      * @return the BuildDefinition32Inner object itself.
      */
@@ -227,7 +223,7 @@ public final class BuildDefinition32Inner extends BuildDefinitionReference32 {
 
     /**
      * Get the comment property: The comment entered when saving the definition.
-     *
+     * 
      * @return the comment value.
      */
     public String comment() {
@@ -236,7 +232,7 @@ public final class BuildDefinition32Inner extends BuildDefinitionReference32 {
 
     /**
      * Set the comment property: The comment entered when saving the definition.
-     *
+     * 
      * @param comment the comment value to set.
      * @return the BuildDefinition32Inner object itself.
      */
@@ -247,7 +243,7 @@ public final class BuildDefinition32Inner extends BuildDefinitionReference32 {
 
     /**
      * Get the demands property: The demands property.
-     *
+     * 
      * @return the demands value.
      */
     public List<Demand> demands() {
@@ -256,7 +252,7 @@ public final class BuildDefinition32Inner extends BuildDefinitionReference32 {
 
     /**
      * Set the demands property: The demands property.
-     *
+     * 
      * @param demands the demands value to set.
      * @return the BuildDefinition32Inner object itself.
      */
@@ -267,7 +263,7 @@ public final class BuildDefinition32Inner extends BuildDefinitionReference32 {
 
     /**
      * Get the description property: The description.
-     *
+     * 
      * @return the description value.
      */
     public String description() {
@@ -276,7 +272,7 @@ public final class BuildDefinition32Inner extends BuildDefinitionReference32 {
 
     /**
      * Set the description property: The description.
-     *
+     * 
      * @param description the description value to set.
      * @return the BuildDefinition32Inner object itself.
      */
@@ -287,7 +283,7 @@ public final class BuildDefinition32Inner extends BuildDefinitionReference32 {
 
     /**
      * Get the dropLocation property: The drop location for the definition.
-     *
+     * 
      * @return the dropLocation value.
      */
     public String dropLocation() {
@@ -296,7 +292,7 @@ public final class BuildDefinition32Inner extends BuildDefinitionReference32 {
 
     /**
      * Set the dropLocation property: The drop location for the definition.
-     *
+     * 
      * @param dropLocation the dropLocation value to set.
      * @return the BuildDefinition32Inner object itself.
      */
@@ -308,7 +304,7 @@ public final class BuildDefinition32Inner extends BuildDefinitionReference32 {
     /**
      * Get the jobAuthorizationScope property: The job authorization scope for builds which are queued against this
      * definition.
-     *
+     * 
      * @return the jobAuthorizationScope value.
      */
     public BuildAuthorizationScope jobAuthorizationScope() {
@@ -318,7 +314,7 @@ public final class BuildDefinition32Inner extends BuildDefinitionReference32 {
     /**
      * Set the jobAuthorizationScope property: The job authorization scope for builds which are queued against this
      * definition.
-     *
+     * 
      * @param jobAuthorizationScope the jobAuthorizationScope value to set.
      * @return the BuildDefinition32Inner object itself.
      */
@@ -330,7 +326,7 @@ public final class BuildDefinition32Inner extends BuildDefinitionReference32 {
     /**
      * Get the jobCancelTimeoutInMinutes property: The job cancel timeout in minutes for builds which are cancelled by
      * user for this definition.
-     *
+     * 
      * @return the jobCancelTimeoutInMinutes value.
      */
     public Integer jobCancelTimeoutInMinutes() {
@@ -340,7 +336,7 @@ public final class BuildDefinition32Inner extends BuildDefinitionReference32 {
     /**
      * Set the jobCancelTimeoutInMinutes property: The job cancel timeout in minutes for builds which are cancelled by
      * user for this definition.
-     *
+     * 
      * @param jobCancelTimeoutInMinutes the jobCancelTimeoutInMinutes value to set.
      * @return the BuildDefinition32Inner object itself.
      */
@@ -352,7 +348,7 @@ public final class BuildDefinition32Inner extends BuildDefinitionReference32 {
     /**
      * Get the jobTimeoutInMinutes property: The job execution timeout in minutes for builds which are queued against
      * this definition.
-     *
+     * 
      * @return the jobTimeoutInMinutes value.
      */
     public Integer jobTimeoutInMinutes() {
@@ -362,7 +358,7 @@ public final class BuildDefinition32Inner extends BuildDefinitionReference32 {
     /**
      * Set the jobTimeoutInMinutes property: The job execution timeout in minutes for builds which are queued against
      * this definition.
-     *
+     * 
      * @param jobTimeoutInMinutes the jobTimeoutInMinutes value to set.
      * @return the BuildDefinition32Inner object itself.
      */
@@ -373,7 +369,7 @@ public final class BuildDefinition32Inner extends BuildDefinitionReference32 {
 
     /**
      * Get the latestBuild property: Data representation of a build.
-     *
+     * 
      * @return the latestBuild value.
      */
     public BuildInner latestBuild() {
@@ -382,7 +378,7 @@ public final class BuildDefinition32Inner extends BuildDefinitionReference32 {
 
     /**
      * Set the latestBuild property: Data representation of a build.
-     *
+     * 
      * @param latestBuild the latestBuild value to set.
      * @return the BuildDefinition32Inner object itself.
      */
@@ -393,7 +389,7 @@ public final class BuildDefinition32Inner extends BuildDefinitionReference32 {
 
     /**
      * Get the latestCompletedBuild property: Data representation of a build.
-     *
+     * 
      * @return the latestCompletedBuild value.
      */
     public BuildInner latestCompletedBuild() {
@@ -402,7 +398,7 @@ public final class BuildDefinition32Inner extends BuildDefinitionReference32 {
 
     /**
      * Set the latestCompletedBuild property: Data representation of a build.
-     *
+     * 
      * @param latestCompletedBuild the latestCompletedBuild value to set.
      * @return the BuildDefinition32Inner object itself.
      */
@@ -413,7 +409,7 @@ public final class BuildDefinition32Inner extends BuildDefinitionReference32 {
 
     /**
      * Get the options property: The options property.
-     *
+     * 
      * @return the options value.
      */
     public List<BuildOption> options() {
@@ -422,7 +418,7 @@ public final class BuildDefinition32Inner extends BuildDefinitionReference32 {
 
     /**
      * Set the options property: The options property.
-     *
+     * 
      * @param options the options value to set.
      * @return the BuildDefinition32Inner object itself.
      */
@@ -433,7 +429,7 @@ public final class BuildDefinition32Inner extends BuildDefinitionReference32 {
 
     /**
      * Get the processParameters property: Process Parameters.
-     *
+     * 
      * @return the processParameters value.
      */
     public ProcessParameters processParameters() {
@@ -442,7 +438,7 @@ public final class BuildDefinition32Inner extends BuildDefinitionReference32 {
 
     /**
      * Set the processParameters property: Process Parameters.
-     *
+     * 
      * @param processParameters the processParameters value to set.
      * @return the BuildDefinition32Inner object itself.
      */
@@ -456,7 +452,7 @@ public final class BuildDefinition32Inner extends BuildDefinitionReference32 {
      * all primitive types (any type with a `TypeCode != TypeCode.Object`) except for `DBNull` are accepted. Values of
      * type Byte[], Int32, Double, DateType and String preserve their type, other primitives are retuned as a String.
      * Byte[] expected as base64 encoded string.
-     *
+     * 
      * @return the properties value.
      */
     public PropertiesCollectionInner properties() {
@@ -468,7 +464,7 @@ public final class BuildDefinition32Inner extends BuildDefinitionReference32 {
      * all primitive types (any type with a `TypeCode != TypeCode.Object`) except for `DBNull` are accepted. Values of
      * type Byte[], Int32, Double, DateType and String preserve their type, other primitives are retuned as a String.
      * Byte[] expected as base64 encoded string.
-     *
+     * 
      * @param properties the properties value to set.
      * @return the BuildDefinition32Inner object itself.
      */
@@ -479,7 +475,7 @@ public final class BuildDefinition32Inner extends BuildDefinitionReference32 {
 
     /**
      * Get the repository property: The repository.
-     *
+     * 
      * @return the repository value.
      */
     public BuildRepository repository() {
@@ -488,7 +484,7 @@ public final class BuildDefinition32Inner extends BuildDefinitionReference32 {
 
     /**
      * Set the repository property: The repository.
-     *
+     * 
      * @param repository the repository value to set.
      * @return the BuildDefinition32Inner object itself.
      */
@@ -499,7 +495,7 @@ public final class BuildDefinition32Inner extends BuildDefinitionReference32 {
 
     /**
      * Get the retentionRules property: The retentionRules property.
-     *
+     * 
      * @return the retentionRules value.
      */
     public List<RetentionPolicy> retentionRules() {
@@ -508,7 +504,7 @@ public final class BuildDefinition32Inner extends BuildDefinitionReference32 {
 
     /**
      * Set the retentionRules property: The retentionRules property.
-     *
+     * 
      * @param retentionRules the retentionRules value to set.
      * @return the BuildDefinition32Inner object itself.
      */
@@ -519,7 +515,7 @@ public final class BuildDefinition32Inner extends BuildDefinitionReference32 {
 
     /**
      * Get the tags property: The tags property.
-     *
+     * 
      * @return the tags value.
      */
     public List<String> tags() {
@@ -528,7 +524,7 @@ public final class BuildDefinition32Inner extends BuildDefinitionReference32 {
 
     /**
      * Set the tags property: The tags property.
-     *
+     * 
      * @param tags the tags value to set.
      * @return the BuildDefinition32Inner object itself.
      */
@@ -539,7 +535,7 @@ public final class BuildDefinition32Inner extends BuildDefinitionReference32 {
 
     /**
      * Get the triggers property: The triggers property.
-     *
+     * 
      * @return the triggers value.
      */
     public List<BuildTrigger> triggers() {
@@ -548,7 +544,7 @@ public final class BuildDefinition32Inner extends BuildDefinitionReference32 {
 
     /**
      * Set the triggers property: The triggers property.
-     *
+     * 
      * @param triggers the triggers value to set.
      * @return the BuildDefinition32Inner object itself.
      */
@@ -559,7 +555,7 @@ public final class BuildDefinition32Inner extends BuildDefinitionReference32 {
 
     /**
      * Get the variables property: Dictionary of &lt;BuildDefinitionVariable&gt;.
-     *
+     * 
      * @return the variables value.
      */
     public Map<String, BuildDefinitionVariable> variables() {
@@ -568,7 +564,7 @@ public final class BuildDefinition32Inner extends BuildDefinitionReference32 {
 
     /**
      * Set the variables property: Dictionary of &lt;BuildDefinitionVariable&gt;.
-     *
+     * 
      * @param variables the variables value to set.
      * @return the BuildDefinition32Inner object itself.
      */
@@ -577,119 +573,153 @@ public final class BuildDefinition32Inner extends BuildDefinitionReference32 {
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinition32Inner withLinks(ReferenceLinks links) {
         super.withLinks(links);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinition32Inner withAuthoredBy(IdentityRef authoredBy) {
         super.withAuthoredBy(authoredBy);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinition32Inner withDraftOf(DefinitionReference draftOf) {
         super.withDraftOf(draftOf);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinition32Inner withDrafts(List<DefinitionReference> drafts) {
         super.withDrafts(drafts);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinition32Inner withMetrics(List<BuildMetricInner> metrics) {
         super.withMetrics(metrics);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinition32Inner withQuality(DefinitionQuality quality) {
         super.withQuality(quality);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinition32Inner withQueue(AgentPoolQueue queue) {
         super.withQueue(queue);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinition32Inner withCreatedDate(OffsetDateTime createdDate) {
         super.withCreatedDate(createdDate);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinition32Inner withId(Integer id) {
         super.withId(id);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinition32Inner withName(String name) {
         super.withName(name);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinition32Inner withPath(String path) {
         super.withPath(path);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinition32Inner withProject(TeamProjectReference project) {
         super.withProject(project);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinition32Inner withQueueStatus(DefinitionQueueStatus queueStatus) {
         super.withQueueStatus(queueStatus);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinition32Inner withRevision(Integer revision) {
         super.withRevision(revision);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinition32Inner withType(DefinitionType type) {
         super.withType(type);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinition32Inner withUri(String uri) {
         super.withUri(uri);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinition32Inner withUrl(String url) {
         super.withUrl(url);
@@ -698,7 +728,7 @@ public final class BuildDefinition32Inner extends BuildDefinitionReference32 {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     @Override
@@ -735,14 +765,11 @@ public final class BuildDefinition32Inner extends BuildDefinitionReference32 {
             triggers().forEach(e -> e.validate());
         }
         if (variables() != null) {
-            variables()
-                .values()
-                .forEach(
-                    e -> {
-                        if (e != null) {
-                            e.validate();
-                        }
-                    });
+            variables().values().forEach(e -> {
+                if (e != null) {
+                    e.validate();
+                }
+            });
         }
     }
 }

@@ -5,15 +5,13 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Deployment information for type "Deploy". */
+/**
+ * Deployment information for type "Deploy".
+ */
 @Fluent
 public final class DeploymentDeploy extends Deployment {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(DeploymentDeploy.class);
-
     /*
      * The message property.
      */
@@ -21,8 +19,14 @@ public final class DeploymentDeploy extends Deployment {
     private String message;
 
     /**
+     * Creates an instance of DeploymentDeploy class.
+     */
+    public DeploymentDeploy() {
+    }
+
+    /**
      * Get the message property: The message property.
-     *
+     * 
      * @return the message value.
      */
     public String message() {
@@ -31,7 +35,7 @@ public final class DeploymentDeploy extends Deployment {
 
     /**
      * Set the message property: The message property.
-     *
+     * 
      * @param message the message value to set.
      * @return the DeploymentDeploy object itself.
      */
@@ -40,7 +44,9 @@ public final class DeploymentDeploy extends Deployment {
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public DeploymentDeploy withType(String type) {
         super.withType(type);
@@ -49,7 +55,7 @@ public final class DeploymentDeploy extends Deployment {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     @Override

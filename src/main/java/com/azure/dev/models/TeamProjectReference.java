@@ -5,17 +5,15 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
-/** Represents a shallow reference to a TeamProject. */
+/**
+ * Represents a shallow reference to a TeamProject.
+ */
 @Fluent
 public final class TeamProjectReference {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(TeamProjectReference.class);
-
     /*
      * Project abbreviation.
      */
@@ -77,8 +75,14 @@ public final class TeamProjectReference {
     private ProjectVisibility visibility;
 
     /**
+     * Creates an instance of TeamProjectReference class.
+     */
+    public TeamProjectReference() {
+    }
+
+    /**
      * Get the abbreviation property: Project abbreviation.
-     *
+     * 
      * @return the abbreviation value.
      */
     public String abbreviation() {
@@ -87,7 +91,7 @@ public final class TeamProjectReference {
 
     /**
      * Set the abbreviation property: Project abbreviation.
-     *
+     * 
      * @param abbreviation the abbreviation value to set.
      * @return the TeamProjectReference object itself.
      */
@@ -98,7 +102,7 @@ public final class TeamProjectReference {
 
     /**
      * Get the defaultTeamImageUrl property: Url to default team identity image.
-     *
+     * 
      * @return the defaultTeamImageUrl value.
      */
     public String defaultTeamImageUrl() {
@@ -107,7 +111,7 @@ public final class TeamProjectReference {
 
     /**
      * Set the defaultTeamImageUrl property: Url to default team identity image.
-     *
+     * 
      * @param defaultTeamImageUrl the defaultTeamImageUrl value to set.
      * @return the TeamProjectReference object itself.
      */
@@ -118,7 +122,7 @@ public final class TeamProjectReference {
 
     /**
      * Get the description property: The project's description (if any).
-     *
+     * 
      * @return the description value.
      */
     public String description() {
@@ -127,7 +131,7 @@ public final class TeamProjectReference {
 
     /**
      * Set the description property: The project's description (if any).
-     *
+     * 
      * @param description the description value to set.
      * @return the TeamProjectReference object itself.
      */
@@ -138,7 +142,7 @@ public final class TeamProjectReference {
 
     /**
      * Get the id property: Project identifier.
-     *
+     * 
      * @return the id value.
      */
     public UUID id() {
@@ -147,7 +151,7 @@ public final class TeamProjectReference {
 
     /**
      * Set the id property: Project identifier.
-     *
+     * 
      * @param id the id value to set.
      * @return the TeamProjectReference object itself.
      */
@@ -158,7 +162,7 @@ public final class TeamProjectReference {
 
     /**
      * Get the lastUpdateTime property: Project last update time.
-     *
+     * 
      * @return the lastUpdateTime value.
      */
     public OffsetDateTime lastUpdateTime() {
@@ -167,7 +171,7 @@ public final class TeamProjectReference {
 
     /**
      * Set the lastUpdateTime property: Project last update time.
-     *
+     * 
      * @param lastUpdateTime the lastUpdateTime value to set.
      * @return the TeamProjectReference object itself.
      */
@@ -178,7 +182,7 @@ public final class TeamProjectReference {
 
     /**
      * Get the name property: Project name.
-     *
+     * 
      * @return the name value.
      */
     public String name() {
@@ -187,7 +191,7 @@ public final class TeamProjectReference {
 
     /**
      * Set the name property: Project name.
-     *
+     * 
      * @param name the name value to set.
      * @return the TeamProjectReference object itself.
      */
@@ -198,7 +202,7 @@ public final class TeamProjectReference {
 
     /**
      * Get the revision property: Project revision.
-     *
+     * 
      * @return the revision value.
      */
     public Long revision() {
@@ -207,7 +211,7 @@ public final class TeamProjectReference {
 
     /**
      * Set the revision property: Project revision.
-     *
+     * 
      * @param revision the revision value to set.
      * @return the TeamProjectReference object itself.
      */
@@ -218,7 +222,7 @@ public final class TeamProjectReference {
 
     /**
      * Get the state property: Project state.
-     *
+     * 
      * @return the state value.
      */
     public ProjectState state() {
@@ -227,7 +231,7 @@ public final class TeamProjectReference {
 
     /**
      * Set the state property: Project state.
-     *
+     * 
      * @param state the state value to set.
      * @return the TeamProjectReference object itself.
      */
@@ -238,7 +242,7 @@ public final class TeamProjectReference {
 
     /**
      * Get the url property: Url to the full version of the object.
-     *
+     * 
      * @return the url value.
      */
     public String url() {
@@ -247,7 +251,7 @@ public final class TeamProjectReference {
 
     /**
      * Set the url property: Url to the full version of the object.
-     *
+     * 
      * @param url the url value to set.
      * @return the TeamProjectReference object itself.
      */
@@ -258,7 +262,7 @@ public final class TeamProjectReference {
 
     /**
      * Get the visibility property: Project visibility.
-     *
+     * 
      * @return the visibility value.
      */
     public ProjectVisibility visibility() {
@@ -267,7 +271,7 @@ public final class TeamProjectReference {
 
     /**
      * Set the visibility property: Project visibility.
-     *
+     * 
      * @param visibility the visibility value to set.
      * @return the TeamProjectReference object itself.
      */
@@ -278,7 +282,7 @@ public final class TeamProjectReference {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

@@ -5,15 +5,13 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Represents a group of inputs for a build option. */
+/**
+ * Represents a group of inputs for a build option.
+ */
 @Fluent
 public final class BuildOptionGroupDefinition {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(BuildOptionGroupDefinition.class);
-
     /*
      * The name of the group to display in the UI.
      */
@@ -21,8 +19,7 @@ public final class BuildOptionGroupDefinition {
     private String displayName;
 
     /*
-     * Indicates whether the group is initially displayed as expanded in the
-     * UI.
+     * Indicates whether the group is initially displayed as expanded in the UI.
      */
     @JsonProperty(value = "isExpanded")
     private Boolean isExpanded;
@@ -34,8 +31,14 @@ public final class BuildOptionGroupDefinition {
     private String name;
 
     /**
+     * Creates an instance of BuildOptionGroupDefinition class.
+     */
+    public BuildOptionGroupDefinition() {
+    }
+
+    /**
      * Get the displayName property: The name of the group to display in the UI.
-     *
+     * 
      * @return the displayName value.
      */
     public String displayName() {
@@ -44,7 +47,7 @@ public final class BuildOptionGroupDefinition {
 
     /**
      * Set the displayName property: The name of the group to display in the UI.
-     *
+     * 
      * @param displayName the displayName value to set.
      * @return the BuildOptionGroupDefinition object itself.
      */
@@ -55,7 +58,7 @@ public final class BuildOptionGroupDefinition {
 
     /**
      * Get the isExpanded property: Indicates whether the group is initially displayed as expanded in the UI.
-     *
+     * 
      * @return the isExpanded value.
      */
     public Boolean isExpanded() {
@@ -64,7 +67,7 @@ public final class BuildOptionGroupDefinition {
 
     /**
      * Set the isExpanded property: Indicates whether the group is initially displayed as expanded in the UI.
-     *
+     * 
      * @param isExpanded the isExpanded value to set.
      * @return the BuildOptionGroupDefinition object itself.
      */
@@ -75,7 +78,7 @@ public final class BuildOptionGroupDefinition {
 
     /**
      * Get the name property: The internal name of the group.
-     *
+     * 
      * @return the name value.
      */
     public String name() {
@@ -84,7 +87,7 @@ public final class BuildOptionGroupDefinition {
 
     /**
      * Set the name property: The internal name of the group.
-     *
+     * 
      * @param name the name value to set.
      * @return the BuildOptionGroupDefinition object itself.
      */
@@ -95,7 +98,7 @@ public final class BuildOptionGroupDefinition {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

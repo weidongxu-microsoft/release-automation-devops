@@ -5,15 +5,13 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** The RepositoryResourceParameters model. */
+/**
+ * The RepositoryResourceParameters model.
+ */
 @Fluent
 public final class RepositoryResourceParameters {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(RepositoryResourceParameters.class);
-
     /*
      * The refName property.
      */
@@ -27,8 +25,7 @@ public final class RepositoryResourceParameters {
     private String token;
 
     /*
-     * Optional. This is the type of the token given. If not provided, a type
-     * of "Bearer" is assumed. Note: Use "Basic" for a PAT token.
+     * Optional. This is the type of the token given. If not provided, a type of "Bearer" is assumed. Note: Use "Basic" for a PAT token.
      */
     @JsonProperty(value = "tokenType")
     private String tokenType;
@@ -40,8 +37,14 @@ public final class RepositoryResourceParameters {
     private String version;
 
     /**
+     * Creates an instance of RepositoryResourceParameters class.
+     */
+    public RepositoryResourceParameters() {
+    }
+
+    /**
      * Get the refName property: The refName property.
-     *
+     * 
      * @return the refName value.
      */
     public String refName() {
@@ -50,7 +53,7 @@ public final class RepositoryResourceParameters {
 
     /**
      * Set the refName property: The refName property.
-     *
+     * 
      * @param refName the refName value to set.
      * @return the RepositoryResourceParameters object itself.
      */
@@ -61,7 +64,7 @@ public final class RepositoryResourceParameters {
 
     /**
      * Get the token property: This is the security token to use when connecting to the repository.
-     *
+     * 
      * @return the token value.
      */
     public String token() {
@@ -70,7 +73,7 @@ public final class RepositoryResourceParameters {
 
     /**
      * Set the token property: This is the security token to use when connecting to the repository.
-     *
+     * 
      * @param token the token value to set.
      * @return the RepositoryResourceParameters object itself.
      */
@@ -82,7 +85,7 @@ public final class RepositoryResourceParameters {
     /**
      * Get the tokenType property: Optional. This is the type of the token given. If not provided, a type of "Bearer" is
      * assumed. Note: Use "Basic" for a PAT token.
-     *
+     * 
      * @return the tokenType value.
      */
     public String tokenType() {
@@ -92,7 +95,7 @@ public final class RepositoryResourceParameters {
     /**
      * Set the tokenType property: Optional. This is the type of the token given. If not provided, a type of "Bearer" is
      * assumed. Note: Use "Basic" for a PAT token.
-     *
+     * 
      * @param tokenType the tokenType value to set.
      * @return the RepositoryResourceParameters object itself.
      */
@@ -103,7 +106,7 @@ public final class RepositoryResourceParameters {
 
     /**
      * Get the version property: The version property.
-     *
+     * 
      * @return the version value.
      */
     public String version() {
@@ -112,7 +115,7 @@ public final class RepositoryResourceParameters {
 
     /**
      * Set the version property: The version property.
-     *
+     * 
      * @param version the version value to set.
      * @return the RepositoryResourceParameters object itself.
      */
@@ -123,7 +126,7 @@ public final class RepositoryResourceParameters {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

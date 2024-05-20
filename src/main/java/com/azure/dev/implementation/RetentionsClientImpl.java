@@ -23,30 +23,33 @@ import com.azure.core.http.rest.RestProxy;
 import com.azure.core.management.exception.ManagementException;
 import com.azure.core.util.Context;
 import com.azure.core.util.FluxUtil;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.fluent.RetentionsClient;
 import com.azure.dev.fluent.models.ProjectRetentionSettingInner;
 import com.azure.dev.models.UpdateProjectRetentionSettingModel;
 import reactor.core.publisher.Mono;
 
-/** An instance of this class provides access to all the operations defined in RetentionsClient. */
+/**
+ * An instance of this class provides access to all the operations defined in RetentionsClient.
+ */
 public final class RetentionsClientImpl implements RetentionsClient {
-    private final ClientLogger logger = new ClientLogger(RetentionsClientImpl.class);
-
-    /** The proxy service used to perform REST calls. */
+    /**
+     * The proxy service used to perform REST calls.
+     */
     private final RetentionsService service;
 
-    /** The service client containing this operation class. */
+    /**
+     * The service client containing this operation class.
+     */
     private final DevClientImpl client;
 
     /**
      * Initializes an instance of RetentionsClientImpl.
-     *
+     * 
      * @param client the instance of the service client containing this operation class.
      */
     RetentionsClientImpl(DevClientImpl client) {
-        this.service =
-            RestProxy.create(RetentionsService.class, client.getHttpPipeline(), client.getSerializerAdapter());
+        this.service
+            = RestProxy.create(RetentionsService.class, client.getHttpPipeline(), client.getSerializerAdapter());
         this.client = client;
     }
 
@@ -56,50 +59,41 @@ public final class RetentionsClientImpl implements RetentionsClient {
      */
     @Host("{$host}")
     @ServiceInterface(name = "DevClientRetentions")
-    private interface RetentionsService {
-        @Headers({"Content-Type: application/json"})
+    public interface RetentionsService {
+        @Headers({ "Content-Type: application/json" })
         @Get("/{organization}/{project}/_apis/build/retention")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<ProjectRetentionSettingInner>> get(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<ProjectRetentionSettingInner>> get(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
         @Patch("/{organization}/{project}/_apis/build/retention")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<ProjectRetentionSettingInner>> update(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
+        Mono<Response<ProjectRetentionSettingInner>> update(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
             @QueryParam("api-version") String apiVersion,
             @BodyParam("application/json") UpdateProjectRetentionSettingModel body,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @HeaderParam("Accept") String accept, Context context);
     }
 
     /**
      * Gets the project's retention settings.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the project's retention settings.
+     * @return the project's retention settings along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<Response<ProjectRetentionSettingInner>> getWithResponseAsync(String organization, String project) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -107,33 +101,30 @@ public final class RetentionsClientImpl implements RetentionsClient {
         if (project == null) {
             return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context -> service.get(this.client.getEndpoint(), organization, project, apiVersion, accept, context))
+            .withContext(context -> service.get(this.client.getEndpoint(), organization, project,
+                this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Gets the project's retention settings.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the project's retention settings.
+     * @return the project's retention settings along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<ProjectRetentionSettingInner>> getWithResponseAsync(
-        String organization, String project, Context context) {
+    private Mono<Response<ProjectRetentionSettingInner>> getWithResponseAsync(String organization, String project,
+        Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -141,38 +132,47 @@ public final class RetentionsClientImpl implements RetentionsClient {
         if (project == null) {
             return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service.get(this.client.getEndpoint(), organization, project, apiVersion, accept, context);
+        return service.get(this.client.getEndpoint(), organization, project, this.client.getApiVersion(), accept,
+            context);
     }
 
     /**
      * Gets the project's retention settings.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the project's retention settings.
+     * @return the project's retention settings on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<ProjectRetentionSettingInner> getAsync(String organization, String project) {
-        return getWithResponseAsync(organization, project)
-            .flatMap(
-                (Response<ProjectRetentionSettingInner> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+        return getWithResponseAsync(organization, project).flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Gets the project's retention settings.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the project's retention settings along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<ProjectRetentionSettingInner> getWithResponse(String organization, String project,
+        Context context) {
+        return getWithResponseAsync(organization, project, context).block();
+    }
+
+    /**
+     * Gets the project's retention settings.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -182,45 +182,27 @@ public final class RetentionsClientImpl implements RetentionsClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public ProjectRetentionSettingInner get(String organization, String project) {
-        return getAsync(organization, project).block();
-    }
-
-    /**
-     * Gets the project's retention settings.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the project's retention settings.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<ProjectRetentionSettingInner> getWithResponse(
-        String organization, String project, Context context) {
-        return getWithResponseAsync(organization, project, context).block();
+        return getWithResponse(organization, project, Context.NONE).getValue();
     }
 
     /**
      * Updates the project's retention settings.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param body Contains members for updating the retention settings values. All fields are optional.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return contains the settings for the retention rules.
+     * @return contains the settings for the retention rules along with {@link Response} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<ProjectRetentionSettingInner>> updateWithResponseAsync(
-        String organization, String project, UpdateProjectRetentionSettingModel body) {
+    private Mono<Response<ProjectRetentionSettingInner>> updateWithResponseAsync(String organization, String project,
+        UpdateProjectRetentionSettingModel body) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -233,18 +215,16 @@ public final class RetentionsClientImpl implements RetentionsClient {
         } else {
             body.validate();
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service.update(this.client.getEndpoint(), organization, project, apiVersion, body, accept, context))
+            .withContext(context -> service.update(this.client.getEndpoint(), organization, project,
+                this.client.getApiVersion(), body, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Updates the project's retention settings.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param body Contains members for updating the retention settings values. All fields are optional.
@@ -252,16 +232,15 @@ public final class RetentionsClientImpl implements RetentionsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return contains the settings for the retention rules.
+     * @return contains the settings for the retention rules along with {@link Response} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<ProjectRetentionSettingInner>> updateWithResponseAsync(
-        String organization, String project, UpdateProjectRetentionSettingModel body, Context context) {
+    private Mono<Response<ProjectRetentionSettingInner>> updateWithResponseAsync(String organization, String project,
+        UpdateProjectRetentionSettingModel body, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -274,57 +253,32 @@ public final class RetentionsClientImpl implements RetentionsClient {
         } else {
             body.validate();
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service.update(this.client.getEndpoint(), organization, project, apiVersion, body, accept, context);
+        return service.update(this.client.getEndpoint(), organization, project, this.client.getApiVersion(), body,
+            accept, context);
     }
 
     /**
      * Updates the project's retention settings.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param body Contains members for updating the retention settings values. All fields are optional.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return contains the settings for the retention rules.
+     * @return contains the settings for the retention rules on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ProjectRetentionSettingInner> updateAsync(
-        String organization, String project, UpdateProjectRetentionSettingModel body) {
-        return updateWithResponseAsync(organization, project, body)
-            .flatMap(
-                (Response<ProjectRetentionSettingInner> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+    private Mono<ProjectRetentionSettingInner> updateAsync(String organization, String project,
+        UpdateProjectRetentionSettingModel body) {
+        return updateWithResponseAsync(organization, project, body).flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Updates the project's retention settings.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param body Contains members for updating the retention settings values. All fields are optional.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return contains the settings for the retention rules.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public ProjectRetentionSettingInner update(
-        String organization, String project, UpdateProjectRetentionSettingModel body) {
-        return updateAsync(organization, project, body).block();
-    }
-
-    /**
-     * Updates the project's retention settings.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param body Contains members for updating the retention settings values. All fields are optional.
@@ -332,11 +286,28 @@ public final class RetentionsClientImpl implements RetentionsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return contains the settings for the retention rules along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<ProjectRetentionSettingInner> updateWithResponse(String organization, String project,
+        UpdateProjectRetentionSettingModel body, Context context) {
+        return updateWithResponseAsync(organization, project, body, context).block();
+    }
+
+    /**
+     * Updates the project's retention settings.
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param body Contains members for updating the retention settings values. All fields are optional.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return contains the settings for the retention rules.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<ProjectRetentionSettingInner> updateWithResponse(
-        String organization, String project, UpdateProjectRetentionSettingModel body, Context context) {
-        return updateWithResponseAsync(organization, project, body, context).block();
+    public ProjectRetentionSettingInner update(String organization, String project,
+        UpdateProjectRetentionSettingModel body) {
+        return updateWithResponse(organization, project, body, Context.NONE).getValue();
     }
 }

@@ -5,15 +5,13 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Represents a build process. */
+/**
+ * Represents a build process.
+ */
 @Fluent
 public class BuildProcess {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(BuildProcess.class);
-
     /*
      * The type of the process.
      */
@@ -21,8 +19,14 @@ public class BuildProcess {
     private Integer type;
 
     /**
+     * Creates an instance of BuildProcess class.
+     */
+    public BuildProcess() {
+    }
+
+    /**
      * Get the type property: The type of the process.
-     *
+     * 
      * @return the type value.
      */
     public Integer type() {
@@ -31,7 +35,7 @@ public class BuildProcess {
 
     /**
      * Set the type property: The type of the process.
-     *
+     * 
      * @param type the type value to set.
      * @return the BuildProcess object itself.
      */
@@ -42,7 +46,7 @@ public class BuildProcess {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

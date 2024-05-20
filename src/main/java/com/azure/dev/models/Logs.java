@@ -7,11 +7,30 @@ package com.azure.dev.models;
 import com.azure.core.http.rest.Response;
 import com.azure.core.util.Context;
 
-/** Resource collection API of Logs. */
+/**
+ * Resource collection API of Logs.
+ */
 public interface Logs {
     /**
      * Get a list of logs from a pipeline run.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param pipelineId ID of the pipeline.
+     * @param runId ID of the run of that pipeline.
+     * @param expand Expand options. Default is None.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return a list of logs from a pipeline run along with {@link Response}.
+     */
+    Response<LogCollection> listWithResponse(String organization, String project, int pipelineId, int runId,
+        GetLogExpandOptions expand, Context context);
+
+    /**
+     * Get a list of logs from a pipeline run.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param pipelineId ID of the pipeline.
@@ -24,25 +43,26 @@ public interface Logs {
     LogCollection list(String organization, String project, int pipelineId, int runId);
 
     /**
-     * Get a list of logs from a pipeline run.
-     *
+     * Get a specific log from a pipeline run.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param pipelineId ID of the pipeline.
      * @param runId ID of the run of that pipeline.
+     * @param logId ID of the log.
      * @param expand Expand options. Default is None.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of logs from a pipeline run.
+     * @return a specific log from a pipeline run along with {@link Response}.
      */
-    Response<LogCollection> listWithResponse(
-        String organization, String project, int pipelineId, int runId, GetLogExpandOptions expand, Context context);
+    Response<Log> getWithResponse(String organization, String project, int pipelineId, int runId, int logId,
+        GetLogExpandOptions expand, Context context);
 
     /**
      * Get a specific log from a pipeline run.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param pipelineId ID of the pipeline.
@@ -54,28 +74,4 @@ public interface Logs {
      * @return a specific log from a pipeline run.
      */
     Log get(String organization, String project, int pipelineId, int runId, int logId);
-
-    /**
-     * Get a specific log from a pipeline run.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param pipelineId ID of the pipeline.
-     * @param runId ID of the run of that pipeline.
-     * @param logId ID of the log.
-     * @param expand Expand options. Default is None.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a specific log from a pipeline run.
-     */
-    Response<Log> getWithResponse(
-        String organization,
-        String project,
-        int pipelineId,
-        int runId,
-        int logId,
-        GetLogExpandOptions expand,
-        Context context);
 }

@@ -7,27 +7,43 @@ package com.azure.dev.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/** Defines values for TaskResult. */
+/**
+ * The result.
+ */
 public enum TaskResult {
-    /** Enum value succeeded. */
+    /**
+     * Enum value succeeded.
+     */
     SUCCEEDED("succeeded"),
 
-    /** Enum value succeededWithIssues. */
+    /**
+     * Enum value succeededWithIssues.
+     */
     SUCCEEDED_WITH_ISSUES("succeededWithIssues"),
 
-    /** Enum value failed. */
+    /**
+     * Enum value failed.
+     */
     FAILED("failed"),
 
-    /** Enum value canceled. */
+    /**
+     * Enum value canceled.
+     */
     CANCELED("canceled"),
 
-    /** Enum value skipped. */
+    /**
+     * Enum value skipped.
+     */
     SKIPPED("skipped"),
 
-    /** Enum value abandoned. */
+    /**
+     * Enum value abandoned.
+     */
     ABANDONED("abandoned");
 
-    /** The actual serialized value for a TaskResult instance. */
+    /**
+     * The actual serialized value for a TaskResult instance.
+     */
     private final String value;
 
     TaskResult(String value) {
@@ -36,12 +52,15 @@ public enum TaskResult {
 
     /**
      * Parses a serialized value to a TaskResult instance.
-     *
+     * 
      * @param value the serialized value to parse.
      * @return the parsed TaskResult object, or null if unable to parse.
      */
     @JsonCreator
     public static TaskResult fromString(String value) {
+        if (value == null) {
+            return null;
+        }
         TaskResult[] items = TaskResult.values();
         for (TaskResult item : items) {
             if (item.toString().equalsIgnoreCase(value)) {
@@ -51,6 +70,9 @@ public enum TaskResult {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @JsonValue
     @Override
     public String toString() {

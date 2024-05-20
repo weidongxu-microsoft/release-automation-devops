@@ -5,16 +5,14 @@
 package com.azure.dev.fluent.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.models.ReferenceLinks;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Represents an attachment to a build. */
+/**
+ * Represents an attachment to a build.
+ */
 @Fluent
 public final class AttachmentInner {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(AttachmentInner.class);
-
     /*
      * The class to represent a collection of REST reference links.
      */
@@ -28,8 +26,14 @@ public final class AttachmentInner {
     private String name;
 
     /**
+     * Creates an instance of AttachmentInner class.
+     */
+    public AttachmentInner() {
+    }
+
+    /**
      * Get the links property: The class to represent a collection of REST reference links.
-     *
+     * 
      * @return the links value.
      */
     public ReferenceLinks links() {
@@ -38,7 +42,7 @@ public final class AttachmentInner {
 
     /**
      * Set the links property: The class to represent a collection of REST reference links.
-     *
+     * 
      * @param links the links value to set.
      * @return the AttachmentInner object itself.
      */
@@ -49,7 +53,7 @@ public final class AttachmentInner {
 
     /**
      * Get the name property: The name of the attachment.
-     *
+     * 
      * @return the name value.
      */
     public String name() {
@@ -58,7 +62,7 @@ public final class AttachmentInner {
 
     /**
      * Set the name property: The name of the attachment.
-     *
+     * 
      * @param name the name value to set.
      * @return the AttachmentInner object itself.
      */
@@ -69,7 +73,7 @@ public final class AttachmentInner {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

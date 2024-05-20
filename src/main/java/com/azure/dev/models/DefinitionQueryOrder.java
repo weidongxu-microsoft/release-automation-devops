@@ -7,24 +7,38 @@ package com.azure.dev.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/** Defines values for DefinitionQueryOrder. */
+/**
+ * Defines values for DefinitionQueryOrder.
+ */
 public enum DefinitionQueryOrder {
-    /** Enum value none. */
+    /**
+     * Enum value none.
+     */
     NONE("none"),
 
-    /** Enum value lastModifiedAscending. */
+    /**
+     * Enum value lastModifiedAscending.
+     */
     LAST_MODIFIED_ASCENDING("lastModifiedAscending"),
 
-    /** Enum value lastModifiedDescending. */
+    /**
+     * Enum value lastModifiedDescending.
+     */
     LAST_MODIFIED_DESCENDING("lastModifiedDescending"),
 
-    /** Enum value definitionNameAscending. */
+    /**
+     * Enum value definitionNameAscending.
+     */
     DEFINITION_NAME_ASCENDING("definitionNameAscending"),
 
-    /** Enum value definitionNameDescending. */
+    /**
+     * Enum value definitionNameDescending.
+     */
     DEFINITION_NAME_DESCENDING("definitionNameDescending");
 
-    /** The actual serialized value for a DefinitionQueryOrder instance. */
+    /**
+     * The actual serialized value for a DefinitionQueryOrder instance.
+     */
     private final String value;
 
     DefinitionQueryOrder(String value) {
@@ -33,12 +47,15 @@ public enum DefinitionQueryOrder {
 
     /**
      * Parses a serialized value to a DefinitionQueryOrder instance.
-     *
+     * 
      * @param value the serialized value to parse.
      * @return the parsed DefinitionQueryOrder object, or null if unable to parse.
      */
     @JsonCreator
     public static DefinitionQueryOrder fromString(String value) {
+        if (value == null) {
+            return null;
+        }
         DefinitionQueryOrder[] items = DefinitionQueryOrder.values();
         for (DefinitionQueryOrder item : items) {
             if (item.toString().equalsIgnoreCase(value)) {
@@ -48,6 +65,9 @@ public enum DefinitionQueryOrder {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @JsonValue
     @Override
     public String toString() {

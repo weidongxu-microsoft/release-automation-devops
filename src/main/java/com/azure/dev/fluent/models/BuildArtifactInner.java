@@ -5,16 +5,14 @@
 package com.azure.dev.fluent.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.models.ArtifactResource;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Represents an artifact produced by a build. */
+/**
+ * Represents an artifact produced by a build.
+ */
 @Fluent
 public final class BuildArtifactInner {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(BuildArtifactInner.class);
-
     /*
      * The artifact ID.
      */
@@ -34,16 +32,20 @@ public final class BuildArtifactInner {
     private ArtifactResource resource;
 
     /*
-     * The artifact source, which will be the ID of the job that produced this
-     * artifact. If an artifact is associated with multiple sources, this
-     * points to the first source.
+     * The artifact source, which will be the ID of the job that produced this artifact. If an artifact is associated with multiple sources, this points to the first source.
      */
     @JsonProperty(value = "source")
     private String source;
 
     /**
+     * Creates an instance of BuildArtifactInner class.
+     */
+    public BuildArtifactInner() {
+    }
+
+    /**
      * Get the id property: The artifact ID.
-     *
+     * 
      * @return the id value.
      */
     public Integer id() {
@@ -52,7 +54,7 @@ public final class BuildArtifactInner {
 
     /**
      * Set the id property: The artifact ID.
-     *
+     * 
      * @param id the id value to set.
      * @return the BuildArtifactInner object itself.
      */
@@ -63,7 +65,7 @@ public final class BuildArtifactInner {
 
     /**
      * Get the name property: The name of the artifact.
-     *
+     * 
      * @return the name value.
      */
     public String name() {
@@ -72,7 +74,7 @@ public final class BuildArtifactInner {
 
     /**
      * Set the name property: The name of the artifact.
-     *
+     * 
      * @param name the name value to set.
      * @return the BuildArtifactInner object itself.
      */
@@ -83,7 +85,7 @@ public final class BuildArtifactInner {
 
     /**
      * Get the resource property: The actual resource.
-     *
+     * 
      * @return the resource value.
      */
     public ArtifactResource resource() {
@@ -92,7 +94,7 @@ public final class BuildArtifactInner {
 
     /**
      * Set the resource property: The actual resource.
-     *
+     * 
      * @param resource the resource value to set.
      * @return the BuildArtifactInner object itself.
      */
@@ -104,7 +106,7 @@ public final class BuildArtifactInner {
     /**
      * Get the source property: The artifact source, which will be the ID of the job that produced this artifact. If an
      * artifact is associated with multiple sources, this points to the first source.
-     *
+     * 
      * @return the source value.
      */
     public String source() {
@@ -114,7 +116,7 @@ public final class BuildArtifactInner {
     /**
      * Set the source property: The artifact source, which will be the ID of the job that produced this artifact. If an
      * artifact is associated with multiple sources, this points to the first source.
-     *
+     * 
      * @param source the source value to set.
      * @return the BuildArtifactInner object itself.
      */
@@ -125,7 +127,7 @@ public final class BuildArtifactInner {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

@@ -5,16 +5,28 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
 
-/** The RunResources model. */
+/**
+ * The RunResources model.
+ */
 @Fluent
 public final class RunResources {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(RunResources.class);
+    /*
+     * Dictionary of <ContainerResource>
+     */
+    @JsonProperty(value = "containers")
+    @JsonInclude(value = JsonInclude.Include.NON_NULL, content = JsonInclude.Include.ALWAYS)
+    private Map<String, ContainerResource> containers;
+
+    /*
+     * Dictionary of <PipelineResource>
+     */
+    @JsonProperty(value = "pipelines")
+    @JsonInclude(value = JsonInclude.Include.NON_NULL, content = JsonInclude.Include.ALWAYS)
+    private Map<String, PipelineResource> pipelines;
 
     /*
      * Dictionary of <RepositoryResource>
@@ -24,8 +36,54 @@ public final class RunResources {
     private Map<String, RepositoryResource> repositories;
 
     /**
+     * Creates an instance of RunResources class.
+     */
+    public RunResources() {
+    }
+
+    /**
+     * Get the containers property: Dictionary of &lt;ContainerResource&gt;.
+     * 
+     * @return the containers value.
+     */
+    public Map<String, ContainerResource> containers() {
+        return this.containers;
+    }
+
+    /**
+     * Set the containers property: Dictionary of &lt;ContainerResource&gt;.
+     * 
+     * @param containers the containers value to set.
+     * @return the RunResources object itself.
+     */
+    public RunResources withContainers(Map<String, ContainerResource> containers) {
+        this.containers = containers;
+        return this;
+    }
+
+    /**
+     * Get the pipelines property: Dictionary of &lt;PipelineResource&gt;.
+     * 
+     * @return the pipelines value.
+     */
+    public Map<String, PipelineResource> pipelines() {
+        return this.pipelines;
+    }
+
+    /**
+     * Set the pipelines property: Dictionary of &lt;PipelineResource&gt;.
+     * 
+     * @param pipelines the pipelines value to set.
+     * @return the RunResources object itself.
+     */
+    public RunResources withPipelines(Map<String, PipelineResource> pipelines) {
+        this.pipelines = pipelines;
+        return this;
+    }
+
+    /**
      * Get the repositories property: Dictionary of &lt;RepositoryResource&gt;.
-     *
+     * 
      * @return the repositories value.
      */
     public Map<String, RepositoryResource> repositories() {
@@ -34,7 +92,7 @@ public final class RunResources {
 
     /**
      * Set the repositories property: Dictionary of &lt;RepositoryResource&gt;.
-     *
+     * 
      * @param repositories the repositories value to set.
      * @return the RunResources object itself.
      */
@@ -45,19 +103,30 @@ public final class RunResources {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {
+        if (containers() != null) {
+            containers().values().forEach(e -> {
+                if (e != null) {
+                    e.validate();
+                }
+            });
+        }
+        if (pipelines() != null) {
+            pipelines().values().forEach(e -> {
+                if (e != null) {
+                    e.validate();
+                }
+            });
+        }
         if (repositories() != null) {
-            repositories()
-                .values()
-                .forEach(
-                    e -> {
-                        if (e != null) {
-                            e.validate();
-                        }
-                    });
+            repositories().values().forEach(e -> {
+                if (e != null) {
+                    e.validate();
+                }
+            });
         }
     }
 }

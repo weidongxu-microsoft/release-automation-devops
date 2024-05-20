@@ -8,25 +8,13 @@ import com.azure.core.http.rest.Response;
 import com.azure.core.util.Context;
 import java.util.UUID;
 
-/** Resource collection API of Timelines. */
+/**
+ * Resource collection API of Timelines.
+ */
 public interface Timelines {
     /**
      * Gets details for a build.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param buildId The buildId parameter.
-     * @param timelineId The timelineId parameter.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return details for a build.
-     */
-    Timeline get(String organization, String project, int buildId, UUID timelineId);
-
-    /**
-     * Gets details for a build.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The buildId parameter.
@@ -37,14 +25,22 @@ public interface Timelines {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return details for a build along with {@link Response}.
+     */
+    Response<Timeline> getWithResponse(String organization, String project, int buildId, UUID timelineId,
+        Integer changeId, UUID planId, Context context);
+
+    /**
+     * Gets details for a build.
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param buildId The buildId parameter.
+     * @param timelineId The timelineId parameter.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return details for a build.
      */
-    Response<Timeline> getWithResponse(
-        String organization,
-        String project,
-        int buildId,
-        UUID timelineId,
-        Integer changeId,
-        UUID planId,
-        Context context);
+    Timeline get(String organization, String project, int buildId, UUID timelineId);
 }

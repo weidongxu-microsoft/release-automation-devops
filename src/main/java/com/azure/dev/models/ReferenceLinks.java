@@ -5,29 +5,32 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
 
-/** The class to represent a collection of REST reference links. */
+/**
+ * The class to represent a collection of REST reference links.
+ */
 @Fluent
 public final class ReferenceLinks {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(ReferenceLinks.class);
-
     /*
-     * The readonly view of the links.  Because Reference links are readonly,
-     * we only want to expose them as read only.
+     * The readonly view of the links.  Because Reference links are readonly, we only want to expose them as read only.
      */
     @JsonProperty(value = "links")
     @JsonInclude(value = JsonInclude.Include.NON_NULL, content = JsonInclude.Include.ALWAYS)
     private Map<String, Object> links;
 
     /**
+     * Creates an instance of ReferenceLinks class.
+     */
+    public ReferenceLinks() {
+    }
+
+    /**
      * Get the links property: The readonly view of the links. Because Reference links are readonly, we only want to
      * expose them as read only.
-     *
+     * 
      * @return the links value.
      */
     public Map<String, Object> links() {
@@ -37,7 +40,7 @@ public final class ReferenceLinks {
     /**
      * Set the links property: The readonly view of the links. Because Reference links are readonly, we only want to
      * expose them as read only.
-     *
+     * 
      * @param links the links value to set.
      * @return the ReferenceLinks object itself.
      */
@@ -48,7 +51,7 @@ public final class ReferenceLinks {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

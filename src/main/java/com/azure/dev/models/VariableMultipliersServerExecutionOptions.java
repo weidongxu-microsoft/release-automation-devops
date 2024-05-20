@@ -5,19 +5,16 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** Represents options for running a phase based on values specified by a list of variables. */
+/**
+ * Represents options for running a phase based on values specified by a list of variables.
+ */
 @Fluent
 public final class VariableMultipliersServerExecutionOptions extends ServerTargetExecutionOptions {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(VariableMultipliersServerExecutionOptions.class);
-
     /*
-     * Indicates whether failure of one job should prevent the phase from
-     * running in other jobs.
+     * Indicates whether failure of one job should prevent the phase from running in other jobs.
      */
     @JsonProperty(value = "continueOnError")
     private Boolean continueOnError;
@@ -35,9 +32,15 @@ public final class VariableMultipliersServerExecutionOptions extends ServerTarge
     private List<String> multipliers;
 
     /**
+     * Creates an instance of VariableMultipliersServerExecutionOptions class.
+     */
+    public VariableMultipliersServerExecutionOptions() {
+    }
+
+    /**
      * Get the continueOnError property: Indicates whether failure of one job should prevent the phase from running in
      * other jobs.
-     *
+     * 
      * @return the continueOnError value.
      */
     public Boolean continueOnError() {
@@ -47,7 +50,7 @@ public final class VariableMultipliersServerExecutionOptions extends ServerTarge
     /**
      * Set the continueOnError property: Indicates whether failure of one job should prevent the phase from running in
      * other jobs.
-     *
+     * 
      * @param continueOnError the continueOnError value to set.
      * @return the VariableMultipliersServerExecutionOptions object itself.
      */
@@ -58,7 +61,7 @@ public final class VariableMultipliersServerExecutionOptions extends ServerTarge
 
     /**
      * Get the maxConcurrency property: The maximum number of server jobs to run in parallel.
-     *
+     * 
      * @return the maxConcurrency value.
      */
     public Integer maxConcurrency() {
@@ -67,7 +70,7 @@ public final class VariableMultipliersServerExecutionOptions extends ServerTarge
 
     /**
      * Set the maxConcurrency property: The maximum number of server jobs to run in parallel.
-     *
+     * 
      * @param maxConcurrency the maxConcurrency value to set.
      * @return the VariableMultipliersServerExecutionOptions object itself.
      */
@@ -78,7 +81,7 @@ public final class VariableMultipliersServerExecutionOptions extends ServerTarge
 
     /**
      * Get the multipliers property: The multipliers property.
-     *
+     * 
      * @return the multipliers value.
      */
     public List<String> multipliers() {
@@ -87,7 +90,7 @@ public final class VariableMultipliersServerExecutionOptions extends ServerTarge
 
     /**
      * Set the multipliers property: The multipliers property.
-     *
+     * 
      * @param multipliers the multipliers value to set.
      * @return the VariableMultipliersServerExecutionOptions object itself.
      */
@@ -96,7 +99,9 @@ public final class VariableMultipliersServerExecutionOptions extends ServerTarge
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public VariableMultipliersServerExecutionOptions withType(Integer type) {
         super.withType(type);
@@ -105,7 +110,7 @@ public final class VariableMultipliersServerExecutionOptions extends ServerTarge
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     @Override

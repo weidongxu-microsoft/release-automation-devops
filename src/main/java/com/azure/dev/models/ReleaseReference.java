@@ -5,16 +5,14 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 
-/** Reference to a release. */
+/**
+ * Reference to a release.
+ */
 @Fluent
 public final class ReleaseReference {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(ReleaseReference.class);
-
     /*
      * Number of Release Attempt.
      */
@@ -22,7 +20,7 @@ public final class ReleaseReference {
     private Integer attempt;
 
     /*
-     * Release Creation Date.
+     * Release Creation Date(UTC).
      */
     @JsonProperty(value = "creationDate")
     private OffsetDateTime creationDate;
@@ -34,7 +32,7 @@ public final class ReleaseReference {
     private Integer definitionId;
 
     /*
-     * Environment creation Date.
+     * Environment creation Date(UTC).
      */
     @JsonProperty(value = "environmentCreationDate")
     private OffsetDateTime environmentCreationDate;
@@ -76,8 +74,14 @@ public final class ReleaseReference {
     private String name;
 
     /**
+     * Creates an instance of ReleaseReference class.
+     */
+    public ReleaseReference() {
+    }
+
+    /**
      * Get the attempt property: Number of Release Attempt.
-     *
+     * 
      * @return the attempt value.
      */
     public Integer attempt() {
@@ -86,7 +90,7 @@ public final class ReleaseReference {
 
     /**
      * Set the attempt property: Number of Release Attempt.
-     *
+     * 
      * @param attempt the attempt value to set.
      * @return the ReleaseReference object itself.
      */
@@ -96,8 +100,8 @@ public final class ReleaseReference {
     }
 
     /**
-     * Get the creationDate property: Release Creation Date.
-     *
+     * Get the creationDate property: Release Creation Date(UTC).
+     * 
      * @return the creationDate value.
      */
     public OffsetDateTime creationDate() {
@@ -105,8 +109,8 @@ public final class ReleaseReference {
     }
 
     /**
-     * Set the creationDate property: Release Creation Date.
-     *
+     * Set the creationDate property: Release Creation Date(UTC).
+     * 
      * @param creationDate the creationDate value to set.
      * @return the ReleaseReference object itself.
      */
@@ -117,7 +121,7 @@ public final class ReleaseReference {
 
     /**
      * Get the definitionId property: Release definition ID.
-     *
+     * 
      * @return the definitionId value.
      */
     public Integer definitionId() {
@@ -126,7 +130,7 @@ public final class ReleaseReference {
 
     /**
      * Set the definitionId property: Release definition ID.
-     *
+     * 
      * @param definitionId the definitionId value to set.
      * @return the ReleaseReference object itself.
      */
@@ -136,8 +140,8 @@ public final class ReleaseReference {
     }
 
     /**
-     * Get the environmentCreationDate property: Environment creation Date.
-     *
+     * Get the environmentCreationDate property: Environment creation Date(UTC).
+     * 
      * @return the environmentCreationDate value.
      */
     public OffsetDateTime environmentCreationDate() {
@@ -145,8 +149,8 @@ public final class ReleaseReference {
     }
 
     /**
-     * Set the environmentCreationDate property: Environment creation Date.
-     *
+     * Set the environmentCreationDate property: Environment creation Date(UTC).
+     * 
      * @param environmentCreationDate the environmentCreationDate value to set.
      * @return the ReleaseReference object itself.
      */
@@ -157,7 +161,7 @@ public final class ReleaseReference {
 
     /**
      * Get the environmentDefinitionId property: Release environment definition ID.
-     *
+     * 
      * @return the environmentDefinitionId value.
      */
     public Integer environmentDefinitionId() {
@@ -166,7 +170,7 @@ public final class ReleaseReference {
 
     /**
      * Set the environmentDefinitionId property: Release environment definition ID.
-     *
+     * 
      * @param environmentDefinitionId the environmentDefinitionId value to set.
      * @return the ReleaseReference object itself.
      */
@@ -177,7 +181,7 @@ public final class ReleaseReference {
 
     /**
      * Get the environmentDefinitionName property: Release environment definition name.
-     *
+     * 
      * @return the environmentDefinitionName value.
      */
     public String environmentDefinitionName() {
@@ -186,7 +190,7 @@ public final class ReleaseReference {
 
     /**
      * Set the environmentDefinitionName property: Release environment definition name.
-     *
+     * 
      * @param environmentDefinitionName the environmentDefinitionName value to set.
      * @return the ReleaseReference object itself.
      */
@@ -197,7 +201,7 @@ public final class ReleaseReference {
 
     /**
      * Get the environmentId property: Release environment ID.
-     *
+     * 
      * @return the environmentId value.
      */
     public Integer environmentId() {
@@ -206,7 +210,7 @@ public final class ReleaseReference {
 
     /**
      * Set the environmentId property: Release environment ID.
-     *
+     * 
      * @param environmentId the environmentId value to set.
      * @return the ReleaseReference object itself.
      */
@@ -217,7 +221,7 @@ public final class ReleaseReference {
 
     /**
      * Get the environmentName property: Release environment name.
-     *
+     * 
      * @return the environmentName value.
      */
     public String environmentName() {
@@ -226,7 +230,7 @@ public final class ReleaseReference {
 
     /**
      * Set the environmentName property: Release environment name.
-     *
+     * 
      * @param environmentName the environmentName value to set.
      * @return the ReleaseReference object itself.
      */
@@ -237,7 +241,7 @@ public final class ReleaseReference {
 
     /**
      * Get the id property: Release ID.
-     *
+     * 
      * @return the id value.
      */
     public Integer id() {
@@ -246,7 +250,7 @@ public final class ReleaseReference {
 
     /**
      * Set the id property: Release ID.
-     *
+     * 
      * @param id the id value to set.
      * @return the ReleaseReference object itself.
      */
@@ -257,7 +261,7 @@ public final class ReleaseReference {
 
     /**
      * Get the name property: Release name.
-     *
+     * 
      * @return the name value.
      */
     public String name() {
@@ -266,7 +270,7 @@ public final class ReleaseReference {
 
     /**
      * Set the name property: Release name.
-     *
+     * 
      * @param name the name value to set.
      * @return the ReleaseReference object itself.
      */
@@ -277,7 +281,7 @@ public final class ReleaseReference {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

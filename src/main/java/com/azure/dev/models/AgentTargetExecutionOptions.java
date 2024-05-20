@@ -5,15 +5,13 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Additional options for running phases against an agent queue. */
+/**
+ * Additional options for running phases against an agent queue.
+ */
 @Fluent
 public class AgentTargetExecutionOptions {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(AgentTargetExecutionOptions.class);
-
     /*
      * Indicates the type of execution options.
      */
@@ -21,8 +19,14 @@ public class AgentTargetExecutionOptions {
     private Integer type;
 
     /**
+     * Creates an instance of AgentTargetExecutionOptions class.
+     */
+    public AgentTargetExecutionOptions() {
+    }
+
+    /**
      * Get the type property: Indicates the type of execution options.
-     *
+     * 
      * @return the type value.
      */
     public Integer type() {
@@ -31,7 +35,7 @@ public class AgentTargetExecutionOptions {
 
     /**
      * Set the type property: Indicates the type of execution options.
-     *
+     * 
      * @param type the type value to set.
      * @return the AgentTargetExecutionOptions object itself.
      */
@@ -42,7 +46,7 @@ public class AgentTargetExecutionOptions {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

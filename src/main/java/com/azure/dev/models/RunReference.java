@@ -5,15 +5,13 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** The RunReference model. */
+/**
+ * The RunReference model.
+ */
 @Fluent
 public class RunReference {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(RunReference.class);
-
     /*
      * The id property.
      */
@@ -27,8 +25,14 @@ public class RunReference {
     private String name;
 
     /**
+     * Creates an instance of RunReference class.
+     */
+    public RunReference() {
+    }
+
+    /**
      * Get the id property: The id property.
-     *
+     * 
      * @return the id value.
      */
     public Integer id() {
@@ -37,7 +41,7 @@ public class RunReference {
 
     /**
      * Set the id property: The id property.
-     *
+     * 
      * @param id the id value to set.
      * @return the RunReference object itself.
      */
@@ -48,7 +52,7 @@ public class RunReference {
 
     /**
      * Get the name property: The name property.
-     *
+     * 
      * @return the name value.
      */
     public String name() {
@@ -57,7 +61,7 @@ public class RunReference {
 
     /**
      * Set the name property: The name property.
-     *
+     * 
      * @param name the name value to set.
      * @return the RunReference object itself.
      */
@@ -68,7 +72,7 @@ public class RunReference {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

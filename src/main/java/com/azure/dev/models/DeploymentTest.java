@@ -5,15 +5,13 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Deployment information for type "Test". */
+/**
+ * Deployment information for type "Test".
+ */
 @Fluent
 public final class DeploymentTest extends Deployment {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(DeploymentTest.class);
-
     /*
      * The runId property.
      */
@@ -21,8 +19,14 @@ public final class DeploymentTest extends Deployment {
     private Integer runId;
 
     /**
+     * Creates an instance of DeploymentTest class.
+     */
+    public DeploymentTest() {
+    }
+
+    /**
      * Get the runId property: The runId property.
-     *
+     * 
      * @return the runId value.
      */
     public Integer runId() {
@@ -31,7 +35,7 @@ public final class DeploymentTest extends Deployment {
 
     /**
      * Set the runId property: The runId property.
-     *
+     * 
      * @param runId the runId value to set.
      * @return the DeploymentTest object itself.
      */
@@ -40,7 +44,9 @@ public final class DeploymentTest extends Deployment {
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public DeploymentTest withType(String type) {
         super.withType(type);
@@ -49,7 +55,7 @@ public final class DeploymentTest extends Deployment {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     @Override

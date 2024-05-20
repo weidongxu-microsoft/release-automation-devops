@@ -23,24 +23,27 @@ import com.azure.core.http.rest.RestProxy;
 import com.azure.core.management.exception.ManagementException;
 import com.azure.core.util.Context;
 import com.azure.core.util.FluxUtil;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.fluent.SettingsClient;
 import com.azure.dev.fluent.models.BuildSettingsInner;
 import reactor.core.publisher.Mono;
 
-/** An instance of this class provides access to all the operations defined in SettingsClient. */
+/**
+ * An instance of this class provides access to all the operations defined in SettingsClient.
+ */
 public final class SettingsClientImpl implements SettingsClient {
-    private final ClientLogger logger = new ClientLogger(SettingsClientImpl.class);
-
-    /** The proxy service used to perform REST calls. */
+    /**
+     * The proxy service used to perform REST calls.
+     */
     private final SettingsService service;
 
-    /** The service client containing this operation class. */
+    /**
+     * The service client containing this operation class.
+     */
     private final DevClientImpl client;
 
     /**
      * Initializes an instance of SettingsClientImpl.
-     *
+     * 
      * @param client the instance of the service client containing this operation class.
      */
     SettingsClientImpl(DevClientImpl client) {
@@ -54,50 +57,40 @@ public final class SettingsClientImpl implements SettingsClient {
      */
     @Host("{$host}")
     @ServiceInterface(name = "DevClientSettings")
-    private interface SettingsService {
-        @Headers({"Content-Type: application/json"})
+    public interface SettingsService {
+        @Headers({ "Content-Type: application/json" })
         @Get("/{organization}/{project}/_apis/build/settings")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<BuildSettingsInner>> get(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<BuildSettingsInner>> get(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
         @Patch("/{organization}/{project}/_apis/build/settings")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<BuildSettingsInner>> update(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
-            @QueryParam("api-version") String apiVersion,
-            @BodyParam("application/json") BuildSettingsInner body,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<BuildSettingsInner>> update(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
+            @QueryParam("api-version") String apiVersion, @BodyParam("application/json") BuildSettingsInner body,
+            @HeaderParam("Accept") String accept, Context context);
     }
 
     /**
      * Gets the build settings.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the build settings.
+     * @return the build settings along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<Response<BuildSettingsInner>> getWithResponseAsync(String organization, String project) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -105,33 +98,30 @@ public final class SettingsClientImpl implements SettingsClient {
         if (project == null) {
             return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context -> service.get(this.client.getEndpoint(), organization, project, apiVersion, accept, context))
+            .withContext(context -> service.get(this.client.getEndpoint(), organization, project,
+                this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Gets the build settings.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the build settings.
+     * @return the build settings along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<BuildSettingsInner>> getWithResponseAsync(
-        String organization, String project, Context context) {
+    private Mono<Response<BuildSettingsInner>> getWithResponseAsync(String organization, String project,
+        Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -139,38 +129,46 @@ public final class SettingsClientImpl implements SettingsClient {
         if (project == null) {
             return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service.get(this.client.getEndpoint(), organization, project, apiVersion, accept, context);
+        return service.get(this.client.getEndpoint(), organization, project, this.client.getApiVersion(), accept,
+            context);
     }
 
     /**
      * Gets the build settings.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the build settings.
+     * @return the build settings on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<BuildSettingsInner> getAsync(String organization, String project) {
-        return getWithResponseAsync(organization, project)
-            .flatMap(
-                (Response<BuildSettingsInner> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+        return getWithResponseAsync(organization, project).flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Gets the build settings.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the build settings along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<BuildSettingsInner> getWithResponse(String organization, String project, Context context) {
+        return getWithResponseAsync(organization, project, context).block();
+    }
+
+    /**
+     * Gets the build settings.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -180,44 +178,27 @@ public final class SettingsClientImpl implements SettingsClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public BuildSettingsInner get(String organization, String project) {
-        return getAsync(organization, project).block();
-    }
-
-    /**
-     * Gets the build settings.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the build settings.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<BuildSettingsInner> getWithResponse(String organization, String project, Context context) {
-        return getWithResponseAsync(organization, project, context).block();
+        return getWithResponse(organization, project, Context.NONE).getValue();
     }
 
     /**
      * Updates the build settings.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param body The new settings.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return represents system-wide build settings.
+     * @return represents system-wide build settings along with {@link Response} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<BuildSettingsInner>> updateWithResponseAsync(
-        String organization, String project, BuildSettingsInner body) {
+    private Mono<Response<BuildSettingsInner>> updateWithResponseAsync(String organization, String project,
+        BuildSettingsInner body) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -230,18 +211,16 @@ public final class SettingsClientImpl implements SettingsClient {
         } else {
             body.validate();
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service.update(this.client.getEndpoint(), organization, project, apiVersion, body, accept, context))
+            .withContext(context -> service.update(this.client.getEndpoint(), organization, project,
+                this.client.getApiVersion(), body, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Updates the build settings.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param body The new settings.
@@ -249,16 +228,15 @@ public final class SettingsClientImpl implements SettingsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return represents system-wide build settings.
+     * @return represents system-wide build settings along with {@link Response} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<BuildSettingsInner>> updateWithResponseAsync(
-        String organization, String project, BuildSettingsInner body, Context context) {
+    private Mono<Response<BuildSettingsInner>> updateWithResponseAsync(String organization, String project,
+        BuildSettingsInner body, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -271,39 +249,49 @@ public final class SettingsClientImpl implements SettingsClient {
         } else {
             body.validate();
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service.update(this.client.getEndpoint(), organization, project, apiVersion, body, accept, context);
+        return service.update(this.client.getEndpoint(), organization, project, this.client.getApiVersion(), body,
+            accept, context);
     }
 
     /**
      * Updates the build settings.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param body The new settings.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return represents system-wide build settings.
+     * @return represents system-wide build settings on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<BuildSettingsInner> updateAsync(String organization, String project, BuildSettingsInner body) {
-        return updateWithResponseAsync(organization, project, body)
-            .flatMap(
-                (Response<BuildSettingsInner> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+        return updateWithResponseAsync(organization, project, body).flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Updates the build settings.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param body The new settings.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return represents system-wide build settings along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<BuildSettingsInner> updateWithResponse(String organization, String project, BuildSettingsInner body,
+        Context context) {
+        return updateWithResponseAsync(organization, project, body, context).block();
+    }
+
+    /**
+     * Updates the build settings.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param body The new settings.
@@ -314,24 +302,6 @@ public final class SettingsClientImpl implements SettingsClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public BuildSettingsInner update(String organization, String project, BuildSettingsInner body) {
-        return updateAsync(organization, project, body).block();
-    }
-
-    /**
-     * Updates the build settings.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param body The new settings.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return represents system-wide build settings.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<BuildSettingsInner> updateWithResponse(
-        String organization, String project, BuildSettingsInner body, Context context) {
-        return updateWithResponseAsync(organization, project, body, context).block();
+        return updateWithResponse(organization, project, body, Context.NONE).getValue();
     }
 }

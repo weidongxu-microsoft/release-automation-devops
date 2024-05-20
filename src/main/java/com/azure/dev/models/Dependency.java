@@ -5,18 +5,15 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Represents a dependency. */
+/**
+ * Represents a dependency.
+ */
 @Fluent
 public final class Dependency {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(Dependency.class);
-
     /*
-     * The event. The dependency is satisfied when the referenced object emits
-     * this event.
+     * The event. The dependency is satisfied when the referenced object emits this event.
      */
     @JsonProperty(value = "event")
     private String event;
@@ -28,8 +25,14 @@ public final class Dependency {
     private String scope;
 
     /**
+     * Creates an instance of Dependency class.
+     */
+    public Dependency() {
+    }
+
+    /**
      * Get the event property: The event. The dependency is satisfied when the referenced object emits this event.
-     *
+     * 
      * @return the event value.
      */
     public String event() {
@@ -38,7 +41,7 @@ public final class Dependency {
 
     /**
      * Set the event property: The event. The dependency is satisfied when the referenced object emits this event.
-     *
+     * 
      * @param event the event value to set.
      * @return the Dependency object itself.
      */
@@ -49,7 +52,7 @@ public final class Dependency {
 
     /**
      * Get the scope property: The scope. This names the object referenced by the dependency.
-     *
+     * 
      * @return the scope value.
      */
     public String scope() {
@@ -58,7 +61,7 @@ public final class Dependency {
 
     /**
      * Set the scope property: The scope. This names the object referenced by the dependency.
-     *
+     * 
      * @param scope the scope value to set.
      * @return the Dependency object itself.
      */
@@ -69,7 +72,7 @@ public final class Dependency {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

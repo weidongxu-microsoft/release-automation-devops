@@ -7,18 +7,28 @@ package com.azure.dev.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/** Defines values for AuditAction. */
+/**
+ * The change type (add, edit, delete).
+ */
 public enum AuditAction {
-    /** Enum value add. */
+    /**
+     * Enum value add.
+     */
     ADD("add"),
 
-    /** Enum value update. */
+    /**
+     * Enum value update.
+     */
     UPDATE("update"),
 
-    /** Enum value delete. */
+    /**
+     * Enum value delete.
+     */
     DELETE("delete");
 
-    /** The actual serialized value for a AuditAction instance. */
+    /**
+     * The actual serialized value for a AuditAction instance.
+     */
     private final String value;
 
     AuditAction(String value) {
@@ -27,12 +37,15 @@ public enum AuditAction {
 
     /**
      * Parses a serialized value to a AuditAction instance.
-     *
+     * 
      * @param value the serialized value to parse.
      * @return the parsed AuditAction object, or null if unable to parse.
      */
     @JsonCreator
     public static AuditAction fromString(String value) {
+        if (value == null) {
+            return null;
+        }
         AuditAction[] items = AuditAction.values();
         for (AuditAction item : items) {
             if (item.toString().equalsIgnoreCase(value)) {
@@ -42,6 +55,9 @@ public enum AuditAction {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @JsonValue
     @Override
     public String toString() {

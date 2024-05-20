@@ -5,17 +5,15 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
 
-/** Represents the application of an optional behavior to a build definition. */
+/**
+ * Represents the application of an optional behavior to a build definition.
+ */
 @Fluent
 public final class BuildOption {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(BuildOption.class);
-
     /*
      * A reference to the build option.
      */
@@ -36,8 +34,14 @@ public final class BuildOption {
     private Map<String, String> inputs;
 
     /**
+     * Creates an instance of BuildOption class.
+     */
+    public BuildOption() {
+    }
+
+    /**
      * Get the definition property: A reference to the build option.
-     *
+     * 
      * @return the definition value.
      */
     public BuildOptionDefinitionReference definition() {
@@ -46,7 +50,7 @@ public final class BuildOption {
 
     /**
      * Set the definition property: A reference to the build option.
-     *
+     * 
      * @param definition the definition value to set.
      * @return the BuildOption object itself.
      */
@@ -57,7 +61,7 @@ public final class BuildOption {
 
     /**
      * Get the enabled property: Indicates whether the behavior is enabled.
-     *
+     * 
      * @return the enabled value.
      */
     public Boolean enabled() {
@@ -66,7 +70,7 @@ public final class BuildOption {
 
     /**
      * Set the enabled property: Indicates whether the behavior is enabled.
-     *
+     * 
      * @param enabled the enabled value to set.
      * @return the BuildOption object itself.
      */
@@ -77,7 +81,7 @@ public final class BuildOption {
 
     /**
      * Get the inputs property: Dictionary of &lt;string&gt;.
-     *
+     * 
      * @return the inputs value.
      */
     public Map<String, String> inputs() {
@@ -86,7 +90,7 @@ public final class BuildOption {
 
     /**
      * Set the inputs property: Dictionary of &lt;string&gt;.
-     *
+     * 
      * @param inputs the inputs value to set.
      * @return the BuildOption object itself.
      */
@@ -97,7 +101,7 @@ public final class BuildOption {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

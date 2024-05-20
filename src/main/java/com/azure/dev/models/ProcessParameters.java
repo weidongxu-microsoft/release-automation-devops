@@ -5,16 +5,14 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** The ProcessParameters model. */
+/**
+ * The ProcessParameters model.
+ */
 @Fluent
 public final class ProcessParameters {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(ProcessParameters.class);
-
     /*
      * The dataSourceBindings property.
      */
@@ -34,8 +32,14 @@ public final class ProcessParameters {
     private List<TaskSourceDefinitionBase> sourceDefinitions;
 
     /**
+     * Creates an instance of ProcessParameters class.
+     */
+    public ProcessParameters() {
+    }
+
+    /**
      * Get the dataSourceBindings property: The dataSourceBindings property.
-     *
+     * 
      * @return the dataSourceBindings value.
      */
     public List<DataSourceBindingBase> dataSourceBindings() {
@@ -44,7 +48,7 @@ public final class ProcessParameters {
 
     /**
      * Set the dataSourceBindings property: The dataSourceBindings property.
-     *
+     * 
      * @param dataSourceBindings the dataSourceBindings value to set.
      * @return the ProcessParameters object itself.
      */
@@ -55,7 +59,7 @@ public final class ProcessParameters {
 
     /**
      * Get the inputs property: The inputs property.
-     *
+     * 
      * @return the inputs value.
      */
     public List<TaskInputDefinitionBase> inputs() {
@@ -64,7 +68,7 @@ public final class ProcessParameters {
 
     /**
      * Set the inputs property: The inputs property.
-     *
+     * 
      * @param inputs the inputs value to set.
      * @return the ProcessParameters object itself.
      */
@@ -75,7 +79,7 @@ public final class ProcessParameters {
 
     /**
      * Get the sourceDefinitions property: The sourceDefinitions property.
-     *
+     * 
      * @return the sourceDefinitions value.
      */
     public List<TaskSourceDefinitionBase> sourceDefinitions() {
@@ -84,7 +88,7 @@ public final class ProcessParameters {
 
     /**
      * Set the sourceDefinitions property: The sourceDefinitions property.
-     *
+     * 
      * @param sourceDefinitions the sourceDefinitions value to set.
      * @return the ProcessParameters object itself.
      */
@@ -95,7 +99,7 @@ public final class ProcessParameters {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

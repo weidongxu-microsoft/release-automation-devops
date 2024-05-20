@@ -7,18 +7,28 @@ package com.azure.dev.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/** Defines values for ValidationResult. */
+/**
+ * The result.
+ */
 public enum ValidationResult {
-    /** Enum value ok. */
+    /**
+     * Enum value ok.
+     */
     OK("ok"),
 
-    /** Enum value warning. */
+    /**
+     * Enum value warning.
+     */
     WARNING("warning"),
 
-    /** Enum value error. */
+    /**
+     * Enum value error.
+     */
     ERROR("error");
 
-    /** The actual serialized value for a ValidationResult instance. */
+    /**
+     * The actual serialized value for a ValidationResult instance.
+     */
     private final String value;
 
     ValidationResult(String value) {
@@ -27,12 +37,15 @@ public enum ValidationResult {
 
     /**
      * Parses a serialized value to a ValidationResult instance.
-     *
+     * 
      * @param value the serialized value to parse.
      * @return the parsed ValidationResult object, or null if unable to parse.
      */
     @JsonCreator
     public static ValidationResult fromString(String value) {
+        if (value == null) {
+            return null;
+        }
         ValidationResult[] items = ValidationResult.values();
         for (ValidationResult item : items) {
             if (item.toString().equalsIgnoreCase(value)) {
@@ -42,6 +55,9 @@ public enum ValidationResult {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @JsonValue
     @Override
     public String toString() {

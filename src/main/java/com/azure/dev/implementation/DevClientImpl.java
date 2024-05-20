@@ -5,6 +5,7 @@
 package com.azure.dev.implementation;
 
 import com.azure.core.annotation.ServiceClient;
+import com.azure.core.http.HttpHeaderName;
 import com.azure.core.http.HttpHeaders;
 import com.azure.core.http.HttpPipeline;
 import com.azure.core.http.HttpResponse;
@@ -12,9 +13,10 @@ import com.azure.core.http.rest.Response;
 import com.azure.core.management.AzureEnvironment;
 import com.azure.core.management.exception.ManagementError;
 import com.azure.core.management.exception.ManagementException;
-import com.azure.core.management.polling.PollResult;
 import com.azure.core.management.polling.PollerFactory;
+import com.azure.core.management.polling.PollResult;
 import com.azure.core.util.Context;
+import com.azure.core.util.CoreUtils;
 import com.azure.core.util.logging.ClientLogger;
 import com.azure.core.util.polling.AsyncPollResponse;
 import com.azure.core.util.polling.LongRunningOperationStatus;
@@ -31,16 +33,18 @@ import com.azure.dev.fluent.DefinitionsClient;
 import com.azure.dev.fluent.DevClient;
 import com.azure.dev.fluent.FoldersClient;
 import com.azure.dev.fluent.GeneralSettingsClient;
+import com.azure.dev.fluent.HistoriesClient;
 import com.azure.dev.fluent.LatestsClient;
 import com.azure.dev.fluent.LeasesClient;
 import com.azure.dev.fluent.LogsClient;
 import com.azure.dev.fluent.MetricsClient;
 import com.azure.dev.fluent.OptionsClient;
 import com.azure.dev.fluent.PipelinesClient;
+import com.azure.dev.fluent.PreviewsClient;
 import com.azure.dev.fluent.PropertiesClient;
 import com.azure.dev.fluent.ReportsClient;
-import com.azure.dev.fluent.ResourceUsagesClient;
 import com.azure.dev.fluent.ResourcesClient;
+import com.azure.dev.fluent.ResourceUsagesClient;
 import com.azure.dev.fluent.RetentionsClient;
 import com.azure.dev.fluent.RunsClient;
 import com.azure.dev.fluent.SettingsClient;
@@ -50,399 +54,519 @@ import com.azure.dev.fluent.StatusClient;
 import com.azure.dev.fluent.TagsClient;
 import com.azure.dev.fluent.TemplatesClient;
 import com.azure.dev.fluent.TimelinesClient;
+import com.azure.dev.fluent.YamlsClient;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
-import java.util.Map;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-/** Initializes a new instance of the DevClientImpl type. */
+/**
+ * Initializes a new instance of the DevClientImpl type.
+ */
 @ServiceClient(builder = DevClientBuilder.class)
 public final class DevClientImpl implements DevClient {
-    private final ClientLogger logger = new ClientLogger(DevClientImpl.class);
-
-    /** server parameter. */
+    /**
+     * server parameter.
+     */
     private final String endpoint;
 
     /**
      * Gets server parameter.
-     *
+     * 
      * @return the endpoint value.
      */
     public String getEndpoint() {
         return this.endpoint;
     }
 
-    /** The HTTP pipeline to send requests through. */
+    /**
+     * Api Version.
+     */
+    private final String apiVersion;
+
+    /**
+     * Gets Api Version.
+     * 
+     * @return the apiVersion value.
+     */
+    public String getApiVersion() {
+        return this.apiVersion;
+    }
+
+    /**
+     * The HTTP pipeline to send requests through.
+     */
     private final HttpPipeline httpPipeline;
 
     /**
      * Gets The HTTP pipeline to send requests through.
-     *
+     * 
      * @return the httpPipeline value.
      */
     public HttpPipeline getHttpPipeline() {
         return this.httpPipeline;
     }
 
-    /** The serializer to serialize an object into a string. */
+    /**
+     * The serializer to serialize an object into a string.
+     */
     private final SerializerAdapter serializerAdapter;
 
     /**
      * Gets The serializer to serialize an object into a string.
-     *
+     * 
      * @return the serializerAdapter value.
      */
     SerializerAdapter getSerializerAdapter() {
         return this.serializerAdapter;
     }
 
-    /** The default poll interval for long-running operation. */
+    /**
+     * The default poll interval for long-running operation.
+     */
     private final Duration defaultPollInterval;
 
     /**
      * Gets The default poll interval for long-running operation.
-     *
+     * 
      * @return the defaultPollInterval value.
      */
     public Duration getDefaultPollInterval() {
         return this.defaultPollInterval;
     }
 
-    /** The ControllersClient object to access its operations. */
+    /**
+     * The ControllersClient object to access its operations.
+     */
     private final ControllersClient controllers;
 
     /**
      * Gets the ControllersClient object to access its operations.
-     *
+     * 
      * @return the ControllersClient object.
      */
     public ControllersClient getControllers() {
         return this.controllers;
     }
 
-    /** The ResourceUsagesClient object to access its operations. */
+    /**
+     * The ResourceUsagesClient object to access its operations.
+     */
     private final ResourceUsagesClient resourceUsages;
 
     /**
      * Gets the ResourceUsagesClient object to access its operations.
-     *
+     * 
      * @return the ResourceUsagesClient object.
      */
     public ResourceUsagesClient getResourceUsages() {
         return this.resourceUsages;
     }
 
-    /** The BadgesClient object to access its operations. */
+    /**
+     * The HistoriesClient object to access its operations.
+     */
+    private final HistoriesClient histories;
+
+    /**
+     * Gets the HistoriesClient object to access its operations.
+     * 
+     * @return the HistoriesClient object.
+     */
+    public HistoriesClient getHistories() {
+        return this.histories;
+    }
+
+    /**
+     * The BadgesClient object to access its operations.
+     */
     private final BadgesClient badges;
 
     /**
      * Gets the BadgesClient object to access its operations.
-     *
+     * 
      * @return the BadgesClient object.
      */
     public BadgesClient getBadges() {
         return this.badges;
     }
 
-    /** The AuthorizedresourcesClient object to access its operations. */
+    /**
+     * The AuthorizedresourcesClient object to access its operations.
+     */
     private final AuthorizedresourcesClient authorizedresources;
 
     /**
      * Gets the AuthorizedresourcesClient object to access its operations.
-     *
+     * 
      * @return the AuthorizedresourcesClient object.
      */
     public AuthorizedresourcesClient getAuthorizedresources() {
         return this.authorizedresources;
     }
 
-    /** The BuildsClient object to access its operations. */
+    /**
+     * The BuildsClient object to access its operations.
+     */
     private final BuildsClient builds;
 
     /**
      * Gets the BuildsClient object to access its operations.
-     *
+     * 
      * @return the BuildsClient object.
      */
     public BuildsClient getBuilds() {
         return this.builds;
     }
 
-    /** The AttachmentsClient object to access its operations. */
+    /**
+     * The AttachmentsClient object to access its operations.
+     */
     private final AttachmentsClient attachments;
 
     /**
      * Gets the AttachmentsClient object to access its operations.
-     *
+     * 
      * @return the AttachmentsClient object.
      */
     public AttachmentsClient getAttachments() {
         return this.attachments;
     }
 
-    /** The ArtifactsClient object to access its operations. */
+    /**
+     * The ArtifactsClient object to access its operations.
+     */
     private final ArtifactsClient artifacts;
 
     /**
      * Gets the ArtifactsClient object to access its operations.
-     *
+     * 
      * @return the ArtifactsClient object.
      */
     public ArtifactsClient getArtifacts() {
         return this.artifacts;
     }
 
-    /** The PropertiesClient object to access its operations. */
+    /**
+     * The PropertiesClient object to access its operations.
+     */
     private final PropertiesClient properties;
 
     /**
      * Gets the PropertiesClient object to access its operations.
-     *
+     * 
      * @return the PropertiesClient object.
      */
     public PropertiesClient getProperties() {
         return this.properties;
     }
 
-    /** The ReportsClient object to access its operations. */
+    /**
+     * The ReportsClient object to access its operations.
+     */
     private final ReportsClient reports;
 
     /**
      * Gets the ReportsClient object to access its operations.
-     *
+     * 
      * @return the ReportsClient object.
      */
     public ReportsClient getReports() {
         return this.reports;
     }
 
-    /** The StagesClient object to access its operations. */
+    /**
+     * The StagesClient object to access its operations.
+     */
     private final StagesClient stages;
 
     /**
      * Gets the StagesClient object to access its operations.
-     *
+     * 
      * @return the StagesClient object.
      */
     public StagesClient getStages() {
         return this.stages;
     }
 
-    /** The TagsClient object to access its operations. */
+    /**
+     * The TagsClient object to access its operations.
+     */
     private final TagsClient tags;
 
     /**
      * Gets the TagsClient object to access its operations.
-     *
+     * 
      * @return the TagsClient object.
      */
     public TagsClient getTags() {
         return this.tags;
     }
 
-    /** The TimelinesClient object to access its operations. */
+    /**
+     * The TimelinesClient object to access its operations.
+     */
     private final TimelinesClient timelines;
 
     /**
      * Gets the TimelinesClient object to access its operations.
-     *
+     * 
      * @return the TimelinesClient object.
      */
     public TimelinesClient getTimelines() {
         return this.timelines;
     }
 
-    /** The DefinitionsClient object to access its operations. */
+    /**
+     * The DefinitionsClient object to access its operations.
+     */
     private final DefinitionsClient definitions;
 
     /**
      * Gets the DefinitionsClient object to access its operations.
-     *
+     * 
      * @return the DefinitionsClient object.
      */
     public DefinitionsClient getDefinitions() {
         return this.definitions;
     }
 
-    /** The MetricsClient object to access its operations. */
+    /**
+     * The MetricsClient object to access its operations.
+     */
     private final MetricsClient metrics;
 
     /**
      * Gets the MetricsClient object to access its operations.
-     *
+     * 
      * @return the MetricsClient object.
      */
     public MetricsClient getMetrics() {
         return this.metrics;
     }
 
-    /** The ResourcesClient object to access its operations. */
+    /**
+     * The ResourcesClient object to access its operations.
+     */
     private final ResourcesClient resources;
 
     /**
      * Gets the ResourcesClient object to access its operations.
-     *
+     * 
      * @return the ResourcesClient object.
      */
     public ResourcesClient getResources() {
         return this.resources;
     }
 
-    /** The TemplatesClient object to access its operations. */
+    /**
+     * The YamlsClient object to access its operations.
+     */
+    private final YamlsClient yamls;
+
+    /**
+     * Gets the YamlsClient object to access its operations.
+     * 
+     * @return the YamlsClient object.
+     */
+    public YamlsClient getYamls() {
+        return this.yamls;
+    }
+
+    /**
+     * The TemplatesClient object to access its operations.
+     */
     private final TemplatesClient templates;
 
     /**
      * Gets the TemplatesClient object to access its operations.
-     *
+     * 
      * @return the TemplatesClient object.
      */
     public TemplatesClient getTemplates() {
         return this.templates;
     }
 
-    /** The FoldersClient object to access its operations. */
+    /**
+     * The FoldersClient object to access its operations.
+     */
     private final FoldersClient folders;
 
     /**
      * Gets the FoldersClient object to access its operations.
-     *
+     * 
      * @return the FoldersClient object.
      */
     public FoldersClient getFolders() {
         return this.folders;
     }
 
-    /** The GeneralSettingsClient object to access its operations. */
+    /**
+     * The GeneralSettingsClient object to access its operations.
+     */
     private final GeneralSettingsClient generalSettings;
 
     /**
      * Gets the GeneralSettingsClient object to access its operations.
-     *
+     * 
      * @return the GeneralSettingsClient object.
      */
     public GeneralSettingsClient getGeneralSettings() {
         return this.generalSettings;
     }
 
-    /** The LatestsClient object to access its operations. */
+    /**
+     * The LatestsClient object to access its operations.
+     */
     private final LatestsClient latests;
 
     /**
      * Gets the LatestsClient object to access its operations.
-     *
+     * 
      * @return the LatestsClient object.
      */
     public LatestsClient getLatests() {
         return this.latests;
     }
 
-    /** The OptionsClient object to access its operations. */
+    /**
+     * The OptionsClient object to access its operations.
+     */
     private final OptionsClient options;
 
     /**
      * Gets the OptionsClient object to access its operations.
-     *
+     * 
      * @return the OptionsClient object.
      */
     public OptionsClient getOptions() {
         return this.options;
     }
 
-    /** The RetentionsClient object to access its operations. */
+    /**
+     * The RetentionsClient object to access its operations.
+     */
     private final RetentionsClient retentions;
 
     /**
      * Gets the RetentionsClient object to access its operations.
-     *
+     * 
      * @return the RetentionsClient object.
      */
     public RetentionsClient getRetentions() {
         return this.retentions;
     }
 
-    /** The LeasesClient object to access its operations. */
+    /**
+     * The LeasesClient object to access its operations.
+     */
     private final LeasesClient leases;
 
     /**
      * Gets the LeasesClient object to access its operations.
-     *
+     * 
      * @return the LeasesClient object.
      */
     public LeasesClient getLeases() {
         return this.leases;
     }
 
-    /** The SettingsClient object to access its operations. */
+    /**
+     * The SettingsClient object to access its operations.
+     */
     private final SettingsClient settings;
 
     /**
      * Gets the SettingsClient object to access its operations.
-     *
+     * 
      * @return the SettingsClient object.
      */
     public SettingsClient getSettings() {
         return this.settings;
     }
 
-    /** The StatusClient object to access its operations. */
+    /**
+     * The StatusClient object to access its operations.
+     */
     private final StatusClient status;
 
     /**
      * Gets the StatusClient object to access its operations.
-     *
+     * 
      * @return the StatusClient object.
      */
     public StatusClient getStatus() {
         return this.status;
     }
 
-    /** The SourceProvidersClient object to access its operations. */
+    /**
+     * The SourceProvidersClient object to access its operations.
+     */
     private final SourceProvidersClient sourceProviders;
 
     /**
      * Gets the SourceProvidersClient object to access its operations.
-     *
+     * 
      * @return the SourceProvidersClient object.
      */
     public SourceProvidersClient getSourceProviders() {
         return this.sourceProviders;
     }
 
-    /** The PipelinesClient object to access its operations. */
+    /**
+     * The PipelinesClient object to access its operations.
+     */
     private final PipelinesClient pipelines;
 
     /**
      * Gets the PipelinesClient object to access its operations.
-     *
+     * 
      * @return the PipelinesClient object.
      */
     public PipelinesClient getPipelines() {
         return this.pipelines;
     }
 
-    /** The RunsClient object to access its operations. */
+    /**
+     * The PreviewsClient object to access its operations.
+     */
+    private final PreviewsClient previews;
+
+    /**
+     * Gets the PreviewsClient object to access its operations.
+     * 
+     * @return the PreviewsClient object.
+     */
+    public PreviewsClient getPreviews() {
+        return this.previews;
+    }
+
+    /**
+     * The RunsClient object to access its operations.
+     */
     private final RunsClient runs;
 
     /**
      * Gets the RunsClient object to access its operations.
-     *
+     * 
      * @return the RunsClient object.
      */
     public RunsClient getRuns() {
         return this.runs;
     }
 
-    /** The LogsClient object to access its operations. */
+    /**
+     * The LogsClient object to access its operations.
+     */
     private final LogsClient logs;
 
     /**
      * Gets the LogsClient object to access its operations.
-     *
+     * 
      * @return the LogsClient object.
      */
     public LogsClient getLogs() {
@@ -451,25 +575,23 @@ public final class DevClientImpl implements DevClient {
 
     /**
      * Initializes an instance of DevClient client.
-     *
+     * 
      * @param httpPipeline The HTTP pipeline to send requests through.
      * @param serializerAdapter The serializer to serialize an object into a string.
      * @param defaultPollInterval The default poll interval for long-running operation.
      * @param environment The Azure environment.
      * @param endpoint server parameter.
      */
-    DevClientImpl(
-        HttpPipeline httpPipeline,
-        SerializerAdapter serializerAdapter,
-        Duration defaultPollInterval,
-        AzureEnvironment environment,
-        String endpoint) {
+    DevClientImpl(HttpPipeline httpPipeline, SerializerAdapter serializerAdapter, Duration defaultPollInterval,
+        AzureEnvironment environment, String endpoint) {
         this.httpPipeline = httpPipeline;
         this.serializerAdapter = serializerAdapter;
         this.defaultPollInterval = defaultPollInterval;
         this.endpoint = endpoint;
+        this.apiVersion = "7.2-preview";
         this.controllers = new ControllersClientImpl(this);
         this.resourceUsages = new ResourceUsagesClientImpl(this);
+        this.histories = new HistoriesClientImpl(this);
         this.badges = new BadgesClientImpl(this);
         this.authorizedresources = new AuthorizedresourcesClientImpl(this);
         this.builds = new BuildsClientImpl(this);
@@ -483,6 +605,7 @@ public final class DevClientImpl implements DevClient {
         this.definitions = new DefinitionsClientImpl(this);
         this.metrics = new MetricsClientImpl(this);
         this.resources = new ResourcesClientImpl(this);
+        this.yamls = new YamlsClientImpl(this);
         this.templates = new TemplatesClientImpl(this);
         this.folders = new FoldersClientImpl(this);
         this.generalSettings = new GeneralSettingsClientImpl(this);
@@ -494,13 +617,14 @@ public final class DevClientImpl implements DevClient {
         this.status = new StatusClientImpl(this);
         this.sourceProviders = new SourceProvidersClientImpl(this);
         this.pipelines = new PipelinesClientImpl(this);
+        this.previews = new PreviewsClientImpl(this);
         this.runs = new RunsClientImpl(this);
         this.logs = new LogsClientImpl(this);
     }
 
     /**
      * Gets default client context.
-     *
+     * 
      * @return the default client context.
      */
     public Context getContext() {
@@ -509,20 +633,17 @@ public final class DevClientImpl implements DevClient {
 
     /**
      * Merges default client context with provided context.
-     *
+     * 
      * @param context the context to be merged with default client context.
      * @return the merged context.
      */
     public Context mergeContext(Context context) {
-        for (Map.Entry<Object, Object> entry : this.getContext().getValues().entrySet()) {
-            context = context.addData(entry.getKey(), entry.getValue());
-        }
-        return context;
+        return CoreUtils.mergeContexts(this.getContext(), context);
     }
 
     /**
      * Gets long running operation result.
-     *
+     * 
      * @param activationResponse the response of activation operation.
      * @param httpPipeline the http pipeline.
      * @param pollResultType type of poll result.
@@ -532,26 +653,15 @@ public final class DevClientImpl implements DevClient {
      * @param <U> type of final result.
      * @return poller flux for poll result and final result.
      */
-    public <T, U> PollerFlux<PollResult<T>, U> getLroResult(
-        Mono<Response<Flux<ByteBuffer>>> activationResponse,
-        HttpPipeline httpPipeline,
-        Type pollResultType,
-        Type finalResultType,
-        Context context) {
-        return PollerFactory
-            .create(
-                serializerAdapter,
-                httpPipeline,
-                pollResultType,
-                finalResultType,
-                defaultPollInterval,
-                activationResponse,
-                context);
+    public <T, U> PollerFlux<PollResult<T>, U> getLroResult(Mono<Response<Flux<ByteBuffer>>> activationResponse,
+        HttpPipeline httpPipeline, Type pollResultType, Type finalResultType, Context context) {
+        return PollerFactory.create(serializerAdapter, httpPipeline, pollResultType, finalResultType,
+            defaultPollInterval, activationResponse, context);
     }
 
     /**
      * Gets the final result, or an error, based on last async poll response.
-     *
+     * 
      * @param response the last async poll response.
      * @param <T> type of poll result.
      * @param <U> type of final result.
@@ -564,24 +674,21 @@ public final class DevClientImpl implements DevClient {
             HttpResponse errorResponse = null;
             PollResult.Error lroError = response.getValue().getError();
             if (lroError != null) {
-                errorResponse =
-                    new HttpResponseImpl(
-                        lroError.getResponseStatusCode(), lroError.getResponseHeaders(), lroError.getResponseBody());
+                errorResponse = new HttpResponseImpl(lroError.getResponseStatusCode(), lroError.getResponseHeaders(),
+                    lroError.getResponseBody());
 
                 errorMessage = response.getValue().getError().getMessage();
                 String errorBody = response.getValue().getError().getResponseBody();
                 if (errorBody != null) {
                     // try to deserialize error body to ManagementError
                     try {
-                        managementError =
-                            this
-                                .getSerializerAdapter()
-                                .deserialize(errorBody, ManagementError.class, SerializerEncoding.JSON);
+                        managementError = this.getSerializerAdapter()
+                            .deserialize(errorBody, ManagementError.class, SerializerEncoding.JSON);
                         if (managementError.getCode() == null || managementError.getMessage() == null) {
                             managementError = null;
                         }
                     } catch (IOException | RuntimeException ioe) {
-                        logger.logThrowableAsWarning(ioe);
+                        LOGGER.logThrowableAsWarning(ioe);
                     }
                 }
             } else {
@@ -617,7 +724,7 @@ public final class DevClientImpl implements DevClient {
         }
 
         public String getHeaderValue(String s) {
-            return httpHeaders.getValue(s);
+            return httpHeaders.getValue(HttpHeaderName.fromString(s));
         }
 
         public HttpHeaders getHeaders() {
@@ -640,4 +747,6 @@ public final class DevClientImpl implements DevClient {
             return Mono.just(new String(responseBody, charset));
         }
     }
+
+    private static final ClientLogger LOGGER = new ClientLogger(DevClientImpl.class);
 }

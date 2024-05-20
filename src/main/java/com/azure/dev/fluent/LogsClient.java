@@ -12,11 +12,31 @@ import com.azure.dev.fluent.models.LogCollectionInner;
 import com.azure.dev.fluent.models.LogInner;
 import com.azure.dev.models.GetLogExpandOptions;
 
-/** An instance of this class provides access to all the operations defined in LogsClient. */
+/**
+ * An instance of this class provides access to all the operations defined in LogsClient.
+ */
 public interface LogsClient {
     /**
      * Get a list of logs from a pipeline run.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param pipelineId ID of the pipeline.
+     * @param runId ID of the run of that pipeline.
+     * @param expand Expand options. Default is None.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return a list of logs from a pipeline run along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Response<LogCollectionInner> listWithResponse(String organization, String project, int pipelineId, int runId,
+        GetLogExpandOptions expand, Context context);
+
+    /**
+     * Get a list of logs from a pipeline run.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param pipelineId ID of the pipeline.
@@ -30,26 +50,27 @@ public interface LogsClient {
     LogCollectionInner list(String organization, String project, int pipelineId, int runId);
 
     /**
-     * Get a list of logs from a pipeline run.
-     *
+     * Get a specific log from a pipeline run.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param pipelineId ID of the pipeline.
      * @param runId ID of the run of that pipeline.
+     * @param logId ID of the log.
      * @param expand Expand options. Default is None.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of logs from a pipeline run.
+     * @return a specific log from a pipeline run along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<LogCollectionInner> listWithResponse(
-        String organization, String project, int pipelineId, int runId, GetLogExpandOptions expand, Context context);
+    Response<LogInner> getWithResponse(String organization, String project, int pipelineId, int runId, int logId,
+        GetLogExpandOptions expand, Context context);
 
     /**
      * Get a specific log from a pipeline run.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param pipelineId ID of the pipeline.
@@ -62,29 +83,4 @@ public interface LogsClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     LogInner get(String organization, String project, int pipelineId, int runId, int logId);
-
-    /**
-     * Get a specific log from a pipeline run.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param pipelineId ID of the pipeline.
-     * @param runId ID of the run of that pipeline.
-     * @param logId ID of the log.
-     * @param expand Expand options. Default is None.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a specific log from a pipeline run.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<LogInner> getWithResponse(
-        String organization,
-        String project,
-        int pipelineId,
-        int runId,
-        int logId,
-        GetLogExpandOptions expand,
-        Context context);
 }

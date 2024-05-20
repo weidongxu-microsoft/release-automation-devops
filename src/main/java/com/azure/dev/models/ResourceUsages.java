@@ -7,11 +7,25 @@ package com.azure.dev.models;
 import com.azure.core.http.rest.Response;
 import com.azure.core.util.Context;
 
-/** Resource collection API of ResourceUsages. */
+/**
+ * Resource collection API of ResourceUsages.
+ */
 public interface ResourceUsages {
     /**
      * Gets information about build resources in the system.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return information about build resources in the system along with {@link Response}.
+     */
+    Response<BuildResourceUsage> getWithResponse(String organization, Context context);
+
+    /**
+     * Gets information about build resources in the system.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
@@ -19,16 +33,4 @@ public interface ResourceUsages {
      * @return information about build resources in the system.
      */
     BuildResourceUsage get(String organization);
-
-    /**
-     * Gets information about build resources in the system.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return information about build resources in the system.
-     */
-    Response<BuildResourceUsage> getWithResponse(String organization, Context context);
 }

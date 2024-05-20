@@ -5,15 +5,13 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** The Variable model. */
+/**
+ * The Variable model.
+ */
 @Fluent
 public final class Variable {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(Variable.class);
-
     /*
      * The isSecret property.
      */
@@ -27,8 +25,14 @@ public final class Variable {
     private String value;
 
     /**
+     * Creates an instance of Variable class.
+     */
+    public Variable() {
+    }
+
+    /**
      * Get the isSecret property: The isSecret property.
-     *
+     * 
      * @return the isSecret value.
      */
     public Boolean isSecret() {
@@ -37,7 +41,7 @@ public final class Variable {
 
     /**
      * Set the isSecret property: The isSecret property.
-     *
+     * 
      * @param isSecret the isSecret value to set.
      * @return the Variable object itself.
      */
@@ -48,7 +52,7 @@ public final class Variable {
 
     /**
      * Get the value property: The value property.
-     *
+     * 
      * @return the value value.
      */
     public String value() {
@@ -57,7 +61,7 @@ public final class Variable {
 
     /**
      * Set the value property: The value property.
-     *
+     * 
      * @param value the value value to set.
      * @return the Variable object itself.
      */
@@ -68,7 +72,7 @@ public final class Variable {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

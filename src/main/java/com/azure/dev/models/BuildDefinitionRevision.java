@@ -7,60 +7,62 @@ package com.azure.dev.models;
 import com.azure.dev.fluent.models.BuildDefinitionRevisionInner;
 import java.time.OffsetDateTime;
 
-/** An immutable client-side representation of BuildDefinitionRevision. */
+/**
+ * An immutable client-side representation of BuildDefinitionRevision.
+ */
 public interface BuildDefinitionRevision {
     /**
      * Gets the changedBy property: The identity of the person or process that changed the definition.
-     *
+     * 
      * @return the changedBy value.
      */
     IdentityRef changedBy();
 
     /**
      * Gets the changedDate property: The date and time that the definition was changed.
-     *
+     * 
      * @return the changedDate value.
      */
     OffsetDateTime changedDate();
 
     /**
      * Gets the changeType property: The change type (add, edit, delete).
-     *
+     * 
      * @return the changeType value.
      */
     AuditAction changeType();
 
     /**
      * Gets the comment property: The comment associated with the change.
-     *
+     * 
      * @return the comment value.
      */
     String comment();
 
     /**
      * Gets the definitionUrl property: A link to the definition at this revision.
-     *
+     * 
      * @return the definitionUrl value.
      */
     String definitionUrl();
 
     /**
      * Gets the name property: The name of the definition.
-     *
+     * 
      * @return the name value.
      */
     String name();
 
     /**
      * Gets the revision property: The revision number.
-     *
+     * 
      * @return the revision value.
      */
     Integer revision();
 
     /**
      * Gets the inner com.azure.dev.fluent.models.BuildDefinitionRevisionInner object.
-     *
+     * 
      * @return the inner object.
      */
     BuildDefinitionRevisionInner innerModel();

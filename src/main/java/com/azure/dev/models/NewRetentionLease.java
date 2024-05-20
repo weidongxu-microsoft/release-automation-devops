@@ -5,17 +5,15 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** The NewRetentionLease model. */
+/**
+ * Required information to create a new retention lease.
+ */
 @Fluent
 public final class NewRetentionLease {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(NewRetentionLease.class);
-
     /*
-     * The number of days to consider the lease valid.
+     * The number of days to consider the lease valid. A retention lease valid for more than 100 years (36500 days) will display as retaining the build "forever".
      */
     @JsonProperty(value = "daysValid")
     private Integer daysValid;
@@ -33,8 +31,7 @@ public final class NewRetentionLease {
     private String ownerId;
 
     /*
-     * If set, this lease will also prevent the pipeline from being deleted
-     * while the lease is still valid.
+     * If set, this lease will also prevent the pipeline from being deleted while the lease is still valid.
      */
     @JsonProperty(value = "protectPipeline")
     private Boolean protectPipeline;
@@ -46,8 +43,15 @@ public final class NewRetentionLease {
     private Integer runId;
 
     /**
-     * Get the daysValid property: The number of days to consider the lease valid.
-     *
+     * Creates an instance of NewRetentionLease class.
+     */
+    public NewRetentionLease() {
+    }
+
+    /**
+     * Get the daysValid property: The number of days to consider the lease valid. A retention lease valid for more than
+     * 100 years (36500 days) will display as retaining the build "forever".
+     * 
      * @return the daysValid value.
      */
     public Integer daysValid() {
@@ -55,8 +59,9 @@ public final class NewRetentionLease {
     }
 
     /**
-     * Set the daysValid property: The number of days to consider the lease valid.
-     *
+     * Set the daysValid property: The number of days to consider the lease valid. A retention lease valid for more than
+     * 100 years (36500 days) will display as retaining the build "forever".
+     * 
      * @param daysValid the daysValid value to set.
      * @return the NewRetentionLease object itself.
      */
@@ -67,7 +72,7 @@ public final class NewRetentionLease {
 
     /**
      * Get the definitionId property: The pipeline definition of the run.
-     *
+     * 
      * @return the definitionId value.
      */
     public Integer definitionId() {
@@ -76,7 +81,7 @@ public final class NewRetentionLease {
 
     /**
      * Set the definitionId property: The pipeline definition of the run.
-     *
+     * 
      * @param definitionId the definitionId value to set.
      * @return the NewRetentionLease object itself.
      */
@@ -87,7 +92,7 @@ public final class NewRetentionLease {
 
     /**
      * Get the ownerId property: User-provided string that identifies the owner of a retention lease.
-     *
+     * 
      * @return the ownerId value.
      */
     public String ownerId() {
@@ -96,7 +101,7 @@ public final class NewRetentionLease {
 
     /**
      * Set the ownerId property: User-provided string that identifies the owner of a retention lease.
-     *
+     * 
      * @param ownerId the ownerId value to set.
      * @return the NewRetentionLease object itself.
      */
@@ -108,7 +113,7 @@ public final class NewRetentionLease {
     /**
      * Get the protectPipeline property: If set, this lease will also prevent the pipeline from being deleted while the
      * lease is still valid.
-     *
+     * 
      * @return the protectPipeline value.
      */
     public Boolean protectPipeline() {
@@ -118,7 +123,7 @@ public final class NewRetentionLease {
     /**
      * Set the protectPipeline property: If set, this lease will also prevent the pipeline from being deleted while the
      * lease is still valid.
-     *
+     * 
      * @param protectPipeline the protectPipeline value to set.
      * @return the NewRetentionLease object itself.
      */
@@ -129,7 +134,7 @@ public final class NewRetentionLease {
 
     /**
      * Get the runId property: The pipeline run to protect.
-     *
+     * 
      * @return the runId value.
      */
     public Integer runId() {
@@ -138,7 +143,7 @@ public final class NewRetentionLease {
 
     /**
      * Set the runId property: The pipeline run to protect.
-     *
+     * 
      * @param runId the runId value to set.
      * @return the NewRetentionLease object itself.
      */
@@ -149,7 +154,7 @@ public final class NewRetentionLease {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

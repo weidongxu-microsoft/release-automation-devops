@@ -5,15 +5,13 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** The AggregatedRunsByOutcome model. */
+/**
+ * The AggregatedRunsByOutcome model.
+ */
 @Fluent
 public final class AggregatedRunsByOutcome {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(AggregatedRunsByOutcome.class);
-
     /*
      * The outcome property.
      */
@@ -27,8 +25,14 @@ public final class AggregatedRunsByOutcome {
     private Integer runsCount;
 
     /**
+     * Creates an instance of AggregatedRunsByOutcome class.
+     */
+    public AggregatedRunsByOutcome() {
+    }
+
+    /**
      * Get the outcome property: The outcome property.
-     *
+     * 
      * @return the outcome value.
      */
     public TestRunOutcome outcome() {
@@ -37,7 +41,7 @@ public final class AggregatedRunsByOutcome {
 
     /**
      * Set the outcome property: The outcome property.
-     *
+     * 
      * @param outcome the outcome value to set.
      * @return the AggregatedRunsByOutcome object itself.
      */
@@ -48,7 +52,7 @@ public final class AggregatedRunsByOutcome {
 
     /**
      * Get the runsCount property: The runsCount property.
-     *
+     * 
      * @return the runsCount value.
      */
     public Integer runsCount() {
@@ -57,7 +61,7 @@ public final class AggregatedRunsByOutcome {
 
     /**
      * Set the runsCount property: The runsCount property.
-     *
+     * 
      * @param runsCount the runsCount value to set.
      * @return the AggregatedRunsByOutcome object itself.
      */
@@ -68,7 +72,7 @@ public final class AggregatedRunsByOutcome {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

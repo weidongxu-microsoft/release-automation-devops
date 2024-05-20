@@ -5,15 +5,13 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Represents a demand used by a definition or build. */
+/**
+ * Represents a demand used by a definition or build.
+ */
 @Fluent
 public final class Demand {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(Demand.class);
-
     /*
      * The name of the capability referenced by the demand.
      */
@@ -27,8 +25,14 @@ public final class Demand {
     private String value;
 
     /**
+     * Creates an instance of Demand class.
+     */
+    public Demand() {
+    }
+
+    /**
      * Get the name property: The name of the capability referenced by the demand.
-     *
+     * 
      * @return the name value.
      */
     public String name() {
@@ -37,7 +41,7 @@ public final class Demand {
 
     /**
      * Set the name property: The name of the capability referenced by the demand.
-     *
+     * 
      * @param name the name value to set.
      * @return the Demand object itself.
      */
@@ -48,7 +52,7 @@ public final class Demand {
 
     /**
      * Get the value property: The demanded value.
-     *
+     * 
      * @return the value value.
      */
     public String value() {
@@ -57,7 +61,7 @@ public final class Demand {
 
     /**
      * Set the value property: The demanded value.
-     *
+     * 
      * @param value the value value to set.
      * @return the Demand object itself.
      */
@@ -68,7 +72,7 @@ public final class Demand {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

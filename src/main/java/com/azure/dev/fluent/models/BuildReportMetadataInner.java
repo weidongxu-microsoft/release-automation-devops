@@ -5,15 +5,13 @@
 package com.azure.dev.fluent.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Represents information about a build report. */
+/**
+ * Represents information about a build report.
+ */
 @Fluent
 public final class BuildReportMetadataInner {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(BuildReportMetadataInner.class);
-
     /*
      * The Id of the build.
      */
@@ -33,8 +31,14 @@ public final class BuildReportMetadataInner {
     private String type;
 
     /**
+     * Creates an instance of BuildReportMetadataInner class.
+     */
+    public BuildReportMetadataInner() {
+    }
+
+    /**
      * Get the buildId property: The Id of the build.
-     *
+     * 
      * @return the buildId value.
      */
     public Integer buildId() {
@@ -43,7 +47,7 @@ public final class BuildReportMetadataInner {
 
     /**
      * Set the buildId property: The Id of the build.
-     *
+     * 
      * @param buildId the buildId value to set.
      * @return the BuildReportMetadataInner object itself.
      */
@@ -54,7 +58,7 @@ public final class BuildReportMetadataInner {
 
     /**
      * Get the content property: The content of the report.
-     *
+     * 
      * @return the content value.
      */
     public String content() {
@@ -63,7 +67,7 @@ public final class BuildReportMetadataInner {
 
     /**
      * Set the content property: The content of the report.
-     *
+     * 
      * @param content the content value to set.
      * @return the BuildReportMetadataInner object itself.
      */
@@ -74,7 +78,7 @@ public final class BuildReportMetadataInner {
 
     /**
      * Get the type property: The type of the report.
-     *
+     * 
      * @return the type value.
      */
     public String type() {
@@ -83,7 +87,7 @@ public final class BuildReportMetadataInner {
 
     /**
      * Set the type property: The type of the report.
-     *
+     * 
      * @param type the type value to set.
      * @return the BuildReportMetadataInner object itself.
      */
@@ -94,7 +98,7 @@ public final class BuildReportMetadataInner {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

@@ -5,16 +5,14 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.UUID;
 
-/** The TimelineAttempt model. */
+/**
+ * The TimelineAttempt model.
+ */
 @Fluent
 public final class TimelineAttempt {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(TimelineAttempt.class);
-
     /*
      * Gets or sets the attempt of the record.
      */
@@ -22,22 +20,26 @@ public final class TimelineAttempt {
     private Integer attempt;
 
     /*
-     * Gets or sets the record identifier located within the specified
-     * timeline.
+     * Gets or sets the record identifier located within the specified timeline.
      */
     @JsonProperty(value = "recordId")
     private UUID recordId;
 
     /*
-     * Gets or sets the timeline identifier which owns the record representing
-     * this attempt.
+     * Gets or sets the timeline identifier which owns the record representing this attempt.
      */
     @JsonProperty(value = "timelineId")
     private UUID timelineId;
 
     /**
+     * Creates an instance of TimelineAttempt class.
+     */
+    public TimelineAttempt() {
+    }
+
+    /**
      * Get the attempt property: Gets or sets the attempt of the record.
-     *
+     * 
      * @return the attempt value.
      */
     public Integer attempt() {
@@ -46,7 +48,7 @@ public final class TimelineAttempt {
 
     /**
      * Set the attempt property: Gets or sets the attempt of the record.
-     *
+     * 
      * @param attempt the attempt value to set.
      * @return the TimelineAttempt object itself.
      */
@@ -57,7 +59,7 @@ public final class TimelineAttempt {
 
     /**
      * Get the recordId property: Gets or sets the record identifier located within the specified timeline.
-     *
+     * 
      * @return the recordId value.
      */
     public UUID recordId() {
@@ -66,7 +68,7 @@ public final class TimelineAttempt {
 
     /**
      * Set the recordId property: Gets or sets the record identifier located within the specified timeline.
-     *
+     * 
      * @param recordId the recordId value to set.
      * @return the TimelineAttempt object itself.
      */
@@ -78,7 +80,7 @@ public final class TimelineAttempt {
     /**
      * Get the timelineId property: Gets or sets the timeline identifier which owns the record representing this
      * attempt.
-     *
+     * 
      * @return the timelineId value.
      */
     public UUID timelineId() {
@@ -88,7 +90,7 @@ public final class TimelineAttempt {
     /**
      * Set the timelineId property: Gets or sets the timeline identifier which owns the record representing this
      * attempt.
-     *
+     * 
      * @param timelineId the timelineId value to set.
      * @return the TimelineAttempt object itself.
      */
@@ -99,7 +101,7 @@ public final class TimelineAttempt {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

@@ -5,16 +5,14 @@
 package com.azure.dev.fluent.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.models.RealtimeBuildEvent;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** The BuildUpdatedEvent model. */
+/**
+ * The BuildUpdatedEvent model.
+ */
 @Fluent
 public class BuildUpdatedEventInner extends RealtimeBuildEvent {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(BuildUpdatedEventInner.class);
-
     /*
      * Data representation of a build.
      */
@@ -22,8 +20,14 @@ public class BuildUpdatedEventInner extends RealtimeBuildEvent {
     private BuildInner build;
 
     /**
+     * Creates an instance of BuildUpdatedEventInner class.
+     */
+    public BuildUpdatedEventInner() {
+    }
+
+    /**
      * Get the build property: Data representation of a build.
-     *
+     * 
      * @return the build value.
      */
     public BuildInner build() {
@@ -32,7 +36,7 @@ public class BuildUpdatedEventInner extends RealtimeBuildEvent {
 
     /**
      * Set the build property: Data representation of a build.
-     *
+     * 
      * @param build the build value to set.
      * @return the BuildUpdatedEventInner object itself.
      */
@@ -41,7 +45,9 @@ public class BuildUpdatedEventInner extends RealtimeBuildEvent {
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildUpdatedEventInner withBuildId(Integer buildId) {
         super.withBuildId(buildId);
@@ -50,7 +56,7 @@ public class BuildUpdatedEventInner extends RealtimeBuildEvent {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     @Override

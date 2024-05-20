@@ -66,6 +66,15 @@ public final class RunImpl implements Run {
         return this.innerModel().state();
     }
 
+    public Map<String, Object> templateParameters() {
+        Map<String, Object> inner = this.innerModel().templateParameters();
+        if (inner != null) {
+            return Collections.unmodifiableMap(inner);
+        } else {
+            return Collections.emptyMap();
+        }
+    }
+
     public String url() {
         return this.innerModel().url();
     }

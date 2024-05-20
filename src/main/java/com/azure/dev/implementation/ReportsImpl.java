@@ -12,10 +12,9 @@ import com.azure.dev.fluent.ReportsClient;
 import com.azure.dev.fluent.models.BuildReportMetadataInner;
 import com.azure.dev.models.BuildReportMetadata;
 import com.azure.dev.models.Reports;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public final class ReportsImpl implements Reports {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(ReportsImpl.class);
+    private static final ClientLogger LOGGER = new ClientLogger(ReportsImpl.class);
 
     private final ReportsClient innerClient;
 
@@ -26,25 +25,22 @@ public final class ReportsImpl implements Reports {
         this.serviceManager = serviceManager;
     }
 
-    public BuildReportMetadata get(String organization, String project, int buildId) {
-        BuildReportMetadataInner inner = this.serviceClient().get(organization, project, buildId);
+    public Response<BuildReportMetadata> getWithResponse(String organization, String project, int buildId, String type,
+        Context context) {
+        Response<BuildReportMetadataInner> inner
+            = this.serviceClient().getWithResponse(organization, project, buildId, type, context);
         if (inner != null) {
-            return new BuildReportMetadataImpl(inner, this.manager());
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
+                new BuildReportMetadataImpl(inner.getValue(), this.manager()));
         } else {
             return null;
         }
     }
 
-    public Response<BuildReportMetadata> getWithResponse(
-        String organization, String project, int buildId, String type, Context context) {
-        Response<BuildReportMetadataInner> inner =
-            this.serviceClient().getWithResponse(organization, project, buildId, type, context);
+    public BuildReportMetadata get(String organization, String project, int buildId) {
+        BuildReportMetadataInner inner = this.serviceClient().get(organization, project, buildId);
         if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                new BuildReportMetadataImpl(inner.getValue(), this.manager()));
+            return new BuildReportMetadataImpl(inner, this.manager());
         } else {
             return null;
         }

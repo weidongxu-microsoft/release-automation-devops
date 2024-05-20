@@ -21,23 +21,26 @@ import com.azure.core.http.rest.RestProxy;
 import com.azure.core.management.exception.ManagementException;
 import com.azure.core.util.Context;
 import com.azure.core.util.FluxUtil;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.fluent.StatusClient;
 import reactor.core.publisher.Mono;
 
-/** An instance of this class provides access to all the operations defined in StatusClient. */
+/**
+ * An instance of this class provides access to all the operations defined in StatusClient.
+ */
 public final class StatusClientImpl implements StatusClient {
-    private final ClientLogger logger = new ClientLogger(StatusClientImpl.class);
-
-    /** The proxy service used to perform REST calls. */
+    /**
+     * The proxy service used to perform REST calls.
+     */
     private final StatusService service;
 
-    /** The service client containing this operation class. */
+    /**
+     * The service client containing this operation class.
+     */
     private final DevClientImpl client;
 
     /**
      * Initializes an instance of StatusClientImpl.
-     *
+     * 
      * @param client the instance of the service client containing this operation class.
      */
     StatusClientImpl(DevClientImpl client) {
@@ -51,24 +54,17 @@ public final class StatusClientImpl implements StatusClient {
      */
     @Host("{$host}")
     @ServiceInterface(name = "DevClientStatus")
-    private interface StatusService {
-        @Headers({"Content-Type: application/json"})
+    public interface StatusService {
+        @Headers({ "Content-Type: application/json" })
         @Get("/{organization}/{project}/_apis/build/status/{definition}")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<String>> get(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
-            @PathParam("definition") String definition,
-            @QueryParam("branchName") String branchName,
-            @QueryParam("stageName") String stageName,
-            @QueryParam("jobName") String jobName,
-            @QueryParam("configuration") String configuration,
-            @QueryParam("label") String label,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<String>> get(@HostParam("$host") String endpoint, @PathParam("organization") String organization,
+            @PathParam("project") String project, @PathParam("definition") String definition,
+            @QueryParam("branchName") String branchName, @QueryParam("stageName") String stageName,
+            @QueryParam("jobName") String jobName, @QueryParam("configuration") String configuration,
+            @QueryParam("label") String label, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, Context context);
     }
 
     /**
@@ -76,11 +72,12 @@ public final class StatusClientImpl implements StatusClient {
      * configuration.&lt;/p&gt; &lt;p&gt;If there are more than one, then it is required to pass in a stageName value
      * when specifying a jobName, and the same rule then applies for both if passing a configuration
      * parameter.&lt;/p&gt;.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definition Either the definition name with optional leading folder path, or the definition id.
-     * @param branchName Only consider the most recent build for this branch.
+     * @param branchName Only consider the most recent build for this branch. If not specified, the default branch is
+     * used.
      * @param stageName Use this stage within the pipeline to render the status.
      * @param jobName Use this job within a stage of the pipeline to render the status.
      * @param configuration Use this job configuration to render the status.
@@ -88,23 +85,14 @@ public final class StatusClientImpl implements StatusClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response.
+     * @return the response body along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<String>> getWithResponseAsync(
-        String organization,
-        String project,
-        String definition,
-        String branchName,
-        String stageName,
-        String jobName,
-        String configuration,
-        String label) {
+    private Mono<Response<String>> getWithResponseAsync(String organization, String project, String definition,
+        String branchName, String stageName, String jobName, String configuration, String label) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -115,25 +103,10 @@ public final class StatusClientImpl implements StatusClient {
         if (definition == null) {
             return Mono.error(new IllegalArgumentException("Parameter definition is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .get(
-                            this.client.getEndpoint(),
-                            organization,
-                            project,
-                            definition,
-                            branchName,
-                            stageName,
-                            jobName,
-                            configuration,
-                            label,
-                            apiVersion,
-                            accept,
-                            context))
+            .withContext(context -> service.get(this.client.getEndpoint(), organization, project, definition,
+                branchName, stageName, jobName, configuration, label, this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
@@ -142,11 +115,12 @@ public final class StatusClientImpl implements StatusClient {
      * configuration.&lt;/p&gt; &lt;p&gt;If there are more than one, then it is required to pass in a stageName value
      * when specifying a jobName, and the same rule then applies for both if passing a configuration
      * parameter.&lt;/p&gt;.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definition Either the definition name with optional leading folder path, or the definition id.
-     * @param branchName Only consider the most recent build for this branch.
+     * @param branchName Only consider the most recent build for this branch. If not specified, the default branch is
+     * used.
      * @param stageName Use this stage within the pipeline to render the status.
      * @param jobName Use this job within a stage of the pipeline to render the status.
      * @param configuration Use this job configuration to render the status.
@@ -155,24 +129,14 @@ public final class StatusClientImpl implements StatusClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response.
+     * @return the response body along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<String>> getWithResponseAsync(
-        String organization,
-        String project,
-        String definition,
-        String branchName,
-        String stageName,
-        String jobName,
-        String configuration,
-        String label,
-        Context context) {
+    private Mono<Response<String>> getWithResponseAsync(String organization, String project, String definition,
+        String branchName, String stageName, String jobName, String configuration, String label, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -183,23 +147,10 @@ public final class StatusClientImpl implements StatusClient {
         if (definition == null) {
             return Mono.error(new IllegalArgumentException("Parameter definition is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .get(
-                this.client.getEndpoint(),
-                organization,
-                project,
-                definition,
-                branchName,
-                stageName,
-                jobName,
-                configuration,
-                label,
-                apiVersion,
-                accept,
-                context);
+        return service.get(this.client.getEndpoint(), organization, project, definition, branchName, stageName, jobName,
+            configuration, label, this.client.getApiVersion(), accept, context);
     }
 
     /**
@@ -207,55 +158,14 @@ public final class StatusClientImpl implements StatusClient {
      * configuration.&lt;/p&gt; &lt;p&gt;If there are more than one, then it is required to pass in a stageName value
      * when specifying a jobName, and the same rule then applies for both if passing a configuration
      * parameter.&lt;/p&gt;.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param definition Either the definition name with optional leading folder path, or the definition id.
-     * @param branchName Only consider the most recent build for this branch.
-     * @param stageName Use this stage within the pipeline to render the status.
-     * @param jobName Use this job within a stage of the pipeline to render the status.
-     * @param configuration Use this job configuration to render the status.
-     * @param label Replaces the default text on the left side of the badge.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<String> getAsync(
-        String organization,
-        String project,
-        String definition,
-        String branchName,
-        String stageName,
-        String jobName,
-        String configuration,
-        String label) {
-        return getWithResponseAsync(
-                organization, project, definition, branchName, stageName, jobName, configuration, label)
-            .flatMap(
-                (Response<String> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
-    }
-
-    /**
-     * &lt;p&gt;Gets the build status for a definition, optionally scoped to a specific branch, stage, job, and
-     * configuration.&lt;/p&gt; &lt;p&gt;If there are more than one, then it is required to pass in a stageName value
-     * when specifying a jobName, and the same rule then applies for both if passing a configuration
-     * parameter.&lt;/p&gt;.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definition Either the definition name with optional leading folder path, or the definition id.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response.
+     * @return the response body on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<String> getAsync(String organization, String project, String definition) {
@@ -264,16 +174,8 @@ public final class StatusClientImpl implements StatusClient {
         final String jobName = null;
         final String configuration = null;
         final String label = null;
-        return getWithResponseAsync(
-                organization, project, definition, branchName, stageName, jobName, configuration, label)
-            .flatMap(
-                (Response<String> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+        return getWithResponseAsync(organization, project, definition, branchName, stageName, jobName, configuration,
+            label).flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
@@ -281,7 +183,35 @@ public final class StatusClientImpl implements StatusClient {
      * configuration.&lt;/p&gt; &lt;p&gt;If there are more than one, then it is required to pass in a stageName value
      * when specifying a jobName, and the same rule then applies for both if passing a configuration
      * parameter.&lt;/p&gt;.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param definition Either the definition name with optional leading folder path, or the definition id.
+     * @param branchName Only consider the most recent build for this branch. If not specified, the default branch is
+     * used.
+     * @param stageName Use this stage within the pipeline to render the status.
+     * @param jobName Use this job within a stage of the pipeline to render the status.
+     * @param configuration Use this job configuration to render the status.
+     * @param label Replaces the default text on the left side of the badge.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response body along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<String> getWithResponse(String organization, String project, String definition, String branchName,
+        String stageName, String jobName, String configuration, String label, Context context) {
+        return getWithResponseAsync(organization, project, definition, branchName, stageName, jobName, configuration,
+            label, context).block();
+    }
+
+    /**
+     * &lt;p&gt;Gets the build status for a definition, optionally scoped to a specific branch, stage, job, and
+     * configuration.&lt;/p&gt; &lt;p&gt;If there are more than one, then it is required to pass in a stageName value
+     * when specifying a jobName, and the same rule then applies for both if passing a configuration
+     * parameter.&lt;/p&gt;.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definition Either the definition name with optional leading folder path, or the definition id.
@@ -297,43 +227,7 @@ public final class StatusClientImpl implements StatusClient {
         final String jobName = null;
         final String configuration = null;
         final String label = null;
-        return getAsync(organization, project, definition, branchName, stageName, jobName, configuration, label)
-            .block();
-    }
-
-    /**
-     * &lt;p&gt;Gets the build status for a definition, optionally scoped to a specific branch, stage, job, and
-     * configuration.&lt;/p&gt; &lt;p&gt;If there are more than one, then it is required to pass in a stageName value
-     * when specifying a jobName, and the same rule then applies for both if passing a configuration
-     * parameter.&lt;/p&gt;.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param definition Either the definition name with optional leading folder path, or the definition id.
-     * @param branchName Only consider the most recent build for this branch.
-     * @param stageName Use this stage within the pipeline to render the status.
-     * @param jobName Use this job within a stage of the pipeline to render the status.
-     * @param configuration Use this job configuration to render the status.
-     * @param label Replaces the default text on the left side of the badge.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<String> getWithResponse(
-        String organization,
-        String project,
-        String definition,
-        String branchName,
-        String stageName,
-        String jobName,
-        String configuration,
-        String label,
-        Context context) {
-        return getWithResponseAsync(
-                organization, project, definition, branchName, stageName, jobName, configuration, label, context)
-            .block();
+        return getWithResponse(organization, project, definition, branchName, stageName, jobName, configuration, label,
+            Context.NONE).getValue();
     }
 }

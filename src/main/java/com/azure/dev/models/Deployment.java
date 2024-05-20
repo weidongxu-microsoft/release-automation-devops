@@ -5,15 +5,13 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Represents the data from the build information nodes for type "DeploymentInformation" for xaml builds. */
+/**
+ * Represents the data from the build information nodes for type "DeploymentInformation" for xaml builds.
+ */
 @Fluent
 public class Deployment {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(Deployment.class);
-
     /*
      * The type property.
      */
@@ -21,8 +19,14 @@ public class Deployment {
     private String type;
 
     /**
+     * Creates an instance of Deployment class.
+     */
+    public Deployment() {
+    }
+
+    /**
      * Get the type property: The type property.
-     *
+     * 
      * @return the type value.
      */
     public String type() {
@@ -31,7 +35,7 @@ public class Deployment {
 
     /**
      * Set the type property: The type property.
-     *
+     * 
      * @param type the type value to set.
      * @return the Deployment object itself.
      */
@@ -42,7 +46,7 @@ public class Deployment {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

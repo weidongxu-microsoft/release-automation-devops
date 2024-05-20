@@ -7,15 +7,23 @@ package com.azure.dev.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/** Defines values for ResultSet. */
+/**
+ * Defines values for ResultSet.
+ */
 public enum ResultSet {
-    /** Enum value all. */
+    /**
+     * Enum value all.
+     */
     ALL("all"),
 
-    /** Enum value top. */
+    /**
+     * Enum value top.
+     */
     TOP("top");
 
-    /** The actual serialized value for a ResultSet instance. */
+    /**
+     * The actual serialized value for a ResultSet instance.
+     */
     private final String value;
 
     ResultSet(String value) {
@@ -24,12 +32,15 @@ public enum ResultSet {
 
     /**
      * Parses a serialized value to a ResultSet instance.
-     *
+     * 
      * @param value the serialized value to parse.
      * @return the parsed ResultSet object, or null if unable to parse.
      */
     @JsonCreator
     public static ResultSet fromString(String value) {
+        if (value == null) {
+            return null;
+        }
         ResultSet[] items = ResultSet.values();
         for (ResultSet item : items) {
             if (item.toString().equalsIgnoreCase(value)) {
@@ -39,6 +50,9 @@ public enum ResultSet {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @JsonValue
     @Override
     public String toString() {

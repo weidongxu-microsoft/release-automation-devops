@@ -7,30 +7,48 @@ package com.azure.dev.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/** Defines values for TestRunState. */
+/**
+ * Defines values for TestRunState.
+ */
 public enum TestRunState {
-    /** Enum value unspecified. */
+    /**
+     * Enum value unspecified.
+     */
     UNSPECIFIED("unspecified"),
 
-    /** Enum value notStarted. */
+    /**
+     * Enum value notStarted.
+     */
     NOT_STARTED("notStarted"),
 
-    /** Enum value inProgress. */
+    /**
+     * Enum value inProgress.
+     */
     IN_PROGRESS("inProgress"),
 
-    /** Enum value completed. */
+    /**
+     * Enum value completed.
+     */
     COMPLETED("completed"),
 
-    /** Enum value aborted. */
+    /**
+     * Enum value aborted.
+     */
     ABORTED("aborted"),
 
-    /** Enum value waiting. */
+    /**
+     * Enum value waiting.
+     */
     WAITING("waiting"),
 
-    /** Enum value needsInvestigation. */
+    /**
+     * Enum value needsInvestigation.
+     */
     NEEDS_INVESTIGATION("needsInvestigation");
 
-    /** The actual serialized value for a TestRunState instance. */
+    /**
+     * The actual serialized value for a TestRunState instance.
+     */
     private final String value;
 
     TestRunState(String value) {
@@ -39,12 +57,15 @@ public enum TestRunState {
 
     /**
      * Parses a serialized value to a TestRunState instance.
-     *
+     * 
      * @param value the serialized value to parse.
      * @return the parsed TestRunState object, or null if unable to parse.
      */
     @JsonCreator
     public static TestRunState fromString(String value) {
+        if (value == null) {
+            return null;
+        }
         TestRunState[] items = TestRunState.values();
         for (TestRunState item : items) {
             if (item.toString().equalsIgnoreCase(value)) {
@@ -54,6 +75,9 @@ public enum TestRunState {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @JsonValue
     @Override
     public String toString() {

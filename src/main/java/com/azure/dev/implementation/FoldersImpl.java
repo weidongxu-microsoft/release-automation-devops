@@ -13,13 +13,12 @@ import com.azure.dev.fluent.models.FolderInner;
 import com.azure.dev.models.Folder;
 import com.azure.dev.models.FolderQueryOrder;
 import com.azure.dev.models.Folders;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public final class FoldersImpl implements Folders {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(FoldersImpl.class);
+    private static final ClientLogger LOGGER = new ClientLogger(FoldersImpl.class);
 
     private final FoldersClient innerClient;
 
@@ -28,6 +27,18 @@ public final class FoldersImpl implements Folders {
     public FoldersImpl(FoldersClient innerClient, com.azure.dev.DevManager serviceManager) {
         this.innerClient = innerClient;
         this.serviceManager = serviceManager;
+    }
+
+    public Response<Folder> createWithResponse(String organization, String project, String path, FolderInner body,
+        Context context) {
+        Response<FolderInner> inner
+            = this.serviceClient().createWithResponse(organization, project, path, body, context);
+        if (inner != null) {
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
+                new FolderImpl(inner.getValue(), this.manager()));
+        } else {
+            return null;
+        }
     }
 
     public Folder create(String organization, String project, String path, FolderInner body) {
@@ -39,27 +50,24 @@ public final class FoldersImpl implements Folders {
         }
     }
 
-    public Response<Folder> createWithResponse(
-        String organization, String project, String path, FolderInner body, Context context) {
-        Response<FolderInner> inner =
-            this.serviceClient().createWithResponse(organization, project, path, body, context);
-        if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                new FolderImpl(inner.getValue(), this.manager()));
-        } else {
-            return null;
-        }
+    public Response<Void> deleteWithResponse(String organization, String project, String path, Context context) {
+        return this.serviceClient().deleteWithResponse(organization, project, path, context);
     }
 
     public void delete(String organization, String project, String path) {
         this.serviceClient().delete(organization, project, path);
     }
 
-    public Response<Void> deleteWithResponse(String organization, String project, String path, Context context) {
-        return this.serviceClient().deleteWithResponse(organization, project, path, context);
+    public Response<Folder> updateWithResponse(String organization, String project, String path, FolderInner body,
+        Context context) {
+        Response<FolderInner> inner
+            = this.serviceClient().updateWithResponse(organization, project, path, body, context);
+        if (inner != null) {
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
+                new FolderImpl(inner.getValue(), this.manager()));
+        } else {
+            return null;
+        }
     }
 
     public Folder update(String organization, String project, String path, FolderInner body) {
@@ -71,16 +79,16 @@ public final class FoldersImpl implements Folders {
         }
     }
 
-    public Response<Folder> updateWithResponse(
-        String organization, String project, String path, FolderInner body, Context context) {
-        Response<FolderInner> inner =
-            this.serviceClient().updateWithResponse(organization, project, path, body, context);
+    public Response<List<Folder>> listWithResponse(String organization, String project, String path,
+        FolderQueryOrder queryOrder, Context context) {
+        Response<List<FolderInner>> inner
+            = this.serviceClient().listWithResponse(organization, project, path, queryOrder, context);
         if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                new FolderImpl(inner.getValue(), this.manager()));
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
+                inner.getValue()
+                    .stream()
+                    .map(inner1 -> new FolderImpl(inner1, this.manager()))
+                    .collect(Collectors.toList()));
         } else {
             return null;
         }
@@ -89,30 +97,10 @@ public final class FoldersImpl implements Folders {
     public List<Folder> list(String organization, String project, String path) {
         List<FolderInner> inner = this.serviceClient().list(organization, project, path);
         if (inner != null) {
-            return Collections
-                .unmodifiableList(
-                    inner.stream().map(inner1 -> new FolderImpl(inner1, this.manager())).collect(Collectors.toList()));
+            return Collections.unmodifiableList(
+                inner.stream().map(inner1 -> new FolderImpl(inner1, this.manager())).collect(Collectors.toList()));
         } else {
             return Collections.emptyList();
-        }
-    }
-
-    public Response<List<Folder>> listWithResponse(
-        String organization, String project, String path, FolderQueryOrder queryOrder, Context context) {
-        Response<List<FolderInner>> inner =
-            this.serviceClient().listWithResponse(organization, project, path, queryOrder, context);
-        if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                inner
-                    .getValue()
-                    .stream()
-                    .map(inner1 -> new FolderImpl(inner1, this.manager()))
-                    .collect(Collectors.toList()));
-        } else {
-            return null;
         }
     }
 

@@ -12,6 +12,7 @@ import com.azure.core.annotation.HeaderParam;
 import com.azure.core.annotation.Headers;
 import com.azure.core.annotation.Host;
 import com.azure.core.annotation.HostParam;
+import com.azure.core.annotation.Patch;
 import com.azure.core.annotation.PathParam;
 import com.azure.core.annotation.Post;
 import com.azure.core.annotation.Put;
@@ -25,24 +26,28 @@ import com.azure.core.http.rest.RestProxy;
 import com.azure.core.management.exception.ManagementException;
 import com.azure.core.util.Context;
 import com.azure.core.util.FluxUtil;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.fluent.TagsClient;
+import com.azure.dev.models.UpdateTagParameters;
 import java.util.List;
 import reactor.core.publisher.Mono;
 
-/** An instance of this class provides access to all the operations defined in TagsClient. */
+/**
+ * An instance of this class provides access to all the operations defined in TagsClient.
+ */
 public final class TagsClientImpl implements TagsClient {
-    private final ClientLogger logger = new ClientLogger(TagsClientImpl.class);
-
-    /** The proxy service used to perform REST calls. */
+    /**
+     * The proxy service used to perform REST calls.
+     */
     private final TagsService service;
 
-    /** The service client containing this operation class. */
+    /**
+     * The service client containing this operation class.
+     */
     private final DevClientImpl client;
 
     /**
      * Initializes an instance of TagsClientImpl.
-     *
+     * 
      * @param client the instance of the service client containing this operation class.
      */
     TagsClientImpl(DevClientImpl client) {
@@ -55,164 +60,136 @@ public final class TagsClientImpl implements TagsClient {
      */
     @Host("{$host}")
     @ServiceInterface(name = "DevClientTags")
-    private interface TagsService {
-        @Headers({"Content-Type: application/json"})
+    public interface TagsService {
+        @Headers({ "Content-Type: application/json" })
         @Post("/{organization}/{project}/_apis/build/builds/{buildId}/tags")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<List<String>>> addBuildTags(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
-            @PathParam("buildId") int buildId,
-            @QueryParam("api-version") String apiVersion,
-            @BodyParam("application/json") List<String> body,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<List<String>>> addBuildTags(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
+            @PathParam("buildId") int buildId, @QueryParam("api-version") String apiVersion,
+            @BodyParam("application/json") List<String> body, @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
         @Get("/{organization}/{project}/_apis/build/builds/{buildId}/tags")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<List<String>>> getBuildTags(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
-            @PathParam("buildId") int buildId,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
+        Mono<Response<List<String>>> getBuildTags(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
+            @PathParam("buildId") int buildId, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Patch("/{organization}/{project}/_apis/build/builds/{buildId}/tags")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<List<String>>> updateBuildTags(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
+            @PathParam("buildId") int buildId, @QueryParam("api-version") String apiVersion,
+            @BodyParam("application/json") UpdateTagParameters body, @HeaderParam("Accept") String accept,
             Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
         @Put("/{organization}/{project}/_apis/build/builds/{buildId}/tags/{tag}")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<List<String>>> addBuildTag(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
-            @PathParam("buildId") int buildId,
-            @PathParam("tag") String tag,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<List<String>>> addBuildTag(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
+            @PathParam("buildId") int buildId, @PathParam("tag") String tag,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
         @Delete("/{organization}/{project}/_apis/build/builds/{buildId}/tags/{tag}")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<List<String>>> deleteBuildTag(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
-            @PathParam("buildId") int buildId,
-            @PathParam("tag") String tag,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
+        Mono<Response<List<String>>> deleteBuildTag(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
+            @PathParam("buildId") int buildId, @PathParam("tag") String tag,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Post("/{organization}/{project}/_apis/build/definitions/{definitionId}/tags")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<List<String>>> addDefinitionTags(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
+            @PathParam("definitionId") int definitionId, @QueryParam("api-version") String apiVersion,
+            @BodyParam("application/json") List<String> body, @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Get("/{organization}/{project}/_apis/build/definitions/{definitionId}/tags")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<List<String>>> getDefinitionTags(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
+            @PathParam("definitionId") int definitionId, @QueryParam("revision") Integer revision,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Patch("/{organization}/{project}/_apis/build/definitions/{definitionId}/tags")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<List<String>>> updateDefinitionTags(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
+            @PathParam("definitionId") int definitionId, @QueryParam("api-version") String apiVersion,
+            @BodyParam("application/json") UpdateTagParameters body, @HeaderParam("Accept") String accept,
             Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Post("/{organization}/{project}/_apis/build/definitions/{DefinitionId}/tags")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Put("/{organization}/{project}/_apis/build/definitions/{definitionId}/tags/{tag}")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<List<String>>> addDefinitionTags(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
-            @PathParam("definitionId") int definitionId,
-            @QueryParam("api-version") String apiVersion,
-            @BodyParam("application/json") List<String> body,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<List<String>>> addDefinitionTag(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
+            @PathParam("definitionId") int definitionId, @PathParam("tag") String tag,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Get("/{organization}/{project}/_apis/build/definitions/{DefinitionId}/tags")
-        @ExpectedResponses({200})
+        @Headers({ "Content-Type: application/json" })
+        @Delete("/{organization}/{project}/_apis/build/definitions/{definitionId}/tags/{tag}")
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<List<String>>> getDefinitionTags(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
-            @PathParam("definitionId") int definitionId,
-            @QueryParam("revision") Integer revision,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<List<String>>> deleteDefinitionTag(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
+            @PathParam("definitionId") int definitionId, @PathParam("tag") String tag,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
-        @Put("/{organization}/{project}/_apis/build/definitions/{DefinitionId}/tags/{tag}")
-        @ExpectedResponses({200})
-        @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<List<String>>> addDefinitionTag(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
-            @PathParam("definitionId") int definitionId,
-            @PathParam("tag") String tag,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
-
-        @Headers({"Content-Type: application/json"})
-        @Delete("/{organization}/{project}/_apis/build/definitions/{DefinitionId}/tags/{tag}")
-        @ExpectedResponses({200})
-        @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<List<String>>> deleteDefinitionTag(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
-            @PathParam("definitionId") int definitionId,
-            @PathParam("tag") String tag,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
-
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
         @Get("/{organization}/{project}/_apis/build/tags")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<List<String>>> getTags(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<List<String>>> getTags(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
         @Delete("/{organization}/{project}/_apis/build/tags/{tag}")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<List<String>>> deleteTag(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
-            @PathParam("tag") String tag,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<List<String>>> deleteTag(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
+            @PathParam("tag") String tag, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, Context context);
     }
 
     /**
      * Adds tags to a build.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
-     * @param body The tags to add.
+     * @param body The tags to add. Request body is composed directly from listed tags.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of Post200ApplicationJsonItemsItem.
+     * @return array of Post200ApplicationJsonItemsItem along with {@link Response} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<String>>> addBuildTagsWithResponseAsync(
-        String organization, String project, int buildId, List<String> body) {
+    private Mono<Response<List<String>>> addBuildTagsWithResponseAsync(String organization, String project, int buildId,
+        List<String> body) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -223,45 +200,33 @@ public final class TagsClientImpl implements TagsClient {
         if (body == null) {
             return Mono.error(new IllegalArgumentException("Parameter body is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .addBuildTags(
-                            this.client.getEndpoint(),
-                            organization,
-                            project,
-                            buildId,
-                            apiVersion,
-                            body,
-                            accept,
-                            context))
+            .withContext(context -> service.addBuildTags(this.client.getEndpoint(), organization, project, buildId,
+                this.client.getApiVersion(), body, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Adds tags to a build.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
-     * @param body The tags to add.
+     * @param body The tags to add. Request body is composed directly from listed tags.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of Post200ApplicationJsonItemsItem.
+     * @return array of Post200ApplicationJsonItemsItem along with {@link Response} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<String>>> addBuildTagsWithResponseAsync(
-        String organization, String project, int buildId, List<String> body, Context context) {
+    private Mono<Response<List<String>>> addBuildTagsWithResponseAsync(String organization, String project, int buildId,
+        List<String> body, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -272,45 +237,56 @@ public final class TagsClientImpl implements TagsClient {
         if (body == null) {
             return Mono.error(new IllegalArgumentException("Parameter body is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .addBuildTags(this.client.getEndpoint(), organization, project, buildId, apiVersion, body, accept, context);
+        return service.addBuildTags(this.client.getEndpoint(), organization, project, buildId,
+            this.client.getApiVersion(), body, accept, context);
     }
 
     /**
      * Adds tags to a build.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
-     * @param body The tags to add.
+     * @param body The tags to add. Request body is composed directly from listed tags.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of Post200ApplicationJsonItemsItem.
+     * @return array of Post200ApplicationJsonItemsItem on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<List<String>> addBuildTagsAsync(String organization, String project, int buildId, List<String> body) {
         return addBuildTagsWithResponseAsync(organization, project, buildId, body)
-            .flatMap(
-                (Response<List<String>> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+            .flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Adds tags to a build.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
-     * @param body The tags to add.
+     * @param body The tags to add. Request body is composed directly from listed tags.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return array of Post200ApplicationJsonItemsItem along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<List<String>> addBuildTagsWithResponse(String organization, String project, int buildId,
+        List<String> body, Context context) {
+        return addBuildTagsWithResponseAsync(organization, project, buildId, body, context).block();
+    }
+
+    /**
+     * Adds tags to a build.
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param buildId The ID of the build.
+     * @param body The tags to add. Request body is composed directly from listed tags.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
@@ -318,47 +294,26 @@ public final class TagsClientImpl implements TagsClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public List<String> addBuildTags(String organization, String project, int buildId, List<String> body) {
-        return addBuildTagsAsync(organization, project, buildId, body).block();
-    }
-
-    /**
-     * Adds tags to a build.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param buildId The ID of the build.
-     * @param body The tags to add.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of Post200ApplicationJsonItemsItem.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<List<String>> addBuildTagsWithResponse(
-        String organization, String project, int buildId, List<String> body, Context context) {
-        return addBuildTagsWithResponseAsync(organization, project, buildId, body, context).block();
+        return addBuildTagsWithResponse(organization, project, buildId, body, Context.NONE).getValue();
     }
 
     /**
      * Gets the tags for a build.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the tags for a build.
+     * @return the tags for a build along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<String>>> getBuildTagsWithResponseAsync(
-        String organization, String project, int buildId) {
+    private Mono<Response<List<String>>> getBuildTagsWithResponseAsync(String organization, String project,
+        int buildId) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -366,20 +321,16 @@ public final class TagsClientImpl implements TagsClient {
         if (project == null) {
             return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .getBuildTags(
-                            this.client.getEndpoint(), organization, project, buildId, apiVersion, accept, context))
+            .withContext(context -> service.getBuildTags(this.client.getEndpoint(), organization, project, buildId,
+                this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Gets the tags for a build.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
@@ -387,16 +338,14 @@ public final class TagsClientImpl implements TagsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the tags for a build.
+     * @return the tags for a build along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<String>>> getBuildTagsWithResponseAsync(
-        String organization, String project, int buildId, Context context) {
+    private Mono<Response<List<String>>> getBuildTagsWithResponseAsync(String organization, String project, int buildId,
+        Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -404,40 +353,50 @@ public final class TagsClientImpl implements TagsClient {
         if (project == null) {
             return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .getBuildTags(this.client.getEndpoint(), organization, project, buildId, apiVersion, accept, context);
+        return service.getBuildTags(this.client.getEndpoint(), organization, project, buildId,
+            this.client.getApiVersion(), accept, context);
     }
 
     /**
      * Gets the tags for a build.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the tags for a build.
+     * @return the tags for a build on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<List<String>> getBuildTagsAsync(String organization, String project, int buildId) {
         return getBuildTagsWithResponseAsync(organization, project, buildId)
-            .flatMap(
-                (Response<List<String>> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+            .flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Gets the tags for a build.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param buildId The ID of the build.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the tags for a build along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<List<String>> getBuildTagsWithResponse(String organization, String project, int buildId,
+        Context context) {
+        return getBuildTagsWithResponseAsync(organization, project, buildId, context).block();
+    }
+
+    /**
+     * Gets the tags for a build.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
@@ -448,30 +407,143 @@ public final class TagsClientImpl implements TagsClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public List<String> getBuildTags(String organization, String project, int buildId) {
-        return getBuildTagsAsync(organization, project, buildId).block();
+        return getBuildTagsWithResponse(organization, project, buildId, Context.NONE).getValue();
     }
 
     /**
-     * Gets the tags for a build.
-     *
+     * Adds/Removes tags from a build.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
+     * @param body The tags to add/remove.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return array of Patch200ApplicationJsonItemsItem along with {@link Response} on successful completion of
+     * {@link Mono}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Mono<Response<List<String>>> updateBuildTagsWithResponseAsync(String organization, String project,
+        int buildId, UpdateTagParameters body) {
+        if (this.client.getEndpoint() == null) {
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (organization == null) {
+            return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
+        }
+        if (project == null) {
+            return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
+        }
+        if (body == null) {
+            return Mono.error(new IllegalArgumentException("Parameter body is required and cannot be null."));
+        } else {
+            body.validate();
+        }
+        final String accept = "application/json";
+        return FluxUtil
+            .withContext(context -> service.updateBuildTags(this.client.getEndpoint(), organization, project, buildId,
+                this.client.getApiVersion(), body, accept, context))
+            .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
+    }
+
+    /**
+     * Adds/Removes tags from a build.
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param buildId The ID of the build.
+     * @param body The tags to add/remove.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the tags for a build.
+     * @return array of Patch200ApplicationJsonItemsItem along with {@link Response} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<List<String>> getBuildTagsWithResponse(
-        String organization, String project, int buildId, Context context) {
-        return getBuildTagsWithResponseAsync(organization, project, buildId, context).block();
+    private Mono<Response<List<String>>> updateBuildTagsWithResponseAsync(String organization, String project,
+        int buildId, UpdateTagParameters body, Context context) {
+        if (this.client.getEndpoint() == null) {
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (organization == null) {
+            return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
+        }
+        if (project == null) {
+            return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
+        }
+        if (body == null) {
+            return Mono.error(new IllegalArgumentException("Parameter body is required and cannot be null."));
+        } else {
+            body.validate();
+        }
+        final String accept = "application/json";
+        context = this.client.mergeContext(context);
+        return service.updateBuildTags(this.client.getEndpoint(), organization, project, buildId,
+            this.client.getApiVersion(), body, accept, context);
+    }
+
+    /**
+     * Adds/Removes tags from a build.
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param buildId The ID of the build.
+     * @param body The tags to add/remove.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return array of Patch200ApplicationJsonItemsItem on successful completion of {@link Mono}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Mono<List<String>> updateBuildTagsAsync(String organization, String project, int buildId,
+        UpdateTagParameters body) {
+        return updateBuildTagsWithResponseAsync(organization, project, buildId, body)
+            .flatMap(res -> Mono.justOrEmpty(res.getValue()));
+    }
+
+    /**
+     * Adds/Removes tags from a build.
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param buildId The ID of the build.
+     * @param body The tags to add/remove.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return array of Patch200ApplicationJsonItemsItem along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<List<String>> updateBuildTagsWithResponse(String organization, String project, int buildId,
+        UpdateTagParameters body, Context context) {
+        return updateBuildTagsWithResponseAsync(organization, project, buildId, body, context).block();
+    }
+
+    /**
+     * Adds/Removes tags from a build.
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param buildId The ID of the build.
+     * @param body The tags to add/remove.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return array of Patch200ApplicationJsonItemsItem.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public List<String> updateBuildTags(String organization, String project, int buildId, UpdateTagParameters body) {
+        return updateBuildTagsWithResponse(organization, project, buildId, body, Context.NONE).getValue();
     }
 
     /**
      * Adds a tag to a build.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
@@ -479,16 +551,15 @@ public final class TagsClientImpl implements TagsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of Put200ApplicationJsonItemsItem.
+     * @return array of Put200ApplicationJsonItemsItem along with {@link Response} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<String>>> addBuildTagWithResponseAsync(
-        String organization, String project, int buildId, String tag) {
+    private Mono<Response<List<String>>> addBuildTagWithResponseAsync(String organization, String project, int buildId,
+        String tag) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -499,27 +570,16 @@ public final class TagsClientImpl implements TagsClient {
         if (tag == null) {
             return Mono.error(new IllegalArgumentException("Parameter tag is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .addBuildTag(
-                            this.client.getEndpoint(),
-                            organization,
-                            project,
-                            buildId,
-                            tag,
-                            apiVersion,
-                            accept,
-                            context))
+            .withContext(context -> service.addBuildTag(this.client.getEndpoint(), organization, project, buildId, tag,
+                this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Adds a tag to a build.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
@@ -528,16 +588,15 @@ public final class TagsClientImpl implements TagsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of Put200ApplicationJsonItemsItem.
+     * @return array of Put200ApplicationJsonItemsItem along with {@link Response} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<String>>> addBuildTagWithResponseAsync(
-        String organization, String project, int buildId, String tag, Context context) {
+    private Mono<Response<List<String>>> addBuildTagWithResponseAsync(String organization, String project, int buildId,
+        String tag, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -548,16 +607,15 @@ public final class TagsClientImpl implements TagsClient {
         if (tag == null) {
             return Mono.error(new IllegalArgumentException("Parameter tag is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .addBuildTag(this.client.getEndpoint(), organization, project, buildId, tag, apiVersion, accept, context);
+        return service.addBuildTag(this.client.getEndpoint(), organization, project, buildId, tag,
+            this.client.getApiVersion(), accept, context);
     }
 
     /**
      * Adds a tag to a build.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
@@ -565,24 +623,36 @@ public final class TagsClientImpl implements TagsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of Put200ApplicationJsonItemsItem.
+     * @return array of Put200ApplicationJsonItemsItem on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<List<String>> addBuildTagAsync(String organization, String project, int buildId, String tag) {
         return addBuildTagWithResponseAsync(organization, project, buildId, tag)
-            .flatMap(
-                (Response<List<String>> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+            .flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Adds a tag to a build.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param buildId The ID of the build.
+     * @param tag The tag to add.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return array of Put200ApplicationJsonItemsItem along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<List<String>> addBuildTagWithResponse(String organization, String project, int buildId, String tag,
+        Context context) {
+        return addBuildTagWithResponseAsync(organization, project, buildId, tag, context).block();
+    }
+
+    /**
+     * Adds a tag to a build.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
@@ -594,31 +664,13 @@ public final class TagsClientImpl implements TagsClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public List<String> addBuildTag(String organization, String project, int buildId, String tag) {
-        return addBuildTagAsync(organization, project, buildId, tag).block();
+        return addBuildTagWithResponse(organization, project, buildId, tag, Context.NONE).getValue();
     }
 
     /**
-     * Adds a tag to a build.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param buildId The ID of the build.
-     * @param tag The tag to add.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of Put200ApplicationJsonItemsItem.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<List<String>> addBuildTagWithResponse(
-        String organization, String project, int buildId, String tag, Context context) {
-        return addBuildTagWithResponseAsync(organization, project, buildId, tag, context).block();
-    }
-
-    /**
-     * Removes a tag from a build.
-     *
+     * Removes a tag from a build. NOTE: This API will not work for tags with special characters. To remove tags with
+     * special characters, use the PATCH method instead (in 6.0+).
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
@@ -626,16 +678,15 @@ public final class TagsClientImpl implements TagsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of Delete200ApplicationJsonItemsItem.
+     * @return array of Delete200ApplicationJsonItemsItem along with {@link Response} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<String>>> deleteBuildTagWithResponseAsync(
-        String organization, String project, int buildId, String tag) {
+    private Mono<Response<List<String>>> deleteBuildTagWithResponseAsync(String organization, String project,
+        int buildId, String tag) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -646,27 +697,17 @@ public final class TagsClientImpl implements TagsClient {
         if (tag == null) {
             return Mono.error(new IllegalArgumentException("Parameter tag is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .deleteBuildTag(
-                            this.client.getEndpoint(),
-                            organization,
-                            project,
-                            buildId,
-                            tag,
-                            apiVersion,
-                            accept,
-                            context))
+            .withContext(context -> service.deleteBuildTag(this.client.getEndpoint(), organization, project, buildId,
+                tag, this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
-     * Removes a tag from a build.
-     *
+     * Removes a tag from a build. NOTE: This API will not work for tags with special characters. To remove tags with
+     * special characters, use the PATCH method instead (in 6.0+).
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
@@ -675,16 +716,15 @@ public final class TagsClientImpl implements TagsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of Delete200ApplicationJsonItemsItem.
+     * @return array of Delete200ApplicationJsonItemsItem along with {@link Response} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<String>>> deleteBuildTagWithResponseAsync(
-        String organization, String project, int buildId, String tag, Context context) {
+    private Mono<Response<List<String>>> deleteBuildTagWithResponseAsync(String organization, String project,
+        int buildId, String tag, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -695,17 +735,16 @@ public final class TagsClientImpl implements TagsClient {
         if (tag == null) {
             return Mono.error(new IllegalArgumentException("Parameter tag is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .deleteBuildTag(
-                this.client.getEndpoint(), organization, project, buildId, tag, apiVersion, accept, context);
+        return service.deleteBuildTag(this.client.getEndpoint(), organization, project, buildId, tag,
+            this.client.getApiVersion(), accept, context);
     }
 
     /**
-     * Removes a tag from a build.
-     *
+     * Removes a tag from a build. NOTE: This API will not work for tags with special characters. To remove tags with
+     * special characters, use the PATCH method instead (in 6.0+).
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
@@ -713,24 +752,38 @@ public final class TagsClientImpl implements TagsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of Delete200ApplicationJsonItemsItem.
+     * @return array of Delete200ApplicationJsonItemsItem on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<List<String>> deleteBuildTagAsync(String organization, String project, int buildId, String tag) {
         return deleteBuildTagWithResponseAsync(organization, project, buildId, tag)
-            .flatMap(
-                (Response<List<String>> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+            .flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
-     * Removes a tag from a build.
-     *
+     * Removes a tag from a build. NOTE: This API will not work for tags with special characters. To remove tags with
+     * special characters, use the PATCH method instead (in 6.0+).
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param buildId The ID of the build.
+     * @param tag The tag to remove.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return array of Delete200ApplicationJsonItemsItem along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<List<String>> deleteBuildTagWithResponse(String organization, String project, int buildId,
+        String tag, Context context) {
+        return deleteBuildTagWithResponseAsync(organization, project, buildId, tag, context).block();
+    }
+
+    /**
+     * Removes a tag from a build. NOTE: This API will not work for tags with special characters. To remove tags with
+     * special characters, use the PATCH method instead (in 6.0+).
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
@@ -742,31 +795,12 @@ public final class TagsClientImpl implements TagsClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public List<String> deleteBuildTag(String organization, String project, int buildId, String tag) {
-        return deleteBuildTagAsync(organization, project, buildId, tag).block();
-    }
-
-    /**
-     * Removes a tag from a build.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param buildId The ID of the build.
-     * @param tag The tag to remove.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of Delete200ApplicationJsonItemsItem.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<List<String>> deleteBuildTagWithResponse(
-        String organization, String project, int buildId, String tag, Context context) {
-        return deleteBuildTagWithResponseAsync(organization, project, buildId, tag, context).block();
+        return deleteBuildTagWithResponse(organization, project, buildId, tag, Context.NONE).getValue();
     }
 
     /**
      * Adds multiple tags to a definition.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
@@ -774,16 +808,14 @@ public final class TagsClientImpl implements TagsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of String.
+     * @return array of String along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<String>>> addDefinitionTagsWithResponseAsync(
-        String organization, String project, int definitionId, List<String> body) {
+    private Mono<Response<List<String>>> addDefinitionTagsWithResponseAsync(String organization, String project,
+        int definitionId, List<String> body) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -794,27 +826,16 @@ public final class TagsClientImpl implements TagsClient {
         if (body == null) {
             return Mono.error(new IllegalArgumentException("Parameter body is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .addDefinitionTags(
-                            this.client.getEndpoint(),
-                            organization,
-                            project,
-                            definitionId,
-                            apiVersion,
-                            body,
-                            accept,
-                            context))
+            .withContext(context -> service.addDefinitionTags(this.client.getEndpoint(), organization, project,
+                definitionId, this.client.getApiVersion(), body, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Adds multiple tags to a definition.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
@@ -823,16 +844,14 @@ public final class TagsClientImpl implements TagsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of String.
+     * @return array of String along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<String>>> addDefinitionTagsWithResponseAsync(
-        String organization, String project, int definitionId, List<String> body, Context context) {
+    private Mono<Response<List<String>>> addDefinitionTagsWithResponseAsync(String organization, String project,
+        int definitionId, List<String> body, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -843,17 +862,15 @@ public final class TagsClientImpl implements TagsClient {
         if (body == null) {
             return Mono.error(new IllegalArgumentException("Parameter body is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .addDefinitionTags(
-                this.client.getEndpoint(), organization, project, definitionId, apiVersion, body, accept, context);
+        return service.addDefinitionTags(this.client.getEndpoint(), organization, project, definitionId,
+            this.client.getApiVersion(), body, accept, context);
     }
 
     /**
      * Adds multiple tags to a definition.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
@@ -861,25 +878,37 @@ public final class TagsClientImpl implements TagsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of String.
+     * @return array of String on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<List<String>> addDefinitionTagsAsync(
-        String organization, String project, int definitionId, List<String> body) {
+    private Mono<List<String>> addDefinitionTagsAsync(String organization, String project, int definitionId,
+        List<String> body) {
         return addDefinitionTagsWithResponseAsync(organization, project, definitionId, body)
-            .flatMap(
-                (Response<List<String>> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+            .flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Adds multiple tags to a definition.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param definitionId The ID of the definition.
+     * @param body The tags to add.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return array of String along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<List<String>> addDefinitionTagsWithResponse(String organization, String project, int definitionId,
+        List<String> body, Context context) {
+        return addDefinitionTagsWithResponseAsync(organization, project, definitionId, body, context).block();
+    }
+
+    /**
+     * Adds multiple tags to a definition.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
@@ -891,31 +920,12 @@ public final class TagsClientImpl implements TagsClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public List<String> addDefinitionTags(String organization, String project, int definitionId, List<String> body) {
-        return addDefinitionTagsAsync(organization, project, definitionId, body).block();
-    }
-
-    /**
-     * Adds multiple tags to a definition.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param definitionId The ID of the definition.
-     * @param body The tags to add.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of String.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<List<String>> addDefinitionTagsWithResponse(
-        String organization, String project, int definitionId, List<String> body, Context context) {
-        return addDefinitionTagsWithResponseAsync(organization, project, definitionId, body, context).block();
+        return addDefinitionTagsWithResponse(organization, project, definitionId, body, Context.NONE).getValue();
     }
 
     /**
      * Gets the tags for a definition.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
@@ -923,16 +933,14 @@ public final class TagsClientImpl implements TagsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the tags for a definition.
+     * @return the tags for a definition along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<String>>> getDefinitionTagsWithResponseAsync(
-        String organization, String project, int definitionId, Integer revision) {
+    private Mono<Response<List<String>>> getDefinitionTagsWithResponseAsync(String organization, String project,
+        int definitionId, Integer revision) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -940,27 +948,16 @@ public final class TagsClientImpl implements TagsClient {
         if (project == null) {
             return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .getDefinitionTags(
-                            this.client.getEndpoint(),
-                            organization,
-                            project,
-                            definitionId,
-                            revision,
-                            apiVersion,
-                            accept,
-                            context))
+            .withContext(context -> service.getDefinitionTags(this.client.getEndpoint(), organization, project,
+                definitionId, revision, this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Gets the tags for a definition.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
@@ -969,16 +966,14 @@ public final class TagsClientImpl implements TagsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the tags for a definition.
+     * @return the tags for a definition along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<String>>> getDefinitionTagsWithResponseAsync(
-        String organization, String project, int definitionId, Integer revision, Context context) {
+    private Mono<Response<List<String>>> getDefinitionTagsWithResponseAsync(String organization, String project,
+        int definitionId, Integer revision, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -986,68 +981,52 @@ public final class TagsClientImpl implements TagsClient {
         if (project == null) {
             return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .getDefinitionTags(
-                this.client.getEndpoint(), organization, project, definitionId, revision, apiVersion, accept, context);
+        return service.getDefinitionTags(this.client.getEndpoint(), organization, project, definitionId, revision,
+            this.client.getApiVersion(), accept, context);
     }
 
     /**
      * Gets the tags for a definition.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param definitionId The ID of the definition.
-     * @param revision The definition revision number. If not specified, uses the latest revision of the definition.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the tags for a definition.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<List<String>> getDefinitionTagsAsync(
-        String organization, String project, int definitionId, Integer revision) {
-        return getDefinitionTagsWithResponseAsync(organization, project, definitionId, revision)
-            .flatMap(
-                (Response<List<String>> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
-    }
-
-    /**
-     * Gets the tags for a definition.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the tags for a definition.
+     * @return the tags for a definition on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<List<String>> getDefinitionTagsAsync(String organization, String project, int definitionId) {
         final Integer revision = null;
         return getDefinitionTagsWithResponseAsync(organization, project, definitionId, revision)
-            .flatMap(
-                (Response<List<String>> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+            .flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Gets the tags for a definition.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param definitionId The ID of the definition.
+     * @param revision The definition revision number. If not specified, uses the latest revision of the definition.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the tags for a definition along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<List<String>> getDefinitionTagsWithResponse(String organization, String project, int definitionId,
+        Integer revision, Context context) {
+        return getDefinitionTagsWithResponseAsync(organization, project, definitionId, revision, context).block();
+    }
+
+    /**
+     * Gets the tags for a definition.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
@@ -1059,31 +1038,142 @@ public final class TagsClientImpl implements TagsClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public List<String> getDefinitionTags(String organization, String project, int definitionId) {
         final Integer revision = null;
-        return getDefinitionTagsAsync(organization, project, definitionId, revision).block();
+        return getDefinitionTagsWithResponse(organization, project, definitionId, revision, Context.NONE).getValue();
     }
 
     /**
-     * Gets the tags for a definition.
-     *
+     * Adds/Removes tags from a definition.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
-     * @param revision The definition revision number. If not specified, uses the latest revision of the definition.
+     * @param body The tags to add/remove.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return array of String along with {@link Response} on successful completion of {@link Mono}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Mono<Response<List<String>>> updateDefinitionTagsWithResponseAsync(String organization, String project,
+        int definitionId, UpdateTagParameters body) {
+        if (this.client.getEndpoint() == null) {
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (organization == null) {
+            return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
+        }
+        if (project == null) {
+            return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
+        }
+        if (body == null) {
+            return Mono.error(new IllegalArgumentException("Parameter body is required and cannot be null."));
+        } else {
+            body.validate();
+        }
+        final String accept = "application/json";
+        return FluxUtil
+            .withContext(context -> service.updateDefinitionTags(this.client.getEndpoint(), organization, project,
+                definitionId, this.client.getApiVersion(), body, accept, context))
+            .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
+    }
+
+    /**
+     * Adds/Removes tags from a definition.
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param definitionId The ID of the definition.
+     * @param body The tags to add/remove.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the tags for a definition.
+     * @return array of String along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<List<String>> getDefinitionTagsWithResponse(
-        String organization, String project, int definitionId, Integer revision, Context context) {
-        return getDefinitionTagsWithResponseAsync(organization, project, definitionId, revision, context).block();
+    private Mono<Response<List<String>>> updateDefinitionTagsWithResponseAsync(String organization, String project,
+        int definitionId, UpdateTagParameters body, Context context) {
+        if (this.client.getEndpoint() == null) {
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (organization == null) {
+            return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
+        }
+        if (project == null) {
+            return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
+        }
+        if (body == null) {
+            return Mono.error(new IllegalArgumentException("Parameter body is required and cannot be null."));
+        } else {
+            body.validate();
+        }
+        final String accept = "application/json";
+        context = this.client.mergeContext(context);
+        return service.updateDefinitionTags(this.client.getEndpoint(), organization, project, definitionId,
+            this.client.getApiVersion(), body, accept, context);
+    }
+
+    /**
+     * Adds/Removes tags from a definition.
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param definitionId The ID of the definition.
+     * @param body The tags to add/remove.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return array of String on successful completion of {@link Mono}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Mono<List<String>> updateDefinitionTagsAsync(String organization, String project, int definitionId,
+        UpdateTagParameters body) {
+        return updateDefinitionTagsWithResponseAsync(organization, project, definitionId, body)
+            .flatMap(res -> Mono.justOrEmpty(res.getValue()));
+    }
+
+    /**
+     * Adds/Removes tags from a definition.
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param definitionId The ID of the definition.
+     * @param body The tags to add/remove.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return array of String along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<List<String>> updateDefinitionTagsWithResponse(String organization, String project,
+        int definitionId, UpdateTagParameters body, Context context) {
+        return updateDefinitionTagsWithResponseAsync(organization, project, definitionId, body, context).block();
+    }
+
+    /**
+     * Adds/Removes tags from a definition.
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param definitionId The ID of the definition.
+     * @param body The tags to add/remove.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return array of String.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public List<String> updateDefinitionTags(String organization, String project, int definitionId,
+        UpdateTagParameters body) {
+        return updateDefinitionTagsWithResponse(organization, project, definitionId, body, Context.NONE).getValue();
     }
 
     /**
      * Adds a tag to a definition.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
@@ -1091,16 +1181,14 @@ public final class TagsClientImpl implements TagsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of String.
+     * @return array of String along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<String>>> addDefinitionTagWithResponseAsync(
-        String organization, String project, int definitionId, String tag) {
+    private Mono<Response<List<String>>> addDefinitionTagWithResponseAsync(String organization, String project,
+        int definitionId, String tag) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -1111,27 +1199,16 @@ public final class TagsClientImpl implements TagsClient {
         if (tag == null) {
             return Mono.error(new IllegalArgumentException("Parameter tag is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .addDefinitionTag(
-                            this.client.getEndpoint(),
-                            organization,
-                            project,
-                            definitionId,
-                            tag,
-                            apiVersion,
-                            accept,
-                            context))
+            .withContext(context -> service.addDefinitionTag(this.client.getEndpoint(), organization, project,
+                definitionId, tag, this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Adds a tag to a definition.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
@@ -1140,16 +1217,14 @@ public final class TagsClientImpl implements TagsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of String.
+     * @return array of String along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<String>>> addDefinitionTagWithResponseAsync(
-        String organization, String project, int definitionId, String tag, Context context) {
+    private Mono<Response<List<String>>> addDefinitionTagWithResponseAsync(String organization, String project,
+        int definitionId, String tag, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -1160,17 +1235,15 @@ public final class TagsClientImpl implements TagsClient {
         if (tag == null) {
             return Mono.error(new IllegalArgumentException("Parameter tag is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .addDefinitionTag(
-                this.client.getEndpoint(), organization, project, definitionId, tag, apiVersion, accept, context);
+        return service.addDefinitionTag(this.client.getEndpoint(), organization, project, definitionId, tag,
+            this.client.getApiVersion(), accept, context);
     }
 
     /**
      * Adds a tag to a definition.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
@@ -1178,25 +1251,37 @@ public final class TagsClientImpl implements TagsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of String.
+     * @return array of String on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<List<String>> addDefinitionTagAsync(
-        String organization, String project, int definitionId, String tag) {
+    private Mono<List<String>> addDefinitionTagAsync(String organization, String project, int definitionId,
+        String tag) {
         return addDefinitionTagWithResponseAsync(organization, project, definitionId, tag)
-            .flatMap(
-                (Response<List<String>> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+            .flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Adds a tag to a definition.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param definitionId The ID of the definition.
+     * @param tag The tag to add.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return array of String along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<List<String>> addDefinitionTagWithResponse(String organization, String project, int definitionId,
+        String tag, Context context) {
+        return addDefinitionTagWithResponseAsync(organization, project, definitionId, tag, context).block();
+    }
+
+    /**
+     * Adds a tag to a definition.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
@@ -1208,31 +1293,13 @@ public final class TagsClientImpl implements TagsClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public List<String> addDefinitionTag(String organization, String project, int definitionId, String tag) {
-        return addDefinitionTagAsync(organization, project, definitionId, tag).block();
+        return addDefinitionTagWithResponse(organization, project, definitionId, tag, Context.NONE).getValue();
     }
 
     /**
-     * Adds a tag to a definition.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param definitionId The ID of the definition.
-     * @param tag The tag to add.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of String.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<List<String>> addDefinitionTagWithResponse(
-        String organization, String project, int definitionId, String tag, Context context) {
-        return addDefinitionTagWithResponseAsync(organization, project, definitionId, tag, context).block();
-    }
-
-    /**
-     * Removes a tag from a definition.
-     *
+     * Removes a tag from a definition. NOTE: This API will not work for tags with special characters. To remove tags
+     * with special characters, use the PATCH method instead (in 6.0+).
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
@@ -1240,16 +1307,14 @@ public final class TagsClientImpl implements TagsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of String.
+     * @return array of String along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<String>>> deleteDefinitionTagWithResponseAsync(
-        String organization, String project, int definitionId, String tag) {
+    private Mono<Response<List<String>>> deleteDefinitionTagWithResponseAsync(String organization, String project,
+        int definitionId, String tag) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -1260,27 +1325,17 @@ public final class TagsClientImpl implements TagsClient {
         if (tag == null) {
             return Mono.error(new IllegalArgumentException("Parameter tag is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .deleteDefinitionTag(
-                            this.client.getEndpoint(),
-                            organization,
-                            project,
-                            definitionId,
-                            tag,
-                            apiVersion,
-                            accept,
-                            context))
+            .withContext(context -> service.deleteDefinitionTag(this.client.getEndpoint(), organization, project,
+                definitionId, tag, this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
-     * Removes a tag from a definition.
-     *
+     * Removes a tag from a definition. NOTE: This API will not work for tags with special characters. To remove tags
+     * with special characters, use the PATCH method instead (in 6.0+).
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
@@ -1289,16 +1344,14 @@ public final class TagsClientImpl implements TagsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of String.
+     * @return array of String along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<String>>> deleteDefinitionTagWithResponseAsync(
-        String organization, String project, int definitionId, String tag, Context context) {
+    private Mono<Response<List<String>>> deleteDefinitionTagWithResponseAsync(String organization, String project,
+        int definitionId, String tag, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -1309,17 +1362,16 @@ public final class TagsClientImpl implements TagsClient {
         if (tag == null) {
             return Mono.error(new IllegalArgumentException("Parameter tag is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .deleteDefinitionTag(
-                this.client.getEndpoint(), organization, project, definitionId, tag, apiVersion, accept, context);
+        return service.deleteDefinitionTag(this.client.getEndpoint(), organization, project, definitionId, tag,
+            this.client.getApiVersion(), accept, context);
     }
 
     /**
-     * Removes a tag from a definition.
-     *
+     * Removes a tag from a definition. NOTE: This API will not work for tags with special characters. To remove tags
+     * with special characters, use the PATCH method instead (in 6.0+).
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
@@ -1327,25 +1379,39 @@ public final class TagsClientImpl implements TagsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of String.
+     * @return array of String on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<List<String>> deleteDefinitionTagAsync(
-        String organization, String project, int definitionId, String tag) {
+    private Mono<List<String>> deleteDefinitionTagAsync(String organization, String project, int definitionId,
+        String tag) {
         return deleteDefinitionTagWithResponseAsync(organization, project, definitionId, tag)
-            .flatMap(
-                (Response<List<String>> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+            .flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
-     * Removes a tag from a definition.
-     *
+     * Removes a tag from a definition. NOTE: This API will not work for tags with special characters. To remove tags
+     * with special characters, use the PATCH method instead (in 6.0+).
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param definitionId The ID of the definition.
+     * @param tag The tag to remove.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return array of String along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<List<String>> deleteDefinitionTagWithResponse(String organization, String project, int definitionId,
+        String tag, Context context) {
+        return deleteDefinitionTagWithResponseAsync(organization, project, definitionId, tag, context).block();
+    }
+
+    /**
+     * Removes a tag from a definition. NOTE: This API will not work for tags with special characters. To remove tags
+     * with special characters, use the PATCH method instead (in 6.0+).
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
@@ -1357,45 +1423,25 @@ public final class TagsClientImpl implements TagsClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public List<String> deleteDefinitionTag(String organization, String project, int definitionId, String tag) {
-        return deleteDefinitionTagAsync(organization, project, definitionId, tag).block();
-    }
-
-    /**
-     * Removes a tag from a definition.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param definitionId The ID of the definition.
-     * @param tag The tag to remove.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of String.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<List<String>> deleteDefinitionTagWithResponse(
-        String organization, String project, int definitionId, String tag, Context context) {
-        return deleteDefinitionTagWithResponseAsync(organization, project, definitionId, tag, context).block();
+        return deleteDefinitionTagWithResponse(organization, project, definitionId, tag, Context.NONE).getValue();
     }
 
     /**
      * Gets a list of all build tags in the project.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of all build tags in the project.
+     * @return a list of all build tags in the project along with {@link Response} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<Response<List<String>>> getTagsWithResponseAsync(String organization, String project) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -1403,34 +1449,31 @@ public final class TagsClientImpl implements TagsClient {
         if (project == null) {
             return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service.getTags(this.client.getEndpoint(), organization, project, apiVersion, accept, context))
+            .withContext(context -> service.getTags(this.client.getEndpoint(), organization, project,
+                this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Gets a list of all build tags in the project.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of all build tags in the project.
+     * @return a list of all build tags in the project along with {@link Response} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<String>>> getTagsWithResponseAsync(
-        String organization, String project, Context context) {
+    private Mono<Response<List<String>>> getTagsWithResponseAsync(String organization, String project,
+        Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -1438,38 +1481,46 @@ public final class TagsClientImpl implements TagsClient {
         if (project == null) {
             return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service.getTags(this.client.getEndpoint(), organization, project, apiVersion, accept, context);
+        return service.getTags(this.client.getEndpoint(), organization, project, this.client.getApiVersion(), accept,
+            context);
     }
 
     /**
      * Gets a list of all build tags in the project.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of all build tags in the project.
+     * @return a list of all build tags in the project on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<List<String>> getTagsAsync(String organization, String project) {
-        return getTagsWithResponseAsync(organization, project)
-            .flatMap(
-                (Response<List<String>> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+        return getTagsWithResponseAsync(organization, project).flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Gets a list of all build tags in the project.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return a list of all build tags in the project along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<List<String>> getTagsWithResponse(String organization, String project, Context context) {
+        return getTagsWithResponseAsync(organization, project, context).block();
+    }
+
+    /**
+     * Gets a list of all build tags in the project.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1479,43 +1530,25 @@ public final class TagsClientImpl implements TagsClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public List<String> getTags(String organization, String project) {
-        return getTagsAsync(organization, project).block();
-    }
-
-    /**
-     * Gets a list of all build tags in the project.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of all build tags in the project.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<List<String>> getTagsWithResponse(String organization, String project, Context context) {
-        return getTagsWithResponseAsync(organization, project, context).block();
+        return getTagsWithResponse(organization, project, Context.NONE).getValue();
     }
 
     /**
      * Removes a tag from builds, definitions, and from the tag store.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param tag The tag to remove.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of String.
+     * @return array of String along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<Response<List<String>>> deleteTagWithResponseAsync(String organization, String project, String tag) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -1526,19 +1559,16 @@ public final class TagsClientImpl implements TagsClient {
         if (tag == null) {
             return Mono.error(new IllegalArgumentException("Parameter tag is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .deleteTag(this.client.getEndpoint(), organization, project, tag, apiVersion, accept, context))
+            .withContext(context -> service.deleteTag(this.client.getEndpoint(), organization, project, tag,
+                this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Removes a tag from builds, definitions, and from the tag store.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param tag The tag to remove.
@@ -1546,16 +1576,14 @@ public final class TagsClientImpl implements TagsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of String.
+     * @return array of String along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<String>>> deleteTagWithResponseAsync(
-        String organization, String project, String tag, Context context) {
+    private Mono<Response<List<String>>> deleteTagWithResponseAsync(String organization, String project, String tag,
+        Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -1566,39 +1594,49 @@ public final class TagsClientImpl implements TagsClient {
         if (tag == null) {
             return Mono.error(new IllegalArgumentException("Parameter tag is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service.deleteTag(this.client.getEndpoint(), organization, project, tag, apiVersion, accept, context);
+        return service.deleteTag(this.client.getEndpoint(), organization, project, tag, this.client.getApiVersion(),
+            accept, context);
     }
 
     /**
      * Removes a tag from builds, definitions, and from the tag store.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param tag The tag to remove.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of String.
+     * @return array of String on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<List<String>> deleteTagAsync(String organization, String project, String tag) {
-        return deleteTagWithResponseAsync(organization, project, tag)
-            .flatMap(
-                (Response<List<String>> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+        return deleteTagWithResponseAsync(organization, project, tag).flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Removes a tag from builds, definitions, and from the tag store.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param tag The tag to remove.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return array of String along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<List<String>> deleteTagWithResponse(String organization, String project, String tag,
+        Context context) {
+        return deleteTagWithResponseAsync(organization, project, tag, context).block();
+    }
+
+    /**
+     * Removes a tag from builds, definitions, and from the tag store.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param tag The tag to remove.
@@ -1609,24 +1647,6 @@ public final class TagsClientImpl implements TagsClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public List<String> deleteTag(String organization, String project, String tag) {
-        return deleteTagAsync(organization, project, tag).block();
-    }
-
-    /**
-     * Removes a tag from builds, definitions, and from the tag store.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param tag The tag to remove.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of String.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<List<String>> deleteTagWithResponse(
-        String organization, String project, String tag, Context context) {
-        return deleteTagWithResponseAsync(organization, project, tag, context).block();
+        return deleteTagWithResponse(organization, project, tag, Context.NONE).getValue();
     }
 }

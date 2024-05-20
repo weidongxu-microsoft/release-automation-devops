@@ -5,17 +5,15 @@
 package com.azure.dev.fluent.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.models.SignedUrl;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 
-/** Log for a pipeline. */
+/**
+ * Log for a pipeline.
+ */
 @Fluent
 public final class LogInner {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(LogInner.class);
-
     /*
      * The date and time the log was created.
      */
@@ -41,8 +39,7 @@ public final class LogInner {
     private Long lineCount;
 
     /*
-     * A signed url allowing limited-time anonymous access to private
-     * resources.
+     * A signed url allowing limited-time anonymous access to private resources.
      */
     @JsonProperty(value = "signedContent")
     private SignedUrl signedContent;
@@ -54,8 +51,14 @@ public final class LogInner {
     private String url;
 
     /**
+     * Creates an instance of LogInner class.
+     */
+    public LogInner() {
+    }
+
+    /**
      * Get the createdOn property: The date and time the log was created.
-     *
+     * 
      * @return the createdOn value.
      */
     public OffsetDateTime createdOn() {
@@ -64,7 +67,7 @@ public final class LogInner {
 
     /**
      * Set the createdOn property: The date and time the log was created.
-     *
+     * 
      * @param createdOn the createdOn value to set.
      * @return the LogInner object itself.
      */
@@ -75,7 +78,7 @@ public final class LogInner {
 
     /**
      * Get the id property: The ID of the log.
-     *
+     * 
      * @return the id value.
      */
     public Integer id() {
@@ -84,7 +87,7 @@ public final class LogInner {
 
     /**
      * Set the id property: The ID of the log.
-     *
+     * 
      * @param id the id value to set.
      * @return the LogInner object itself.
      */
@@ -95,7 +98,7 @@ public final class LogInner {
 
     /**
      * Get the lastChangedOn property: The date and time the log was last changed.
-     *
+     * 
      * @return the lastChangedOn value.
      */
     public OffsetDateTime lastChangedOn() {
@@ -104,7 +107,7 @@ public final class LogInner {
 
     /**
      * Set the lastChangedOn property: The date and time the log was last changed.
-     *
+     * 
      * @param lastChangedOn the lastChangedOn value to set.
      * @return the LogInner object itself.
      */
@@ -115,7 +118,7 @@ public final class LogInner {
 
     /**
      * Get the lineCount property: The number of lines in the log.
-     *
+     * 
      * @return the lineCount value.
      */
     public Long lineCount() {
@@ -124,7 +127,7 @@ public final class LogInner {
 
     /**
      * Set the lineCount property: The number of lines in the log.
-     *
+     * 
      * @param lineCount the lineCount value to set.
      * @return the LogInner object itself.
      */
@@ -135,7 +138,7 @@ public final class LogInner {
 
     /**
      * Get the signedContent property: A signed url allowing limited-time anonymous access to private resources.
-     *
+     * 
      * @return the signedContent value.
      */
     public SignedUrl signedContent() {
@@ -144,7 +147,7 @@ public final class LogInner {
 
     /**
      * Set the signedContent property: A signed url allowing limited-time anonymous access to private resources.
-     *
+     * 
      * @param signedContent the signedContent value to set.
      * @return the LogInner object itself.
      */
@@ -155,7 +158,7 @@ public final class LogInner {
 
     /**
      * Get the url property: The url property.
-     *
+     * 
      * @return the url value.
      */
     public String url() {
@@ -164,7 +167,7 @@ public final class LogInner {
 
     /**
      * Set the url property: The url property.
-     *
+     * 
      * @param url the url value to set.
      * @return the LogInner object itself.
      */
@@ -175,7 +178,7 @@ public final class LogInner {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

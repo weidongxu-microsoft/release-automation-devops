@@ -9,22 +9,13 @@ import com.azure.core.util.Context;
 import com.azure.dev.fluent.models.DefinitionResourceReferenceInner;
 import java.util.List;
 
-/** Resource collection API of Resources. */
+/**
+ * Resource collection API of Resources.
+ */
 public interface Resources {
     /**
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param definitionId The definitionId parameter.
-     * @param body Array of DefinitionResourceReference.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of DefinitionResourceReference.
-     */
-    List<DefinitionResourceReference> authorizeDefinitionResources(
-        String organization, String project, int definitionId, List<DefinitionResourceReferenceInner> body);
-
-    /**
+     * The authorizeDefinitionResources operation.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The definitionId parameter.
@@ -33,16 +24,44 @@ public interface Resources {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return array of DefinitionResourceReference along with {@link Response}.
+     */
+    Response<List<DefinitionResourceReference>> authorizeDefinitionResourcesWithResponse(String organization,
+        String project, int definitionId, List<DefinitionResourceReferenceInner> body, Context context);
+
+    /**
+     * The authorizeDefinitionResources operation.
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param definitionId The definitionId parameter.
+     * @param body Array of DefinitionResourceReference.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return array of DefinitionResourceReference.
      */
-    Response<List<DefinitionResourceReference>> authorizeDefinitionResourcesWithResponse(
-        String organization,
-        String project,
-        int definitionId,
-        List<DefinitionResourceReferenceInner> body,
+    List<DefinitionResourceReference> authorizeDefinitionResources(String organization, String project,
+        int definitionId, List<DefinitionResourceReferenceInner> body);
+
+    /**
+     * The list operation.
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param definitionId The definitionId parameter.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return array of DefinitionResourceReference along with {@link Response}.
+     */
+    Response<List<DefinitionResourceReference>> listWithResponse(String organization, String project, int definitionId,
         Context context);
 
     /**
+     * The list operation.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The definitionId parameter.
@@ -52,17 +71,4 @@ public interface Resources {
      * @return array of DefinitionResourceReference.
      */
     List<DefinitionResourceReference> list(String organization, String project, int definitionId);
-
-    /**
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param definitionId The definitionId parameter.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of DefinitionResourceReference.
-     */
-    Response<List<DefinitionResourceReference>> listWithResponse(
-        String organization, String project, int definitionId, Context context);
 }

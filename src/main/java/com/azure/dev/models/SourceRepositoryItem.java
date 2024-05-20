@@ -6,39 +6,41 @@ package com.azure.dev.models;
 
 import com.azure.dev.fluent.models.SourceRepositoryItemInner;
 
-/** An immutable client-side representation of SourceRepositoryItem. */
+/**
+ * An immutable client-side representation of SourceRepositoryItem.
+ */
 public interface SourceRepositoryItem {
     /**
      * Gets the isContainer property: Whether the item is able to have sub-items (e.g., is a folder).
-     *
+     * 
      * @return the isContainer value.
      */
     Boolean isContainer();
 
     /**
      * Gets the path property: The full path of the item, relative to the root of the repository.
-     *
+     * 
      * @return the path value.
      */
     String path();
 
     /**
      * Gets the type property: The type of the item (folder, file, etc).
-     *
+     * 
      * @return the type value.
      */
     String type();
 
     /**
      * Gets the url property: The URL of the item.
-     *
+     * 
      * @return the url value.
      */
     String url();
 
     /**
      * Gets the inner com.azure.dev.fluent.models.SourceRepositoryItemInner object.
-     *
+     * 
      * @return the inner object.
      */
     SourceRepositoryItemInner innerModel();

@@ -5,18 +5,16 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.fluent.models.BuildInner;
 import com.azure.dev.fluent.models.BuildUpdatedEventInner;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** The BuildTagsAddedEvent model. */
+/**
+ * The BuildTagsAddedEvent model.
+ */
 @Fluent
 public final class BuildTagsAddedEvent extends BuildUpdatedEventInner {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(BuildTagsAddedEvent.class);
-
     /*
      * The allTags property.
      */
@@ -30,8 +28,14 @@ public final class BuildTagsAddedEvent extends BuildUpdatedEventInner {
     private List<String> newTags;
 
     /**
+     * Creates an instance of BuildTagsAddedEvent class.
+     */
+    public BuildTagsAddedEvent() {
+    }
+
+    /**
      * Get the allTags property: The allTags property.
-     *
+     * 
      * @return the allTags value.
      */
     public List<String> allTags() {
@@ -40,7 +44,7 @@ public final class BuildTagsAddedEvent extends BuildUpdatedEventInner {
 
     /**
      * Set the allTags property: The allTags property.
-     *
+     * 
      * @param allTags the allTags value to set.
      * @return the BuildTagsAddedEvent object itself.
      */
@@ -51,7 +55,7 @@ public final class BuildTagsAddedEvent extends BuildUpdatedEventInner {
 
     /**
      * Get the newTags property: The newTags property.
-     *
+     * 
      * @return the newTags value.
      */
     public List<String> newTags() {
@@ -60,7 +64,7 @@ public final class BuildTagsAddedEvent extends BuildUpdatedEventInner {
 
     /**
      * Set the newTags property: The newTags property.
-     *
+     * 
      * @param newTags the newTags value to set.
      * @return the BuildTagsAddedEvent object itself.
      */
@@ -69,14 +73,18 @@ public final class BuildTagsAddedEvent extends BuildUpdatedEventInner {
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildTagsAddedEvent withBuild(BuildInner build) {
         super.withBuild(build);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildTagsAddedEvent withBuildId(Integer buildId) {
         super.withBuildId(buildId);
@@ -85,7 +93,7 @@ public final class BuildTagsAddedEvent extends BuildUpdatedEventInner {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     @Override

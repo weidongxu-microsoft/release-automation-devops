@@ -5,15 +5,13 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Phase in pipeline. */
+/**
+ * Phase in pipeline.
+ */
 @Fluent
 public final class PhaseReference {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(PhaseReference.class);
-
     /*
      * Attempt number of the phase
      */
@@ -27,8 +25,14 @@ public final class PhaseReference {
     private String phaseName;
 
     /**
+     * Creates an instance of PhaseReference class.
+     */
+    public PhaseReference() {
+    }
+
+    /**
      * Get the attempt property: Attempt number of the phase.
-     *
+     * 
      * @return the attempt value.
      */
     public Integer attempt() {
@@ -37,7 +41,7 @@ public final class PhaseReference {
 
     /**
      * Set the attempt property: Attempt number of the phase.
-     *
+     * 
      * @param attempt the attempt value to set.
      * @return the PhaseReference object itself.
      */
@@ -48,7 +52,7 @@ public final class PhaseReference {
 
     /**
      * Get the phaseName property: Name of the phase. Maximum supported length for name is 256 character.
-     *
+     * 
      * @return the phaseName value.
      */
     public String phaseName() {
@@ -57,7 +61,7 @@ public final class PhaseReference {
 
     /**
      * Set the phaseName property: Name of the phase. Maximum supported length for name is 256 character.
-     *
+     * 
      * @param phaseName the phaseName value to set.
      * @return the PhaseReference object itself.
      */
@@ -68,7 +72,7 @@ public final class PhaseReference {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

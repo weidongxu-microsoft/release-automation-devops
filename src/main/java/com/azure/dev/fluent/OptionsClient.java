@@ -11,11 +11,27 @@ import com.azure.core.util.Context;
 import com.azure.dev.fluent.models.BuildOptionDefinitionInner;
 import java.util.List;
 
-/** An instance of this class provides access to all the operations defined in OptionsClient. */
+/**
+ * An instance of this class provides access to all the operations defined in OptionsClient.
+ */
 public interface OptionsClient {
     /**
      * Gets all build definition options supported by the system.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return all build definition options supported by the system along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Response<List<BuildOptionDefinitionInner>> listWithResponse(String organization, String project, Context context);
+
+    /**
+     * Gets all build definition options supported by the system.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -25,18 +41,4 @@ public interface OptionsClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     List<BuildOptionDefinitionInner> list(String organization, String project);
-
-    /**
-     * Gets all build definition options supported by the system.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return all build definition options supported by the system.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<List<BuildOptionDefinitionInner>> listWithResponse(String organization, String project, Context context);
 }

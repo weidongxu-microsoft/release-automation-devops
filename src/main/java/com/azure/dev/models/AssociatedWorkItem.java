@@ -5,15 +5,13 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** The AssociatedWorkItem model. */
+/**
+ * The AssociatedWorkItem model.
+ */
 @Fluent
 public final class AssociatedWorkItem {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(AssociatedWorkItem.class);
-
     /*
      * The assignedTo property.
      */
@@ -57,8 +55,14 @@ public final class AssociatedWorkItem {
     private String workItemType;
 
     /**
+     * Creates an instance of AssociatedWorkItem class.
+     */
+    public AssociatedWorkItem() {
+    }
+
+    /**
      * Get the assignedTo property: The assignedTo property.
-     *
+     * 
      * @return the assignedTo value.
      */
     public String assignedTo() {
@@ -67,7 +71,7 @@ public final class AssociatedWorkItem {
 
     /**
      * Set the assignedTo property: The assignedTo property.
-     *
+     * 
      * @param assignedTo the assignedTo value to set.
      * @return the AssociatedWorkItem object itself.
      */
@@ -78,7 +82,7 @@ public final class AssociatedWorkItem {
 
     /**
      * Get the id property: Id of associated the work item.
-     *
+     * 
      * @return the id value.
      */
     public Integer id() {
@@ -87,7 +91,7 @@ public final class AssociatedWorkItem {
 
     /**
      * Set the id property: Id of associated the work item.
-     *
+     * 
      * @param id the id value to set.
      * @return the AssociatedWorkItem object itself.
      */
@@ -98,7 +102,7 @@ public final class AssociatedWorkItem {
 
     /**
      * Get the state property: The state property.
-     *
+     * 
      * @return the state value.
      */
     public String state() {
@@ -107,7 +111,7 @@ public final class AssociatedWorkItem {
 
     /**
      * Set the state property: The state property.
-     *
+     * 
      * @param state the state value to set.
      * @return the AssociatedWorkItem object itself.
      */
@@ -118,7 +122,7 @@ public final class AssociatedWorkItem {
 
     /**
      * Get the title property: The title property.
-     *
+     * 
      * @return the title value.
      */
     public String title() {
@@ -127,7 +131,7 @@ public final class AssociatedWorkItem {
 
     /**
      * Set the title property: The title property.
-     *
+     * 
      * @param title the title value to set.
      * @return the AssociatedWorkItem object itself.
      */
@@ -138,7 +142,7 @@ public final class AssociatedWorkItem {
 
     /**
      * Get the url property: REST Url of the work item.
-     *
+     * 
      * @return the url value.
      */
     public String url() {
@@ -147,7 +151,7 @@ public final class AssociatedWorkItem {
 
     /**
      * Set the url property: REST Url of the work item.
-     *
+     * 
      * @param url the url value to set.
      * @return the AssociatedWorkItem object itself.
      */
@@ -158,7 +162,7 @@ public final class AssociatedWorkItem {
 
     /**
      * Get the webUrl property: The webUrl property.
-     *
+     * 
      * @return the webUrl value.
      */
     public String webUrl() {
@@ -167,7 +171,7 @@ public final class AssociatedWorkItem {
 
     /**
      * Set the webUrl property: The webUrl property.
-     *
+     * 
      * @param webUrl the webUrl value to set.
      * @return the AssociatedWorkItem object itself.
      */
@@ -178,7 +182,7 @@ public final class AssociatedWorkItem {
 
     /**
      * Get the workItemType property: The workItemType property.
-     *
+     * 
      * @return the workItemType value.
      */
     public String workItemType() {
@@ -187,7 +191,7 @@ public final class AssociatedWorkItem {
 
     /**
      * Set the workItemType property: The workItemType property.
-     *
+     * 
      * @param workItemType the workItemType value to set.
      * @return the AssociatedWorkItem object itself.
      */
@@ -198,7 +202,7 @@ public final class AssociatedWorkItem {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

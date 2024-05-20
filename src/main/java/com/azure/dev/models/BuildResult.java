@@ -7,24 +7,38 @@ package com.azure.dev.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/** Defines values for BuildResult. */
+/**
+ * The build result.
+ */
 public enum BuildResult {
-    /** Enum value none. */
+    /**
+     * Enum value none.
+     */
     NONE("none"),
 
-    /** Enum value succeeded. */
+    /**
+     * Enum value succeeded.
+     */
     SUCCEEDED("succeeded"),
 
-    /** Enum value partiallySucceeded. */
+    /**
+     * Enum value partiallySucceeded.
+     */
     PARTIALLY_SUCCEEDED("partiallySucceeded"),
 
-    /** Enum value failed. */
+    /**
+     * Enum value failed.
+     */
     FAILED("failed"),
 
-    /** Enum value canceled. */
+    /**
+     * Enum value canceled.
+     */
     CANCELED("canceled");
 
-    /** The actual serialized value for a BuildResult instance. */
+    /**
+     * The actual serialized value for a BuildResult instance.
+     */
     private final String value;
 
     BuildResult(String value) {
@@ -33,12 +47,15 @@ public enum BuildResult {
 
     /**
      * Parses a serialized value to a BuildResult instance.
-     *
+     * 
      * @param value the serialized value to parse.
      * @return the parsed BuildResult object, or null if unable to parse.
      */
     @JsonCreator
     public static BuildResult fromString(String value) {
+        if (value == null) {
+            return null;
+        }
         BuildResult[] items = BuildResult.values();
         for (BuildResult item : items) {
             if (item.toString().equalsIgnoreCase(value)) {
@@ -48,6 +65,9 @@ public enum BuildResult {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @JsonValue
     @Override
     public String toString() {

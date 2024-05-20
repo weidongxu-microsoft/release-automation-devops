@@ -5,15 +5,13 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** The UpdateRetentionSettingModel model. */
+/**
+ * The UpdateRetentionSettingModel model.
+ */
 @Fluent
 public final class UpdateRetentionSettingModel {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(UpdateRetentionSettingModel.class);
-
     /*
      * The value property.
      */
@@ -21,8 +19,14 @@ public final class UpdateRetentionSettingModel {
     private Integer value;
 
     /**
+     * Creates an instance of UpdateRetentionSettingModel class.
+     */
+    public UpdateRetentionSettingModel() {
+    }
+
+    /**
      * Get the value property: The value property.
-     *
+     * 
      * @return the value value.
      */
     public Integer value() {
@@ -31,7 +35,7 @@ public final class UpdateRetentionSettingModel {
 
     /**
      * Set the value property: The value property.
-     *
+     * 
      * @param value the value value to set.
      * @return the UpdateRetentionSettingModel object itself.
      */
@@ -42,7 +46,7 @@ public final class UpdateRetentionSettingModel {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

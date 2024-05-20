@@ -5,15 +5,13 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** A reference to a Pipeline. */
+/**
+ * A reference to a Pipeline.
+ */
 @Fluent
 public final class PipelineReference extends PipelineBase {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(PipelineReference.class);
-
     /*
      * The url property.
      */
@@ -21,8 +19,14 @@ public final class PipelineReference extends PipelineBase {
     private String url;
 
     /**
+     * Creates an instance of PipelineReference class.
+     */
+    public PipelineReference() {
+    }
+
+    /**
      * Get the url property: The url property.
-     *
+     * 
      * @return the url value.
      */
     public String url() {
@@ -31,7 +35,7 @@ public final class PipelineReference extends PipelineBase {
 
     /**
      * Set the url property: The url property.
-     *
+     * 
      * @param url the url value to set.
      * @return the PipelineReference object itself.
      */
@@ -40,28 +44,36 @@ public final class PipelineReference extends PipelineBase {
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PipelineReference withFolder(String folder) {
         super.withFolder(folder);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PipelineReference withId(Integer id) {
         super.withId(id);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PipelineReference withName(String name) {
         super.withName(name);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PipelineReference withRevision(Integer revision) {
         super.withRevision(revision);
@@ -70,7 +82,7 @@ public final class PipelineReference extends PipelineBase {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     @Override

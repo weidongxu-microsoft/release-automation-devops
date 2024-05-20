@@ -14,10 +14,9 @@ import com.azure.dev.fluent.models.RunInner;
 import com.azure.dev.models.Run;
 import com.azure.dev.models.RunPipelineParameters;
 import com.azure.dev.models.Runs;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public final class RunsImpl implements Runs {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(RunsImpl.class);
+    private static final ClientLogger LOGGER = new ClientLogger(RunsImpl.class);
 
     private final RunsClient innerClient;
 
@@ -30,12 +29,24 @@ public final class RunsImpl implements Runs {
 
     public PagedIterable<Run> list(String organization, String project, int pipelineId) {
         PagedIterable<RunInner> inner = this.serviceClient().list(organization, project, pipelineId);
-        return Utils.mapPage(inner, inner1 -> new RunImpl(inner1, this.manager()));
+        return ResourceManagerUtils.mapPage(inner, inner1 -> new RunImpl(inner1, this.manager()));
     }
 
     public PagedIterable<Run> list(String organization, String project, int pipelineId, Context context) {
         PagedIterable<RunInner> inner = this.serviceClient().list(organization, project, pipelineId, context);
-        return Utils.mapPage(inner, inner1 -> new RunImpl(inner1, this.manager()));
+        return ResourceManagerUtils.mapPage(inner, inner1 -> new RunImpl(inner1, this.manager()));
+    }
+
+    public Response<Run> runPipelineWithResponse(String organization, String project, int pipelineId,
+        RunPipelineParameters body, Integer pipelineVersion, Context context) {
+        Response<RunInner> inner = this.serviceClient()
+            .runPipelineWithResponse(organization, project, pipelineId, body, pipelineVersion, context);
+        if (inner != null) {
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
+                new RunImpl(inner.getValue(), this.manager()));
+        } else {
+            return null;
+        }
     }
 
     public Run runPipeline(String organization, String project, int pipelineId, RunPipelineParameters body) {
@@ -47,22 +58,12 @@ public final class RunsImpl implements Runs {
         }
     }
 
-    public Response<Run> runPipelineWithResponse(
-        String organization,
-        String project,
-        int pipelineId,
-        RunPipelineParameters body,
-        Integer pipelineVersion,
+    public Response<Run> getWithResponse(String organization, String project, int pipelineId, int runId,
         Context context) {
-        Response<RunInner> inner =
-            this
-                .serviceClient()
-                .runPipelineWithResponse(organization, project, pipelineId, body, pipelineVersion, context);
+        Response<RunInner> inner
+            = this.serviceClient().getWithResponse(organization, project, pipelineId, runId, context);
         if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
                 new RunImpl(inner.getValue(), this.manager()));
         } else {
             return null;
@@ -73,21 +74,6 @@ public final class RunsImpl implements Runs {
         RunInner inner = this.serviceClient().get(organization, project, pipelineId, runId);
         if (inner != null) {
             return new RunImpl(inner, this.manager());
-        } else {
-            return null;
-        }
-    }
-
-    public Response<Run> getWithResponse(
-        String organization, String project, int pipelineId, int runId, Context context) {
-        Response<RunInner> inner =
-            this.serviceClient().getWithResponse(organization, project, pipelineId, runId, context);
-        if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                new RunImpl(inner.getValue(), this.manager()));
         } else {
             return null;
         }

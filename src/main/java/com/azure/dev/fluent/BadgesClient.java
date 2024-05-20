@@ -10,11 +10,30 @@ import com.azure.core.http.rest.Response;
 import com.azure.core.util.Context;
 import java.util.UUID;
 
-/** An instance of this class provides access to all the operations defined in BadgesClient. */
+/**
+ * An instance of this class provides access to all the operations defined in BadgesClient.
+ */
 public interface BadgesClient {
     /**
      * This endpoint is deprecated. Please see the Build Status REST endpoint.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project The project ID or name.
+     * @param definitionId The ID of the definition.
+     * @param branchName The name of the branch.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response body along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Response<String> getWithResponse(String organization, UUID project, int definitionId, String branchName,
+        Context context);
+
+    /**
+     * This endpoint is deprecated. Please see the Build Status REST endpoint.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project The project ID or name.
      * @param definitionId The ID of the definition.
@@ -27,25 +46,27 @@ public interface BadgesClient {
     String get(String organization, UUID project, int definitionId);
 
     /**
-     * This endpoint is deprecated. Please see the Build Status REST endpoint.
-     *
+     * Gets a badge that indicates the status of the most recent build for the specified branch.
+     * 
      * @param organization The name of the Azure DevOps organization.
-     * @param project The project ID or name.
-     * @param definitionId The ID of the definition.
-     * @param branchName The name of the branch.
+     * @param project Project ID or project name.
+     * @param repoType The repository type.
+     * @param repoId The repository ID.
+     * @param branchName The branch name.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response.
+     * @return a badge that indicates the status of the most recent build for the specified branch along with
+     * {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<String> getWithResponse(
-        String organization, UUID project, int definitionId, String branchName, Context context);
+    Response<String> getBuildBadgeDataWithResponse(String organization, String project, String repoType, String repoId,
+        String branchName, Context context);
 
     /**
      * Gets a badge that indicates the status of the most recent build for the specified branch.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param repoType The repository type.
@@ -56,22 +77,4 @@ public interface BadgesClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     String getBuildBadgeData(String organization, String project, String repoType);
-
-    /**
-     * Gets a badge that indicates the status of the most recent build for the specified branch.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param repoType The repository type.
-     * @param repoId The repository ID.
-     * @param branchName The branch name.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a badge that indicates the status of the most recent build for the specified branch.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<String> getBuildBadgeDataWithResponse(
-        String organization, String project, String repoType, String repoId, String branchName, Context context);
 }

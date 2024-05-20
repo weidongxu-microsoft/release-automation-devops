@@ -17,7 +17,6 @@ import com.azure.dev.models.BuildDefinitionReference;
 import com.azure.dev.models.BuildDefinitionRevision;
 import com.azure.dev.models.DefinitionQueryOrder;
 import com.azure.dev.models.Definitions;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.OffsetDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -25,7 +24,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 public final class DefinitionsImpl implements Definitions {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(DefinitionsImpl.class);
+    private static final ClientLogger LOGGER = new ClientLogger(DefinitionsImpl.class);
 
     private final DefinitionsClient innerClient;
 
@@ -34,6 +33,18 @@ public final class DefinitionsImpl implements Definitions {
     public DefinitionsImpl(DefinitionsClient innerClient, com.azure.dev.DevManager serviceManager) {
         this.innerClient = innerClient;
         this.serviceManager = serviceManager;
+    }
+
+    public Response<BuildDefinition> createWithResponse(String organization, String project, BuildDefinitionInner body,
+        Integer definitionToCloneId, Integer definitionToCloneRevision, Context context) {
+        Response<BuildDefinitionInner> inner = this.serviceClient()
+            .createWithResponse(organization, project, body, definitionToCloneId, definitionToCloneRevision, context);
+        if (inner != null) {
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
+                new BuildDefinitionImpl(inner.getValue(), this.manager()));
+        } else {
+            return null;
+        }
     }
 
     public BuildDefinition create(String organization, String project, BuildDefinitionInner body) {
@@ -45,93 +56,18 @@ public final class DefinitionsImpl implements Definitions {
         }
     }
 
-    public Response<BuildDefinition> createWithResponse(
-        String organization,
-        String project,
-        BuildDefinitionInner body,
-        Integer definitionToCloneId,
-        Integer definitionToCloneRevision,
-        Context context) {
-        Response<BuildDefinitionInner> inner =
-            this
-                .serviceClient()
-                .createWithResponse(
-                    organization, project, body, definitionToCloneId, definitionToCloneRevision, context);
+    public Response<List<BuildDefinitionReference>> listWithResponse(String organization, String project, String name,
+        String repositoryId, String repositoryType, DefinitionQueryOrder queryOrder, Integer top,
+        String continuationToken, OffsetDateTime minMetricsTime, String definitionIds, String path,
+        OffsetDateTime builtAfter, OffsetDateTime notBuiltAfter, Boolean includeAllProperties,
+        Boolean includeLatestBuilds, UUID taskIdFilter, Integer processType, String yamlFilename, Context context) {
+        Response<List<BuildDefinitionReferenceInner>> inner = this.serviceClient()
+            .listWithResponse(organization, project, name, repositoryId, repositoryType, queryOrder, top,
+                continuationToken, minMetricsTime, definitionIds, path, builtAfter, notBuiltAfter, includeAllProperties,
+                includeLatestBuilds, taskIdFilter, processType, yamlFilename, context);
         if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                new BuildDefinitionImpl(inner.getValue(), this.manager()));
-        } else {
-            return null;
-        }
-    }
-
-    public List<BuildDefinitionReference> list(String organization, String project) {
-        List<BuildDefinitionReferenceInner> inner = this.serviceClient().list(organization, project);
-        if (inner != null) {
-            return Collections
-                .unmodifiableList(
-                    inner
-                        .stream()
-                        .map(inner1 -> new BuildDefinitionReferenceImpl(inner1, this.manager()))
-                        .collect(Collectors.toList()));
-        } else {
-            return Collections.emptyList();
-        }
-    }
-
-    public Response<List<BuildDefinitionReference>> listWithResponse(
-        String organization,
-        String project,
-        String name,
-        String repositoryId,
-        String repositoryType,
-        DefinitionQueryOrder queryOrder,
-        Integer top,
-        String continuationToken,
-        OffsetDateTime minMetricsTime,
-        String definitionIds,
-        String path,
-        OffsetDateTime builtAfter,
-        OffsetDateTime notBuiltAfter,
-        Boolean includeAllProperties,
-        Boolean includeLatestBuilds,
-        UUID taskIdFilter,
-        Integer processType,
-        String yamlFilename,
-        Context context) {
-        Response<List<BuildDefinitionReferenceInner>> inner =
-            this
-                .serviceClient()
-                .listWithResponse(
-                    organization,
-                    project,
-                    name,
-                    repositoryId,
-                    repositoryType,
-                    queryOrder,
-                    top,
-                    continuationToken,
-                    minMetricsTime,
-                    definitionIds,
-                    path,
-                    builtAfter,
-                    notBuiltAfter,
-                    includeAllProperties,
-                    includeLatestBuilds,
-                    taskIdFilter,
-                    processType,
-                    yamlFilename,
-                    context);
-        if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                inner
-                    .getValue()
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
+                inner.getValue()
                     .stream()
                     .map(inner1 -> new BuildDefinitionReferenceImpl(inner1, this.manager()))
                     .collect(Collectors.toList()));
@@ -140,12 +76,37 @@ public final class DefinitionsImpl implements Definitions {
         }
     }
 
-    public void delete(String organization, String project, int definitionId) {
-        this.serviceClient().delete(organization, project, definitionId);
+    public List<BuildDefinitionReference> list(String organization, String project) {
+        List<BuildDefinitionReferenceInner> inner = this.serviceClient().list(organization, project);
+        if (inner != null) {
+            return Collections.unmodifiableList(inner.stream()
+                .map(inner1 -> new BuildDefinitionReferenceImpl(inner1, this.manager()))
+                .collect(Collectors.toList()));
+        } else {
+            return Collections.emptyList();
+        }
     }
 
     public Response<Void> deleteWithResponse(String organization, String project, int definitionId, Context context) {
         return this.serviceClient().deleteWithResponse(organization, project, definitionId, context);
+    }
+
+    public void delete(String organization, String project, int definitionId) {
+        this.serviceClient().delete(organization, project, definitionId);
+    }
+
+    public Response<BuildDefinition> getWithResponse(String organization, String project, int definitionId,
+        Integer revision, OffsetDateTime minMetricsTime, String propertyFilters, Boolean includeLatestBuilds,
+        Context context) {
+        Response<BuildDefinitionInner> inner = this.serviceClient()
+            .getWithResponse(organization, project, definitionId, revision, minMetricsTime, propertyFilters,
+                includeLatestBuilds, context);
+        if (inner != null) {
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
+                new BuildDefinitionImpl(inner.getValue(), this.manager()));
+        } else {
+            return null;
+        }
     }
 
     public BuildDefinition get(String organization, String project, int definitionId) {
@@ -157,32 +118,12 @@ public final class DefinitionsImpl implements Definitions {
         }
     }
 
-    public Response<BuildDefinition> getWithResponse(
-        String organization,
-        String project,
-        int definitionId,
-        Integer revision,
-        OffsetDateTime minMetricsTime,
-        String propertyFilters,
-        Boolean includeLatestBuilds,
-        Context context) {
-        Response<BuildDefinitionInner> inner =
-            this
-                .serviceClient()
-                .getWithResponse(
-                    organization,
-                    project,
-                    definitionId,
-                    revision,
-                    minMetricsTime,
-                    propertyFilters,
-                    includeLatestBuilds,
-                    context);
+    public Response<BuildDefinition> restoreDefinitionWithResponse(String organization, String project,
+        int definitionId, boolean deleted, Context context) {
+        Response<BuildDefinitionInner> inner
+            = this.serviceClient().restoreDefinitionWithResponse(organization, project, definitionId, deleted, context);
         if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
                 new BuildDefinitionImpl(inner.getValue(), this.manager()));
         } else {
             return null;
@@ -190,8 +131,8 @@ public final class DefinitionsImpl implements Definitions {
     }
 
     public BuildDefinition restoreDefinition(String organization, String project, int definitionId, boolean deleted) {
-        BuildDefinitionInner inner =
-            this.serviceClient().restoreDefinition(organization, project, definitionId, deleted);
+        BuildDefinitionInner inner
+            = this.serviceClient().restoreDefinition(organization, project, definitionId, deleted);
         if (inner != null) {
             return new BuildDefinitionImpl(inner, this.manager());
         } else {
@@ -199,15 +140,14 @@ public final class DefinitionsImpl implements Definitions {
         }
     }
 
-    public Response<BuildDefinition> restoreDefinitionWithResponse(
-        String organization, String project, int definitionId, boolean deleted, Context context) {
-        Response<BuildDefinitionInner> inner =
-            this.serviceClient().restoreDefinitionWithResponse(organization, project, definitionId, deleted, context);
+    public Response<BuildDefinition> updateWithResponse(String organization, String project, int definitionId,
+        BuildDefinitionInner body, Integer secretsSourceDefinitionId, Integer secretsSourceDefinitionRevision,
+        Context context) {
+        Response<BuildDefinitionInner> inner = this.serviceClient()
+            .updateWithResponse(organization, project, definitionId, body, secretsSourceDefinitionId,
+                secretsSourceDefinitionRevision, context);
         if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
                 new BuildDefinitionImpl(inner.getValue(), this.manager()));
         } else {
             return null;
@@ -223,67 +163,30 @@ public final class DefinitionsImpl implements Definitions {
         }
     }
 
-    public Response<BuildDefinition> updateWithResponse(
-        String organization,
-        String project,
-        int definitionId,
-        BuildDefinitionInner body,
-        Integer secretsSourceDefinitionId,
-        Integer secretsSourceDefinitionRevision,
-        Context context) {
-        Response<BuildDefinitionInner> inner =
-            this
-                .serviceClient()
-                .updateWithResponse(
-                    organization,
-                    project,
-                    definitionId,
-                    body,
-                    secretsSourceDefinitionId,
-                    secretsSourceDefinitionRevision,
-                    context);
+    public Response<List<BuildDefinitionRevision>> getDefinitionRevisionsWithResponse(String organization,
+        String project, int definitionId, Context context) {
+        Response<List<BuildDefinitionRevisionInner>> inner
+            = this.serviceClient().getDefinitionRevisionsWithResponse(organization, project, definitionId, context);
         if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                new BuildDefinitionImpl(inner.getValue(), this.manager()));
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
+                inner.getValue()
+                    .stream()
+                    .map(inner1 -> new BuildDefinitionRevisionImpl(inner1, this.manager()))
+                    .collect(Collectors.toList()));
         } else {
             return null;
         }
     }
 
     public List<BuildDefinitionRevision> getDefinitionRevisions(String organization, String project, int definitionId) {
-        List<BuildDefinitionRevisionInner> inner =
-            this.serviceClient().getDefinitionRevisions(organization, project, definitionId);
+        List<BuildDefinitionRevisionInner> inner
+            = this.serviceClient().getDefinitionRevisions(organization, project, definitionId);
         if (inner != null) {
-            return Collections
-                .unmodifiableList(
-                    inner
-                        .stream()
-                        .map(inner1 -> new BuildDefinitionRevisionImpl(inner1, this.manager()))
-                        .collect(Collectors.toList()));
+            return Collections.unmodifiableList(inner.stream()
+                .map(inner1 -> new BuildDefinitionRevisionImpl(inner1, this.manager()))
+                .collect(Collectors.toList()));
         } else {
             return Collections.emptyList();
-        }
-    }
-
-    public Response<List<BuildDefinitionRevision>> getDefinitionRevisionsWithResponse(
-        String organization, String project, int definitionId, Context context) {
-        Response<List<BuildDefinitionRevisionInner>> inner =
-            this.serviceClient().getDefinitionRevisionsWithResponse(organization, project, definitionId, context);
-        if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                inner
-                    .getValue()
-                    .stream()
-                    .map(inner1 -> new BuildDefinitionRevisionImpl(inner1, this.manager()))
-                    .collect(Collectors.toList()));
-        } else {
-            return null;
         }
     }
 

@@ -7,32 +7,34 @@ package com.azure.dev.models;
 import com.azure.dev.fluent.models.RepositoryWebhookInner;
 import java.util.List;
 
-/** An immutable client-side representation of RepositoryWebhook. */
+/**
+ * An immutable client-side representation of RepositoryWebhook.
+ */
 public interface RepositoryWebhook {
     /**
      * Gets the name property: The friendly name of the repository.
-     *
+     * 
      * @return the name value.
      */
     String name();
 
     /**
      * Gets the types property: The types property.
-     *
+     * 
      * @return the types value.
      */
     List<DefinitionTriggerType> types();
 
     /**
      * Gets the url property: The URL of the repository.
-     *
+     * 
      * @return the url value.
      */
     String url();
 
     /**
      * Gets the inner com.azure.dev.fluent.models.RepositoryWebhookInner object.
-     *
+     * 
      * @return the inner object.
      */
     RepositoryWebhookInner innerModel();

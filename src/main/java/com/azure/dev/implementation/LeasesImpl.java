@@ -13,14 +13,14 @@ import com.azure.dev.fluent.models.RetentionLeaseInner;
 import com.azure.dev.models.Leases;
 import com.azure.dev.models.NewRetentionLease;
 import com.azure.dev.models.RetentionLease;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.azure.dev.models.RetentionLeaseUpdate;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 public final class LeasesImpl implements Leases {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(LeasesImpl.class);
+    private static final ClientLogger LOGGER = new ClientLogger(LeasesImpl.class);
 
     private final LeasesClient innerClient;
 
@@ -31,31 +31,13 @@ public final class LeasesImpl implements Leases {
         this.serviceManager = serviceManager;
     }
 
-    public List<RetentionLease> add(String organization, String project, List<NewRetentionLease> body) {
-        List<RetentionLeaseInner> inner = this.serviceClient().add(organization, project, body);
+    public Response<List<RetentionLease>> addWithResponse(String organization, String project,
+        List<NewRetentionLease> body, Context context) {
+        Response<List<RetentionLeaseInner>> inner
+            = this.serviceClient().addWithResponse(organization, project, body, context);
         if (inner != null) {
-            return Collections
-                .unmodifiableList(
-                    inner
-                        .stream()
-                        .map(inner1 -> new RetentionLeaseImpl(inner1, this.manager()))
-                        .collect(Collectors.toList()));
-        } else {
-            return Collections.emptyList();
-        }
-    }
-
-    public Response<List<RetentionLease>> addWithResponse(
-        String organization, String project, List<NewRetentionLease> body, Context context) {
-        Response<List<RetentionLeaseInner>> inner =
-            this.serviceClient().addWithResponse(organization, project, body, context);
-        if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                inner
-                    .getValue()
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
+                inner.getValue()
                     .stream()
                     .map(inner1 -> new RetentionLeaseImpl(inner1, this.manager()))
                     .collect(Collectors.toList()));
@@ -64,46 +46,59 @@ public final class LeasesImpl implements Leases {
         }
     }
 
-    public void delete(String organization, String project, String ids) {
-        this.serviceClient().delete(organization, project, ids);
+    public List<RetentionLease> add(String organization, String project, List<NewRetentionLease> body) {
+        List<RetentionLeaseInner> inner = this.serviceClient().add(organization, project, body);
+        if (inner != null) {
+            return Collections.unmodifiableList(inner.stream()
+                .map(inner1 -> new RetentionLeaseImpl(inner1, this.manager()))
+                .collect(Collectors.toList()));
+        } else {
+            return Collections.emptyList();
+        }
     }
 
     public Response<Void> deleteWithResponse(String organization, String project, String ids, Context context) {
         return this.serviceClient().deleteWithResponse(organization, project, ids, context);
     }
 
-    public List<RetentionLease> getRetentionLeasesByMinimalRetentionLeases(
-        String organization, String project, String leasesToFetch) {
-        List<RetentionLeaseInner> inner =
-            this.serviceClient().getRetentionLeasesByMinimalRetentionLeases(organization, project, leasesToFetch);
+    public void delete(String organization, String project, String ids) {
+        this.serviceClient().delete(organization, project, ids);
+    }
+
+    public Response<List<RetentionLease>> getRetentionLeasesByMinimalRetentionLeasesWithResponse(String organization,
+        String project, String leasesToFetch, Context context) {
+        Response<List<RetentionLeaseInner>> inner = this.serviceClient()
+            .getRetentionLeasesByMinimalRetentionLeasesWithResponse(organization, project, leasesToFetch, context);
         if (inner != null) {
-            return Collections
-                .unmodifiableList(
-                    inner
-                        .stream()
-                        .map(inner1 -> new RetentionLeaseImpl(inner1, this.manager()))
-                        .collect(Collectors.toList()));
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
+                inner.getValue()
+                    .stream()
+                    .map(inner1 -> new RetentionLeaseImpl(inner1, this.manager()))
+                    .collect(Collectors.toList()));
+        } else {
+            return null;
+        }
+    }
+
+    public List<RetentionLease> getRetentionLeasesByMinimalRetentionLeases(String organization, String project,
+        String leasesToFetch) {
+        List<RetentionLeaseInner> inner
+            = this.serviceClient().getRetentionLeasesByMinimalRetentionLeases(organization, project, leasesToFetch);
+        if (inner != null) {
+            return Collections.unmodifiableList(inner.stream()
+                .map(inner1 -> new RetentionLeaseImpl(inner1, this.manager()))
+                .collect(Collectors.toList()));
         } else {
             return Collections.emptyList();
         }
     }
 
-    public Response<List<RetentionLease>> getRetentionLeasesByMinimalRetentionLeasesWithResponse(
-        String organization, String project, String leasesToFetch, Context context) {
-        Response<List<RetentionLeaseInner>> inner =
-            this
-                .serviceClient()
-                .getRetentionLeasesByMinimalRetentionLeasesWithResponse(organization, project, leasesToFetch, context);
+    public Response<RetentionLease> getWithResponse(String organization, String project, int leaseId, Context context) {
+        Response<RetentionLeaseInner> inner
+            = this.serviceClient().getWithResponse(organization, project, leaseId, context);
         if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                inner
-                    .getValue()
-                    .stream()
-                    .map(inner1 -> new RetentionLeaseImpl(inner1, this.manager()))
-                    .collect(Collectors.toList()));
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
+                new RetentionLeaseImpl(inner.getValue(), this.manager()));
         } else {
             return null;
         }
@@ -118,49 +113,61 @@ public final class LeasesImpl implements Leases {
         }
     }
 
-    public Response<RetentionLease> getWithResponse(String organization, String project, int leaseId, Context context) {
-        Response<RetentionLeaseInner> inner =
-            this.serviceClient().getWithResponse(organization, project, leaseId, context);
+    public Response<RetentionLease> updateWithResponse(String organization, String project, int leaseId,
+        RetentionLeaseUpdate body, Context context) {
+        Response<RetentionLeaseInner> inner
+            = this.serviceClient().updateWithResponse(organization, project, leaseId, body, context);
         if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
                 new RetentionLeaseImpl(inner.getValue(), this.manager()));
         } else {
             return null;
         }
     }
 
-    public List<RetentionLease> getRetentionLeasesByUserId(String organization, String project, UUID userOwnerId) {
-        List<RetentionLeaseInner> inner =
-            this.serviceClient().getRetentionLeasesByUserId(organization, project, userOwnerId);
+    public RetentionLease update(String organization, String project, int leaseId, RetentionLeaseUpdate body) {
+        RetentionLeaseInner inner = this.serviceClient().update(organization, project, leaseId, body);
         if (inner != null) {
-            return Collections
-                .unmodifiableList(
-                    inner
-                        .stream()
-                        .map(inner1 -> new RetentionLeaseImpl(inner1, this.manager()))
-                        .collect(Collectors.toList()));
+            return new RetentionLeaseImpl(inner, this.manager());
+        } else {
+            return null;
+        }
+    }
+
+    public Response<List<RetentionLease>> getRetentionLeasesByUserIdWithResponse(String organization, String project,
+        UUID userOwnerId, Integer definitionId, Integer runId, Context context) {
+        Response<List<RetentionLeaseInner>> inner = this.serviceClient()
+            .getRetentionLeasesByUserIdWithResponse(organization, project, userOwnerId, definitionId, runId, context);
+        if (inner != null) {
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
+                inner.getValue()
+                    .stream()
+                    .map(inner1 -> new RetentionLeaseImpl(inner1, this.manager()))
+                    .collect(Collectors.toList()));
+        } else {
+            return null;
+        }
+    }
+
+    public List<RetentionLease> getRetentionLeasesByUserId(String organization, String project, UUID userOwnerId) {
+        List<RetentionLeaseInner> inner
+            = this.serviceClient().getRetentionLeasesByUserId(organization, project, userOwnerId);
+        if (inner != null) {
+            return Collections.unmodifiableList(inner.stream()
+                .map(inner1 -> new RetentionLeaseImpl(inner1, this.manager()))
+                .collect(Collectors.toList()));
         } else {
             return Collections.emptyList();
         }
     }
 
-    public Response<List<RetentionLease>> getRetentionLeasesByUserIdWithResponse(
-        String organization, String project, UUID userOwnerId, Integer definitionId, Integer runId, Context context) {
-        Response<List<RetentionLeaseInner>> inner =
-            this
-                .serviceClient()
-                .getRetentionLeasesByUserIdWithResponse(
-                    organization, project, userOwnerId, definitionId, runId, context);
+    public Response<List<RetentionLease>> getRetentionLeasesByOwnerIdWithResponse(String organization, String project,
+        String ownerId, Integer definitionId, Integer runId, Context context) {
+        Response<List<RetentionLeaseInner>> inner = this.serviceClient()
+            .getRetentionLeasesByOwnerIdWithResponse(organization, project, ownerId, definitionId, runId, context);
         if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                inner
-                    .getValue()
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
+                inner.getValue()
                     .stream()
                     .map(inner1 -> new RetentionLeaseImpl(inner1, this.manager()))
                     .collect(Collectors.toList()));
@@ -172,35 +179,11 @@ public final class LeasesImpl implements Leases {
     public List<RetentionLease> getRetentionLeasesByOwnerId(String organization, String project) {
         List<RetentionLeaseInner> inner = this.serviceClient().getRetentionLeasesByOwnerId(organization, project);
         if (inner != null) {
-            return Collections
-                .unmodifiableList(
-                    inner
-                        .stream()
-                        .map(inner1 -> new RetentionLeaseImpl(inner1, this.manager()))
-                        .collect(Collectors.toList()));
+            return Collections.unmodifiableList(inner.stream()
+                .map(inner1 -> new RetentionLeaseImpl(inner1, this.manager()))
+                .collect(Collectors.toList()));
         } else {
             return Collections.emptyList();
-        }
-    }
-
-    public Response<List<RetentionLease>> getRetentionLeasesByOwnerIdWithResponse(
-        String organization, String project, String ownerId, Integer definitionId, Integer runId, Context context) {
-        Response<List<RetentionLeaseInner>> inner =
-            this
-                .serviceClient()
-                .getRetentionLeasesByOwnerIdWithResponse(organization, project, ownerId, definitionId, runId, context);
-        if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                inner
-                    .getValue()
-                    .stream()
-                    .map(inner1 -> new RetentionLeaseImpl(inner1, this.manager()))
-                    .collect(Collectors.toList()));
-        } else {
-            return null;
         }
     }
 

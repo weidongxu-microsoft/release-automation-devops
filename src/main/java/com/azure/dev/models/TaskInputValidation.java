@@ -5,15 +5,13 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** The TaskInputValidation model. */
+/**
+ * The TaskInputValidation model.
+ */
 @Fluent
 public final class TaskInputValidation {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(TaskInputValidation.class);
-
     /*
      * Conditional expression
      */
@@ -27,8 +25,14 @@ public final class TaskInputValidation {
     private String message;
 
     /**
+     * Creates an instance of TaskInputValidation class.
+     */
+    public TaskInputValidation() {
+    }
+
+    /**
      * Get the expression property: Conditional expression.
-     *
+     * 
      * @return the expression value.
      */
     public String expression() {
@@ -37,7 +41,7 @@ public final class TaskInputValidation {
 
     /**
      * Set the expression property: Conditional expression.
-     *
+     * 
      * @param expression the expression value to set.
      * @return the TaskInputValidation object itself.
      */
@@ -48,7 +52,7 @@ public final class TaskInputValidation {
 
     /**
      * Get the message property: Message explaining how user can correct if validation fails.
-     *
+     * 
      * @return the message value.
      */
     public String message() {
@@ -57,7 +61,7 @@ public final class TaskInputValidation {
 
     /**
      * Set the message property: Message explaining how user can correct if validation fails.
-     *
+     * 
      * @param message the message value to set.
      * @return the TaskInputValidation object itself.
      */
@@ -68,7 +72,7 @@ public final class TaskInputValidation {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

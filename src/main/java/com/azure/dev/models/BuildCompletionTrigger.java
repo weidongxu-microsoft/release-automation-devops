@@ -5,16 +5,14 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** Represents a build completion trigger. */
+/**
+ * Represents a build completion trigger.
+ */
 @Fluent
 public final class BuildCompletionTrigger extends BuildTrigger {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(BuildCompletionTrigger.class);
-
     /*
      * The branchFilters property.
      */
@@ -22,8 +20,7 @@ public final class BuildCompletionTrigger extends BuildTrigger {
     private List<String> branchFilters;
 
     /*
-     * A reference to the definition that should trigger builds for this
-     * definition.
+     * A reference to the definition that should trigger builds for this definition.
      */
     @JsonProperty(value = "definition")
     private DefinitionReference definition;
@@ -35,8 +32,14 @@ public final class BuildCompletionTrigger extends BuildTrigger {
     private Boolean requiresSuccessfulBuild;
 
     /**
+     * Creates an instance of BuildCompletionTrigger class.
+     */
+    public BuildCompletionTrigger() {
+    }
+
+    /**
      * Get the branchFilters property: The branchFilters property.
-     *
+     * 
      * @return the branchFilters value.
      */
     public List<String> branchFilters() {
@@ -45,7 +48,7 @@ public final class BuildCompletionTrigger extends BuildTrigger {
 
     /**
      * Set the branchFilters property: The branchFilters property.
-     *
+     * 
      * @param branchFilters the branchFilters value to set.
      * @return the BuildCompletionTrigger object itself.
      */
@@ -56,7 +59,7 @@ public final class BuildCompletionTrigger extends BuildTrigger {
 
     /**
      * Get the definition property: A reference to the definition that should trigger builds for this definition.
-     *
+     * 
      * @return the definition value.
      */
     public DefinitionReference definition() {
@@ -65,7 +68,7 @@ public final class BuildCompletionTrigger extends BuildTrigger {
 
     /**
      * Set the definition property: A reference to the definition that should trigger builds for this definition.
-     *
+     * 
      * @param definition the definition value to set.
      * @return the BuildCompletionTrigger object itself.
      */
@@ -76,7 +79,7 @@ public final class BuildCompletionTrigger extends BuildTrigger {
 
     /**
      * Get the requiresSuccessfulBuild property: The requiresSuccessfulBuild property.
-     *
+     * 
      * @return the requiresSuccessfulBuild value.
      */
     public Boolean requiresSuccessfulBuild() {
@@ -85,7 +88,7 @@ public final class BuildCompletionTrigger extends BuildTrigger {
 
     /**
      * Set the requiresSuccessfulBuild property: The requiresSuccessfulBuild property.
-     *
+     * 
      * @param requiresSuccessfulBuild the requiresSuccessfulBuild value to set.
      * @return the BuildCompletionTrigger object itself.
      */
@@ -94,7 +97,9 @@ public final class BuildCompletionTrigger extends BuildTrigger {
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildCompletionTrigger withTriggerType(DefinitionTriggerType triggerType) {
         super.withTriggerType(triggerType);
@@ -103,7 +108,7 @@ public final class BuildCompletionTrigger extends BuildTrigger {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     @Override

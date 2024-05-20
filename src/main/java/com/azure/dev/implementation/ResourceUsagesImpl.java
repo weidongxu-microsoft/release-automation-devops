@@ -12,10 +12,9 @@ import com.azure.dev.fluent.ResourceUsagesClient;
 import com.azure.dev.fluent.models.BuildResourceUsageInner;
 import com.azure.dev.models.BuildResourceUsage;
 import com.azure.dev.models.ResourceUsages;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public final class ResourceUsagesImpl implements ResourceUsages {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(ResourceUsagesImpl.class);
+    private static final ClientLogger LOGGER = new ClientLogger(ResourceUsagesImpl.class);
 
     private final ResourceUsagesClient innerClient;
 
@@ -26,23 +25,20 @@ public final class ResourceUsagesImpl implements ResourceUsages {
         this.serviceManager = serviceManager;
     }
 
-    public BuildResourceUsage get(String organization) {
-        BuildResourceUsageInner inner = this.serviceClient().get(organization);
+    public Response<BuildResourceUsage> getWithResponse(String organization, Context context) {
+        Response<BuildResourceUsageInner> inner = this.serviceClient().getWithResponse(organization, context);
         if (inner != null) {
-            return new BuildResourceUsageImpl(inner, this.manager());
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
+                new BuildResourceUsageImpl(inner.getValue(), this.manager()));
         } else {
             return null;
         }
     }
 
-    public Response<BuildResourceUsage> getWithResponse(String organization, Context context) {
-        Response<BuildResourceUsageInner> inner = this.serviceClient().getWithResponse(organization, context);
+    public BuildResourceUsage get(String organization) {
+        BuildResourceUsageInner inner = this.serviceClient().get(organization);
         if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                new BuildResourceUsageImpl(inner.getValue(), this.manager()));
+            return new BuildResourceUsageImpl(inner, this.manager());
         } else {
             return null;
         }

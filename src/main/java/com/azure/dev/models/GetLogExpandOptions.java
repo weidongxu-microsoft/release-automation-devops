@@ -7,15 +7,23 @@ package com.azure.dev.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/** Defines values for GetLogExpandOptions. */
+/**
+ * Defines values for GetLogExpandOptions.
+ */
 public enum GetLogExpandOptions {
-    /** Enum value none. */
+    /**
+     * Enum value none.
+     */
     NONE("none"),
 
-    /** Enum value signedContent. */
+    /**
+     * Enum value signedContent.
+     */
     SIGNED_CONTENT("signedContent");
 
-    /** The actual serialized value for a GetLogExpandOptions instance. */
+    /**
+     * The actual serialized value for a GetLogExpandOptions instance.
+     */
     private final String value;
 
     GetLogExpandOptions(String value) {
@@ -24,12 +32,15 @@ public enum GetLogExpandOptions {
 
     /**
      * Parses a serialized value to a GetLogExpandOptions instance.
-     *
+     * 
      * @param value the serialized value to parse.
      * @return the parsed GetLogExpandOptions object, or null if unable to parse.
      */
     @JsonCreator
     public static GetLogExpandOptions fromString(String value) {
+        if (value == null) {
+            return null;
+        }
         GetLogExpandOptions[] items = GetLogExpandOptions.values();
         for (GetLogExpandOptions item : items) {
             if (item.toString().equalsIgnoreCase(value)) {
@@ -39,6 +50,9 @@ public enum GetLogExpandOptions {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @JsonValue
     @Override
     public String toString() {

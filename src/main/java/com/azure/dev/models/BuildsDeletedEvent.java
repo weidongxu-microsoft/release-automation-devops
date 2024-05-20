@@ -5,31 +5,41 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import java.util.UUID;
 
-/** The BuildsDeletedEvent model. */
+/**
+ * The BuildsDeletedEvent model.
+ */
 @Fluent
 public final class BuildsDeletedEvent extends BuildsDeletedEvent1 {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(BuildsDeletedEvent.class);
+    /**
+     * Creates an instance of BuildsDeletedEvent class.
+     */
+    public BuildsDeletedEvent() {
+    }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildsDeletedEvent withBuildIds(List<Integer> buildIds) {
         super.withBuildIds(buildIds);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildsDeletedEvent withDefinitionId(Integer definitionId) {
         super.withDefinitionId(definitionId);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildsDeletedEvent withProjectId(UUID projectId) {
         super.withProjectId(projectId);
@@ -38,7 +48,7 @@ public final class BuildsDeletedEvent extends BuildsDeletedEvent1 {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     @Override

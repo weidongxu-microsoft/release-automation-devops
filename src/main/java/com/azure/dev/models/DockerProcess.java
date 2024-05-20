@@ -5,15 +5,13 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** The DockerProcess model. */
+/**
+ * The DockerProcess model.
+ */
 @Fluent
 public final class DockerProcess extends BuildProcess {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(DockerProcess.class);
-
     /*
      * Represents the target for the docker build process.
      */
@@ -21,8 +19,14 @@ public final class DockerProcess extends BuildProcess {
     private DockerProcessTarget target;
 
     /**
+     * Creates an instance of DockerProcess class.
+     */
+    public DockerProcess() {
+    }
+
+    /**
      * Get the target property: Represents the target for the docker build process.
-     *
+     * 
      * @return the target value.
      */
     public DockerProcessTarget target() {
@@ -31,7 +35,7 @@ public final class DockerProcess extends BuildProcess {
 
     /**
      * Set the target property: Represents the target for the docker build process.
-     *
+     * 
      * @param target the target value to set.
      * @return the DockerProcess object itself.
      */
@@ -40,7 +44,9 @@ public final class DockerProcess extends BuildProcess {
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public DockerProcess withType(Integer type) {
         super.withType(type);
@@ -49,7 +55,7 @@ public final class DockerProcess extends BuildProcess {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     @Override

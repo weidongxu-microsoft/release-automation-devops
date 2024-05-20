@@ -5,15 +5,13 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Specification of the agent defined by the pool provider. */
+/**
+ * Specification of the agent defined by the pool provider.
+ */
 @Fluent
 public final class AgentSpecification {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(AgentSpecification.class);
-
     /*
      * Agent specification unique identifier.
      */
@@ -21,8 +19,14 @@ public final class AgentSpecification {
     private String identifier;
 
     /**
+     * Creates an instance of AgentSpecification class.
+     */
+    public AgentSpecification() {
+    }
+
+    /**
      * Get the identifier property: Agent specification unique identifier.
-     *
+     * 
      * @return the identifier value.
      */
     public String identifier() {
@@ -31,7 +35,7 @@ public final class AgentSpecification {
 
     /**
      * Set the identifier property: Agent specification unique identifier.
-     *
+     * 
      * @param identifier the identifier value to set.
      * @return the AgentSpecification object itself.
      */
@@ -42,7 +46,7 @@ public final class AgentSpecification {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

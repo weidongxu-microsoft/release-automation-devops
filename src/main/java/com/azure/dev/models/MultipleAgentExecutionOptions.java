@@ -5,18 +5,15 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Represents options for running a phase against multiple agents. */
+/**
+ * Represents options for running a phase against multiple agents.
+ */
 @Fluent
 public final class MultipleAgentExecutionOptions extends AgentTargetExecutionOptions {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(MultipleAgentExecutionOptions.class);
-
     /*
-     * Indicates whether failure on one agent should prevent the phase from
-     * running on other agents.
+     * Indicates whether failure on one agent should prevent the phase from running on other agents.
      */
     @JsonProperty(value = "continueOnError")
     private Boolean continueOnError;
@@ -28,9 +25,15 @@ public final class MultipleAgentExecutionOptions extends AgentTargetExecutionOpt
     private Integer maxConcurrency;
 
     /**
+     * Creates an instance of MultipleAgentExecutionOptions class.
+     */
+    public MultipleAgentExecutionOptions() {
+    }
+
+    /**
      * Get the continueOnError property: Indicates whether failure on one agent should prevent the phase from running on
      * other agents.
-     *
+     * 
      * @return the continueOnError value.
      */
     public Boolean continueOnError() {
@@ -40,7 +43,7 @@ public final class MultipleAgentExecutionOptions extends AgentTargetExecutionOpt
     /**
      * Set the continueOnError property: Indicates whether failure on one agent should prevent the phase from running on
      * other agents.
-     *
+     * 
      * @param continueOnError the continueOnError value to set.
      * @return the MultipleAgentExecutionOptions object itself.
      */
@@ -51,7 +54,7 @@ public final class MultipleAgentExecutionOptions extends AgentTargetExecutionOpt
 
     /**
      * Get the maxConcurrency property: The maximum number of agents to use simultaneously.
-     *
+     * 
      * @return the maxConcurrency value.
      */
     public Integer maxConcurrency() {
@@ -60,7 +63,7 @@ public final class MultipleAgentExecutionOptions extends AgentTargetExecutionOpt
 
     /**
      * Set the maxConcurrency property: The maximum number of agents to use simultaneously.
-     *
+     * 
      * @param maxConcurrency the maxConcurrency value to set.
      * @return the MultipleAgentExecutionOptions object itself.
      */
@@ -69,7 +72,9 @@ public final class MultipleAgentExecutionOptions extends AgentTargetExecutionOpt
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public MultipleAgentExecutionOptions withType(Integer type) {
         super.withType(type);
@@ -78,7 +83,7 @@ public final class MultipleAgentExecutionOptions extends AgentTargetExecutionOpt
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     @Override

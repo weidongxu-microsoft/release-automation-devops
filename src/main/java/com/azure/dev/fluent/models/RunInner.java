@@ -5,7 +5,6 @@
 package com.azure.dev.fluent.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.models.PipelineReference;
 import com.azure.dev.models.ReferenceLinks;
 import com.azure.dev.models.RunReference;
@@ -13,17 +12,16 @@ import com.azure.dev.models.RunResources;
 import com.azure.dev.models.RunResult;
 import com.azure.dev.models.RunState;
 import com.azure.dev.models.Variable;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 import java.util.Map;
 
-/** The Run model. */
+/**
+ * The Run model.
+ */
 @Fluent
 public final class RunInner extends RunReference {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(RunInner.class);
-
     /*
      * The class to represent a collection of REST reference links.
      */
@@ -73,6 +71,13 @@ public final class RunInner extends RunReference {
     private RunState state;
 
     /*
+     * Dictionary of <AnyObject>
+     */
+    @JsonProperty(value = "templateParameters")
+    @JsonInclude(value = JsonInclude.Include.NON_NULL, content = JsonInclude.Include.ALWAYS)
+    private Map<String, Object> templateParameters;
+
+    /*
      * The url property.
      */
     @JsonProperty(value = "url")
@@ -86,8 +91,14 @@ public final class RunInner extends RunReference {
     private Map<String, Variable> variables;
 
     /**
+     * Creates an instance of RunInner class.
+     */
+    public RunInner() {
+    }
+
+    /**
      * Get the links property: The class to represent a collection of REST reference links.
-     *
+     * 
      * @return the links value.
      */
     public ReferenceLinks links() {
@@ -96,7 +107,7 @@ public final class RunInner extends RunReference {
 
     /**
      * Set the links property: The class to represent a collection of REST reference links.
-     *
+     * 
      * @param links the links value to set.
      * @return the RunInner object itself.
      */
@@ -107,7 +118,7 @@ public final class RunInner extends RunReference {
 
     /**
      * Get the createdDate property: The createdDate property.
-     *
+     * 
      * @return the createdDate value.
      */
     public OffsetDateTime createdDate() {
@@ -116,7 +127,7 @@ public final class RunInner extends RunReference {
 
     /**
      * Set the createdDate property: The createdDate property.
-     *
+     * 
      * @param createdDate the createdDate value to set.
      * @return the RunInner object itself.
      */
@@ -127,7 +138,7 @@ public final class RunInner extends RunReference {
 
     /**
      * Get the finalYaml property: The finalYaml property.
-     *
+     * 
      * @return the finalYaml value.
      */
     public String finalYaml() {
@@ -136,7 +147,7 @@ public final class RunInner extends RunReference {
 
     /**
      * Set the finalYaml property: The finalYaml property.
-     *
+     * 
      * @param finalYaml the finalYaml value to set.
      * @return the RunInner object itself.
      */
@@ -147,7 +158,7 @@ public final class RunInner extends RunReference {
 
     /**
      * Get the finishedDate property: The finishedDate property.
-     *
+     * 
      * @return the finishedDate value.
      */
     public OffsetDateTime finishedDate() {
@@ -156,7 +167,7 @@ public final class RunInner extends RunReference {
 
     /**
      * Set the finishedDate property: The finishedDate property.
-     *
+     * 
      * @param finishedDate the finishedDate value to set.
      * @return the RunInner object itself.
      */
@@ -167,7 +178,7 @@ public final class RunInner extends RunReference {
 
     /**
      * Get the pipeline property: A reference to a Pipeline.
-     *
+     * 
      * @return the pipeline value.
      */
     public PipelineReference pipeline() {
@@ -176,7 +187,7 @@ public final class RunInner extends RunReference {
 
     /**
      * Set the pipeline property: A reference to a Pipeline.
-     *
+     * 
      * @param pipeline the pipeline value to set.
      * @return the RunInner object itself.
      */
@@ -187,7 +198,7 @@ public final class RunInner extends RunReference {
 
     /**
      * Get the resources property: The resources property.
-     *
+     * 
      * @return the resources value.
      */
     public RunResources resources() {
@@ -196,7 +207,7 @@ public final class RunInner extends RunReference {
 
     /**
      * Set the resources property: The resources property.
-     *
+     * 
      * @param resources the resources value to set.
      * @return the RunInner object itself.
      */
@@ -207,7 +218,7 @@ public final class RunInner extends RunReference {
 
     /**
      * Get the result property: The result property.
-     *
+     * 
      * @return the result value.
      */
     public RunResult result() {
@@ -216,7 +227,7 @@ public final class RunInner extends RunReference {
 
     /**
      * Set the result property: The result property.
-     *
+     * 
      * @param result the result value to set.
      * @return the RunInner object itself.
      */
@@ -227,7 +238,7 @@ public final class RunInner extends RunReference {
 
     /**
      * Get the state property: The state property.
-     *
+     * 
      * @return the state value.
      */
     public RunState state() {
@@ -236,7 +247,7 @@ public final class RunInner extends RunReference {
 
     /**
      * Set the state property: The state property.
-     *
+     * 
      * @param state the state value to set.
      * @return the RunInner object itself.
      */
@@ -246,8 +257,28 @@ public final class RunInner extends RunReference {
     }
 
     /**
+     * Get the templateParameters property: Dictionary of &lt;AnyObject&gt;.
+     * 
+     * @return the templateParameters value.
+     */
+    public Map<String, Object> templateParameters() {
+        return this.templateParameters;
+    }
+
+    /**
+     * Set the templateParameters property: Dictionary of &lt;AnyObject&gt;.
+     * 
+     * @param templateParameters the templateParameters value to set.
+     * @return the RunInner object itself.
+     */
+    public RunInner withTemplateParameters(Map<String, Object> templateParameters) {
+        this.templateParameters = templateParameters;
+        return this;
+    }
+
+    /**
      * Get the url property: The url property.
-     *
+     * 
      * @return the url value.
      */
     public String url() {
@@ -256,7 +287,7 @@ public final class RunInner extends RunReference {
 
     /**
      * Set the url property: The url property.
-     *
+     * 
      * @param url the url value to set.
      * @return the RunInner object itself.
      */
@@ -267,7 +298,7 @@ public final class RunInner extends RunReference {
 
     /**
      * Get the variables property: Dictionary of &lt;Variable&gt;.
-     *
+     * 
      * @return the variables value.
      */
     public Map<String, Variable> variables() {
@@ -276,7 +307,7 @@ public final class RunInner extends RunReference {
 
     /**
      * Set the variables property: Dictionary of &lt;Variable&gt;.
-     *
+     * 
      * @param variables the variables value to set.
      * @return the RunInner object itself.
      */
@@ -285,14 +316,18 @@ public final class RunInner extends RunReference {
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public RunInner withId(Integer id) {
         super.withId(id);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public RunInner withName(String name) {
         super.withName(name);
@@ -301,7 +336,7 @@ public final class RunInner extends RunReference {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     @Override
@@ -317,14 +352,11 @@ public final class RunInner extends RunReference {
             resources().validate();
         }
         if (variables() != null) {
-            variables()
-                .values()
-                .forEach(
-                    e -> {
-                        if (e != null) {
-                            e.validate();
-                        }
-                    });
+            variables().values().forEach(e -> {
+                if (e != null) {
+                    e.validate();
+                }
+            });
         }
     }
 }

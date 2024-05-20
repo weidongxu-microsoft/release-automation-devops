@@ -5,21 +5,18 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.Map;
 
-/** Represents binding of data source for the service endpoint request. */
+/**
+ * Represents binding of data source for the service endpoint request.
+ */
 @Fluent
 public final class DataSourceBindingBase {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(DataSourceBindingBase.class);
-
     /*
-     * Pagination format supported by this data
-     * source(ContinuationToken/SkipTop).
+     * Pagination format supported by this data source(ContinuationToken/SkipTop).
      */
     @JsonProperty(value = "callbackContextTemplate")
     private String callbackContextTemplate;
@@ -98,9 +95,15 @@ public final class DataSourceBindingBase {
     private String target;
 
     /**
+     * Creates an instance of DataSourceBindingBase class.
+     */
+    public DataSourceBindingBase() {
+    }
+
+    /**
      * Get the callbackContextTemplate property: Pagination format supported by this data
      * source(ContinuationToken/SkipTop).
-     *
+     * 
      * @return the callbackContextTemplate value.
      */
     public String callbackContextTemplate() {
@@ -110,7 +113,7 @@ public final class DataSourceBindingBase {
     /**
      * Set the callbackContextTemplate property: Pagination format supported by this data
      * source(ContinuationToken/SkipTop).
-     *
+     * 
      * @param callbackContextTemplate the callbackContextTemplate value to set.
      * @return the DataSourceBindingBase object itself.
      */
@@ -121,7 +124,7 @@ public final class DataSourceBindingBase {
 
     /**
      * Get the callbackRequiredTemplate property: Subsequent calls needed?.
-     *
+     * 
      * @return the callbackRequiredTemplate value.
      */
     public String callbackRequiredTemplate() {
@@ -130,7 +133,7 @@ public final class DataSourceBindingBase {
 
     /**
      * Set the callbackRequiredTemplate property: Subsequent calls needed?.
-     *
+     * 
      * @param callbackRequiredTemplate the callbackRequiredTemplate value to set.
      * @return the DataSourceBindingBase object itself.
      */
@@ -141,7 +144,7 @@ public final class DataSourceBindingBase {
 
     /**
      * Get the dataSourceName property: Gets or sets the name of the data source.
-     *
+     * 
      * @return the dataSourceName value.
      */
     public String dataSourceName() {
@@ -150,7 +153,7 @@ public final class DataSourceBindingBase {
 
     /**
      * Set the dataSourceName property: Gets or sets the name of the data source.
-     *
+     * 
      * @param dataSourceName the dataSourceName value to set.
      * @return the DataSourceBindingBase object itself.
      */
@@ -161,7 +164,7 @@ public final class DataSourceBindingBase {
 
     /**
      * Get the endpointId property: Gets or sets the endpoint Id.
-     *
+     * 
      * @return the endpointId value.
      */
     public String endpointId() {
@@ -170,7 +173,7 @@ public final class DataSourceBindingBase {
 
     /**
      * Set the endpointId property: Gets or sets the endpoint Id.
-     *
+     * 
      * @param endpointId the endpointId value to set.
      * @return the DataSourceBindingBase object itself.
      */
@@ -181,7 +184,7 @@ public final class DataSourceBindingBase {
 
     /**
      * Get the endpointUrl property: Gets or sets the url of the service endpoint.
-     *
+     * 
      * @return the endpointUrl value.
      */
     public String endpointUrl() {
@@ -190,7 +193,7 @@ public final class DataSourceBindingBase {
 
     /**
      * Set the endpointUrl property: Gets or sets the url of the service endpoint.
-     *
+     * 
      * @param endpointUrl the endpointUrl value to set.
      * @return the DataSourceBindingBase object itself.
      */
@@ -201,7 +204,7 @@ public final class DataSourceBindingBase {
 
     /**
      * Get the headers property: Gets or sets the authorization headers.
-     *
+     * 
      * @return the headers value.
      */
     public List<AuthorizationHeader> headers() {
@@ -210,7 +213,7 @@ public final class DataSourceBindingBase {
 
     /**
      * Set the headers property: Gets or sets the authorization headers.
-     *
+     * 
      * @param headers the headers value to set.
      * @return the DataSourceBindingBase object itself.
      */
@@ -221,7 +224,7 @@ public final class DataSourceBindingBase {
 
     /**
      * Get the initialContextTemplate property: Defines the initial value of the query params.
-     *
+     * 
      * @return the initialContextTemplate value.
      */
     public String initialContextTemplate() {
@@ -230,7 +233,7 @@ public final class DataSourceBindingBase {
 
     /**
      * Set the initialContextTemplate property: Defines the initial value of the query params.
-     *
+     * 
      * @param initialContextTemplate the initialContextTemplate value to set.
      * @return the DataSourceBindingBase object itself.
      */
@@ -241,7 +244,7 @@ public final class DataSourceBindingBase {
 
     /**
      * Get the parameters property: Gets or sets the parameters for the data source.
-     *
+     * 
      * @return the parameters value.
      */
     public Map<String, String> parameters() {
@@ -250,7 +253,7 @@ public final class DataSourceBindingBase {
 
     /**
      * Set the parameters property: Gets or sets the parameters for the data source.
-     *
+     * 
      * @param parameters the parameters value to set.
      * @return the DataSourceBindingBase object itself.
      */
@@ -261,7 +264,7 @@ public final class DataSourceBindingBase {
 
     /**
      * Get the requestContent property: Gets or sets http request body.
-     *
+     * 
      * @return the requestContent value.
      */
     public String requestContent() {
@@ -270,7 +273,7 @@ public final class DataSourceBindingBase {
 
     /**
      * Set the requestContent property: Gets or sets http request body.
-     *
+     * 
      * @param requestContent the requestContent value to set.
      * @return the DataSourceBindingBase object itself.
      */
@@ -281,7 +284,7 @@ public final class DataSourceBindingBase {
 
     /**
      * Get the requestVerb property: Gets or sets http request verb.
-     *
+     * 
      * @return the requestVerb value.
      */
     public String requestVerb() {
@@ -290,7 +293,7 @@ public final class DataSourceBindingBase {
 
     /**
      * Set the requestVerb property: Gets or sets http request verb.
-     *
+     * 
      * @param requestVerb the requestVerb value to set.
      * @return the DataSourceBindingBase object itself.
      */
@@ -301,7 +304,7 @@ public final class DataSourceBindingBase {
 
     /**
      * Get the resultSelector property: Gets or sets the result selector.
-     *
+     * 
      * @return the resultSelector value.
      */
     public String resultSelector() {
@@ -310,7 +313,7 @@ public final class DataSourceBindingBase {
 
     /**
      * Set the resultSelector property: Gets or sets the result selector.
-     *
+     * 
      * @param resultSelector the resultSelector value to set.
      * @return the DataSourceBindingBase object itself.
      */
@@ -321,7 +324,7 @@ public final class DataSourceBindingBase {
 
     /**
      * Get the resultTemplate property: Gets or sets the result template.
-     *
+     * 
      * @return the resultTemplate value.
      */
     public String resultTemplate() {
@@ -330,7 +333,7 @@ public final class DataSourceBindingBase {
 
     /**
      * Set the resultTemplate property: Gets or sets the result template.
-     *
+     * 
      * @param resultTemplate the resultTemplate value to set.
      * @return the DataSourceBindingBase object itself.
      */
@@ -341,7 +344,7 @@ public final class DataSourceBindingBase {
 
     /**
      * Get the target property: Gets or sets the target of the data source.
-     *
+     * 
      * @return the target value.
      */
     public String target() {
@@ -350,7 +353,7 @@ public final class DataSourceBindingBase {
 
     /**
      * Set the target property: Gets or sets the target of the data source.
-     *
+     * 
      * @param target the target value to set.
      * @return the DataSourceBindingBase object itself.
      */
@@ -361,7 +364,7 @@ public final class DataSourceBindingBase {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

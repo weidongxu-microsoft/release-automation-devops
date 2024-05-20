@@ -7,39 +7,41 @@ package com.azure.dev.models;
 import com.azure.dev.fluent.models.BuildMetricInner;
 import java.time.OffsetDateTime;
 
-/** An immutable client-side representation of BuildMetric. */
+/**
+ * An immutable client-side representation of BuildMetric.
+ */
 public interface BuildMetric {
     /**
      * Gets the date property: The date for the scope.
-     *
+     * 
      * @return the date value.
      */
     OffsetDateTime date();
 
     /**
      * Gets the intValue property: The value.
-     *
+     * 
      * @return the intValue value.
      */
     Integer intValue();
 
     /**
      * Gets the name property: The name of the metric.
-     *
+     * 
      * @return the name value.
      */
     String name();
 
     /**
      * Gets the scope property: The scope.
-     *
+     * 
      * @return the scope value.
      */
     String scope();
 
     /**
      * Gets the inner com.azure.dev.fluent.models.BuildMetricInner object.
-     *
+     * 
      * @return the inner object.
      */
     BuildMetricInner innerModel();

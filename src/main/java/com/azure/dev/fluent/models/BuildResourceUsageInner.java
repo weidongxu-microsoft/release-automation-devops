@@ -5,15 +5,13 @@
 package com.azure.dev.fluent.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Represents information about resources used by builds in the system. */
+/**
+ * Represents information about resources used by builds in the system.
+ */
 @Fluent
 public final class BuildResourceUsageInner {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(BuildResourceUsageInner.class);
-
     /*
      * The number of build agents.
      */
@@ -39,8 +37,14 @@ public final class BuildResourceUsageInner {
     private Integer xamlControllers;
 
     /**
+     * Creates an instance of BuildResourceUsageInner class.
+     */
+    public BuildResourceUsageInner() {
+    }
+
+    /**
      * Get the distributedTaskAgents property: The number of build agents.
-     *
+     * 
      * @return the distributedTaskAgents value.
      */
     public Integer distributedTaskAgents() {
@@ -49,7 +53,7 @@ public final class BuildResourceUsageInner {
 
     /**
      * Set the distributedTaskAgents property: The number of build agents.
-     *
+     * 
      * @param distributedTaskAgents the distributedTaskAgents value to set.
      * @return the BuildResourceUsageInner object itself.
      */
@@ -60,7 +64,7 @@ public final class BuildResourceUsageInner {
 
     /**
      * Get the paidPrivateAgentSlots property: The number of paid private agent slots.
-     *
+     * 
      * @return the paidPrivateAgentSlots value.
      */
     public Integer paidPrivateAgentSlots() {
@@ -69,7 +73,7 @@ public final class BuildResourceUsageInner {
 
     /**
      * Set the paidPrivateAgentSlots property: The number of paid private agent slots.
-     *
+     * 
      * @param paidPrivateAgentSlots the paidPrivateAgentSlots value to set.
      * @return the BuildResourceUsageInner object itself.
      */
@@ -80,7 +84,7 @@ public final class BuildResourceUsageInner {
 
     /**
      * Get the totalUsage property: The total usage.
-     *
+     * 
      * @return the totalUsage value.
      */
     public Integer totalUsage() {
@@ -89,7 +93,7 @@ public final class BuildResourceUsageInner {
 
     /**
      * Set the totalUsage property: The total usage.
-     *
+     * 
      * @param totalUsage the totalUsage value to set.
      * @return the BuildResourceUsageInner object itself.
      */
@@ -100,7 +104,7 @@ public final class BuildResourceUsageInner {
 
     /**
      * Get the xamlControllers property: The number of XAML controllers.
-     *
+     * 
      * @return the xamlControllers value.
      */
     public Integer xamlControllers() {
@@ -109,7 +113,7 @@ public final class BuildResourceUsageInner {
 
     /**
      * Set the xamlControllers property: The number of XAML controllers.
-     *
+     * 
      * @param xamlControllers the xamlControllers value to set.
      * @return the BuildResourceUsageInner object itself.
      */
@@ -120,7 +124,7 @@ public final class BuildResourceUsageInner {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

@@ -10,14 +10,33 @@ import com.azure.core.http.rest.Response;
 import com.azure.core.util.Context;
 import com.azure.dev.fluent.models.RetentionLeaseInner;
 import com.azure.dev.models.NewRetentionLease;
+import com.azure.dev.models.RetentionLeaseUpdate;
 import java.util.List;
 import java.util.UUID;
 
-/** An instance of this class provides access to all the operations defined in LeasesClient. */
+/**
+ * An instance of this class provides access to all the operations defined in LeasesClient.
+ */
 public interface LeasesClient {
     /**
      * Adds new leases for pipeline runs.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param body Array of NewRetentionLease.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return array of RetentionLease along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Response<List<RetentionLeaseInner>> addWithResponse(String organization, String project,
+        List<NewRetentionLease> body, Context context);
+
+    /**
+     * Adds new leases for pipeline runs.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param body Array of NewRetentionLease.
@@ -30,24 +49,23 @@ public interface LeasesClient {
     List<RetentionLeaseInner> add(String organization, String project, List<NewRetentionLease> body);
 
     /**
-     * Adds new leases for pipeline runs.
-     *
+     * Removes specific retention leases.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
-     * @param body Array of NewRetentionLease.
+     * @param ids The ids parameter.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of RetentionLease.
+     * @return the {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<List<RetentionLeaseInner>> addWithResponse(
-        String organization, String project, List<NewRetentionLease> body, Context context);
+    Response<Void> deleteWithResponse(String organization, String project, String ids, Context context);
 
     /**
      * Removes specific retention leases.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param ids The ids parameter.
@@ -59,23 +77,24 @@ public interface LeasesClient {
     void delete(String organization, String project, String ids);
 
     /**
-     * Removes specific retention leases.
-     *
+     * Returns any leases matching the specified MinimalRetentionLeases.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
-     * @param ids The ids parameter.
+     * @param leasesToFetch List of JSON-serialized MinimalRetentionLeases separated by '|'.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response.
+     * @return array of RetentionLease along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<Void> deleteWithResponse(String organization, String project, String ids, Context context);
+    Response<List<RetentionLeaseInner>> getRetentionLeasesByMinimalRetentionLeasesWithResponse(String organization,
+        String project, String leasesToFetch, Context context);
 
     /**
      * Returns any leases matching the specified MinimalRetentionLeases.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param leasesToFetch List of JSON-serialized MinimalRetentionLeases separated by '|'.
@@ -85,28 +104,28 @@ public interface LeasesClient {
      * @return array of RetentionLease.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    List<RetentionLeaseInner> getRetentionLeasesByMinimalRetentionLeases(
-        String organization, String project, String leasesToFetch);
-
-    /**
-     * Returns any leases matching the specified MinimalRetentionLeases.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param leasesToFetch List of JSON-serialized MinimalRetentionLeases separated by '|'.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of RetentionLease.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<List<RetentionLeaseInner>> getRetentionLeasesByMinimalRetentionLeasesWithResponse(
-        String organization, String project, String leasesToFetch, Context context);
+    List<RetentionLeaseInner> getRetentionLeasesByMinimalRetentionLeases(String organization, String project,
+        String leasesToFetch);
 
     /**
      * Returns the details of the retention lease given a lease id.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param leaseId The leaseId parameter.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return a valid retention lease prevents automated systems from deleting a pipeline run along with
+     * {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Response<RetentionLeaseInner> getWithResponse(String organization, String project, int leaseId, Context context);
+
+    /**
+     * Returns the details of the retention lease given a lease id.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param leaseId The leaseId parameter.
@@ -119,23 +138,59 @@ public interface LeasesClient {
     RetentionLeaseInner get(String organization, String project, int leaseId);
 
     /**
-     * Returns the details of the retention lease given a lease id.
-     *
+     * Updates the duration or pipeline protection status of a retention lease.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
-     * @param leaseId The leaseId parameter.
+     * @param leaseId The ID of the lease to update.
+     * @param body The new data for the retention lease.
      * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return a valid retention lease prevents automated systems from deleting a pipeline run along with
+     * {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Response<RetentionLeaseInner> updateWithResponse(String organization, String project, int leaseId,
+        RetentionLeaseUpdate body, Context context);
+
+    /**
+     * Updates the duration or pipeline protection status of a retention lease.
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param leaseId The ID of the lease to update.
+     * @param body The new data for the retention lease.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return a valid retention lease prevents automated systems from deleting a pipeline run.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<RetentionLeaseInner> getWithResponse(String organization, String project, int leaseId, Context context);
+    RetentionLeaseInner update(String organization, String project, int leaseId, RetentionLeaseUpdate body);
 
     /**
      * Returns any leases owned by the specified user, optionally scoped to a single pipeline definition and run.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param userOwnerId The user id to search for.
+     * @param definitionId An optional parameter to limit the search to a specific pipeline definition.
+     * @param runId An optional parameter to limit the search to a single pipeline run. Requires definitionId.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return array of RetentionLease along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Response<List<RetentionLeaseInner>> getRetentionLeasesByUserIdWithResponse(String organization, String project,
+        UUID userOwnerId, Integer definitionId, Integer runId, Context context);
+
+    /**
+     * Returns any leases owned by the specified user, optionally scoped to a single pipeline definition and run.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param userOwnerId The user id to search for.
@@ -148,39 +203,8 @@ public interface LeasesClient {
     List<RetentionLeaseInner> getRetentionLeasesByUserId(String organization, String project, UUID userOwnerId);
 
     /**
-     * Returns any leases owned by the specified user, optionally scoped to a single pipeline definition and run.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param userOwnerId The user id to search for.
-     * @param definitionId An optional parameter to limit the search to a specific pipeline definition.
-     * @param runId An optional parameter to limit the search to a single pipeline run. Requires definitionId.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of RetentionLease.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<List<RetentionLeaseInner>> getRetentionLeasesByUserIdWithResponse(
-        String organization, String project, UUID userOwnerId, Integer definitionId, Integer runId, Context context);
-
-    /**
      * Returns any leases owned by the specified entity, optionally scoped to a single pipeline definition and run.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of RetentionLease.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    List<RetentionLeaseInner> getRetentionLeasesByOwnerId(String organization, String project);
-
-    /**
-     * Returns any leases owned by the specified entity, optionally scoped to a single pipeline definition and run.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param ownerId The ownerId parameter.
@@ -190,9 +214,22 @@ public interface LeasesClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return array of RetentionLease along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Response<List<RetentionLeaseInner>> getRetentionLeasesByOwnerIdWithResponse(String organization, String project,
+        String ownerId, Integer definitionId, Integer runId, Context context);
+
+    /**
+     * Returns any leases owned by the specified entity, optionally scoped to a single pipeline definition and run.
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return array of RetentionLease.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<List<RetentionLeaseInner>> getRetentionLeasesByOwnerIdWithResponse(
-        String organization, String project, String ownerId, Integer definitionId, Integer runId, Context context);
+    List<RetentionLeaseInner> getRetentionLeasesByOwnerId(String organization, String project);
 }

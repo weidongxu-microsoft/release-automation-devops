@@ -7,18 +7,28 @@ package com.azure.dev.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/** Defines values for ControllerStatus. */
+/**
+ * The status of the controller.
+ */
 public enum ControllerStatus {
-    /** Enum value unavailable. */
+    /**
+     * Enum value unavailable.
+     */
     UNAVAILABLE("unavailable"),
 
-    /** Enum value available. */
+    /**
+     * Enum value available.
+     */
     AVAILABLE("available"),
 
-    /** Enum value offline. */
+    /**
+     * Enum value offline.
+     */
     OFFLINE("offline");
 
-    /** The actual serialized value for a ControllerStatus instance. */
+    /**
+     * The actual serialized value for a ControllerStatus instance.
+     */
     private final String value;
 
     ControllerStatus(String value) {
@@ -27,12 +37,15 @@ public enum ControllerStatus {
 
     /**
      * Parses a serialized value to a ControllerStatus instance.
-     *
+     * 
      * @param value the serialized value to parse.
      * @return the parsed ControllerStatus object, or null if unable to parse.
      */
     @JsonCreator
     public static ControllerStatus fromString(String value) {
+        if (value == null) {
+            return null;
+        }
         ControllerStatus[] items = ControllerStatus.values();
         for (ControllerStatus item : items) {
             if (item.toString().equalsIgnoreCase(value)) {
@@ -42,6 +55,9 @@ public enum ControllerStatus {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @JsonValue
     @Override
     public String toString() {

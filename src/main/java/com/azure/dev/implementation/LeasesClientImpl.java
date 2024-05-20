@@ -12,6 +12,7 @@ import com.azure.core.annotation.HeaderParam;
 import com.azure.core.annotation.Headers;
 import com.azure.core.annotation.Host;
 import com.azure.core.annotation.HostParam;
+import com.azure.core.annotation.Patch;
 import com.azure.core.annotation.PathParam;
 import com.azure.core.annotation.Post;
 import com.azure.core.annotation.QueryParam;
@@ -24,27 +25,31 @@ import com.azure.core.http.rest.RestProxy;
 import com.azure.core.management.exception.ManagementException;
 import com.azure.core.util.Context;
 import com.azure.core.util.FluxUtil;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.fluent.LeasesClient;
 import com.azure.dev.fluent.models.RetentionLeaseInner;
 import com.azure.dev.models.NewRetentionLease;
+import com.azure.dev.models.RetentionLeaseUpdate;
 import java.util.List;
 import java.util.UUID;
 import reactor.core.publisher.Mono;
 
-/** An instance of this class provides access to all the operations defined in LeasesClient. */
+/**
+ * An instance of this class provides access to all the operations defined in LeasesClient.
+ */
 public final class LeasesClientImpl implements LeasesClient {
-    private final ClientLogger logger = new ClientLogger(LeasesClientImpl.class);
-
-    /** The proxy service used to perform REST calls. */
+    /**
+     * The proxy service used to perform REST calls.
+     */
     private final LeasesService service;
 
-    /** The service client containing this operation class. */
+    /**
+     * The service client containing this operation class.
+     */
     private final DevClientImpl client;
 
     /**
      * Initializes an instance of LeasesClientImpl.
-     *
+     * 
      * @param client the instance of the service client containing this operation class.
      */
     LeasesClientImpl(DevClientImpl client) {
@@ -58,108 +63,90 @@ public final class LeasesClientImpl implements LeasesClient {
      */
     @Host("{$host}")
     @ServiceInterface(name = "DevClientLeases")
-    private interface LeasesService {
-        @Headers({"Content-Type: application/json"})
+    public interface LeasesService {
+        @Headers({ "Content-Type: application/json" })
         @Post("/{organization}/{project}/_apis/build/retention/leases")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<List<RetentionLeaseInner>>> add(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
-            @QueryParam("api-version") String apiVersion,
-            @BodyParam("application/json") List<NewRetentionLease> body,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<List<RetentionLeaseInner>>> add(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
+            @QueryParam("api-version") String apiVersion, @BodyParam("application/json") List<NewRetentionLease> body,
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Accept: application/json;q=0.9", "Content-Type: application/json"})
+        @Headers({ "Accept: application/json;q=0.9", "Content-Type: application/json" })
         @Delete("/{organization}/{project}/_apis/build/retention/leases")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Void>> delete(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
-            @QueryParam("ids") String ids,
-            @QueryParam("api-version") String apiVersion,
-            Context context);
+        Mono<Response<Void>> delete(@HostParam("$host") String endpoint, @PathParam("organization") String organization,
+            @PathParam("project") String project, @QueryParam("ids") String ids,
+            @QueryParam("api-version") String apiVersion, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
         @Get("/{organization}/{project}/_apis/build/retention/leases")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
         Mono<Response<List<RetentionLeaseInner>>> getRetentionLeasesByMinimalRetentionLeases(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
-            @QueryParam("leasesToFetch") String leasesToFetch,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @HostParam("$host") String endpoint, @PathParam("organization") String organization,
+            @PathParam("project") String project, @QueryParam("leasesToFetch") String leasesToFetch,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
         @Get("/{organization}/{project}/_apis/build/retention/leases/{leaseId}")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<RetentionLeaseInner>> get(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
-            @PathParam("leaseId") int leaseId,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
+        Mono<Response<RetentionLeaseInner>> get(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
+            @PathParam("leaseId") int leaseId, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, Context context);
+
+        @Headers({ "Content-Type: application/json" })
+        @Patch("/{organization}/{project}/_apis/build/retention/leases/{leaseId}")
+        @ExpectedResponses({ 200 })
+        @UnexpectedResponseExceptionType(ManagementException.class)
+        Mono<Response<RetentionLeaseInner>> update(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
+            @PathParam("leaseId") int leaseId, @QueryParam("api-version") String apiVersion,
+            @BodyParam("application/json") RetentionLeaseUpdate body, @HeaderParam("Accept") String accept,
             Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
         @Get("/{organization}/{project}/_apis/build/retention/leases")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<List<RetentionLeaseInner>>> getRetentionLeasesByUserId(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
-            @QueryParam("userOwnerId") UUID userOwnerId,
-            @QueryParam("definitionId") Integer definitionId,
-            @QueryParam("runId") Integer runId,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<List<RetentionLeaseInner>>> getRetentionLeasesByUserId(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
+            @QueryParam("userOwnerId") UUID userOwnerId, @QueryParam("definitionId") Integer definitionId,
+            @QueryParam("runId") Integer runId, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
         @Get("/{organization}/{project}/_apis/build/retention/leases")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<List<RetentionLeaseInner>>> getRetentionLeasesByOwnerId(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
-            @QueryParam("ownerId") String ownerId,
-            @QueryParam("definitionId") Integer definitionId,
-            @QueryParam("runId") Integer runId,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<List<RetentionLeaseInner>>> getRetentionLeasesByOwnerId(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
+            @QueryParam("ownerId") String ownerId, @QueryParam("definitionId") Integer definitionId,
+            @QueryParam("runId") Integer runId, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, Context context);
     }
 
     /**
      * Adds new leases for pipeline runs.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param body Array of NewRetentionLease.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of RetentionLease.
+     * @return array of RetentionLease along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<RetentionLeaseInner>>> addWithResponseAsync(
-        String organization, String project, List<NewRetentionLease> body) {
+    private Mono<Response<List<RetentionLeaseInner>>> addWithResponseAsync(String organization, String project,
+        List<NewRetentionLease> body) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -172,18 +159,16 @@ public final class LeasesClientImpl implements LeasesClient {
         } else {
             body.forEach(e -> e.validate());
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service.add(this.client.getEndpoint(), organization, project, apiVersion, body, accept, context))
+            .withContext(context -> service.add(this.client.getEndpoint(), organization, project,
+                this.client.getApiVersion(), body, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Adds new leases for pipeline runs.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param body Array of NewRetentionLease.
@@ -191,16 +176,14 @@ public final class LeasesClientImpl implements LeasesClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of RetentionLease.
+     * @return array of RetentionLease along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<RetentionLeaseInner>>> addWithResponseAsync(
-        String organization, String project, List<NewRetentionLease> body, Context context) {
+    private Mono<Response<List<RetentionLeaseInner>>> addWithResponseAsync(String organization, String project,
+        List<NewRetentionLease> body, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -213,40 +196,50 @@ public final class LeasesClientImpl implements LeasesClient {
         } else {
             body.forEach(e -> e.validate());
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service.add(this.client.getEndpoint(), organization, project, apiVersion, body, accept, context);
+        return service.add(this.client.getEndpoint(), organization, project, this.client.getApiVersion(), body, accept,
+            context);
     }
 
     /**
      * Adds new leases for pipeline runs.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param body Array of NewRetentionLease.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of RetentionLease.
+     * @return array of RetentionLease on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<List<RetentionLeaseInner>> addAsync(
-        String organization, String project, List<NewRetentionLease> body) {
-        return addWithResponseAsync(organization, project, body)
-            .flatMap(
-                (Response<List<RetentionLeaseInner>> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+    private Mono<List<RetentionLeaseInner>> addAsync(String organization, String project,
+        List<NewRetentionLease> body) {
+        return addWithResponseAsync(organization, project, body).flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Adds new leases for pipeline runs.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param body Array of NewRetentionLease.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return array of RetentionLease along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<List<RetentionLeaseInner>> addWithResponse(String organization, String project,
+        List<NewRetentionLease> body, Context context) {
+        return addWithResponseAsync(organization, project, body, context).block();
+    }
+
+    /**
+     * Adds new leases for pipeline runs.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param body Array of NewRetentionLease.
@@ -257,45 +250,25 @@ public final class LeasesClientImpl implements LeasesClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public List<RetentionLeaseInner> add(String organization, String project, List<NewRetentionLease> body) {
-        return addAsync(organization, project, body).block();
-    }
-
-    /**
-     * Adds new leases for pipeline runs.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param body Array of NewRetentionLease.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of RetentionLease.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<List<RetentionLeaseInner>> addWithResponse(
-        String organization, String project, List<NewRetentionLease> body, Context context) {
-        return addWithResponseAsync(organization, project, body, context).block();
+        return addWithResponse(organization, project, body, Context.NONE).getValue();
     }
 
     /**
      * Removes specific retention leases.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param ids The ids parameter.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the completion.
+     * @return the {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<Response<Void>> deleteWithResponseAsync(String organization, String project, String ids) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -306,16 +279,15 @@ public final class LeasesClientImpl implements LeasesClient {
         if (ids == null) {
             return Mono.error(new IllegalArgumentException("Parameter ids is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         return FluxUtil
-            .withContext(
-                context -> service.delete(this.client.getEndpoint(), organization, project, ids, apiVersion, context))
+            .withContext(context -> service.delete(this.client.getEndpoint(), organization, project, ids,
+                this.client.getApiVersion(), context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Removes specific retention leases.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param ids The ids parameter.
@@ -323,16 +295,14 @@ public final class LeasesClientImpl implements LeasesClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the completion.
+     * @return the {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Void>> deleteWithResponseAsync(
-        String organization, String project, String ids, Context context) {
+    private Mono<Response<Void>> deleteWithResponseAsync(String organization, String project, String ids,
+        Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -343,30 +313,47 @@ public final class LeasesClientImpl implements LeasesClient {
         if (ids == null) {
             return Mono.error(new IllegalArgumentException("Parameter ids is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         context = this.client.mergeContext(context);
-        return service.delete(this.client.getEndpoint(), organization, project, ids, apiVersion, context);
+        return service.delete(this.client.getEndpoint(), organization, project, ids, this.client.getApiVersion(),
+            context);
     }
 
     /**
      * Removes specific retention leases.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param ids The ids parameter.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the completion.
+     * @return A {@link Mono} that completes when a successful response is received.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<Void> deleteAsync(String organization, String project, String ids) {
-        return deleteWithResponseAsync(organization, project, ids).flatMap((Response<Void> res) -> Mono.empty());
+        return deleteWithResponseAsync(organization, project, ids).flatMap(ignored -> Mono.empty());
     }
 
     /**
      * Removes specific retention leases.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param ids The ids parameter.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<Void> deleteWithResponse(String organization, String project, String ids, Context context) {
+        return deleteWithResponseAsync(organization, project, ids, context).block();
+    }
+
+    /**
+     * Removes specific retention leases.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param ids The ids parameter.
@@ -376,45 +363,26 @@ public final class LeasesClientImpl implements LeasesClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public void delete(String organization, String project, String ids) {
-        deleteAsync(organization, project, ids).block();
-    }
-
-    /**
-     * Removes specific retention leases.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param ids The ids parameter.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<Void> deleteWithResponse(String organization, String project, String ids, Context context) {
-        return deleteWithResponseAsync(organization, project, ids, context).block();
+        deleteWithResponse(organization, project, ids, Context.NONE);
     }
 
     /**
      * Returns any leases matching the specified MinimalRetentionLeases.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param leasesToFetch List of JSON-serialized MinimalRetentionLeases separated by '|'.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of RetentionLease.
+     * @return array of RetentionLease along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<Response<List<RetentionLeaseInner>>> getRetentionLeasesByMinimalRetentionLeasesWithResponseAsync(
         String organization, String project, String leasesToFetch) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -425,26 +393,16 @@ public final class LeasesClientImpl implements LeasesClient {
         if (leasesToFetch == null) {
             return Mono.error(new IllegalArgumentException("Parameter leasesToFetch is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .getRetentionLeasesByMinimalRetentionLeases(
-                            this.client.getEndpoint(),
-                            organization,
-                            project,
-                            leasesToFetch,
-                            apiVersion,
-                            accept,
-                            context))
+            .withContext(context -> service.getRetentionLeasesByMinimalRetentionLeases(this.client.getEndpoint(),
+                organization, project, leasesToFetch, this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Returns any leases matching the specified MinimalRetentionLeases.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param leasesToFetch List of JSON-serialized MinimalRetentionLeases separated by '|'.
@@ -452,16 +410,14 @@ public final class LeasesClientImpl implements LeasesClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of RetentionLease.
+     * @return array of RetentionLease along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<Response<List<RetentionLeaseInner>>> getRetentionLeasesByMinimalRetentionLeasesWithResponseAsync(
         String organization, String project, String leasesToFetch, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -472,59 +428,33 @@ public final class LeasesClientImpl implements LeasesClient {
         if (leasesToFetch == null) {
             return Mono.error(new IllegalArgumentException("Parameter leasesToFetch is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .getRetentionLeasesByMinimalRetentionLeases(
-                this.client.getEndpoint(), organization, project, leasesToFetch, apiVersion, accept, context);
+        return service.getRetentionLeasesByMinimalRetentionLeases(this.client.getEndpoint(), organization, project,
+            leasesToFetch, this.client.getApiVersion(), accept, context);
     }
 
     /**
      * Returns any leases matching the specified MinimalRetentionLeases.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param leasesToFetch List of JSON-serialized MinimalRetentionLeases separated by '|'.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of RetentionLease.
+     * @return array of RetentionLease on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<List<RetentionLeaseInner>> getRetentionLeasesByMinimalRetentionLeasesAsync(
-        String organization, String project, String leasesToFetch) {
+    private Mono<List<RetentionLeaseInner>> getRetentionLeasesByMinimalRetentionLeasesAsync(String organization,
+        String project, String leasesToFetch) {
         return getRetentionLeasesByMinimalRetentionLeasesWithResponseAsync(organization, project, leasesToFetch)
-            .flatMap(
-                (Response<List<RetentionLeaseInner>> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+            .flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Returns any leases matching the specified MinimalRetentionLeases.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param leasesToFetch List of JSON-serialized MinimalRetentionLeases separated by '|'.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of RetentionLease.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public List<RetentionLeaseInner> getRetentionLeasesByMinimalRetentionLeases(
-        String organization, String project, String leasesToFetch) {
-        return getRetentionLeasesByMinimalRetentionLeasesAsync(organization, project, leasesToFetch).block();
-    }
-
-    /**
-     * Returns any leases matching the specified MinimalRetentionLeases.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param leasesToFetch List of JSON-serialized MinimalRetentionLeases separated by '|'.
@@ -532,34 +462,50 @@ public final class LeasesClientImpl implements LeasesClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of RetentionLease.
+     * @return array of RetentionLease along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<List<RetentionLeaseInner>> getRetentionLeasesByMinimalRetentionLeasesWithResponse(
         String organization, String project, String leasesToFetch, Context context) {
-        return getRetentionLeasesByMinimalRetentionLeasesWithResponseAsync(
-                organization, project, leasesToFetch, context)
-            .block();
+        return getRetentionLeasesByMinimalRetentionLeasesWithResponseAsync(organization, project, leasesToFetch,
+            context).block();
+    }
+
+    /**
+     * Returns any leases matching the specified MinimalRetentionLeases.
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param leasesToFetch List of JSON-serialized MinimalRetentionLeases separated by '|'.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return array of RetentionLease.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public List<RetentionLeaseInner> getRetentionLeasesByMinimalRetentionLeases(String organization, String project,
+        String leasesToFetch) {
+        return getRetentionLeasesByMinimalRetentionLeasesWithResponse(organization, project, leasesToFetch,
+            Context.NONE).getValue();
     }
 
     /**
      * Returns the details of the retention lease given a lease id.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param leaseId The leaseId parameter.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a valid retention lease prevents automated systems from deleting a pipeline run.
+     * @return a valid retention lease prevents automated systems from deleting a pipeline run along with
+     * {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<Response<RetentionLeaseInner>> getWithResponseAsync(String organization, String project, int leaseId) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -567,18 +513,16 @@ public final class LeasesClientImpl implements LeasesClient {
         if (project == null) {
             return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service.get(this.client.getEndpoint(), organization, project, leaseId, apiVersion, accept, context))
+            .withContext(context -> service.get(this.client.getEndpoint(), organization, project, leaseId,
+                this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Returns the details of the retention lease given a lease id.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param leaseId The leaseId parameter.
@@ -586,16 +530,15 @@ public final class LeasesClientImpl implements LeasesClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a valid retention lease prevents automated systems from deleting a pipeline run.
+     * @return a valid retention lease prevents automated systems from deleting a pipeline run along with
+     * {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<RetentionLeaseInner>> getWithResponseAsync(
-        String organization, String project, int leaseId, Context context) {
+    private Mono<Response<RetentionLeaseInner>> getWithResponseAsync(String organization, String project, int leaseId,
+        Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -603,39 +546,51 @@ public final class LeasesClientImpl implements LeasesClient {
         if (project == null) {
             return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service.get(this.client.getEndpoint(), organization, project, leaseId, apiVersion, accept, context);
+        return service.get(this.client.getEndpoint(), organization, project, leaseId, this.client.getApiVersion(),
+            accept, context);
     }
 
     /**
      * Returns the details of the retention lease given a lease id.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param leaseId The leaseId parameter.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a valid retention lease prevents automated systems from deleting a pipeline run.
+     * @return a valid retention lease prevents automated systems from deleting a pipeline run on successful completion
+     * of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<RetentionLeaseInner> getAsync(String organization, String project, int leaseId) {
-        return getWithResponseAsync(organization, project, leaseId)
-            .flatMap(
-                (Response<RetentionLeaseInner> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+        return getWithResponseAsync(organization, project, leaseId).flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Returns the details of the retention lease given a lease id.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param leaseId The leaseId parameter.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return a valid retention lease prevents automated systems from deleting a pipeline run along with
+     * {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<RetentionLeaseInner> getWithResponse(String organization, String project, int leaseId,
+        Context context) {
+        return getWithResponseAsync(organization, project, leaseId, context).block();
+    }
+
+    /**
+     * Returns the details of the retention lease given a lease id.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param leaseId The leaseId parameter.
@@ -646,30 +601,145 @@ public final class LeasesClientImpl implements LeasesClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public RetentionLeaseInner get(String organization, String project, int leaseId) {
-        return getAsync(organization, project, leaseId).block();
+        return getWithResponse(organization, project, leaseId, Context.NONE).getValue();
     }
 
     /**
-     * Returns the details of the retention lease given a lease id.
-     *
+     * Updates the duration or pipeline protection status of a retention lease.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
-     * @param leaseId The leaseId parameter.
+     * @param leaseId The ID of the lease to update.
+     * @param body The new data for the retention lease.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return a valid retention lease prevents automated systems from deleting a pipeline run along with
+     * {@link Response} on successful completion of {@link Mono}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Mono<Response<RetentionLeaseInner>> updateWithResponseAsync(String organization, String project,
+        int leaseId, RetentionLeaseUpdate body) {
+        if (this.client.getEndpoint() == null) {
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (organization == null) {
+            return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
+        }
+        if (project == null) {
+            return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
+        }
+        if (body == null) {
+            return Mono.error(new IllegalArgumentException("Parameter body is required and cannot be null."));
+        } else {
+            body.validate();
+        }
+        final String accept = "application/json";
+        return FluxUtil
+            .withContext(context -> service.update(this.client.getEndpoint(), organization, project, leaseId,
+                this.client.getApiVersion(), body, accept, context))
+            .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
+    }
+
+    /**
+     * Updates the duration or pipeline protection status of a retention lease.
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param leaseId The ID of the lease to update.
+     * @param body The new data for the retention lease.
      * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return a valid retention lease prevents automated systems from deleting a pipeline run along with
+     * {@link Response} on successful completion of {@link Mono}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Mono<Response<RetentionLeaseInner>> updateWithResponseAsync(String organization, String project,
+        int leaseId, RetentionLeaseUpdate body, Context context) {
+        if (this.client.getEndpoint() == null) {
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
+        }
+        if (organization == null) {
+            return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
+        }
+        if (project == null) {
+            return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
+        }
+        if (body == null) {
+            return Mono.error(new IllegalArgumentException("Parameter body is required and cannot be null."));
+        } else {
+            body.validate();
+        }
+        final String accept = "application/json";
+        context = this.client.mergeContext(context);
+        return service.update(this.client.getEndpoint(), organization, project, leaseId, this.client.getApiVersion(),
+            body, accept, context);
+    }
+
+    /**
+     * Updates the duration or pipeline protection status of a retention lease.
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param leaseId The ID of the lease to update.
+     * @param body The new data for the retention lease.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return a valid retention lease prevents automated systems from deleting a pipeline run on successful completion
+     * of {@link Mono}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Mono<RetentionLeaseInner> updateAsync(String organization, String project, int leaseId,
+        RetentionLeaseUpdate body) {
+        return updateWithResponseAsync(organization, project, leaseId, body)
+            .flatMap(res -> Mono.justOrEmpty(res.getValue()));
+    }
+
+    /**
+     * Updates the duration or pipeline protection status of a retention lease.
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param leaseId The ID of the lease to update.
+     * @param body The new data for the retention lease.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return a valid retention lease prevents automated systems from deleting a pipeline run along with
+     * {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<RetentionLeaseInner> updateWithResponse(String organization, String project, int leaseId,
+        RetentionLeaseUpdate body, Context context) {
+        return updateWithResponseAsync(organization, project, leaseId, body, context).block();
+    }
+
+    /**
+     * Updates the duration or pipeline protection status of a retention lease.
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param leaseId The ID of the lease to update.
+     * @param body The new data for the retention lease.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return a valid retention lease prevents automated systems from deleting a pipeline run.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<RetentionLeaseInner> getWithResponse(
-        String organization, String project, int leaseId, Context context) {
-        return getWithResponseAsync(organization, project, leaseId, context).block();
+    public RetentionLeaseInner update(String organization, String project, int leaseId, RetentionLeaseUpdate body) {
+        return updateWithResponse(organization, project, leaseId, body, Context.NONE).getValue();
     }
 
     /**
      * Returns any leases owned by the specified user, optionally scoped to a single pipeline definition and run.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param userOwnerId The user id to search for.
@@ -678,16 +748,14 @@ public final class LeasesClientImpl implements LeasesClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of RetentionLease.
+     * @return array of RetentionLease along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<RetentionLeaseInner>>> getRetentionLeasesByUserIdWithResponseAsync(
-        String organization, String project, UUID userOwnerId, Integer definitionId, Integer runId) {
+    private Mono<Response<List<RetentionLeaseInner>>> getRetentionLeasesByUserIdWithResponseAsync(String organization,
+        String project, UUID userOwnerId, Integer definitionId, Integer runId) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -698,28 +766,16 @@ public final class LeasesClientImpl implements LeasesClient {
         if (userOwnerId == null) {
             return Mono.error(new IllegalArgumentException("Parameter userOwnerId is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .getRetentionLeasesByUserId(
-                            this.client.getEndpoint(),
-                            organization,
-                            project,
-                            userOwnerId,
-                            definitionId,
-                            runId,
-                            apiVersion,
-                            accept,
-                            context))
+            .withContext(context -> service.getRetentionLeasesByUserId(this.client.getEndpoint(), organization, project,
+                userOwnerId, definitionId, runId, this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Returns any leases owned by the specified user, optionally scoped to a single pipeline definition and run.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param userOwnerId The user id to search for.
@@ -729,16 +785,14 @@ public final class LeasesClientImpl implements LeasesClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of RetentionLease.
+     * @return array of RetentionLease along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<RetentionLeaseInner>>> getRetentionLeasesByUserIdWithResponseAsync(
-        String organization, String project, UUID userOwnerId, Integer definitionId, Integer runId, Context context) {
+    private Mono<Response<List<RetentionLeaseInner>>> getRetentionLeasesByUserIdWithResponseAsync(String organization,
+        String project, UUID userOwnerId, Integer definitionId, Integer runId, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -749,79 +803,56 @@ public final class LeasesClientImpl implements LeasesClient {
         if (userOwnerId == null) {
             return Mono.error(new IllegalArgumentException("Parameter userOwnerId is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .getRetentionLeasesByUserId(
-                this.client.getEndpoint(),
-                organization,
-                project,
-                userOwnerId,
-                definitionId,
-                runId,
-                apiVersion,
-                accept,
-                context);
+        return service.getRetentionLeasesByUserId(this.client.getEndpoint(), organization, project, userOwnerId,
+            definitionId, runId, this.client.getApiVersion(), accept, context);
     }
 
     /**
      * Returns any leases owned by the specified user, optionally scoped to a single pipeline definition and run.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param userOwnerId The user id to search for.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return array of RetentionLease on successful completion of {@link Mono}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Mono<List<RetentionLeaseInner>> getRetentionLeasesByUserIdAsync(String organization, String project,
+        UUID userOwnerId) {
+        final Integer definitionId = null;
+        final Integer runId = null;
+        return getRetentionLeasesByUserIdWithResponseAsync(organization, project, userOwnerId, definitionId, runId)
+            .flatMap(res -> Mono.justOrEmpty(res.getValue()));
+    }
+
+    /**
+     * Returns any leases owned by the specified user, optionally scoped to a single pipeline definition and run.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param userOwnerId The user id to search for.
      * @param definitionId An optional parameter to limit the search to a specific pipeline definition.
      * @param runId An optional parameter to limit the search to a single pipeline run. Requires definitionId.
+     * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of RetentionLease.
+     * @return array of RetentionLease along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<List<RetentionLeaseInner>> getRetentionLeasesByUserIdAsync(
-        String organization, String project, UUID userOwnerId, Integer definitionId, Integer runId) {
-        return getRetentionLeasesByUserIdWithResponseAsync(organization, project, userOwnerId, definitionId, runId)
-            .flatMap(
-                (Response<List<RetentionLeaseInner>> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+    public Response<List<RetentionLeaseInner>> getRetentionLeasesByUserIdWithResponse(String organization,
+        String project, UUID userOwnerId, Integer definitionId, Integer runId, Context context) {
+        return getRetentionLeasesByUserIdWithResponseAsync(organization, project, userOwnerId, definitionId, runId,
+            context).block();
     }
 
     /**
      * Returns any leases owned by the specified user, optionally scoped to a single pipeline definition and run.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param userOwnerId The user id to search for.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of RetentionLease.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<List<RetentionLeaseInner>> getRetentionLeasesByUserIdAsync(
-        String organization, String project, UUID userOwnerId) {
-        final Integer definitionId = null;
-        final Integer runId = null;
-        return getRetentionLeasesByUserIdWithResponseAsync(organization, project, userOwnerId, definitionId, runId)
-            .flatMap(
-                (Response<List<RetentionLeaseInner>> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
-    }
-
-    /**
-     * Returns any leases owned by the specified user, optionally scoped to a single pipeline definition and run.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param userOwnerId The user id to search for.
@@ -834,34 +865,13 @@ public final class LeasesClientImpl implements LeasesClient {
     public List<RetentionLeaseInner> getRetentionLeasesByUserId(String organization, String project, UUID userOwnerId) {
         final Integer definitionId = null;
         final Integer runId = null;
-        return getRetentionLeasesByUserIdAsync(organization, project, userOwnerId, definitionId, runId).block();
-    }
-
-    /**
-     * Returns any leases owned by the specified user, optionally scoped to a single pipeline definition and run.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param userOwnerId The user id to search for.
-     * @param definitionId An optional parameter to limit the search to a specific pipeline definition.
-     * @param runId An optional parameter to limit the search to a single pipeline run. Requires definitionId.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of RetentionLease.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<List<RetentionLeaseInner>> getRetentionLeasesByUserIdWithResponse(
-        String organization, String project, UUID userOwnerId, Integer definitionId, Integer runId, Context context) {
-        return getRetentionLeasesByUserIdWithResponseAsync(
-                organization, project, userOwnerId, definitionId, runId, context)
-            .block();
+        return getRetentionLeasesByUserIdWithResponse(organization, project, userOwnerId, definitionId, runId,
+            Context.NONE).getValue();
     }
 
     /**
      * Returns any leases owned by the specified entity, optionally scoped to a single pipeline definition and run.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param ownerId The ownerId parameter.
@@ -870,16 +880,14 @@ public final class LeasesClientImpl implements LeasesClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of RetentionLease.
+     * @return array of RetentionLease along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<RetentionLeaseInner>>> getRetentionLeasesByOwnerIdWithResponseAsync(
-        String organization, String project, String ownerId, Integer definitionId, Integer runId) {
+    private Mono<Response<List<RetentionLeaseInner>>> getRetentionLeasesByOwnerIdWithResponseAsync(String organization,
+        String project, String ownerId, Integer definitionId, Integer runId) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -887,28 +895,16 @@ public final class LeasesClientImpl implements LeasesClient {
         if (project == null) {
             return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .getRetentionLeasesByOwnerId(
-                            this.client.getEndpoint(),
-                            organization,
-                            project,
-                            ownerId,
-                            definitionId,
-                            runId,
-                            apiVersion,
-                            accept,
-                            context))
+            .withContext(context -> service.getRetentionLeasesByOwnerId(this.client.getEndpoint(), organization,
+                project, ownerId, definitionId, runId, this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Returns any leases owned by the specified entity, optionally scoped to a single pipeline definition and run.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param ownerId The ownerId parameter.
@@ -918,16 +914,14 @@ public final class LeasesClientImpl implements LeasesClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of RetentionLease.
+     * @return array of RetentionLease along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<RetentionLeaseInner>>> getRetentionLeasesByOwnerIdWithResponseAsync(
-        String organization, String project, String ownerId, Integer definitionId, Integer runId, Context context) {
+    private Mono<Response<List<RetentionLeaseInner>>> getRetentionLeasesByOwnerIdWithResponseAsync(String organization,
+        String project, String ownerId, Integer definitionId, Integer runId, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -935,58 +929,21 @@ public final class LeasesClientImpl implements LeasesClient {
         if (project == null) {
             return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .getRetentionLeasesByOwnerId(
-                this.client.getEndpoint(),
-                organization,
-                project,
-                ownerId,
-                definitionId,
-                runId,
-                apiVersion,
-                accept,
-                context);
+        return service.getRetentionLeasesByOwnerId(this.client.getEndpoint(), organization, project, ownerId,
+            definitionId, runId, this.client.getApiVersion(), accept, context);
     }
 
     /**
      * Returns any leases owned by the specified entity, optionally scoped to a single pipeline definition and run.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param ownerId The ownerId parameter.
-     * @param definitionId An optional parameter to limit the search to a specific pipeline definition.
-     * @param runId An optional parameter to limit the search to a single pipeline run. Requires definitionId.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of RetentionLease.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<List<RetentionLeaseInner>> getRetentionLeasesByOwnerIdAsync(
-        String organization, String project, String ownerId, Integer definitionId, Integer runId) {
-        return getRetentionLeasesByOwnerIdWithResponseAsync(organization, project, ownerId, definitionId, runId)
-            .flatMap(
-                (Response<List<RetentionLeaseInner>> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
-    }
-
-    /**
-     * Returns any leases owned by the specified entity, optionally scoped to a single pipeline definition and run.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of RetentionLease.
+     * @return array of RetentionLease on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<List<RetentionLeaseInner>> getRetentionLeasesByOwnerIdAsync(String organization, String project) {
@@ -994,19 +951,33 @@ public final class LeasesClientImpl implements LeasesClient {
         final Integer definitionId = null;
         final Integer runId = null;
         return getRetentionLeasesByOwnerIdWithResponseAsync(organization, project, ownerId, definitionId, runId)
-            .flatMap(
-                (Response<List<RetentionLeaseInner>> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+            .flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Returns any leases owned by the specified entity, optionally scoped to a single pipeline definition and run.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param ownerId The ownerId parameter.
+     * @param definitionId An optional parameter to limit the search to a specific pipeline definition.
+     * @param runId An optional parameter to limit the search to a single pipeline run. Requires definitionId.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return array of RetentionLease along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<List<RetentionLeaseInner>> getRetentionLeasesByOwnerIdWithResponse(String organization,
+        String project, String ownerId, Integer definitionId, Integer runId, Context context) {
+        return getRetentionLeasesByOwnerIdWithResponseAsync(organization, project, ownerId, definitionId, runId,
+            context).block();
+    }
+
+    /**
+     * Returns any leases owned by the specified entity, optionally scoped to a single pipeline definition and run.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -1019,28 +990,7 @@ public final class LeasesClientImpl implements LeasesClient {
         final String ownerId = null;
         final Integer definitionId = null;
         final Integer runId = null;
-        return getRetentionLeasesByOwnerIdAsync(organization, project, ownerId, definitionId, runId).block();
-    }
-
-    /**
-     * Returns any leases owned by the specified entity, optionally scoped to a single pipeline definition and run.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param ownerId The ownerId parameter.
-     * @param definitionId An optional parameter to limit the search to a specific pipeline definition.
-     * @param runId An optional parameter to limit the search to a single pipeline run. Requires definitionId.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of RetentionLease.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<List<RetentionLeaseInner>> getRetentionLeasesByOwnerIdWithResponse(
-        String organization, String project, String ownerId, Integer definitionId, Integer runId, Context context) {
-        return getRetentionLeasesByOwnerIdWithResponseAsync(
-                organization, project, ownerId, definitionId, runId, context)
-            .block();
+        return getRetentionLeasesByOwnerIdWithResponse(organization, project, ownerId, definitionId, runId,
+            Context.NONE).getValue();
     }
 }

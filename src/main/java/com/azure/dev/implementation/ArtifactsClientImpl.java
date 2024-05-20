@@ -23,7 +23,6 @@ import com.azure.core.http.rest.RestProxy;
 import com.azure.core.management.exception.ManagementException;
 import com.azure.core.util.Context;
 import com.azure.core.util.FluxUtil;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.fluent.ArtifactsClient;
 import com.azure.dev.fluent.models.ArtifactInner;
 import com.azure.dev.fluent.models.BuildArtifactInner;
@@ -31,24 +30,28 @@ import com.azure.dev.models.GetArtifactExpandOptions;
 import java.util.List;
 import reactor.core.publisher.Mono;
 
-/** An instance of this class provides access to all the operations defined in ArtifactsClient. */
+/**
+ * An instance of this class provides access to all the operations defined in ArtifactsClient.
+ */
 public final class ArtifactsClientImpl implements ArtifactsClient {
-    private final ClientLogger logger = new ClientLogger(ArtifactsClientImpl.class);
-
-    /** The proxy service used to perform REST calls. */
+    /**
+     * The proxy service used to perform REST calls.
+     */
     private final ArtifactsService service;
 
-    /** The service client containing this operation class. */
+    /**
+     * The service client containing this operation class.
+     */
     private final DevClientImpl client;
 
     /**
      * Initializes an instance of ArtifactsClientImpl.
-     *
+     * 
      * @param client the instance of the service client containing this operation class.
      */
     ArtifactsClientImpl(DevClientImpl client) {
-        this.service =
-            RestProxy.create(ArtifactsService.class, client.getHttpPipeline(), client.getSerializerAdapter());
+        this.service
+            = RestProxy.create(ArtifactsService.class, client.getHttpPipeline(), client.getSerializerAdapter());
         this.client = client;
     }
 
@@ -58,83 +61,59 @@ public final class ArtifactsClientImpl implements ArtifactsClient {
      */
     @Host("{$host}")
     @ServiceInterface(name = "DevClientArtifacts")
-    private interface ArtifactsService {
-        @Headers({"Content-Type: application/json"})
+    public interface ArtifactsService {
+        @Headers({ "Content-Type: application/json" })
         @Post("/{organization}/{project}/_apis/build/builds/{buildId}/artifacts")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<BuildArtifactInner>> create(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
-            @PathParam("buildId") int buildId,
-            @QueryParam("api-version") String apiVersion,
-            @BodyParam("application/json") BuildArtifactInner body,
-            @HeaderParam("Accept") String accept,
+        Mono<Response<BuildArtifactInner>> create(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
+            @PathParam("buildId") int buildId, @QueryParam("api-version") String apiVersion,
+            @BodyParam("application/json") BuildArtifactInner body, @HeaderParam("Accept") String accept,
             Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
         @Get("/{organization}/{project}/_apis/build/builds/{buildId}/artifacts")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<List<BuildArtifactInner>>> list(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
-            @PathParam("buildId") int buildId,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<List<BuildArtifactInner>>> list(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
+            @PathParam("buildId") int buildId, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
         @Get("/{organization}/{project}/_apis/build/builds/{buildId}/artifacts")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<BuildArtifactInner>> getArtifact(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
-            @PathParam("buildId") int buildId,
-            @QueryParam("artifactName") String artifactName,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<BuildArtifactInner>> getArtifact(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
+            @PathParam("buildId") int buildId, @QueryParam("artifactName") String artifactName,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Accept: application/json;q=0.9", "Content-Type: application/json"})
+        @Headers({ "Accept: application/json;q=0.9", "Content-Type: application/json" })
         @Get("/{organization}/{project}/_apis/build/builds/{buildId}/artifacts")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Void>> getFile(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
-            @PathParam("buildId") int buildId,
-            @QueryParam("artifactName") String artifactName,
-            @QueryParam("fileId") String fileId,
-            @QueryParam("fileName") String fileName,
-            @QueryParam("api-version") String apiVersion,
-            Context context);
+        Mono<Response<Void>> getFile(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
+            @PathParam("buildId") int buildId, @QueryParam("artifactName") String artifactName,
+            @QueryParam("fileId") String fileId, @QueryParam("fileName") String fileName,
+            @QueryParam("api-version") String apiVersion, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
         @Get("/{organization}/{project}/_apis/pipelines/{pipelineId}/runs/{runId}/artifacts")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<ArtifactInner>> get(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
-            @PathParam("pipelineId") int pipelineId,
-            @PathParam("runId") int runId,
-            @QueryParam("artifactName") String artifactName,
-            @QueryParam("$expand") GetArtifactExpandOptions expand,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<ArtifactInner>> get(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
+            @PathParam("pipelineId") int pipelineId, @PathParam("runId") int runId,
+            @QueryParam("artifactName") String artifactName, @QueryParam("$expand") GetArtifactExpandOptions expand,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
     }
 
     /**
      * Associates an artifact with a build.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
@@ -142,16 +121,15 @@ public final class ArtifactsClientImpl implements ArtifactsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return represents an artifact produced by a build.
+     * @return represents an artifact produced by a build along with {@link Response} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<BuildArtifactInner>> createWithResponseAsync(
-        String organization, String project, int buildId, BuildArtifactInner body) {
+    private Mono<Response<BuildArtifactInner>> createWithResponseAsync(String organization, String project, int buildId,
+        BuildArtifactInner body) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -164,27 +142,16 @@ public final class ArtifactsClientImpl implements ArtifactsClient {
         } else {
             body.validate();
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .create(
-                            this.client.getEndpoint(),
-                            organization,
-                            project,
-                            buildId,
-                            apiVersion,
-                            body,
-                            accept,
-                            context))
+            .withContext(context -> service.create(this.client.getEndpoint(), organization, project, buildId,
+                this.client.getApiVersion(), body, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Associates an artifact with a build.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
@@ -193,16 +160,15 @@ public final class ArtifactsClientImpl implements ArtifactsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return represents an artifact produced by a build.
+     * @return represents an artifact produced by a build along with {@link Response} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<BuildArtifactInner>> createWithResponseAsync(
-        String organization, String project, int buildId, BuildArtifactInner body, Context context) {
+    private Mono<Response<BuildArtifactInner>> createWithResponseAsync(String organization, String project, int buildId,
+        BuildArtifactInner body, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -215,16 +181,15 @@ public final class ArtifactsClientImpl implements ArtifactsClient {
         } else {
             body.validate();
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .create(this.client.getEndpoint(), organization, project, buildId, apiVersion, body, accept, context);
+        return service.create(this.client.getEndpoint(), organization, project, buildId, this.client.getApiVersion(),
+            body, accept, context);
     }
 
     /**
      * Associates an artifact with a build.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
@@ -232,25 +197,37 @@ public final class ArtifactsClientImpl implements ArtifactsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return represents an artifact produced by a build.
+     * @return represents an artifact produced by a build on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<BuildArtifactInner> createAsync(
-        String organization, String project, int buildId, BuildArtifactInner body) {
+    private Mono<BuildArtifactInner> createAsync(String organization, String project, int buildId,
+        BuildArtifactInner body) {
         return createWithResponseAsync(organization, project, buildId, body)
-            .flatMap(
-                (Response<BuildArtifactInner> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+            .flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Associates an artifact with a build.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param buildId The ID of the build.
+     * @param body The artifact.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return represents an artifact produced by a build along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<BuildArtifactInner> createWithResponse(String organization, String project, int buildId,
+        BuildArtifactInner body, Context context) {
+        return createWithResponseAsync(organization, project, buildId, body, context).block();
+    }
+
+    /**
+     * Associates an artifact with a build.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
@@ -262,47 +239,26 @@ public final class ArtifactsClientImpl implements ArtifactsClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public BuildArtifactInner create(String organization, String project, int buildId, BuildArtifactInner body) {
-        return createAsync(organization, project, buildId, body).block();
-    }
-
-    /**
-     * Associates an artifact with a build.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param buildId The ID of the build.
-     * @param body The artifact.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return represents an artifact produced by a build.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<BuildArtifactInner> createWithResponse(
-        String organization, String project, int buildId, BuildArtifactInner body, Context context) {
-        return createWithResponseAsync(organization, project, buildId, body, context).block();
+        return createWithResponse(organization, project, buildId, body, Context.NONE).getValue();
     }
 
     /**
      * Gets all artifacts for a build.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return all artifacts for a build.
+     * @return all artifacts for a build along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<BuildArtifactInner>>> listWithResponseAsync(
-        String organization, String project, int buildId) {
+    private Mono<Response<List<BuildArtifactInner>>> listWithResponseAsync(String organization, String project,
+        int buildId) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -310,19 +266,16 @@ public final class ArtifactsClientImpl implements ArtifactsClient {
         if (project == null) {
             return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .list(this.client.getEndpoint(), organization, project, buildId, apiVersion, accept, context))
+            .withContext(context -> service.list(this.client.getEndpoint(), organization, project, buildId,
+                this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Gets all artifacts for a build.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
@@ -330,16 +283,14 @@ public final class ArtifactsClientImpl implements ArtifactsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return all artifacts for a build.
+     * @return all artifacts for a build along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<BuildArtifactInner>>> listWithResponseAsync(
-        String organization, String project, int buildId, Context context) {
+    private Mono<Response<List<BuildArtifactInner>>> listWithResponseAsync(String organization, String project,
+        int buildId, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -347,39 +298,49 @@ public final class ArtifactsClientImpl implements ArtifactsClient {
         if (project == null) {
             return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service.list(this.client.getEndpoint(), organization, project, buildId, apiVersion, accept, context);
+        return service.list(this.client.getEndpoint(), organization, project, buildId, this.client.getApiVersion(),
+            accept, context);
     }
 
     /**
      * Gets all artifacts for a build.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return all artifacts for a build.
+     * @return all artifacts for a build on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<List<BuildArtifactInner>> listAsync(String organization, String project, int buildId) {
-        return listWithResponseAsync(organization, project, buildId)
-            .flatMap(
-                (Response<List<BuildArtifactInner>> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+        return listWithResponseAsync(organization, project, buildId).flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Gets all artifacts for a build.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param buildId The ID of the build.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return all artifacts for a build along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<List<BuildArtifactInner>> listWithResponse(String organization, String project, int buildId,
+        Context context) {
+        return listWithResponseAsync(organization, project, buildId, context).block();
+    }
+
+    /**
+     * Gets all artifacts for a build.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
@@ -390,30 +351,12 @@ public final class ArtifactsClientImpl implements ArtifactsClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public List<BuildArtifactInner> list(String organization, String project, int buildId) {
-        return listAsync(organization, project, buildId).block();
-    }
-
-    /**
-     * Gets all artifacts for a build.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param buildId The ID of the build.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return all artifacts for a build.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<List<BuildArtifactInner>> listWithResponse(
-        String organization, String project, int buildId, Context context) {
-        return listWithResponseAsync(organization, project, buildId, context).block();
+        return listWithResponse(organization, project, buildId, Context.NONE).getValue();
     }
 
     /**
      * Gets a specific artifact for a build.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
@@ -421,16 +364,14 @@ public final class ArtifactsClientImpl implements ArtifactsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a specific artifact for a build.
+     * @return a specific artifact for a build along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<BuildArtifactInner>> getArtifactWithResponseAsync(
-        String organization, String project, int buildId, String artifactName) {
+    private Mono<Response<BuildArtifactInner>> getArtifactWithResponseAsync(String organization, String project,
+        int buildId, String artifactName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -441,27 +382,16 @@ public final class ArtifactsClientImpl implements ArtifactsClient {
         if (artifactName == null) {
             return Mono.error(new IllegalArgumentException("Parameter artifactName is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .getArtifact(
-                            this.client.getEndpoint(),
-                            organization,
-                            project,
-                            buildId,
-                            artifactName,
-                            apiVersion,
-                            accept,
-                            context))
+            .withContext(context -> service.getArtifact(this.client.getEndpoint(), organization, project, buildId,
+                artifactName, this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Gets a specific artifact for a build.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
@@ -470,16 +400,14 @@ public final class ArtifactsClientImpl implements ArtifactsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a specific artifact for a build.
+     * @return a specific artifact for a build along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<BuildArtifactInner>> getArtifactWithResponseAsync(
-        String organization, String project, int buildId, String artifactName, Context context) {
+    private Mono<Response<BuildArtifactInner>> getArtifactWithResponseAsync(String organization, String project,
+        int buildId, String artifactName, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -490,17 +418,15 @@ public final class ArtifactsClientImpl implements ArtifactsClient {
         if (artifactName == null) {
             return Mono.error(new IllegalArgumentException("Parameter artifactName is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .getArtifact(
-                this.client.getEndpoint(), organization, project, buildId, artifactName, apiVersion, accept, context);
+        return service.getArtifact(this.client.getEndpoint(), organization, project, buildId, artifactName,
+            this.client.getApiVersion(), accept, context);
     }
 
     /**
      * Gets a specific artifact for a build.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
@@ -508,25 +434,37 @@ public final class ArtifactsClientImpl implements ArtifactsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a specific artifact for a build.
+     * @return a specific artifact for a build on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<BuildArtifactInner> getArtifactAsync(
-        String organization, String project, int buildId, String artifactName) {
+    private Mono<BuildArtifactInner> getArtifactAsync(String organization, String project, int buildId,
+        String artifactName) {
         return getArtifactWithResponseAsync(organization, project, buildId, artifactName)
-            .flatMap(
-                (Response<BuildArtifactInner> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+            .flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Gets a specific artifact for a build.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param buildId The ID of the build.
+     * @param artifactName The name of the artifact.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return a specific artifact for a build along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<BuildArtifactInner> getArtifactWithResponse(String organization, String project, int buildId,
+        String artifactName, Context context) {
+        return getArtifactWithResponseAsync(organization, project, buildId, artifactName, context).block();
+    }
+
+    /**
+     * Gets a specific artifact for a build.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
@@ -538,31 +476,12 @@ public final class ArtifactsClientImpl implements ArtifactsClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public BuildArtifactInner getArtifact(String organization, String project, int buildId, String artifactName) {
-        return getArtifactAsync(organization, project, buildId, artifactName).block();
-    }
-
-    /**
-     * Gets a specific artifact for a build.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param buildId The ID of the build.
-     * @param artifactName The name of the artifact.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a specific artifact for a build.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<BuildArtifactInner> getArtifactWithResponse(
-        String organization, String project, int buildId, String artifactName, Context context) {
-        return getArtifactWithResponseAsync(organization, project, buildId, artifactName, context).block();
+        return getArtifactWithResponse(organization, project, buildId, artifactName, Context.NONE).getValue();
     }
 
     /**
      * Gets a file from the build.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
@@ -572,16 +491,14 @@ public final class ArtifactsClientImpl implements ArtifactsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a file from the build.
+     * @return a file from the build along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Void>> getFileWithResponseAsync(
-        String organization, String project, int buildId, String artifactName, String fileId, String fileName) {
+    private Mono<Response<Void>> getFileWithResponseAsync(String organization, String project, int buildId,
+        String artifactName, String fileId, String fileName) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -598,27 +515,15 @@ public final class ArtifactsClientImpl implements ArtifactsClient {
         if (fileName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fileName is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .getFile(
-                            this.client.getEndpoint(),
-                            organization,
-                            project,
-                            buildId,
-                            artifactName,
-                            fileId,
-                            fileName,
-                            apiVersion,
-                            context))
+            .withContext(context -> service.getFile(this.client.getEndpoint(), organization, project, buildId,
+                artifactName, fileId, fileName, this.client.getApiVersion(), context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Gets a file from the build.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
@@ -629,22 +534,14 @@ public final class ArtifactsClientImpl implements ArtifactsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a file from the build.
+     * @return a file from the build along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Void>> getFileWithResponseAsync(
-        String organization,
-        String project,
-        int buildId,
-        String artifactName,
-        String fileId,
-        String fileName,
-        Context context) {
+    private Mono<Response<Void>> getFileWithResponseAsync(String organization, String project, int buildId,
+        String artifactName, String fileId, String fileName, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -661,24 +558,14 @@ public final class ArtifactsClientImpl implements ArtifactsClient {
         if (fileName == null) {
             return Mono.error(new IllegalArgumentException("Parameter fileName is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         context = this.client.mergeContext(context);
-        return service
-            .getFile(
-                this.client.getEndpoint(),
-                organization,
-                project,
-                buildId,
-                artifactName,
-                fileId,
-                fileName,
-                apiVersion,
-                context);
+        return service.getFile(this.client.getEndpoint(), organization, project, buildId, artifactName, fileId,
+            fileName, this.client.getApiVersion(), context);
     }
 
     /**
      * Gets a file from the build.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
@@ -688,37 +575,18 @@ public final class ArtifactsClientImpl implements ArtifactsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a file from the build.
+     * @return a file from the build on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Void> getFileAsync(
-        String organization, String project, int buildId, String artifactName, String fileId, String fileName) {
+    private Mono<Void> getFileAsync(String organization, String project, int buildId, String artifactName,
+        String fileId, String fileName) {
         return getFileWithResponseAsync(organization, project, buildId, artifactName, fileId, fileName)
-            .flatMap((Response<Void> res) -> Mono.empty());
+            .flatMap(ignored -> Mono.empty());
     }
 
     /**
      * Gets a file from the build.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param buildId The ID of the build.
-     * @param artifactName The name of the artifact.
-     * @param fileId The primary key for the file.
-     * @param fileName The name that the file will be set to.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public void getFile(
-        String organization, String project, int buildId, String artifactName, String fileId, String fileName) {
-        getFileAsync(organization, project, buildId, artifactName, fileId, fileName).block();
-    }
-
-    /**
-     * Gets a file from the build.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
@@ -729,24 +597,37 @@ public final class ArtifactsClientImpl implements ArtifactsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a file from the build.
+     * @return a file from the build along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<Void> getFileWithResponse(
-        String organization,
-        String project,
-        int buildId,
-        String artifactName,
-        String fileId,
-        String fileName,
-        Context context) {
+    public Response<Void> getFileWithResponse(String organization, String project, int buildId, String artifactName,
+        String fileId, String fileName, Context context) {
         return getFileWithResponseAsync(organization, project, buildId, artifactName, fileId, fileName, context)
             .block();
     }
 
     /**
+     * Gets a file from the build.
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param buildId The ID of the build.
+     * @param artifactName The name of the artifact.
+     * @param fileId The primary key for the file.
+     * @param fileName The name that the file will be set to.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public void getFile(String organization, String project, int buildId, String artifactName, String fileId,
+        String fileName) {
+        getFileWithResponse(organization, project, buildId, artifactName, fileId, fileName, Context.NONE);
+    }
+
+    /**
      * Get a specific artifact from a pipeline run.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param pipelineId ID of the pipeline.
@@ -756,21 +637,15 @@ public final class ArtifactsClientImpl implements ArtifactsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a specific artifact from a pipeline run.
+     * @return a specific artifact from a pipeline run along with {@link Response} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<ArtifactInner>> getWithResponseAsync(
-        String organization,
-        String project,
-        int pipelineId,
-        int runId,
-        String artifactName,
-        GetArtifactExpandOptions expand) {
+    private Mono<Response<ArtifactInner>> getWithResponseAsync(String organization, String project, int pipelineId,
+        int runId, String artifactName, GetArtifactExpandOptions expand) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -781,29 +656,16 @@ public final class ArtifactsClientImpl implements ArtifactsClient {
         if (artifactName == null) {
             return Mono.error(new IllegalArgumentException("Parameter artifactName is required and cannot be null."));
         }
-        final String apiVersion = "6.0-preview";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .get(
-                            this.client.getEndpoint(),
-                            organization,
-                            project,
-                            pipelineId,
-                            runId,
-                            artifactName,
-                            expand,
-                            apiVersion,
-                            accept,
-                            context))
+            .withContext(context -> service.get(this.client.getEndpoint(), organization, project, pipelineId, runId,
+                artifactName, expand, this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Get a specific artifact from a pipeline run.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param pipelineId ID of the pipeline.
@@ -814,22 +676,15 @@ public final class ArtifactsClientImpl implements ArtifactsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a specific artifact from a pipeline run.
+     * @return a specific artifact from a pipeline run along with {@link Response} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<ArtifactInner>> getWithResponseAsync(
-        String organization,
-        String project,
-        int pipelineId,
-        int runId,
-        String artifactName,
-        GetArtifactExpandOptions expand,
-        Context context) {
+    private Mono<Response<ArtifactInner>> getWithResponseAsync(String organization, String project, int pipelineId,
+        int runId, String artifactName, GetArtifactExpandOptions expand, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -840,87 +695,57 @@ public final class ArtifactsClientImpl implements ArtifactsClient {
         if (artifactName == null) {
             return Mono.error(new IllegalArgumentException("Parameter artifactName is required and cannot be null."));
         }
-        final String apiVersion = "6.0-preview";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .get(
-                this.client.getEndpoint(),
-                organization,
-                project,
-                pipelineId,
-                runId,
-                artifactName,
-                expand,
-                apiVersion,
-                accept,
-                context);
+        return service.get(this.client.getEndpoint(), organization, project, pipelineId, runId, artifactName, expand,
+            this.client.getApiVersion(), accept, context);
     }
 
     /**
      * Get a specific artifact from a pipeline run.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param pipelineId ID of the pipeline.
+     * @param runId ID of the run of that pipeline.
+     * @param artifactName Name of the artifact.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return a specific artifact from a pipeline run on successful completion of {@link Mono}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Mono<ArtifactInner> getAsync(String organization, String project, int pipelineId, int runId,
+        String artifactName) {
+        final GetArtifactExpandOptions expand = null;
+        return getWithResponseAsync(organization, project, pipelineId, runId, artifactName, expand)
+            .flatMap(res -> Mono.justOrEmpty(res.getValue()));
+    }
+
+    /**
+     * Get a specific artifact from a pipeline run.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param pipelineId ID of the pipeline.
      * @param runId ID of the run of that pipeline.
      * @param artifactName Name of the artifact.
      * @param expand Expand options. Default is None.
+     * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a specific artifact from a pipeline run.
+     * @return a specific artifact from a pipeline run along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ArtifactInner> getAsync(
-        String organization,
-        String project,
-        int pipelineId,
-        int runId,
-        String artifactName,
-        GetArtifactExpandOptions expand) {
-        return getWithResponseAsync(organization, project, pipelineId, runId, artifactName, expand)
-            .flatMap(
-                (Response<ArtifactInner> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+    public Response<ArtifactInner> getWithResponse(String organization, String project, int pipelineId, int runId,
+        String artifactName, GetArtifactExpandOptions expand, Context context) {
+        return getWithResponseAsync(organization, project, pipelineId, runId, artifactName, expand, context).block();
     }
 
     /**
      * Get a specific artifact from a pipeline run.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param pipelineId ID of the pipeline.
-     * @param runId ID of the run of that pipeline.
-     * @param artifactName Name of the artifact.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a specific artifact from a pipeline run.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<ArtifactInner> getAsync(
-        String organization, String project, int pipelineId, int runId, String artifactName) {
-        final GetArtifactExpandOptions expand = null;
-        return getWithResponseAsync(organization, project, pipelineId, runId, artifactName, expand)
-            .flatMap(
-                (Response<ArtifactInner> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
-    }
-
-    /**
-     * Get a specific artifact from a pipeline run.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param pipelineId ID of the pipeline.
@@ -934,33 +759,6 @@ public final class ArtifactsClientImpl implements ArtifactsClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public ArtifactInner get(String organization, String project, int pipelineId, int runId, String artifactName) {
         final GetArtifactExpandOptions expand = null;
-        return getAsync(organization, project, pipelineId, runId, artifactName, expand).block();
-    }
-
-    /**
-     * Get a specific artifact from a pipeline run.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param pipelineId ID of the pipeline.
-     * @param runId ID of the run of that pipeline.
-     * @param artifactName Name of the artifact.
-     * @param expand Expand options. Default is None.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a specific artifact from a pipeline run.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<ArtifactInner> getWithResponse(
-        String organization,
-        String project,
-        int pipelineId,
-        int runId,
-        String artifactName,
-        GetArtifactExpandOptions expand,
-        Context context) {
-        return getWithResponseAsync(organization, project, pipelineId, runId, artifactName, expand, context).block();
+        return getWithResponse(organization, project, pipelineId, runId, artifactName, expand, Context.NONE).getValue();
     }
 }

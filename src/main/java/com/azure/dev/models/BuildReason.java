@@ -7,51 +7,83 @@ package com.azure.dev.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/** Defines values for BuildReason. */
+/**
+ * The reason that the build was created.
+ */
 public enum BuildReason {
-    /** Enum value none. */
+    /**
+     * Enum value none.
+     */
     NONE("none"),
 
-    /** Enum value manual. */
+    /**
+     * Enum value manual.
+     */
     MANUAL("manual"),
 
-    /** Enum value individualCI. */
+    /**
+     * Enum value individualCI.
+     */
     INDIVIDUAL_CI("individualCI"),
 
-    /** Enum value batchedCI. */
+    /**
+     * Enum value batchedCI.
+     */
     BATCHED_CI("batchedCI"),
 
-    /** Enum value schedule. */
+    /**
+     * Enum value schedule.
+     */
     SCHEDULE("schedule"),
 
-    /** Enum value scheduleForced. */
+    /**
+     * Enum value scheduleForced.
+     */
     SCHEDULE_FORCED("scheduleForced"),
 
-    /** Enum value userCreated. */
+    /**
+     * Enum value userCreated.
+     */
     USER_CREATED("userCreated"),
 
-    /** Enum value validateShelveset. */
+    /**
+     * Enum value validateShelveset.
+     */
     VALIDATE_SHELVESET("validateShelveset"),
 
-    /** Enum value checkInShelveset. */
+    /**
+     * Enum value checkInShelveset.
+     */
     CHECK_IN_SHELVESET("checkInShelveset"),
 
-    /** Enum value pullRequest. */
+    /**
+     * Enum value pullRequest.
+     */
     PULL_REQUEST("pullRequest"),
 
-    /** Enum value buildCompletion. */
+    /**
+     * Enum value buildCompletion.
+     */
     BUILD_COMPLETION("buildCompletion"),
 
-    /** Enum value resourceTrigger. */
+    /**
+     * Enum value resourceTrigger.
+     */
     RESOURCE_TRIGGER("resourceTrigger"),
 
-    /** Enum value triggered. */
+    /**
+     * Enum value triggered.
+     */
     TRIGGERED("triggered"),
 
-    /** Enum value all. */
+    /**
+     * Enum value all.
+     */
     ALL("all");
 
-    /** The actual serialized value for a BuildReason instance. */
+    /**
+     * The actual serialized value for a BuildReason instance.
+     */
     private final String value;
 
     BuildReason(String value) {
@@ -60,12 +92,15 @@ public enum BuildReason {
 
     /**
      * Parses a serialized value to a BuildReason instance.
-     *
+     * 
      * @param value the serialized value to parse.
      * @return the parsed BuildReason object, or null if unable to parse.
      */
     @JsonCreator
     public static BuildReason fromString(String value) {
+        if (value == null) {
+            return null;
+        }
         BuildReason[] items = BuildReason.values();
         for (BuildReason item : items) {
             if (item.toString().equalsIgnoreCase(value)) {
@@ -75,6 +110,9 @@ public enum BuildReason {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @JsonValue
     @Override
     public String toString() {

@@ -5,17 +5,15 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
 
-/** The ArtifactResource model. */
+/**
+ * The ArtifactResource model.
+ */
 @Fluent
 public final class ArtifactResource {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(ArtifactResource.class);
-
     /*
      * The class to represent a collection of REST reference links.
      */
@@ -42,8 +40,7 @@ public final class ArtifactResource {
     private Map<String, String> properties;
 
     /*
-     * The type of the resource: File container, version control folder, UNC
-     * path, etc.
+     * The type of the resource: File container, version control folder, UNC path, etc.
      */
     @JsonProperty(value = "type")
     private String type;
@@ -55,8 +52,14 @@ public final class ArtifactResource {
     private String url;
 
     /**
+     * Creates an instance of ArtifactResource class.
+     */
+    public ArtifactResource() {
+    }
+
+    /**
      * Get the links property: The class to represent a collection of REST reference links.
-     *
+     * 
      * @return the links value.
      */
     public ReferenceLinks links() {
@@ -65,7 +68,7 @@ public final class ArtifactResource {
 
     /**
      * Set the links property: The class to represent a collection of REST reference links.
-     *
+     * 
      * @param links the links value to set.
      * @return the ArtifactResource object itself.
      */
@@ -76,7 +79,7 @@ public final class ArtifactResource {
 
     /**
      * Get the data property: Type-specific data about the artifact.
-     *
+     * 
      * @return the data value.
      */
     public String data() {
@@ -85,7 +88,7 @@ public final class ArtifactResource {
 
     /**
      * Set the data property: Type-specific data about the artifact.
-     *
+     * 
      * @param data the data value to set.
      * @return the ArtifactResource object itself.
      */
@@ -96,7 +99,7 @@ public final class ArtifactResource {
 
     /**
      * Get the downloadUrl property: A link to download the resource.
-     *
+     * 
      * @return the downloadUrl value.
      */
     public String downloadUrl() {
@@ -105,7 +108,7 @@ public final class ArtifactResource {
 
     /**
      * Set the downloadUrl property: A link to download the resource.
-     *
+     * 
      * @param downloadUrl the downloadUrl value to set.
      * @return the ArtifactResource object itself.
      */
@@ -116,7 +119,7 @@ public final class ArtifactResource {
 
     /**
      * Get the properties property: Type-specific properties of the artifact.
-     *
+     * 
      * @return the properties value.
      */
     public Map<String, String> properties() {
@@ -125,7 +128,7 @@ public final class ArtifactResource {
 
     /**
      * Set the properties property: Type-specific properties of the artifact.
-     *
+     * 
      * @param properties the properties value to set.
      * @return the ArtifactResource object itself.
      */
@@ -136,7 +139,7 @@ public final class ArtifactResource {
 
     /**
      * Get the type property: The type of the resource: File container, version control folder, UNC path, etc.
-     *
+     * 
      * @return the type value.
      */
     public String type() {
@@ -145,7 +148,7 @@ public final class ArtifactResource {
 
     /**
      * Set the type property: The type of the resource: File container, version control folder, UNC path, etc.
-     *
+     * 
      * @param type the type value to set.
      * @return the ArtifactResource object itself.
      */
@@ -156,7 +159,7 @@ public final class ArtifactResource {
 
     /**
      * Get the url property: The full http link to the resource.
-     *
+     * 
      * @return the url value.
      */
     public String url() {
@@ -165,7 +168,7 @@ public final class ArtifactResource {
 
     /**
      * Set the url property: The full http link to the resource.
-     *
+     * 
      * @param url the url value to set.
      * @return the ArtifactResource object itself.
      */
@@ -176,7 +179,7 @@ public final class ArtifactResource {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {
