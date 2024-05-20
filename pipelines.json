@@ -12,9 +12,10 @@
       "name": "MICROSOFT SOFTWARE LICENSE TERMS",
       "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
     },
-    "version": "6.0-preview"
+    "version": "7.2-preview"
   },
   "host": "dev.azure.com",
+  "x-ms-vss-area": "Pipelines",
   "basePath": "/",
   "tags": [
     {
@@ -25,6 +26,9 @@
     },
     {
       "name": "Pipelines"
+    },
+    {
+      "name": "Preview"
     },
     {
       "name": "Runs"
@@ -39,6 +43,10 @@
         "tags": [
           "Pipelines"
         ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "pipelines",
+        "x-ms-vss-method": "CreatePipeline",
+        "x-ms-preview": true,
         "description": "Create a pipeline.",
         "operationId": "Pipelines_Create",
         "consumes": [
@@ -82,12 +90,23 @@
               "$ref": "#/definitions/Pipeline"
             }
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.build_execute"
+            ]
+          }
+        ]
       },
       "get": {
         "tags": [
           "Pipelines"
         ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "pipelines",
+        "x-ms-vss-method": "ListPipelines",
+        "x-ms-preview": true,
         "description": "Get a list of pipelines.",
         "operationId": "Pipelines_List",
         "produces": [
@@ -138,13 +157,20 @@
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/PipelineListResult"
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Pipeline"
+              }
             }
           }
         },
-        "x-ms-pageable": {
-          "nextLinkName": null
-        }
+        "security": [
+          {
+            "oauth2": [
+              "vso.build"
+            ]
+          }
+        ]
       }
     },
     "/{organization}/{project}/_apis/pipelines/{pipelineId}": {
@@ -152,6 +178,10 @@
         "tags": [
           "Pipelines"
         ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "pipelines",
+        "x-ms-vss-method": "GetPipeline",
+        "x-ms-preview": true,
         "description": "Gets a pipeline, optionally at the specified version",
         "operationId": "Pipelines_Get",
         "produces": [
@@ -199,7 +229,92 @@
               "$ref": "#/definitions/Pipeline"
             }
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.build"
+            ]
+          }
+        ]
+      }
+    },
+    "/{organization}/{project}/_apis/pipelines/{pipelineId}/preview": {
+      "post": {
+        "tags": [
+          "Preview"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "preview",
+        "x-ms-vss-method": "Preview",
+        "x-ms-preview": true,
+        "description": "Queues a dry run of the pipeline and returns an object containing the final yaml.",
+        "operationId": "Preview_Preview",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Optional additional parameters for this run.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RunPipelineParameters"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "pipelineId",
+            "description": "The pipeline ID.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "pipelineVersion",
+            "description": "The pipeline version.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/PreviewRun"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.build"
+            ]
+          }
+        ]
       }
     },
     "/{organization}/{project}/_apis/pipelines/{pipelineId}/runs": {
@@ -207,6 +322,10 @@
         "tags": [
           "Runs"
         ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "runs",
+        "x-ms-vss-method": "ListRuns",
+        "x-ms-preview": true,
         "description": "Gets top 10000 runs for a particular pipeline.",
         "operationId": "Runs_List",
         "produces": [
@@ -243,18 +362,29 @@
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/RunListResult"
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Run"
+              }
             }
           }
         },
-        "x-ms-pageable": {
-          "nextLinkName": null
-        }
+        "security": [
+          {
+            "oauth2": [
+              "vso.build"
+            ]
+          }
+        ]
       },
       "post": {
         "tags": [
           "Runs"
         ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "runs",
+        "x-ms-vss-method": "RunPipeline",
+        "x-ms-preview": true,
         "description": "Runs a pipeline.",
         "operationId": "Runs_Run Pipeline",
         "consumes": [
@@ -314,7 +444,14 @@
               "$ref": "#/definitions/Run"
             }
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.build_execute"
+            ]
+          }
+        ]
       }
     },
     "/{organization}/{project}/_apis/pipelines/{pipelineId}/runs/{runId}": {
@@ -322,6 +459,10 @@
         "tags": [
           "Runs"
         ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "runs",
+        "x-ms-vss-method": "GetRun",
+        "x-ms-preview": true,
         "description": "Gets a run for a particular pipeline.",
         "operationId": "Runs_Get",
         "produces": [
@@ -369,7 +510,14 @@
               "$ref": "#/definitions/Run"
             }
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.build"
+            ]
+          }
+        ]
       }
     },
     "/{organization}/{project}/_apis/pipelines/{pipelineId}/runs/{runId}/artifacts": {
@@ -377,6 +525,10 @@
         "tags": [
           "Artifacts"
         ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "artifacts",
+        "x-ms-vss-method": "GetArtifact",
+        "x-ms-preview": true,
         "description": "Get a specific artifact from a pipeline run",
         "operationId": "Artifacts_Get",
         "produces": [
@@ -455,7 +607,14 @@
               "$ref": "#/definitions/Artifact"
             }
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.build"
+            ]
+          }
+        ]
       }
     },
     "/{organization}/{project}/_apis/pipelines/{pipelineId}/runs/{runId}/logs": {
@@ -463,6 +622,10 @@
         "tags": [
           "Logs"
         ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "logs",
+        "x-ms-vss-method": "ListLogs",
+        "x-ms-preview": true,
         "description": "Get a list of logs from a pipeline run.",
         "operationId": "Logs_List",
         "produces": [
@@ -534,7 +697,14 @@
               "$ref": "#/definitions/LogCollection"
             }
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.build"
+            ]
+          }
+        ]
       }
     },
     "/{organization}/{project}/_apis/pipelines/{pipelineId}/runs/{runId}/logs/{logId}": {
@@ -542,6 +712,10 @@
         "tags": [
           "Logs"
         ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "logs",
+        "x-ms-vss-method": "GetLog",
+        "x-ms-preview": true,
         "description": "Get a specific log from a pipeline run",
         "operationId": "Logs_Get",
         "produces": [
@@ -621,7 +795,14 @@
               "$ref": "#/definitions/Log"
             }
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.build"
+            ]
+          }
+        ]
       }
     }
   },
@@ -650,6 +831,48 @@
       "properties": {
         "version": {
           "type": "string"
+        }
+      }
+    },
+    "Container": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "environment": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "image": {
+          "type": "string"
+        },
+        "mapDockerSocket": {
+          "type": "boolean"
+        },
+        "options": {
+          "type": "string"
+        },
+        "ports": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "volumes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ContainerResource": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "container": {
+          "$ref": "#/definitions/Container"
         }
       }
     },
@@ -881,11 +1104,32 @@
         }
       }
     },
+    "PipelineResource": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "pipeline": {
+          "$ref": "#/definitions/PipelineReference"
+        },
+        "version": {
+          "type": "string"
+        }
+      }
+    },
     "PipelineResourceParameters": {
       "description": "",
       "type": "object",
       "properties": {
         "version": {
+          "type": "string"
+        }
+      }
+    },
+    "PreviewRun": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "finalYaml": {
           "type": "string"
         }
       }
@@ -912,6 +1156,7 @@
             "unknown",
             "gitHub",
             "azureReposGit",
+            "gitHubEnterprise",
             "azureReposGitHyphenated"
           ],
           "x-ms-enum": {
@@ -927,6 +1172,10 @@
               },
               {
                 "value": "azureReposGit",
+                "description": ""
+              },
+              {
+                "value": "gitHubEnterprise",
                 "description": ""
               },
               {
@@ -1060,6 +1309,12 @@
             ]
           }
         },
+        "templateParameters": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
         "url": {
           "type": "string"
         },
@@ -1124,6 +1379,18 @@
       "description": "",
       "type": "object",
       "properties": {
+        "containers": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/ContainerResource"
+          }
+        },
+        "pipelines": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/PipelineResource"
+          }
+        },
         "repositories": {
           "type": "object",
           "additionalProperties": {
@@ -1205,7 +1472,7 @@
       }
     },
     "VssJsonCollectionWrapper": {
-      "description": "This class is used to serialized collections as a single JSON object on the wire, to avoid serializing JSON arrays directly to the client, which can be a security hole",
+      "description": "This class is used to serialize collections as a single JSON object on the wire.",
       "type": "object",
       "allOf": [
         {
@@ -1214,6 +1481,7 @@
       ],
       "properties": {
         "value": {
+          "description": "The serialized item.",
           "type": "string",
           "format": "T"
         }
@@ -1224,30 +1492,9 @@
       "type": "object",
       "properties": {
         "count": {
+          "description": "The number of serialized items.",
           "type": "integer",
           "format": "int32"
-        }
-      }
-    },
-    "PipelineListResult": {
-      "properties": {
-        "value": {
-          "type": "array",
-          "readOnly": true,
-          "items": {
-            "$ref": "#/definitions/Pipeline"
-          }
-        }
-      }
-    },
-    "RunListResult": {
-      "properties": {
-        "value": {
-          "type": "array",
-          "readOnly": true,
-          "items": {
-            "$ref": "#/definitions/Run"
-          }
         }
       }
     }
@@ -1256,7 +1503,7 @@
     "api-Version-preview.1": {
       "name": "api-version",
       "in": "query",
-      "description": "Version of the API to use.  This should be set to '6.0-preview.1' to use this version of the api.",
+      "description": "Version of the API to use.  This should be set to '7.2-preview.1' to use this version of the api.",
       "required": true,
       "type": "string"
     }
@@ -1265,6 +1512,16 @@
     "accessToken": {
       "type": "basic",
       "description": "Personal access token. Use any value for the user name and the token as the password."
+    },
+    "oauth2": {
+      "type": "oauth2",
+      "flow": "accessCode",
+      "authorizationUrl": "https://app.vssps.visualstudio.com/oauth2/authorize&response_type=Assertion",
+      "tokenUrl": "https://app.vssps.visualstudio.com/oauth2/token?client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer",
+      "scopes": {
+        "vso.build": "Grants the ability to access build artifacts, including build results, definitions, and requests, and the ability to receive notifications about build events via service hooks.",
+        "vso.build_execute": "Grants the ability to access build artifacts, including build results, definitions, and requests, and the ability to queue a build, update build properties, and the ability to receive notifications about build events via service hooks."
+      }
     }
   },
   "security": [
