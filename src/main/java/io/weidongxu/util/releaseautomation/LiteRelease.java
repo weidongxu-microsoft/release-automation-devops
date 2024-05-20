@@ -274,6 +274,7 @@ public class LiteRelease {
         if (pipeline != null) {
             Map<String, Object> buildDefinition = Utils.getDefinition(manager, ORGANIZATION, PROJECT_INTERNAL, pipeline.id());
             if (!Utils.isDefinitionEnabled(buildDefinition)) {
+                OUT.println("enable pipeline");
                 Utils.enableDefinition(manager, ORGANIZATION, PROJECT_INTERNAL, pipeline.id(), buildDefinition);
             }
 
@@ -406,6 +407,7 @@ public class LiteRelease {
             Map<String, Object> buildDefinition = Utils.getDefinition(manager, ORGANIZATION, PROJECT_PUBLIC, pipeline.id());
             if (!Utils.isDefinitionEnabled(buildDefinition)) {
                 ciPipelineEnabled = false;
+                OUT.println("enable pipeline");
                 Utils.enableDefinition(manager, ORGANIZATION, PROJECT_PUBLIC, pipeline.id(), buildDefinition);
             }
         }
