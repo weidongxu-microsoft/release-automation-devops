@@ -429,6 +429,9 @@ public class LiteRelease {
             IssueClient issueClient = client.createIssueClient();
             if (!ciPipelineEnabled) {
                 issueClient.createComment(prNumber, "/azp run " + javaSdkCheckName).get();
+                // wait a bit before potentially another "/azp run" comment
+                OUT.println("wait 1 minutes");
+                Thread.sleep(POLL_SHORT_INTERVAL_MINUTE * MILLISECOND_PER_MINUTE);
             }
 
             // trigger live tests, if available
