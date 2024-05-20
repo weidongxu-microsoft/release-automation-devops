@@ -15,6 +15,8 @@ import com.azure.core.management.profile.AzureProfile;
 import com.azure.core.util.Configuration;
 import com.azure.core.util.CoreUtils;
 import com.azure.dev.DevManager;
+import com.azure.dev.models.BuildDefinition;
+import com.azure.dev.models.DefinitionQueueStatus;
 import com.azure.dev.models.Pipeline;
 import com.azure.dev.models.Run;
 import com.azure.dev.models.RunPipelineParameters;
@@ -27,7 +29,6 @@ import com.spotify.github.v3.clients.GitHubClient;
 import com.spotify.github.v3.clients.IssueClient;
 import com.spotify.github.v3.clients.PullRequestClient;
 import com.spotify.github.v3.clients.RepositoryClient;
-import com.spotify.github.v3.comment.Comment;
 import com.spotify.github.v3.prs.ImmutableMergeParameters;
 import com.spotify.github.v3.prs.ImmutableReviewParameters;
 import com.spotify.github.v3.prs.MergeMethod;
@@ -273,6 +274,11 @@ public class LiteRelease {
         Pipeline pipeline = findSdkPipeline(manager, sdk, false);
 
         if (pipeline != null) {
+            BuildDefinition buildDefinition = manager.definitions().get(ORGANIZATION, PROJECT_INTERNAL, pipeline.id());
+            if (buildDefinition.queueStatus() != DefinitionQueueStatus.ENABLED) {
+                manager.definitions().update(ORGANIZATION, PROJECT_INTERNAL, pipeline.id(), buildDefinition.innerModel().withQueueStatus(DefinitionQueueStatus.ENABLED));
+            }
+
             Map<String, String> templateParameters = new HashMap<>();
             for (String releaseTemplateParameter : releaseTemplateParameters) {
                 templateParameters.put(releaseTemplateParameter,
@@ -396,6 +402,15 @@ public class LiteRelease {
         String javaSdkCheckName = pipeline != null ? pipeline.name() : ("java - " + sdk + " - ci");
 
         boolean ciPipelineReady = pipeline != null;
+        boolean ciPipelineEnabled = true;
+
+        if (ciPipelineReady) {
+            BuildDefinition buildDefinition = manager.definitions().get(ORGANIZATION, PROJECT_PUBLIC, pipeline.id());
+            if (buildDefinition.queueStatus() != DefinitionQueueStatus.ENABLED) {
+                ciPipelineEnabled = false;
+                manager.definitions().update(ORGANIZATION, PROJECT_PUBLIC, pipeline.id(), buildDefinition.innerModel().withQueueStatus(DefinitionQueueStatus.ENABLED));
+            }
+        }
 
         if (!ciPipelineReady) {
             LOGGER.info("prepare pipeline");
@@ -403,23 +418,28 @@ public class LiteRelease {
             IssueClient issueClient = client.createIssueClient();
 
             // comment to create sdk CI
-            Comment comment = issueClient.createComment(prNumber, "/azp run prepare-pipelines").get();
+            issueClient.createComment(prNumber, "/azp run prepare-pipelines").get();
 
             // wait for prepare pipelines
             PullRequest pr = prClient.get(prNumber).get();
             waitForCheckSuccess(prClient, prNumber, CI_PREPARE_PIPELINES_NAME, pr.head().sha());
 
             // comment to run the newly created sdk CI
-            comment = issueClient.createComment(prNumber, "/azp run " + javaSdkCheckName).get();
+            issueClient.createComment(prNumber, "/azp run " + javaSdkCheckName).get();
         } else {
+            // comment to run the previously disabled sdk CI
+            IssueClient issueClient = client.createIssueClient();
+            if (!ciPipelineEnabled) {
+                issueClient.createComment(prNumber, "/azp run " + javaSdkCheckName).get();
+            }
+
             // trigger live tests, if available
             String testPipelineName = "java - " + sdk + " - mgmt - tests";
             boolean testPipelineAvailable = manager.pipelines().list(ORGANIZATION, PROJECT_INTERNAL).stream()
                     .anyMatch(p -> p.name().equals(testPipelineName));
             if (testPipelineAvailable) {
-                IssueClient issueClient = client.createIssueClient();
                 // comment to trigger tests.mgmt
-                Comment comment = issueClient.createComment(prNumber, "/azp run " + testPipelineName).get();
+                issueClient.createComment(prNumber, "/azp run " + testPipelineName).get();
             }
         }
 
