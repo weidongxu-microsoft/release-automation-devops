@@ -5,15 +5,13 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Contains members for updating the retention settings values. All fields are optional. */
+/**
+ * Contains members for updating the retention settings values. All fields are optional.
+ */
 @Fluent
 public final class UpdateProjectRetentionSettingModel {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(UpdateProjectRetentionSettingModel.class);
-
     /*
      * The artifactsRetention property.
      */
@@ -39,8 +37,14 @@ public final class UpdateProjectRetentionSettingModel {
     private UpdateRetentionSettingModel runRetention;
 
     /**
+     * Creates an instance of UpdateProjectRetentionSettingModel class.
+     */
+    public UpdateProjectRetentionSettingModel() {
+    }
+
+    /**
      * Get the artifactsRetention property: The artifactsRetention property.
-     *
+     * 
      * @return the artifactsRetention value.
      */
     public UpdateRetentionSettingModel artifactsRetention() {
@@ -49,7 +53,7 @@ public final class UpdateProjectRetentionSettingModel {
 
     /**
      * Set the artifactsRetention property: The artifactsRetention property.
-     *
+     * 
      * @param artifactsRetention the artifactsRetention value to set.
      * @return the UpdateProjectRetentionSettingModel object itself.
      */
@@ -60,7 +64,7 @@ public final class UpdateProjectRetentionSettingModel {
 
     /**
      * Get the pullRequestRunRetention property: The pullRequestRunRetention property.
-     *
+     * 
      * @return the pullRequestRunRetention value.
      */
     public UpdateRetentionSettingModel pullRequestRunRetention() {
@@ -69,19 +73,19 @@ public final class UpdateProjectRetentionSettingModel {
 
     /**
      * Set the pullRequestRunRetention property: The pullRequestRunRetention property.
-     *
+     * 
      * @param pullRequestRunRetention the pullRequestRunRetention value to set.
      * @return the UpdateProjectRetentionSettingModel object itself.
      */
-    public UpdateProjectRetentionSettingModel withPullRequestRunRetention(
-        UpdateRetentionSettingModel pullRequestRunRetention) {
+    public UpdateProjectRetentionSettingModel
+        withPullRequestRunRetention(UpdateRetentionSettingModel pullRequestRunRetention) {
         this.pullRequestRunRetention = pullRequestRunRetention;
         return this;
     }
 
     /**
      * Get the retainRunsPerProtectedBranch property: The retainRunsPerProtectedBranch property.
-     *
+     * 
      * @return the retainRunsPerProtectedBranch value.
      */
     public UpdateRetentionSettingModel retainRunsPerProtectedBranch() {
@@ -90,19 +94,19 @@ public final class UpdateProjectRetentionSettingModel {
 
     /**
      * Set the retainRunsPerProtectedBranch property: The retainRunsPerProtectedBranch property.
-     *
+     * 
      * @param retainRunsPerProtectedBranch the retainRunsPerProtectedBranch value to set.
      * @return the UpdateProjectRetentionSettingModel object itself.
      */
-    public UpdateProjectRetentionSettingModel withRetainRunsPerProtectedBranch(
-        UpdateRetentionSettingModel retainRunsPerProtectedBranch) {
+    public UpdateProjectRetentionSettingModel
+        withRetainRunsPerProtectedBranch(UpdateRetentionSettingModel retainRunsPerProtectedBranch) {
         this.retainRunsPerProtectedBranch = retainRunsPerProtectedBranch;
         return this;
     }
 
     /**
      * Get the runRetention property: The runRetention property.
-     *
+     * 
      * @return the runRetention value.
      */
     public UpdateRetentionSettingModel runRetention() {
@@ -111,7 +115,7 @@ public final class UpdateProjectRetentionSettingModel {
 
     /**
      * Set the runRetention property: The runRetention property.
-     *
+     * 
      * @param runRetention the runRetention value to set.
      * @return the UpdateProjectRetentionSettingModel object itself.
      */
@@ -122,7 +126,7 @@ public final class UpdateProjectRetentionSettingModel {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

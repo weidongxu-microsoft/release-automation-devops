@@ -5,15 +5,13 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Represents a phase target that runs on the server. */
+/**
+ * Represents a phase target that runs on the server.
+ */
 @Fluent
 public final class ServerTarget extends PhaseTarget {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(ServerTarget.class);
-
     /*
      * The execution options.
      */
@@ -21,8 +19,14 @@ public final class ServerTarget extends PhaseTarget {
     private ServerTargetExecutionOptions executionOptions;
 
     /**
+     * Creates an instance of ServerTarget class.
+     */
+    public ServerTarget() {
+    }
+
+    /**
      * Get the executionOptions property: The execution options.
-     *
+     * 
      * @return the executionOptions value.
      */
     public ServerTargetExecutionOptions executionOptions() {
@@ -31,7 +35,7 @@ public final class ServerTarget extends PhaseTarget {
 
     /**
      * Set the executionOptions property: The execution options.
-     *
+     * 
      * @param executionOptions the executionOptions value to set.
      * @return the ServerTarget object itself.
      */
@@ -40,7 +44,9 @@ public final class ServerTarget extends PhaseTarget {
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ServerTarget withType(Integer type) {
         super.withType(type);
@@ -49,7 +55,7 @@ public final class ServerTarget extends PhaseTarget {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     @Override

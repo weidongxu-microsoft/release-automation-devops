@@ -23,30 +23,32 @@ import com.azure.core.http.rest.RestProxy;
 import com.azure.core.management.exception.ManagementException;
 import com.azure.core.util.Context;
 import com.azure.core.util.FluxUtil;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.fluent.PropertiesClient;
 import com.azure.dev.fluent.models.PropertiesCollectionInner;
-import com.azure.dev.models.JsonPatchDocument;
 import reactor.core.publisher.Mono;
 
-/** An instance of this class provides access to all the operations defined in PropertiesClient. */
+/**
+ * An instance of this class provides access to all the operations defined in PropertiesClient.
+ */
 public final class PropertiesClientImpl implements PropertiesClient {
-    private final ClientLogger logger = new ClientLogger(PropertiesClientImpl.class);
-
-    /** The proxy service used to perform REST calls. */
+    /**
+     * The proxy service used to perform REST calls.
+     */
     private final PropertiesService service;
 
-    /** The service client containing this operation class. */
+    /**
+     * The service client containing this operation class.
+     */
     private final DevClientImpl client;
 
     /**
      * Initializes an instance of PropertiesClientImpl.
-     *
+     * 
      * @param client the instance of the service client containing this operation class.
      */
     PropertiesClientImpl(DevClientImpl client) {
-        this.service =
-            RestProxy.create(PropertiesService.class, client.getHttpPipeline(), client.getSerializerAdapter());
+        this.service
+            = RestProxy.create(PropertiesService.class, client.getHttpPipeline(), client.getSerializerAdapter());
         this.client = client;
     }
 
@@ -56,67 +58,49 @@ public final class PropertiesClientImpl implements PropertiesClient {
      */
     @Host("{$host}")
     @ServiceInterface(name = "DevClientProperties")
-    private interface PropertiesService {
-        @Headers({"Content-Type: application/json"})
+    public interface PropertiesService {
+        @Headers({ "Content-Type: application/json" })
         @Get("/{organization}/{project}/_apis/build/builds/{buildId}/properties")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<PropertiesCollectionInner>> getBuildProperties(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
-            @PathParam("buildId") int buildId,
-            @QueryParam("filter") String filter,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<PropertiesCollectionInner>> getBuildProperties(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
+            @PathParam("buildId") int buildId, @QueryParam("filter") String filter,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json-patch+json"})
+        @Headers({ "Content-Type: application/json-patch+json" })
         @Patch("/{organization}/{project}/_apis/build/builds/{buildId}/properties")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<PropertiesCollectionInner>> updateBuildProperties(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
-            @PathParam("buildId") int buildId,
-            @QueryParam("api-version") String apiVersion,
-            @BodyParam("application/json-patch+json") JsonPatchDocument body,
-            @HeaderParam("Accept") String accept,
+        Mono<Response<PropertiesCollectionInner>> updateBuildProperties(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
+            @PathParam("buildId") int buildId, @QueryParam("api-version") String apiVersion,
+            @BodyParam("application/json-patch+json") Object body, @HeaderParam("Accept") String accept,
             Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
         @Get("/{organization}/{project}/_apis/build/definitions/{definitionId}/properties")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<PropertiesCollectionInner>> getDefinitionProperties(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
-            @PathParam("definitionId") int definitionId,
-            @QueryParam("filter") String filter,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<PropertiesCollectionInner>> getDefinitionProperties(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
+            @PathParam("definitionId") int definitionId, @QueryParam("filter") String filter,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json-patch+json"})
+        @Headers({ "Content-Type: application/json-patch+json" })
         @Patch("/{organization}/{project}/_apis/build/definitions/{definitionId}/properties")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<PropertiesCollectionInner>> updateDefinitionProperties(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
-            @PathParam("definitionId") int definitionId,
-            @QueryParam("api-version") String apiVersion,
-            @BodyParam("application/json-patch+json") JsonPatchDocument body,
-            @HeaderParam("Accept") String accept,
+        Mono<Response<PropertiesCollectionInner>> updateDefinitionProperties(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
+            @PathParam("definitionId") int definitionId, @QueryParam("api-version") String apiVersion,
+            @BodyParam("application/json-patch+json") Object body, @HeaderParam("Accept") String accept,
             Context context);
     }
 
     /**
      * Gets properties for a build.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
@@ -124,16 +108,14 @@ public final class PropertiesClientImpl implements PropertiesClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return properties for a build.
+     * @return properties for a build along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<PropertiesCollectionInner>> getBuildPropertiesWithResponseAsync(
-        String organization, String project, int buildId, String filter) {
+    private Mono<Response<PropertiesCollectionInner>> getBuildPropertiesWithResponseAsync(String organization,
+        String project, int buildId, String filter) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -141,27 +123,16 @@ public final class PropertiesClientImpl implements PropertiesClient {
         if (project == null) {
             return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .getBuildProperties(
-                            this.client.getEndpoint(),
-                            organization,
-                            project,
-                            buildId,
-                            filter,
-                            apiVersion,
-                            accept,
-                            context))
+            .withContext(context -> service.getBuildProperties(this.client.getEndpoint(), organization, project,
+                buildId, filter, this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Gets properties for a build.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
@@ -170,16 +141,14 @@ public final class PropertiesClientImpl implements PropertiesClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return properties for a build.
+     * @return properties for a build along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<PropertiesCollectionInner>> getBuildPropertiesWithResponseAsync(
-        String organization, String project, int buildId, String filter, Context context) {
+    private Mono<Response<PropertiesCollectionInner>> getBuildPropertiesWithResponseAsync(String organization,
+        String project, int buildId, String filter, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -187,68 +156,52 @@ public final class PropertiesClientImpl implements PropertiesClient {
         if (project == null) {
             return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .getBuildProperties(
-                this.client.getEndpoint(), organization, project, buildId, filter, apiVersion, accept, context);
+        return service.getBuildProperties(this.client.getEndpoint(), organization, project, buildId, filter,
+            this.client.getApiVersion(), accept, context);
     }
 
     /**
      * Gets properties for a build.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param buildId The ID of the build.
-     * @param filter A comma-delimited list of properties. If specified, filters to these specific properties.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return properties for a build.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PropertiesCollectionInner> getBuildPropertiesAsync(
-        String organization, String project, int buildId, String filter) {
-        return getBuildPropertiesWithResponseAsync(organization, project, buildId, filter)
-            .flatMap(
-                (Response<PropertiesCollectionInner> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
-    }
-
-    /**
-     * Gets properties for a build.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return properties for a build.
+     * @return properties for a build on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<PropertiesCollectionInner> getBuildPropertiesAsync(String organization, String project, int buildId) {
         final String filter = null;
         return getBuildPropertiesWithResponseAsync(organization, project, buildId, filter)
-            .flatMap(
-                (Response<PropertiesCollectionInner> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+            .flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Gets properties for a build.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param buildId The ID of the build.
+     * @param filter A comma-delimited list of properties. If specified, filters to these specific properties.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return properties for a build along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<PropertiesCollectionInner> getBuildPropertiesWithResponse(String organization, String project,
+        int buildId, String filter, Context context) {
+        return getBuildPropertiesWithResponseAsync(organization, project, buildId, filter, context).block();
+    }
+
+    /**
+     * Gets properties for a build.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
@@ -260,48 +213,28 @@ public final class PropertiesClientImpl implements PropertiesClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public PropertiesCollectionInner getBuildProperties(String organization, String project, int buildId) {
         final String filter = null;
-        return getBuildPropertiesAsync(organization, project, buildId, filter).block();
-    }
-
-    /**
-     * Gets properties for a build.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param buildId The ID of the build.
-     * @param filter A comma-delimited list of properties. If specified, filters to these specific properties.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return properties for a build.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<PropertiesCollectionInner> getBuildPropertiesWithResponse(
-        String organization, String project, int buildId, String filter, Context context) {
-        return getBuildPropertiesWithResponseAsync(organization, project, buildId, filter, context).block();
+        return getBuildPropertiesWithResponse(organization, project, buildId, filter, Context.NONE).getValue();
     }
 
     /**
      * Updates properties for a build.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
-     * @param body The JSON model for JSON Patch Operations.
+     * @param body Any object.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the class represents a property bag as a collection of key-value pairs.
+     * @return the class represents a property bag as a collection of key-value pairs along with {@link Response} on
+     * successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<PropertiesCollectionInner>> updateBuildPropertiesWithResponseAsync(
-        String organization, String project, int buildId, JsonPatchDocument body) {
+    private Mono<Response<PropertiesCollectionInner>> updateBuildPropertiesWithResponseAsync(String organization,
+        String project, int buildId, Object body) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -311,48 +244,34 @@ public final class PropertiesClientImpl implements PropertiesClient {
         }
         if (body == null) {
             return Mono.error(new IllegalArgumentException("Parameter body is required and cannot be null."));
-        } else {
-            body.validate();
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .updateBuildProperties(
-                            this.client.getEndpoint(),
-                            organization,
-                            project,
-                            buildId,
-                            apiVersion,
-                            body,
-                            accept,
-                            context))
+            .withContext(context -> service.updateBuildProperties(this.client.getEndpoint(), organization, project,
+                buildId, this.client.getApiVersion(), body, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Updates properties for a build.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
-     * @param body The JSON model for JSON Patch Operations.
+     * @param body Any object.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the class represents a property bag as a collection of key-value pairs.
+     * @return the class represents a property bag as a collection of key-value pairs along with {@link Response} on
+     * successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<PropertiesCollectionInner>> updateBuildPropertiesWithResponseAsync(
-        String organization, String project, int buildId, JsonPatchDocument body, Context context) {
+    private Mono<Response<PropertiesCollectionInner>> updateBuildPropertiesWithResponseAsync(String organization,
+        String project, int buildId, Object body, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -362,83 +281,73 @@ public final class PropertiesClientImpl implements PropertiesClient {
         }
         if (body == null) {
             return Mono.error(new IllegalArgumentException("Parameter body is required and cannot be null."));
-        } else {
-            body.validate();
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .updateBuildProperties(
-                this.client.getEndpoint(), organization, project, buildId, apiVersion, body, accept, context);
+        return service.updateBuildProperties(this.client.getEndpoint(), organization, project, buildId,
+            this.client.getApiVersion(), body, accept, context);
     }
 
     /**
      * Updates properties for a build.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
-     * @param body The JSON model for JSON Patch Operations.
+     * @param body Any object.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the class represents a property bag as a collection of key-value pairs.
+     * @return the class represents a property bag as a collection of key-value pairs on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PropertiesCollectionInner> updateBuildPropertiesAsync(
-        String organization, String project, int buildId, JsonPatchDocument body) {
+    private Mono<PropertiesCollectionInner> updateBuildPropertiesAsync(String organization, String project, int buildId,
+        Object body) {
         return updateBuildPropertiesWithResponseAsync(organization, project, buildId, body)
-            .flatMap(
-                (Response<PropertiesCollectionInner> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+            .flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Updates properties for a build.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
-     * @param body The JSON model for JSON Patch Operations.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the class represents a property bag as a collection of key-value pairs.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public PropertiesCollectionInner updateBuildProperties(
-        String organization, String project, int buildId, JsonPatchDocument body) {
-        return updateBuildPropertiesAsync(organization, project, buildId, body).block();
-    }
-
-    /**
-     * Updates properties for a build.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param buildId The ID of the build.
-     * @param body The JSON model for JSON Patch Operations.
+     * @param body Any object.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the class represents a property bag as a collection of key-value pairs.
+     * @return the class represents a property bag as a collection of key-value pairs along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<PropertiesCollectionInner> updateBuildPropertiesWithResponse(
-        String organization, String project, int buildId, JsonPatchDocument body, Context context) {
+    public Response<PropertiesCollectionInner> updateBuildPropertiesWithResponse(String organization, String project,
+        int buildId, Object body, Context context) {
         return updateBuildPropertiesWithResponseAsync(organization, project, buildId, body, context).block();
     }
 
     /**
+     * Updates properties for a build.
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param buildId The ID of the build.
+     * @param body Any object.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the class represents a property bag as a collection of key-value pairs.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public PropertiesCollectionInner updateBuildProperties(String organization, String project, int buildId,
+        Object body) {
+        return updateBuildPropertiesWithResponse(organization, project, buildId, body, Context.NONE).getValue();
+    }
+
+    /**
      * Gets properties for a definition.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
@@ -446,16 +355,14 @@ public final class PropertiesClientImpl implements PropertiesClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return properties for a definition.
+     * @return properties for a definition along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<PropertiesCollectionInner>> getDefinitionPropertiesWithResponseAsync(
-        String organization, String project, int definitionId, String filter) {
+    private Mono<Response<PropertiesCollectionInner>> getDefinitionPropertiesWithResponseAsync(String organization,
+        String project, int definitionId, String filter) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -463,27 +370,16 @@ public final class PropertiesClientImpl implements PropertiesClient {
         if (project == null) {
             return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .getDefinitionProperties(
-                            this.client.getEndpoint(),
-                            organization,
-                            project,
-                            definitionId,
-                            filter,
-                            apiVersion,
-                            accept,
-                            context))
+            .withContext(context -> service.getDefinitionProperties(this.client.getEndpoint(), organization, project,
+                definitionId, filter, this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Gets properties for a definition.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
@@ -492,16 +388,14 @@ public final class PropertiesClientImpl implements PropertiesClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return properties for a definition.
+     * @return properties for a definition along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<PropertiesCollectionInner>> getDefinitionPropertiesWithResponseAsync(
-        String organization, String project, int definitionId, String filter, Context context) {
+    private Mono<Response<PropertiesCollectionInner>> getDefinitionPropertiesWithResponseAsync(String organization,
+        String project, int definitionId, String filter, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -509,69 +403,53 @@ public final class PropertiesClientImpl implements PropertiesClient {
         if (project == null) {
             return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .getDefinitionProperties(
-                this.client.getEndpoint(), organization, project, definitionId, filter, apiVersion, accept, context);
+        return service.getDefinitionProperties(this.client.getEndpoint(), organization, project, definitionId, filter,
+            this.client.getApiVersion(), accept, context);
     }
 
     /**
      * Gets properties for a definition.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param definitionId The ID of the definition.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return properties for a definition on successful completion of {@link Mono}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Mono<PropertiesCollectionInner> getDefinitionPropertiesAsync(String organization, String project,
+        int definitionId) {
+        final String filter = null;
+        return getDefinitionPropertiesWithResponseAsync(organization, project, definitionId, filter)
+            .flatMap(res -> Mono.justOrEmpty(res.getValue()));
+    }
+
+    /**
+     * Gets properties for a definition.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
      * @param filter A comma-delimited list of properties. If specified, filters to these specific properties.
+     * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return properties for a definition.
+     * @return properties for a definition along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PropertiesCollectionInner> getDefinitionPropertiesAsync(
-        String organization, String project, int definitionId, String filter) {
-        return getDefinitionPropertiesWithResponseAsync(organization, project, definitionId, filter)
-            .flatMap(
-                (Response<PropertiesCollectionInner> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+    public Response<PropertiesCollectionInner> getDefinitionPropertiesWithResponse(String organization, String project,
+        int definitionId, String filter, Context context) {
+        return getDefinitionPropertiesWithResponseAsync(organization, project, definitionId, filter, context).block();
     }
 
     /**
      * Gets properties for a definition.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param definitionId The ID of the definition.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return properties for a definition.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PropertiesCollectionInner> getDefinitionPropertiesAsync(
-        String organization, String project, int definitionId) {
-        final String filter = null;
-        return getDefinitionPropertiesWithResponseAsync(organization, project, definitionId, filter)
-            .flatMap(
-                (Response<PropertiesCollectionInner> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
-    }
-
-    /**
-     * Gets properties for a definition.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
@@ -583,48 +461,29 @@ public final class PropertiesClientImpl implements PropertiesClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public PropertiesCollectionInner getDefinitionProperties(String organization, String project, int definitionId) {
         final String filter = null;
-        return getDefinitionPropertiesAsync(organization, project, definitionId, filter).block();
-    }
-
-    /**
-     * Gets properties for a definition.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param definitionId The ID of the definition.
-     * @param filter A comma-delimited list of properties. If specified, filters to these specific properties.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return properties for a definition.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<PropertiesCollectionInner> getDefinitionPropertiesWithResponse(
-        String organization, String project, int definitionId, String filter, Context context) {
-        return getDefinitionPropertiesWithResponseAsync(organization, project, definitionId, filter, context).block();
+        return getDefinitionPropertiesWithResponse(organization, project, definitionId, filter, Context.NONE)
+            .getValue();
     }
 
     /**
      * Updates properties for a definition.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
-     * @param body The JSON model for JSON Patch Operations.
+     * @param body Any object.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the class represents a property bag as a collection of key-value pairs.
+     * @return the class represents a property bag as a collection of key-value pairs along with {@link Response} on
+     * successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<PropertiesCollectionInner>> updateDefinitionPropertiesWithResponseAsync(
-        String organization, String project, int definitionId, JsonPatchDocument body) {
+    private Mono<Response<PropertiesCollectionInner>> updateDefinitionPropertiesWithResponseAsync(String organization,
+        String project, int definitionId, Object body) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -634,48 +493,34 @@ public final class PropertiesClientImpl implements PropertiesClient {
         }
         if (body == null) {
             return Mono.error(new IllegalArgumentException("Parameter body is required and cannot be null."));
-        } else {
-            body.validate();
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .updateDefinitionProperties(
-                            this.client.getEndpoint(),
-                            organization,
-                            project,
-                            definitionId,
-                            apiVersion,
-                            body,
-                            accept,
-                            context))
+            .withContext(context -> service.updateDefinitionProperties(this.client.getEndpoint(), organization, project,
+                definitionId, this.client.getApiVersion(), body, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Updates properties for a definition.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
-     * @param body The JSON model for JSON Patch Operations.
+     * @param body Any object.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the class represents a property bag as a collection of key-value pairs.
+     * @return the class represents a property bag as a collection of key-value pairs along with {@link Response} on
+     * successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<PropertiesCollectionInner>> updateDefinitionPropertiesWithResponseAsync(
-        String organization, String project, int definitionId, JsonPatchDocument body, Context context) {
+    private Mono<Response<PropertiesCollectionInner>> updateDefinitionPropertiesWithResponseAsync(String organization,
+        String project, int definitionId, Object body, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -685,77 +530,68 @@ public final class PropertiesClientImpl implements PropertiesClient {
         }
         if (body == null) {
             return Mono.error(new IllegalArgumentException("Parameter body is required and cannot be null."));
-        } else {
-            body.validate();
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .updateDefinitionProperties(
-                this.client.getEndpoint(), organization, project, definitionId, apiVersion, body, accept, context);
+        return service.updateDefinitionProperties(this.client.getEndpoint(), organization, project, definitionId,
+            this.client.getApiVersion(), body, accept, context);
     }
 
     /**
      * Updates properties for a definition.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
-     * @param body The JSON model for JSON Patch Operations.
+     * @param body Any object.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the class represents a property bag as a collection of key-value pairs.
+     * @return the class represents a property bag as a collection of key-value pairs on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<PropertiesCollectionInner> updateDefinitionPropertiesAsync(
-        String organization, String project, int definitionId, JsonPatchDocument body) {
+    private Mono<PropertiesCollectionInner> updateDefinitionPropertiesAsync(String organization, String project,
+        int definitionId, Object body) {
         return updateDefinitionPropertiesWithResponseAsync(organization, project, definitionId, body)
-            .flatMap(
-                (Response<PropertiesCollectionInner> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+            .flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Updates properties for a definition.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
-     * @param body The JSON model for JSON Patch Operations.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the class represents a property bag as a collection of key-value pairs.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public PropertiesCollectionInner updateDefinitionProperties(
-        String organization, String project, int definitionId, JsonPatchDocument body) {
-        return updateDefinitionPropertiesAsync(organization, project, definitionId, body).block();
-    }
-
-    /**
-     * Updates properties for a definition.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param definitionId The ID of the definition.
-     * @param body The JSON model for JSON Patch Operations.
+     * @param body Any object.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the class represents a property bag as a collection of key-value pairs along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<PropertiesCollectionInner> updateDefinitionPropertiesWithResponse(String organization,
+        String project, int definitionId, Object body, Context context) {
+        return updateDefinitionPropertiesWithResponseAsync(organization, project, definitionId, body, context).block();
+    }
+
+    /**
+     * Updates properties for a definition.
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param definitionId The ID of the definition.
+     * @param body Any object.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the class represents a property bag as a collection of key-value pairs.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<PropertiesCollectionInner> updateDefinitionPropertiesWithResponse(
-        String organization, String project, int definitionId, JsonPatchDocument body, Context context) {
-        return updateDefinitionPropertiesWithResponseAsync(organization, project, definitionId, body, context).block();
+    public PropertiesCollectionInner updateDefinitionProperties(String organization, String project, int definitionId,
+        Object body) {
+        return updateDefinitionPropertiesWithResponse(organization, project, definitionId, body, Context.NONE)
+            .getValue();
     }
 }

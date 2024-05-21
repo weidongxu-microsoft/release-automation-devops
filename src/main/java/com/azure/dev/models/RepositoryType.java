@@ -7,21 +7,38 @@ package com.azure.dev.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/** Defines values for RepositoryType. */
+/**
+ * Defines values for RepositoryType.
+ */
 public enum RepositoryType {
-    /** Enum value unknown. */
+    /**
+     * Enum value unknown.
+     */
     UNKNOWN("unknown"),
 
-    /** Enum value gitHub. */
+    /**
+     * Enum value gitHub.
+     */
     GIT_HUB("gitHub"),
 
-    /** Enum value azureReposGit. */
+    /**
+     * Enum value azureReposGit.
+     */
     AZURE_REPOS_GIT("azureReposGit"),
 
-    /** Enum value azureReposGitHyphenated. */
+    /**
+     * Enum value gitHubEnterprise.
+     */
+    GIT_HUB_ENTERPRISE("gitHubEnterprise"),
+
+    /**
+     * Enum value azureReposGitHyphenated.
+     */
     AZURE_REPOS_GIT_HYPHENATED("azureReposGitHyphenated");
 
-    /** The actual serialized value for a RepositoryType instance. */
+    /**
+     * The actual serialized value for a RepositoryType instance.
+     */
     private final String value;
 
     RepositoryType(String value) {
@@ -30,12 +47,15 @@ public enum RepositoryType {
 
     /**
      * Parses a serialized value to a RepositoryType instance.
-     *
+     * 
      * @param value the serialized value to parse.
      * @return the parsed RepositoryType object, or null if unable to parse.
      */
     @JsonCreator
     public static RepositoryType fromString(String value) {
+        if (value == null) {
+            return null;
+        }
         RepositoryType[] items = RepositoryType.values();
         for (RepositoryType item : items) {
             if (item.toString().equalsIgnoreCase(value)) {
@@ -45,6 +65,9 @@ public enum RepositoryType {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @JsonValue
     @Override
     public String toString() {

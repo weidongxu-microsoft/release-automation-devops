@@ -5,17 +5,15 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
 
-/** Represents an issue (error, warning) associated with a build. */
+/**
+ * Represents an issue (error, warning) associated with a build.
+ */
 @Fluent
 public final class Issue {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(Issue.class);
-
     /*
      * The category.
      */
@@ -42,8 +40,14 @@ public final class Issue {
     private IssueType type;
 
     /**
+     * Creates an instance of Issue class.
+     */
+    public Issue() {
+    }
+
+    /**
      * Get the category property: The category.
-     *
+     * 
      * @return the category value.
      */
     public String category() {
@@ -52,7 +56,7 @@ public final class Issue {
 
     /**
      * Set the category property: The category.
-     *
+     * 
      * @param category the category value to set.
      * @return the Issue object itself.
      */
@@ -63,7 +67,7 @@ public final class Issue {
 
     /**
      * Get the data property: Dictionary of &lt;string&gt;.
-     *
+     * 
      * @return the data value.
      */
     public Map<String, String> data() {
@@ -72,7 +76,7 @@ public final class Issue {
 
     /**
      * Set the data property: Dictionary of &lt;string&gt;.
-     *
+     * 
      * @param data the data value to set.
      * @return the Issue object itself.
      */
@@ -83,7 +87,7 @@ public final class Issue {
 
     /**
      * Get the message property: A description of the issue.
-     *
+     * 
      * @return the message value.
      */
     public String message() {
@@ -92,7 +96,7 @@ public final class Issue {
 
     /**
      * Set the message property: A description of the issue.
-     *
+     * 
      * @param message the message value to set.
      * @return the Issue object itself.
      */
@@ -103,7 +107,7 @@ public final class Issue {
 
     /**
      * Get the type property: The type (error, warning) of the issue.
-     *
+     * 
      * @return the type value.
      */
     public IssueType type() {
@@ -112,7 +116,7 @@ public final class Issue {
 
     /**
      * Set the type property: The type (error, warning) of the issue.
-     *
+     * 
      * @param type the type value to set.
      * @return the Issue object itself.
      */
@@ -123,7 +127,7 @@ public final class Issue {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

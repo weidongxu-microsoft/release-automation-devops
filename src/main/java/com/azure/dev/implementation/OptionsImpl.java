@@ -12,13 +12,12 @@ import com.azure.dev.fluent.OptionsClient;
 import com.azure.dev.fluent.models.BuildOptionDefinitionInner;
 import com.azure.dev.models.BuildOptionDefinition;
 import com.azure.dev.models.Options;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public final class OptionsImpl implements Options {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(OptionsImpl.class);
+    private static final ClientLogger LOGGER = new ClientLogger(OptionsImpl.class);
 
     private final OptionsClient innerClient;
 
@@ -29,36 +28,29 @@ public final class OptionsImpl implements Options {
         this.serviceManager = serviceManager;
     }
 
-    public List<BuildOptionDefinition> list(String organization, String project) {
-        List<BuildOptionDefinitionInner> inner = this.serviceClient().list(organization, project);
+    public Response<List<BuildOptionDefinition>> listWithResponse(String organization, String project,
+        Context context) {
+        Response<List<BuildOptionDefinitionInner>> inner
+            = this.serviceClient().listWithResponse(organization, project, context);
         if (inner != null) {
-            return Collections
-                .unmodifiableList(
-                    inner
-                        .stream()
-                        .map(inner1 -> new BuildOptionDefinitionImpl(inner1, this.manager()))
-                        .collect(Collectors.toList()));
-        } else {
-            return Collections.emptyList();
-        }
-    }
-
-    public Response<List<BuildOptionDefinition>> listWithResponse(
-        String organization, String project, Context context) {
-        Response<List<BuildOptionDefinitionInner>> inner =
-            this.serviceClient().listWithResponse(organization, project, context);
-        if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                inner
-                    .getValue()
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
+                inner.getValue()
                     .stream()
                     .map(inner1 -> new BuildOptionDefinitionImpl(inner1, this.manager()))
                     .collect(Collectors.toList()));
         } else {
             return null;
+        }
+    }
+
+    public List<BuildOptionDefinition> list(String organization, String project) {
+        List<BuildOptionDefinitionInner> inner = this.serviceClient().list(organization, project);
+        if (inner != null) {
+            return Collections.unmodifiableList(inner.stream()
+                .map(inner1 -> new BuildOptionDefinitionImpl(inner1, this.manager()))
+                .collect(Collectors.toList()));
+        } else {
+            return Collections.emptyList();
         }
     }
 

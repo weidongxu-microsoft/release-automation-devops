@@ -5,18 +5,16 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
-/** Represents an entry in a build's timeline. */
+/**
+ * Represents an entry in a build's timeline.
+ */
 @Fluent
 public final class TimelineRecord {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(TimelineRecord.class);
-
     /*
      * The class to represent a collection of REST reference links.
      */
@@ -180,8 +178,14 @@ public final class TimelineRecord {
     private String workerName;
 
     /**
+     * Creates an instance of TimelineRecord class.
+     */
+    public TimelineRecord() {
+    }
+
+    /**
      * Get the links property: The class to represent a collection of REST reference links.
-     *
+     * 
      * @return the links value.
      */
     public ReferenceLinks links() {
@@ -190,7 +194,7 @@ public final class TimelineRecord {
 
     /**
      * Set the links property: The class to represent a collection of REST reference links.
-     *
+     * 
      * @param links the links value to set.
      * @return the TimelineRecord object itself.
      */
@@ -201,7 +205,7 @@ public final class TimelineRecord {
 
     /**
      * Get the attempt property: Attempt number of record.
-     *
+     * 
      * @return the attempt value.
      */
     public Integer attempt() {
@@ -210,7 +214,7 @@ public final class TimelineRecord {
 
     /**
      * Set the attempt property: Attempt number of record.
-     *
+     * 
      * @param attempt the attempt value to set.
      * @return the TimelineRecord object itself.
      */
@@ -221,7 +225,7 @@ public final class TimelineRecord {
 
     /**
      * Get the changeId property: The change ID.
-     *
+     * 
      * @return the changeId value.
      */
     public Integer changeId() {
@@ -230,7 +234,7 @@ public final class TimelineRecord {
 
     /**
      * Set the changeId property: The change ID.
-     *
+     * 
      * @param changeId the changeId value to set.
      * @return the TimelineRecord object itself.
      */
@@ -241,7 +245,7 @@ public final class TimelineRecord {
 
     /**
      * Get the currentOperation property: A string that indicates the current operation.
-     *
+     * 
      * @return the currentOperation value.
      */
     public String currentOperation() {
@@ -250,7 +254,7 @@ public final class TimelineRecord {
 
     /**
      * Set the currentOperation property: A string that indicates the current operation.
-     *
+     * 
      * @param currentOperation the currentOperation value to set.
      * @return the TimelineRecord object itself.
      */
@@ -261,7 +265,7 @@ public final class TimelineRecord {
 
     /**
      * Get the details property: A reference to a sub-timeline.
-     *
+     * 
      * @return the details value.
      */
     public TimelineReference details() {
@@ -270,7 +274,7 @@ public final class TimelineRecord {
 
     /**
      * Set the details property: A reference to a sub-timeline.
-     *
+     * 
      * @param details the details value to set.
      * @return the TimelineRecord object itself.
      */
@@ -281,7 +285,7 @@ public final class TimelineRecord {
 
     /**
      * Get the errorCount property: The number of errors produced by this operation.
-     *
+     * 
      * @return the errorCount value.
      */
     public Integer errorCount() {
@@ -290,7 +294,7 @@ public final class TimelineRecord {
 
     /**
      * Set the errorCount property: The number of errors produced by this operation.
-     *
+     * 
      * @param errorCount the errorCount value to set.
      * @return the TimelineRecord object itself.
      */
@@ -301,7 +305,7 @@ public final class TimelineRecord {
 
     /**
      * Get the finishTime property: The finish time.
-     *
+     * 
      * @return the finishTime value.
      */
     public OffsetDateTime finishTime() {
@@ -310,7 +314,7 @@ public final class TimelineRecord {
 
     /**
      * Set the finishTime property: The finish time.
-     *
+     * 
      * @param finishTime the finishTime value to set.
      * @return the TimelineRecord object itself.
      */
@@ -321,7 +325,7 @@ public final class TimelineRecord {
 
     /**
      * Get the id property: The ID of the record.
-     *
+     * 
      * @return the id value.
      */
     public UUID id() {
@@ -330,7 +334,7 @@ public final class TimelineRecord {
 
     /**
      * Set the id property: The ID of the record.
-     *
+     * 
      * @param id the id value to set.
      * @return the TimelineRecord object itself.
      */
@@ -341,7 +345,7 @@ public final class TimelineRecord {
 
     /**
      * Get the identifier property: String identifier that is consistent across attempts.
-     *
+     * 
      * @return the identifier value.
      */
     public String identifier() {
@@ -350,7 +354,7 @@ public final class TimelineRecord {
 
     /**
      * Set the identifier property: String identifier that is consistent across attempts.
-     *
+     * 
      * @param identifier the identifier value to set.
      * @return the TimelineRecord object itself.
      */
@@ -361,7 +365,7 @@ public final class TimelineRecord {
 
     /**
      * Get the issues property: The issues property.
-     *
+     * 
      * @return the issues value.
      */
     public List<Issue> issues() {
@@ -370,7 +374,7 @@ public final class TimelineRecord {
 
     /**
      * Set the issues property: The issues property.
-     *
+     * 
      * @param issues the issues value to set.
      * @return the TimelineRecord object itself.
      */
@@ -381,7 +385,7 @@ public final class TimelineRecord {
 
     /**
      * Get the lastModified property: The time the record was last modified.
-     *
+     * 
      * @return the lastModified value.
      */
     public OffsetDateTime lastModified() {
@@ -390,7 +394,7 @@ public final class TimelineRecord {
 
     /**
      * Set the lastModified property: The time the record was last modified.
-     *
+     * 
      * @param lastModified the lastModified value to set.
      * @return the TimelineRecord object itself.
      */
@@ -401,7 +405,7 @@ public final class TimelineRecord {
 
     /**
      * Get the log property: A reference to the log produced by this operation.
-     *
+     * 
      * @return the log value.
      */
     public BuildLogReference log() {
@@ -410,7 +414,7 @@ public final class TimelineRecord {
 
     /**
      * Set the log property: A reference to the log produced by this operation.
-     *
+     * 
      * @param log the log value to set.
      * @return the TimelineRecord object itself.
      */
@@ -421,7 +425,7 @@ public final class TimelineRecord {
 
     /**
      * Get the name property: The name.
-     *
+     * 
      * @return the name value.
      */
     public String name() {
@@ -430,7 +434,7 @@ public final class TimelineRecord {
 
     /**
      * Set the name property: The name.
-     *
+     * 
      * @param name the name value to set.
      * @return the TimelineRecord object itself.
      */
@@ -441,7 +445,7 @@ public final class TimelineRecord {
 
     /**
      * Get the order property: An ordinal value relative to other records.
-     *
+     * 
      * @return the order value.
      */
     public Integer order() {
@@ -450,7 +454,7 @@ public final class TimelineRecord {
 
     /**
      * Set the order property: An ordinal value relative to other records.
-     *
+     * 
      * @param order the order value to set.
      * @return the TimelineRecord object itself.
      */
@@ -461,7 +465,7 @@ public final class TimelineRecord {
 
     /**
      * Get the parentId property: The ID of the record's parent.
-     *
+     * 
      * @return the parentId value.
      */
     public UUID parentId() {
@@ -470,7 +474,7 @@ public final class TimelineRecord {
 
     /**
      * Set the parentId property: The ID of the record's parent.
-     *
+     * 
      * @param parentId the parentId value to set.
      * @return the TimelineRecord object itself.
      */
@@ -481,7 +485,7 @@ public final class TimelineRecord {
 
     /**
      * Get the percentComplete property: The current completion percentage.
-     *
+     * 
      * @return the percentComplete value.
      */
     public Integer percentComplete() {
@@ -490,7 +494,7 @@ public final class TimelineRecord {
 
     /**
      * Set the percentComplete property: The current completion percentage.
-     *
+     * 
      * @param percentComplete the percentComplete value to set.
      * @return the TimelineRecord object itself.
      */
@@ -501,7 +505,7 @@ public final class TimelineRecord {
 
     /**
      * Get the previousAttempts property: The previousAttempts property.
-     *
+     * 
      * @return the previousAttempts value.
      */
     public List<TimelineAttempt> previousAttempts() {
@@ -510,7 +514,7 @@ public final class TimelineRecord {
 
     /**
      * Set the previousAttempts property: The previousAttempts property.
-     *
+     * 
      * @param previousAttempts the previousAttempts value to set.
      * @return the TimelineRecord object itself.
      */
@@ -521,7 +525,7 @@ public final class TimelineRecord {
 
     /**
      * Get the queueId property: The queue ID of the queue that the operation ran on.
-     *
+     * 
      * @return the queueId value.
      */
     public Integer queueId() {
@@ -530,7 +534,7 @@ public final class TimelineRecord {
 
     /**
      * Set the queueId property: The queue ID of the queue that the operation ran on.
-     *
+     * 
      * @param queueId the queueId value to set.
      * @return the TimelineRecord object itself.
      */
@@ -541,7 +545,7 @@ public final class TimelineRecord {
 
     /**
      * Get the result property: The result.
-     *
+     * 
      * @return the result value.
      */
     public TaskResult result() {
@@ -550,7 +554,7 @@ public final class TimelineRecord {
 
     /**
      * Set the result property: The result.
-     *
+     * 
      * @param result the result value to set.
      * @return the TimelineRecord object itself.
      */
@@ -561,7 +565,7 @@ public final class TimelineRecord {
 
     /**
      * Get the resultCode property: The result code.
-     *
+     * 
      * @return the resultCode value.
      */
     public String resultCode() {
@@ -570,7 +574,7 @@ public final class TimelineRecord {
 
     /**
      * Set the resultCode property: The result code.
-     *
+     * 
      * @param resultCode the resultCode value to set.
      * @return the TimelineRecord object itself.
      */
@@ -581,7 +585,7 @@ public final class TimelineRecord {
 
     /**
      * Get the startTime property: The start time.
-     *
+     * 
      * @return the startTime value.
      */
     public OffsetDateTime startTime() {
@@ -590,7 +594,7 @@ public final class TimelineRecord {
 
     /**
      * Set the startTime property: The start time.
-     *
+     * 
      * @param startTime the startTime value to set.
      * @return the TimelineRecord object itself.
      */
@@ -601,7 +605,7 @@ public final class TimelineRecord {
 
     /**
      * Get the state property: The state of the record.
-     *
+     * 
      * @return the state value.
      */
     public TimelineRecordState state() {
@@ -610,7 +614,7 @@ public final class TimelineRecord {
 
     /**
      * Set the state property: The state of the record.
-     *
+     * 
      * @param state the state value to set.
      * @return the TimelineRecord object itself.
      */
@@ -621,7 +625,7 @@ public final class TimelineRecord {
 
     /**
      * Get the task property: A reference to the task represented by this timeline record.
-     *
+     * 
      * @return the task value.
      */
     public TaskReference task() {
@@ -630,7 +634,7 @@ public final class TimelineRecord {
 
     /**
      * Set the task property: A reference to the task represented by this timeline record.
-     *
+     * 
      * @param task the task value to set.
      * @return the TimelineRecord object itself.
      */
@@ -641,7 +645,7 @@ public final class TimelineRecord {
 
     /**
      * Get the type property: The type of the record.
-     *
+     * 
      * @return the type value.
      */
     public String type() {
@@ -650,7 +654,7 @@ public final class TimelineRecord {
 
     /**
      * Set the type property: The type of the record.
-     *
+     * 
      * @param type the type value to set.
      * @return the TimelineRecord object itself.
      */
@@ -661,7 +665,7 @@ public final class TimelineRecord {
 
     /**
      * Get the url property: The REST URL of the timeline record.
-     *
+     * 
      * @return the url value.
      */
     public String url() {
@@ -670,7 +674,7 @@ public final class TimelineRecord {
 
     /**
      * Set the url property: The REST URL of the timeline record.
-     *
+     * 
      * @param url the url value to set.
      * @return the TimelineRecord object itself.
      */
@@ -681,7 +685,7 @@ public final class TimelineRecord {
 
     /**
      * Get the warningCount property: The number of warnings produced by this operation.
-     *
+     * 
      * @return the warningCount value.
      */
     public Integer warningCount() {
@@ -690,7 +694,7 @@ public final class TimelineRecord {
 
     /**
      * Set the warningCount property: The number of warnings produced by this operation.
-     *
+     * 
      * @param warningCount the warningCount value to set.
      * @return the TimelineRecord object itself.
      */
@@ -701,7 +705,7 @@ public final class TimelineRecord {
 
     /**
      * Get the workerName property: The name of the agent running the operation.
-     *
+     * 
      * @return the workerName value.
      */
     public String workerName() {
@@ -710,7 +714,7 @@ public final class TimelineRecord {
 
     /**
      * Set the workerName property: The name of the agent running the operation.
-     *
+     * 
      * @param workerName the workerName value to set.
      * @return the TimelineRecord object itself.
      */
@@ -721,7 +725,7 @@ public final class TimelineRecord {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

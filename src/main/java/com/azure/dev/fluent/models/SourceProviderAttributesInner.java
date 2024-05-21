@@ -5,19 +5,17 @@
 package com.azure.dev.fluent.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.models.SupportedTrigger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.Map;
 
-/** The SourceProviderAttributes model. */
+/**
+ * The SourceProviderAttributes model.
+ */
 @Fluent
 public final class SourceProviderAttributesInner {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(SourceProviderAttributesInner.class);
-
     /*
      * The name of the source provider.
      */
@@ -38,8 +36,14 @@ public final class SourceProviderAttributesInner {
     private List<SupportedTrigger> supportedTriggers;
 
     /**
+     * Creates an instance of SourceProviderAttributesInner class.
+     */
+    public SourceProviderAttributesInner() {
+    }
+
+    /**
      * Get the name property: The name of the source provider.
-     *
+     * 
      * @return the name value.
      */
     public String name() {
@@ -48,7 +52,7 @@ public final class SourceProviderAttributesInner {
 
     /**
      * Set the name property: The name of the source provider.
-     *
+     * 
      * @param name the name value to set.
      * @return the SourceProviderAttributesInner object itself.
      */
@@ -59,7 +63,7 @@ public final class SourceProviderAttributesInner {
 
     /**
      * Get the supportedCapabilities property: The capabilities supported by this source provider.
-     *
+     * 
      * @return the supportedCapabilities value.
      */
     public Map<String, Boolean> supportedCapabilities() {
@@ -68,7 +72,7 @@ public final class SourceProviderAttributesInner {
 
     /**
      * Set the supportedCapabilities property: The capabilities supported by this source provider.
-     *
+     * 
      * @param supportedCapabilities the supportedCapabilities value to set.
      * @return the SourceProviderAttributesInner object itself.
      */
@@ -79,7 +83,7 @@ public final class SourceProviderAttributesInner {
 
     /**
      * Get the supportedTriggers property: The types of triggers supported by this source provider.
-     *
+     * 
      * @return the supportedTriggers value.
      */
     public List<SupportedTrigger> supportedTriggers() {
@@ -88,7 +92,7 @@ public final class SourceProviderAttributesInner {
 
     /**
      * Set the supportedTriggers property: The types of triggers supported by this source provider.
-     *
+     * 
      * @param supportedTriggers the supportedTriggers value to set.
      * @return the SourceProviderAttributesInner object itself.
      */
@@ -99,7 +103,7 @@ public final class SourceProviderAttributesInner {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

@@ -7,21 +7,33 @@ package com.azure.dev.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/** Defines values for TestRunOutcome. */
+/**
+ * Defines values for TestRunOutcome.
+ */
 public enum TestRunOutcome {
-    /** Enum value passed. */
+    /**
+     * Enum value passed.
+     */
     PASSED("passed"),
 
-    /** Enum value failed. */
+    /**
+     * Enum value failed.
+     */
     FAILED("failed"),
 
-    /** Enum value notImpacted. */
+    /**
+     * Enum value notImpacted.
+     */
     NOT_IMPACTED("notImpacted"),
 
-    /** Enum value others. */
+    /**
+     * Enum value others.
+     */
     OTHERS("others");
 
-    /** The actual serialized value for a TestRunOutcome instance. */
+    /**
+     * The actual serialized value for a TestRunOutcome instance.
+     */
     private final String value;
 
     TestRunOutcome(String value) {
@@ -30,12 +42,15 @@ public enum TestRunOutcome {
 
     /**
      * Parses a serialized value to a TestRunOutcome instance.
-     *
+     * 
      * @param value the serialized value to parse.
      * @return the parsed TestRunOutcome object, or null if unable to parse.
      */
     @JsonCreator
     public static TestRunOutcome fromString(String value) {
+        if (value == null) {
+            return null;
+        }
         TestRunOutcome[] items = TestRunOutcome.values();
         for (TestRunOutcome item : items) {
             if (item.toString().equalsIgnoreCase(value)) {
@@ -45,6 +60,9 @@ public enum TestRunOutcome {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @JsonValue
     @Override
     public String toString() {

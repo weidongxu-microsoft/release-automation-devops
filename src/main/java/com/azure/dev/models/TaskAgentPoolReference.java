@@ -5,15 +5,13 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Represents a reference to an agent pool. */
+/**
+ * Represents a reference to an agent pool.
+ */
 @Fluent
 public final class TaskAgentPoolReference {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(TaskAgentPoolReference.class);
-
     /*
      * The pool ID.
      */
@@ -33,8 +31,14 @@ public final class TaskAgentPoolReference {
     private String name;
 
     /**
+     * Creates an instance of TaskAgentPoolReference class.
+     */
+    public TaskAgentPoolReference() {
+    }
+
+    /**
      * Get the id property: The pool ID.
-     *
+     * 
      * @return the id value.
      */
     public Integer id() {
@@ -43,7 +47,7 @@ public final class TaskAgentPoolReference {
 
     /**
      * Set the id property: The pool ID.
-     *
+     * 
      * @param id the id value to set.
      * @return the TaskAgentPoolReference object itself.
      */
@@ -54,7 +58,7 @@ public final class TaskAgentPoolReference {
 
     /**
      * Get the isHosted property: A value indicating whether or not this pool is managed by the service.
-     *
+     * 
      * @return the isHosted value.
      */
     public Boolean isHosted() {
@@ -63,7 +67,7 @@ public final class TaskAgentPoolReference {
 
     /**
      * Set the isHosted property: A value indicating whether or not this pool is managed by the service.
-     *
+     * 
      * @param isHosted the isHosted value to set.
      * @return the TaskAgentPoolReference object itself.
      */
@@ -74,7 +78,7 @@ public final class TaskAgentPoolReference {
 
     /**
      * Get the name property: The pool name.
-     *
+     * 
      * @return the name value.
      */
     public String name() {
@@ -83,7 +87,7 @@ public final class TaskAgentPoolReference {
 
     /**
      * Set the name property: The pool name.
-     *
+     * 
      * @param name the name value to set.
      * @return the TaskAgentPoolReference object itself.
      */
@@ -94,7 +98,7 @@ public final class TaskAgentPoolReference {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

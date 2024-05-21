@@ -21,26 +21,29 @@ import com.azure.core.http.rest.RestProxy;
 import com.azure.core.management.exception.ManagementException;
 import com.azure.core.util.Context;
 import com.azure.core.util.FluxUtil;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.fluent.MetricsClient;
 import com.azure.dev.fluent.models.BuildMetricInner;
 import java.time.OffsetDateTime;
 import java.util.List;
 import reactor.core.publisher.Mono;
 
-/** An instance of this class provides access to all the operations defined in MetricsClient. */
+/**
+ * An instance of this class provides access to all the operations defined in MetricsClient.
+ */
 public final class MetricsClientImpl implements MetricsClient {
-    private final ClientLogger logger = new ClientLogger(MetricsClientImpl.class);
-
-    /** The proxy service used to perform REST calls. */
+    /**
+     * The proxy service used to perform REST calls.
+     */
     private final MetricsService service;
 
-    /** The service client containing this operation class. */
+    /**
+     * The service client containing this operation class.
+     */
     private final DevClientImpl client;
 
     /**
      * Initializes an instance of MetricsClientImpl.
-     *
+     * 
      * @param client the instance of the service client containing this operation class.
      */
     MetricsClientImpl(DevClientImpl client) {
@@ -54,39 +57,30 @@ public final class MetricsClientImpl implements MetricsClient {
      */
     @Host("{$host}")
     @ServiceInterface(name = "DevClientMetrics")
-    private interface MetricsService {
-        @Headers({"Content-Type: application/json"})
+    public interface MetricsService {
+        @Headers({ "Content-Type: application/json" })
         @Get("/{organization}/{project}/_apis/build/definitions/{definitionId}/metrics")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<List<BuildMetricInner>>> getDefinitionMetrics(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
-            @PathParam("definitionId") int definitionId,
-            @QueryParam("minMetricsTime") OffsetDateTime minMetricsTime,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<List<BuildMetricInner>>> getDefinitionMetrics(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
+            @PathParam("definitionId") int definitionId, @QueryParam("minMetricsTime") OffsetDateTime minMetricsTime,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
         @Get("/{organization}/{project}/_apis/build/metrics/{metricAggregationType}")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<List<BuildMetricInner>>> getProjectMetrics(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
+        Mono<Response<List<BuildMetricInner>>> getProjectMetrics(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
             @PathParam("metricAggregationType") String metricAggregationType,
-            @QueryParam("minMetricsTime") OffsetDateTime minMetricsTime,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @QueryParam("minMetricsTime") OffsetDateTime minMetricsTime, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, Context context);
     }
 
     /**
      * Gets build metrics for a definition.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
@@ -94,16 +88,14 @@ public final class MetricsClientImpl implements MetricsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return build metrics for a definition.
+     * @return build metrics for a definition along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<BuildMetricInner>>> getDefinitionMetricsWithResponseAsync(
-        String organization, String project, int definitionId, OffsetDateTime minMetricsTime) {
+    private Mono<Response<List<BuildMetricInner>>> getDefinitionMetricsWithResponseAsync(String organization,
+        String project, int definitionId, OffsetDateTime minMetricsTime) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -111,27 +103,16 @@ public final class MetricsClientImpl implements MetricsClient {
         if (project == null) {
             return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .getDefinitionMetrics(
-                            this.client.getEndpoint(),
-                            organization,
-                            project,
-                            definitionId,
-                            minMetricsTime,
-                            apiVersion,
-                            accept,
-                            context))
+            .withContext(context -> service.getDefinitionMetrics(this.client.getEndpoint(), organization, project,
+                definitionId, minMetricsTime, this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Gets build metrics for a definition.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
@@ -140,16 +121,14 @@ public final class MetricsClientImpl implements MetricsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return build metrics for a definition.
+     * @return build metrics for a definition along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<BuildMetricInner>>> getDefinitionMetricsWithResponseAsync(
-        String organization, String project, int definitionId, OffsetDateTime minMetricsTime, Context context) {
+    private Mono<Response<List<BuildMetricInner>>> getDefinitionMetricsWithResponseAsync(String organization,
+        String project, int definitionId, OffsetDateTime minMetricsTime, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -157,76 +136,54 @@ public final class MetricsClientImpl implements MetricsClient {
         if (project == null) {
             return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .getDefinitionMetrics(
-                this.client.getEndpoint(),
-                organization,
-                project,
-                definitionId,
-                minMetricsTime,
-                apiVersion,
-                accept,
-                context);
+        return service.getDefinitionMetrics(this.client.getEndpoint(), organization, project, definitionId,
+            minMetricsTime, this.client.getApiVersion(), accept, context);
     }
 
     /**
      * Gets build metrics for a definition.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param definitionId The ID of the definition.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return build metrics for a definition on successful completion of {@link Mono}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Mono<List<BuildMetricInner>> getDefinitionMetricsAsync(String organization, String project,
+        int definitionId) {
+        final OffsetDateTime minMetricsTime = null;
+        return getDefinitionMetricsWithResponseAsync(organization, project, definitionId, minMetricsTime)
+            .flatMap(res -> Mono.justOrEmpty(res.getValue()));
+    }
+
+    /**
+     * Gets build metrics for a definition.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
      * @param minMetricsTime The date from which to calculate metrics.
+     * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return build metrics for a definition.
+     * @return build metrics for a definition along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<List<BuildMetricInner>> getDefinitionMetricsAsync(
-        String organization, String project, int definitionId, OffsetDateTime minMetricsTime) {
-        return getDefinitionMetricsWithResponseAsync(organization, project, definitionId, minMetricsTime)
-            .flatMap(
-                (Response<List<BuildMetricInner>> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+    public Response<List<BuildMetricInner>> getDefinitionMetricsWithResponse(String organization, String project,
+        int definitionId, OffsetDateTime minMetricsTime, Context context) {
+        return getDefinitionMetricsWithResponseAsync(organization, project, definitionId, minMetricsTime, context)
+            .block();
     }
 
     /**
      * Gets build metrics for a definition.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param definitionId The ID of the definition.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return build metrics for a definition.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<List<BuildMetricInner>> getDefinitionMetricsAsync(
-        String organization, String project, int definitionId) {
-        final OffsetDateTime minMetricsTime = null;
-        return getDefinitionMetricsWithResponseAsync(organization, project, definitionId, minMetricsTime)
-            .flatMap(
-                (Response<List<BuildMetricInner>> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
-    }
-
-    /**
-     * Gets build metrics for a definition.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
@@ -238,32 +195,13 @@ public final class MetricsClientImpl implements MetricsClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public List<BuildMetricInner> getDefinitionMetrics(String organization, String project, int definitionId) {
         final OffsetDateTime minMetricsTime = null;
-        return getDefinitionMetricsAsync(organization, project, definitionId, minMetricsTime).block();
-    }
-
-    /**
-     * Gets build metrics for a definition.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param definitionId The ID of the definition.
-     * @param minMetricsTime The date from which to calculate metrics.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return build metrics for a definition.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<List<BuildMetricInner>> getDefinitionMetricsWithResponse(
-        String organization, String project, int definitionId, OffsetDateTime minMetricsTime, Context context) {
-        return getDefinitionMetricsWithResponseAsync(organization, project, definitionId, minMetricsTime, context)
-            .block();
+        return getDefinitionMetricsWithResponse(organization, project, definitionId, minMetricsTime, Context.NONE)
+            .getValue();
     }
 
     /**
      * Gets build metrics for a project.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param metricAggregationType The aggregation type to use (hourly, daily).
@@ -271,16 +209,14 @@ public final class MetricsClientImpl implements MetricsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return build metrics for a project.
+     * @return build metrics for a project along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<BuildMetricInner>>> getProjectMetricsWithResponseAsync(
-        String organization, String project, String metricAggregationType, OffsetDateTime minMetricsTime) {
+    private Mono<Response<List<BuildMetricInner>>> getProjectMetricsWithResponseAsync(String organization,
+        String project, String metricAggregationType, OffsetDateTime minMetricsTime) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -292,27 +228,16 @@ public final class MetricsClientImpl implements MetricsClient {
             return Mono
                 .error(new IllegalArgumentException("Parameter metricAggregationType is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .getProjectMetrics(
-                            this.client.getEndpoint(),
-                            organization,
-                            project,
-                            metricAggregationType,
-                            minMetricsTime,
-                            apiVersion,
-                            accept,
-                            context))
+            .withContext(context -> service.getProjectMetrics(this.client.getEndpoint(), organization, project,
+                metricAggregationType, minMetricsTime, this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Gets build metrics for a project.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param metricAggregationType The aggregation type to use (hourly, daily).
@@ -321,20 +246,14 @@ public final class MetricsClientImpl implements MetricsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return build metrics for a project.
+     * @return build metrics for a project along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<BuildMetricInner>>> getProjectMetricsWithResponseAsync(
-        String organization,
-        String project,
-        String metricAggregationType,
-        OffsetDateTime minMetricsTime,
-        Context context) {
+    private Mono<Response<List<BuildMetricInner>>> getProjectMetricsWithResponseAsync(String organization,
+        String project, String metricAggregationType, OffsetDateTime minMetricsTime, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -346,76 +265,54 @@ public final class MetricsClientImpl implements MetricsClient {
             return Mono
                 .error(new IllegalArgumentException("Parameter metricAggregationType is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .getProjectMetrics(
-                this.client.getEndpoint(),
-                organization,
-                project,
-                metricAggregationType,
-                minMetricsTime,
-                apiVersion,
-                accept,
-                context);
+        return service.getProjectMetrics(this.client.getEndpoint(), organization, project, metricAggregationType,
+            minMetricsTime, this.client.getApiVersion(), accept, context);
     }
 
     /**
      * Gets build metrics for a project.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param metricAggregationType The aggregation type to use (hourly, daily).
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return build metrics for a project on successful completion of {@link Mono}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Mono<List<BuildMetricInner>> getProjectMetricsAsync(String organization, String project,
+        String metricAggregationType) {
+        final OffsetDateTime minMetricsTime = null;
+        return getProjectMetricsWithResponseAsync(organization, project, metricAggregationType, minMetricsTime)
+            .flatMap(res -> Mono.justOrEmpty(res.getValue()));
+    }
+
+    /**
+     * Gets build metrics for a project.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param metricAggregationType The aggregation type to use (hourly, daily).
      * @param minMetricsTime The date from which to calculate metrics.
+     * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return build metrics for a project.
+     * @return build metrics for a project along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<List<BuildMetricInner>> getProjectMetricsAsync(
-        String organization, String project, String metricAggregationType, OffsetDateTime minMetricsTime) {
-        return getProjectMetricsWithResponseAsync(organization, project, metricAggregationType, minMetricsTime)
-            .flatMap(
-                (Response<List<BuildMetricInner>> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+    public Response<List<BuildMetricInner>> getProjectMetricsWithResponse(String organization, String project,
+        String metricAggregationType, OffsetDateTime minMetricsTime, Context context) {
+        return getProjectMetricsWithResponseAsync(organization, project, metricAggregationType, minMetricsTime, context)
+            .block();
     }
 
     /**
      * Gets build metrics for a project.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param metricAggregationType The aggregation type to use (hourly, daily).
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return build metrics for a project.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<List<BuildMetricInner>> getProjectMetricsAsync(
-        String organization, String project, String metricAggregationType) {
-        final OffsetDateTime minMetricsTime = null;
-        return getProjectMetricsWithResponseAsync(organization, project, metricAggregationType, minMetricsTime)
-            .flatMap(
-                (Response<List<BuildMetricInner>> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
-    }
-
-    /**
-     * Gets build metrics for a project.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param metricAggregationType The aggregation type to use (hourly, daily).
@@ -427,30 +324,7 @@ public final class MetricsClientImpl implements MetricsClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public List<BuildMetricInner> getProjectMetrics(String organization, String project, String metricAggregationType) {
         final OffsetDateTime minMetricsTime = null;
-        return getProjectMetricsAsync(organization, project, metricAggregationType, minMetricsTime).block();
-    }
-
-    /**
-     * Gets build metrics for a project.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param metricAggregationType The aggregation type to use (hourly, daily).
-     * @param minMetricsTime The date from which to calculate metrics.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return build metrics for a project.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<List<BuildMetricInner>> getProjectMetricsWithResponse(
-        String organization,
-        String project,
-        String metricAggregationType,
-        OffsetDateTime minMetricsTime,
-        Context context) {
-        return getProjectMetricsWithResponseAsync(organization, project, metricAggregationType, minMetricsTime, context)
-            .block();
+        return getProjectMetricsWithResponse(organization, project, metricAggregationType, minMetricsTime, Context.NONE)
+            .getValue();
     }
 }

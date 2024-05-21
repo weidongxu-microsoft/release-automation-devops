@@ -5,18 +5,16 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.fluent.models.BuildMetricInner;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 import java.util.List;
 
-/** For back-compat with extensions that use the old Steps format instead of Process and Phases. */
+/**
+ * For back-compat with extensions that use the old Steps format instead of Process and Phases.
+ */
 @Fluent
 public class BuildDefinitionReference32 extends DefinitionReference {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(BuildDefinitionReference32.class);
-
     /*
      * The class to represent a collection of REST reference links.
      */
@@ -30,15 +28,13 @@ public class BuildDefinitionReference32 extends DefinitionReference {
     private IdentityRef authoredBy;
 
     /*
-     * A reference to the definition that this definition is a draft of, if
-     * this is a draft definition.
+     * A reference to the definition that this definition is a draft of, if this is a draft definition.
      */
     @JsonProperty(value = "draftOf")
     private DefinitionReference draftOf;
 
     /*
-     * The list of drafts associated with this definition, if this is not a
-     * draft definition.
+     * The list of drafts associated with this definition, if this is not a draft definition.
      */
     @JsonProperty(value = "drafts")
     private List<DefinitionReference> drafts;
@@ -62,8 +58,14 @@ public class BuildDefinitionReference32 extends DefinitionReference {
     private AgentPoolQueue queue;
 
     /**
+     * Creates an instance of BuildDefinitionReference32 class.
+     */
+    public BuildDefinitionReference32() {
+    }
+
+    /**
      * Get the links property: The class to represent a collection of REST reference links.
-     *
+     * 
      * @return the links value.
      */
     public ReferenceLinks links() {
@@ -72,7 +74,7 @@ public class BuildDefinitionReference32 extends DefinitionReference {
 
     /**
      * Set the links property: The class to represent a collection of REST reference links.
-     *
+     * 
      * @param links the links value to set.
      * @return the BuildDefinitionReference32 object itself.
      */
@@ -83,7 +85,7 @@ public class BuildDefinitionReference32 extends DefinitionReference {
 
     /**
      * Get the authoredBy property: The author of the definition.
-     *
+     * 
      * @return the authoredBy value.
      */
     public IdentityRef authoredBy() {
@@ -92,7 +94,7 @@ public class BuildDefinitionReference32 extends DefinitionReference {
 
     /**
      * Set the authoredBy property: The author of the definition.
-     *
+     * 
      * @param authoredBy the authoredBy value to set.
      * @return the BuildDefinitionReference32 object itself.
      */
@@ -104,7 +106,7 @@ public class BuildDefinitionReference32 extends DefinitionReference {
     /**
      * Get the draftOf property: A reference to the definition that this definition is a draft of, if this is a draft
      * definition.
-     *
+     * 
      * @return the draftOf value.
      */
     public DefinitionReference draftOf() {
@@ -114,7 +116,7 @@ public class BuildDefinitionReference32 extends DefinitionReference {
     /**
      * Set the draftOf property: A reference to the definition that this definition is a draft of, if this is a draft
      * definition.
-     *
+     * 
      * @param draftOf the draftOf value to set.
      * @return the BuildDefinitionReference32 object itself.
      */
@@ -125,7 +127,7 @@ public class BuildDefinitionReference32 extends DefinitionReference {
 
     /**
      * Get the drafts property: The list of drafts associated with this definition, if this is not a draft definition.
-     *
+     * 
      * @return the drafts value.
      */
     public List<DefinitionReference> drafts() {
@@ -134,7 +136,7 @@ public class BuildDefinitionReference32 extends DefinitionReference {
 
     /**
      * Set the drafts property: The list of drafts associated with this definition, if this is not a draft definition.
-     *
+     * 
      * @param drafts the drafts value to set.
      * @return the BuildDefinitionReference32 object itself.
      */
@@ -145,7 +147,7 @@ public class BuildDefinitionReference32 extends DefinitionReference {
 
     /**
      * Get the metrics property: The metrics property.
-     *
+     * 
      * @return the metrics value.
      */
     public List<BuildMetricInner> metrics() {
@@ -154,7 +156,7 @@ public class BuildDefinitionReference32 extends DefinitionReference {
 
     /**
      * Set the metrics property: The metrics property.
-     *
+     * 
      * @param metrics the metrics value to set.
      * @return the BuildDefinitionReference32 object itself.
      */
@@ -165,7 +167,7 @@ public class BuildDefinitionReference32 extends DefinitionReference {
 
     /**
      * Get the quality property: The quality of the definition document (draft, etc.).
-     *
+     * 
      * @return the quality value.
      */
     public DefinitionQuality quality() {
@@ -174,7 +176,7 @@ public class BuildDefinitionReference32 extends DefinitionReference {
 
     /**
      * Set the quality property: The quality of the definition document (draft, etc.).
-     *
+     * 
      * @param quality the quality value to set.
      * @return the BuildDefinitionReference32 object itself.
      */
@@ -185,7 +187,7 @@ public class BuildDefinitionReference32 extends DefinitionReference {
 
     /**
      * Get the queue property: The default queue for builds run against this definition.
-     *
+     * 
      * @return the queue value.
      */
     public AgentPoolQueue queue() {
@@ -194,7 +196,7 @@ public class BuildDefinitionReference32 extends DefinitionReference {
 
     /**
      * Set the queue property: The default queue for builds run against this definition.
-     *
+     * 
      * @param queue the queue value to set.
      * @return the BuildDefinitionReference32 object itself.
      */
@@ -203,70 +205,90 @@ public class BuildDefinitionReference32 extends DefinitionReference {
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinitionReference32 withCreatedDate(OffsetDateTime createdDate) {
         super.withCreatedDate(createdDate);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinitionReference32 withId(Integer id) {
         super.withId(id);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinitionReference32 withName(String name) {
         super.withName(name);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinitionReference32 withPath(String path) {
         super.withPath(path);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinitionReference32 withProject(TeamProjectReference project) {
         super.withProject(project);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinitionReference32 withQueueStatus(DefinitionQueueStatus queueStatus) {
         super.withQueueStatus(queueStatus);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinitionReference32 withRevision(Integer revision) {
         super.withRevision(revision);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinitionReference32 withType(DefinitionType type) {
         super.withType(type);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinitionReference32 withUri(String uri) {
         super.withUri(uri);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinitionReference32 withUrl(String url) {
         super.withUrl(url);
@@ -275,7 +297,7 @@ public class BuildDefinitionReference32 extends DefinitionReference {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     @Override

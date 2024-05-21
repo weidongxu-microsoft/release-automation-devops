@@ -7,15 +7,23 @@ package com.azure.dev.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/** Defines values for IssueType. */
+/**
+ * The type (error, warning) of the issue.
+ */
 public enum IssueType {
-    /** Enum value error. */
+    /**
+     * Enum value error.
+     */
     ERROR("error"),
 
-    /** Enum value warning. */
+    /**
+     * Enum value warning.
+     */
     WARNING("warning");
 
-    /** The actual serialized value for a IssueType instance. */
+    /**
+     * The actual serialized value for a IssueType instance.
+     */
     private final String value;
 
     IssueType(String value) {
@@ -24,12 +32,15 @@ public enum IssueType {
 
     /**
      * Parses a serialized value to a IssueType instance.
-     *
+     * 
      * @param value the serialized value to parse.
      * @return the parsed IssueType object, or null if unable to parse.
      */
     @JsonCreator
     public static IssueType fromString(String value) {
+        if (value == null) {
+            return null;
+        }
         IssueType[] items = IssueType.values();
         for (IssueType item : items) {
             if (item.toString().equalsIgnoreCase(value)) {
@@ -39,6 +50,9 @@ public enum IssueType {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @JsonValue
     @Override
     public String toString() {

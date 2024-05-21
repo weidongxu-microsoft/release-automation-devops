@@ -5,15 +5,13 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** The TestResultsContext model. */
+/**
+ * The TestResultsContext model.
+ */
 @Fluent
 public final class TestResultsContext {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(TestResultsContext.class);
-
     /*
      * Represents a reference to a build.
      */
@@ -30,7 +28,7 @@ public final class TestResultsContext {
      * Pipeline reference
      */
     @JsonProperty(value = "pipelineReference")
-    private PipelineReferenceBuild pipelineReference;
+    private PipelineReferenceInBuild pipelineReference;
 
     /*
      * Reference to a release.
@@ -39,8 +37,14 @@ public final class TestResultsContext {
     private ReleaseReference release;
 
     /**
+     * Creates an instance of TestResultsContext class.
+     */
+    public TestResultsContext() {
+    }
+
+    /**
      * Get the build property: Represents a reference to a build.
-     *
+     * 
      * @return the build value.
      */
     public BuildReference build() {
@@ -49,7 +53,7 @@ public final class TestResultsContext {
 
     /**
      * Set the build property: Represents a reference to a build.
-     *
+     * 
      * @param build the build value to set.
      * @return the TestResultsContext object itself.
      */
@@ -60,7 +64,7 @@ public final class TestResultsContext {
 
     /**
      * Get the contextType property: The contextType property.
-     *
+     * 
      * @return the contextType value.
      */
     public TestResultsContextType contextType() {
@@ -69,7 +73,7 @@ public final class TestResultsContext {
 
     /**
      * Set the contextType property: The contextType property.
-     *
+     * 
      * @param contextType the contextType value to set.
      * @return the TestResultsContext object itself.
      */
@@ -80,27 +84,27 @@ public final class TestResultsContext {
 
     /**
      * Get the pipelineReference property: Pipeline reference.
-     *
+     * 
      * @return the pipelineReference value.
      */
-    public PipelineReferenceBuild pipelineReference() {
+    public PipelineReferenceInBuild pipelineReference() {
         return this.pipelineReference;
     }
 
     /**
      * Set the pipelineReference property: Pipeline reference.
-     *
+     * 
      * @param pipelineReference the pipelineReference value to set.
      * @return the TestResultsContext object itself.
      */
-    public TestResultsContext withPipelineReference(PipelineReferenceBuild pipelineReference) {
+    public TestResultsContext withPipelineReference(PipelineReferenceInBuild pipelineReference) {
         this.pipelineReference = pipelineReference;
         return this;
     }
 
     /**
      * Get the release property: Reference to a release.
-     *
+     * 
      * @return the release value.
      */
     public ReleaseReference release() {
@@ -109,7 +113,7 @@ public final class TestResultsContext {
 
     /**
      * Set the release property: Reference to a release.
-     *
+     * 
      * @param release the release value to set.
      * @return the TestResultsContext object itself.
      */
@@ -120,7 +124,7 @@ public final class TestResultsContext {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

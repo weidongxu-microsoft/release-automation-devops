@@ -5,15 +5,13 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Represents a reference to a build log. */
+/**
+ * Represents a reference to a build log.
+ */
 @Fluent
 public class BuildLogReference {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(BuildLogReference.class);
-
     /*
      * The ID of the log.
      */
@@ -33,8 +31,14 @@ public class BuildLogReference {
     private String url;
 
     /**
+     * Creates an instance of BuildLogReference class.
+     */
+    public BuildLogReference() {
+    }
+
+    /**
      * Get the id property: The ID of the log.
-     *
+     * 
      * @return the id value.
      */
     public Integer id() {
@@ -43,7 +47,7 @@ public class BuildLogReference {
 
     /**
      * Set the id property: The ID of the log.
-     *
+     * 
      * @param id the id value to set.
      * @return the BuildLogReference object itself.
      */
@@ -54,7 +58,7 @@ public class BuildLogReference {
 
     /**
      * Get the type property: The type of the log location.
-     *
+     * 
      * @return the type value.
      */
     public String type() {
@@ -63,7 +67,7 @@ public class BuildLogReference {
 
     /**
      * Set the type property: The type of the log location.
-     *
+     * 
      * @param type the type value to set.
      * @return the BuildLogReference object itself.
      */
@@ -74,7 +78,7 @@ public class BuildLogReference {
 
     /**
      * Get the url property: A full link to the log resource.
-     *
+     * 
      * @return the url value.
      */
     public String url() {
@@ -83,7 +87,7 @@ public class BuildLogReference {
 
     /**
      * Set the url property: A full link to the log resource.
-     *
+     * 
      * @param url the url value to set.
      * @return the BuildLogReference object itself.
      */
@@ -94,7 +98,7 @@ public class BuildLogReference {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

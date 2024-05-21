@@ -5,27 +5,28 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * This class is used to serialized collections as a single JSON object on the wire, to avoid serializing JSON arrays
- * directly to the client, which can be a security hole.
+ * This class is used to serialize collections as a single JSON object on the wire.
  */
 @Fluent
 public final class VssJsonCollectionWrapper extends VssJsonCollectionWrapperBase {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(VssJsonCollectionWrapper.class);
-
     /*
-     * The value property.
+     * The serialized item.
      */
     @JsonProperty(value = "value")
     private String value;
 
     /**
-     * Get the value property: The value property.
-     *
+     * Creates an instance of VssJsonCollectionWrapper class.
+     */
+    public VssJsonCollectionWrapper() {
+    }
+
+    /**
+     * Get the value property: The serialized item.
+     * 
      * @return the value value.
      */
     public String value() {
@@ -33,8 +34,8 @@ public final class VssJsonCollectionWrapper extends VssJsonCollectionWrapperBase
     }
 
     /**
-     * Set the value property: The value property.
-     *
+     * Set the value property: The serialized item.
+     * 
      * @param value the value value to set.
      * @return the VssJsonCollectionWrapper object itself.
      */
@@ -43,7 +44,9 @@ public final class VssJsonCollectionWrapper extends VssJsonCollectionWrapperBase
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public VssJsonCollectionWrapper withCount(Integer count) {
         super.withCount(count);
@@ -52,7 +55,7 @@ public final class VssJsonCollectionWrapper extends VssJsonCollectionWrapperBase
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     @Override

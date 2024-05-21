@@ -5,15 +5,13 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Deployment information for type "Build". */
+/**
+ * Deployment information for type "Build".
+ */
 @Fluent
 public final class DeploymentBuild extends Deployment {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(DeploymentBuild.class);
-
     /*
      * The buildId property.
      */
@@ -21,8 +19,14 @@ public final class DeploymentBuild extends Deployment {
     private Integer buildId;
 
     /**
+     * Creates an instance of DeploymentBuild class.
+     */
+    public DeploymentBuild() {
+    }
+
+    /**
      * Get the buildId property: The buildId property.
-     *
+     * 
      * @return the buildId value.
      */
     public Integer buildId() {
@@ -31,7 +35,7 @@ public final class DeploymentBuild extends Deployment {
 
     /**
      * Set the buildId property: The buildId property.
-     *
+     * 
      * @param buildId the buildId value to set.
      * @return the DeploymentBuild object itself.
      */
@@ -40,7 +44,9 @@ public final class DeploymentBuild extends Deployment {
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public DeploymentBuild withType(String type) {
         super.withType(type);
@@ -49,7 +55,7 @@ public final class DeploymentBuild extends Deployment {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     @Override

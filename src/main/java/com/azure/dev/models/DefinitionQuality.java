@@ -7,15 +7,23 @@ package com.azure.dev.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/** Defines values for DefinitionQuality. */
+/**
+ * The quality of the definition document (draft, etc.).
+ */
 public enum DefinitionQuality {
-    /** Enum value definition. */
+    /**
+     * Enum value definition.
+     */
     DEFINITION("definition"),
 
-    /** Enum value draft. */
+    /**
+     * Enum value draft.
+     */
     DRAFT("draft");
 
-    /** The actual serialized value for a DefinitionQuality instance. */
+    /**
+     * The actual serialized value for a DefinitionQuality instance.
+     */
     private final String value;
 
     DefinitionQuality(String value) {
@@ -24,12 +32,15 @@ public enum DefinitionQuality {
 
     /**
      * Parses a serialized value to a DefinitionQuality instance.
-     *
+     * 
      * @param value the serialized value to parse.
      * @return the parsed DefinitionQuality object, or null if unable to parse.
      */
     @JsonCreator
     public static DefinitionQuality fromString(String value) {
+        if (value == null) {
+            return null;
+        }
         DefinitionQuality[] items = DefinitionQuality.values();
         for (DefinitionQuality item : items) {
             if (item.toString().equalsIgnoreCase(value)) {
@@ -39,6 +50,9 @@ public enum DefinitionQuality {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @JsonValue
     @Override
     public String toString() {

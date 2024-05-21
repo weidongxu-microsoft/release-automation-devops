@@ -7,60 +7,62 @@ package com.azure.dev.models;
 import com.azure.dev.fluent.models.BuildCompletedEventInner;
 import java.util.List;
 
-/** An immutable client-side representation of BuildCompletedEvent. */
+/**
+ * An immutable client-side representation of BuildCompletedEvent.
+ */
 public interface BuildCompletedEvent {
     /**
      * Gets the buildId property: The buildId property.
-     *
+     * 
      * @return the buildId value.
      */
     Integer buildId();
 
     /**
      * Gets the build property: Data representation of a build.
-     *
+     * 
      * @return the build value.
      */
     Build build();
 
     /**
      * Gets the changes property: Changes associated with a build used for build notifications.
-     *
+     * 
      * @return the changes value.
      */
     List<Change> changes();
 
     /**
      * Gets the pullRequest property: Pull request for the build used for build notifications.
-     *
+     * 
      * @return the pullRequest value.
      */
     PullRequest pullRequest();
 
     /**
      * Gets the testResults property: Test results associated with a build used for build notifications.
-     *
+     * 
      * @return the testResults value.
      */
     AggregatedResultsAnalysis testResults();
 
     /**
      * Gets the timelineRecords property: Timeline records associated with a build used for build notifications.
-     *
+     * 
      * @return the timelineRecords value.
      */
     List<TimelineRecord> timelineRecords();
 
     /**
      * Gets the workItems property: Work items associated with a build used for build notifications.
-     *
+     * 
      * @return the workItems value.
      */
     List<AssociatedWorkItem> workItems();
 
     /**
      * Gets the inner com.azure.dev.fluent.models.BuildCompletedEventInner object.
-     *
+     * 
      * @return the inner object.
      */
     BuildCompletedEventInner innerModel();

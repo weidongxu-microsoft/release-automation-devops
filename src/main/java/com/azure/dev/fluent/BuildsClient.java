@@ -12,6 +12,7 @@ import com.azure.dev.fluent.models.BuildInner;
 import com.azure.dev.fluent.models.BuildLogInner;
 import com.azure.dev.fluent.models.ChangeInner;
 import com.azure.dev.fluent.models.ResourceRefInner;
+import com.azure.dev.fluent.models.RetentionLeaseInner;
 import com.azure.dev.models.BuildQueryOrder;
 import com.azure.dev.models.BuildReason;
 import com.azure.dev.models.BuildResult;
@@ -20,34 +21,23 @@ import com.azure.dev.models.QueryDeletedOption;
 import java.time.OffsetDateTime;
 import java.util.List;
 
-/** An instance of this class provides access to all the operations defined in BuildsClient. */
+/**
+ * An instance of this class provides access to all the operations defined in BuildsClient.
+ */
 public interface BuildsClient {
     /**
      * Gets a list of builds.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of builds.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    List<BuildInner> list(String organization, String project);
-
-    /**
-     * Gets a list of builds.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitions A comma-delimited list of definition IDs. If specified, filters to builds for these
-     *     definitions.
+     * definitions.
      * @param queues A comma-delimited list of queue IDs. If specified, filters to builds that ran against these queues.
      * @param buildNumber If specified, filters to builds that match this build number. Append * to do a prefix search.
      * @param minTime If specified, filters to builds that finished/started/queued after this date based on the
-     *     queryOrder specified.
+     * queryOrder specified.
      * @param maxTime If specified, filters to builds that finished/started/queued before this date based on the
-     *     queryOrder specified.
+     * queryOrder specified.
      * @param requestedFor If specified, filters to builds requested for the specified user.
      * @param reasonFilter If specified, filters to builds that match this reason.
      * @param statusFilter If specified, filters to builds that match this status.
@@ -56,7 +46,7 @@ public interface BuildsClient {
      * @param properties A comma-delimited list of properties to retrieve.
      * @param top The maximum number of builds to return.
      * @param continuationToken A continuation token, returned by a previous call to this method, that can be used to
-     *     return the next set of builds.
+     * return the next set of builds.
      * @param maxBuildsPerDefinition The maximum number of builds to return per definition.
      * @param deletedFilter Indicates whether to exclude, include, or only return deleted builds.
      * @param queryOrder The order in which builds should be returned.
@@ -68,37 +58,52 @@ public interface BuildsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return a list of builds along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Response<List<BuildInner>> listWithResponse(String organization, String project, String definitions, String queues,
+        String buildNumber, OffsetDateTime minTime, OffsetDateTime maxTime, String requestedFor,
+        BuildReason reasonFilter, BuildStatus statusFilter, BuildResult resultFilter, String tagFilters,
+        String properties, Integer top, String continuationToken, Integer maxBuildsPerDefinition,
+        QueryDeletedOption deletedFilter, BuildQueryOrder queryOrder, String branchName, String buildIds,
+        String repositoryId, String repositoryType, Context context);
+
+    /**
+     * Gets a list of builds.
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return a list of builds.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<List<BuildInner>> listWithResponse(
-        String organization,
-        String project,
-        String definitions,
-        String queues,
-        String buildNumber,
-        OffsetDateTime minTime,
-        OffsetDateTime maxTime,
-        String requestedFor,
-        BuildReason reasonFilter,
-        BuildStatus statusFilter,
-        BuildResult resultFilter,
-        String tagFilters,
-        String properties,
-        Integer top,
-        String continuationToken,
-        Integer maxBuildsPerDefinition,
-        QueryDeletedOption deletedFilter,
-        BuildQueryOrder queryOrder,
-        String branchName,
-        String buildIds,
-        String repositoryId,
-        String repositoryType,
-        Context context);
+    List<BuildInner> list(String organization, String project);
 
     /**
      * Queues a build.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param body Data representation of a build.
+     * @param ignoreWarnings The ignoreWarnings parameter.
+     * @param checkInTicket The checkInTicket parameter.
+     * @param sourceBuildId The sourceBuildId parameter.
+     * @param definitionId Optional definition id to queue a build without a body. Ignored if there's a valid body.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return data representation of a build along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Response<BuildInner> queueWithResponse(String organization, String project, BuildInner body, Boolean ignoreWarnings,
+        String checkInTicket, Integer sourceBuildId, Integer definitionId, Context context);
+
+    /**
+     * Queues a build.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param body Data representation of a build.
@@ -111,35 +116,24 @@ public interface BuildsClient {
     BuildInner queue(String organization, String project, BuildInner body);
 
     /**
-     * Queues a build.
-     *
+     * Updates multiple builds.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
-     * @param body Data representation of a build.
-     * @param ignoreWarnings The ignoreWarnings parameter.
-     * @param checkInTicket The checkInTicket parameter.
-     * @param sourceBuildId The sourceBuildId parameter.
-     * @param definitionId Optional definition id to queue a build without a body. Ignored if there's a valid body.
+     * @param body The builds to update.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return data representation of a build.
+     * @return array of Build along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<BuildInner> queueWithResponse(
-        String organization,
-        String project,
-        BuildInner body,
-        Boolean ignoreWarnings,
-        String checkInTicket,
-        Integer sourceBuildId,
-        Integer definitionId,
+    Response<List<BuildInner>> updateBuildsWithResponse(String organization, String project, List<BuildInner> body,
         Context context);
 
     /**
      * Updates multiple builds.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param body The builds to update.
@@ -152,24 +146,23 @@ public interface BuildsClient {
     List<BuildInner> updateBuilds(String organization, String project, List<BuildInner> body);
 
     /**
-     * Updates multiple builds.
-     *
+     * Deletes a build.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
-     * @param body The builds to update.
+     * @param buildId The ID of the build.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of Build.
+     * @return the {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<List<BuildInner>> updateBuildsWithResponse(
-        String organization, String project, List<BuildInner> body, Context context);
+    Response<Void> deleteWithResponse(String organization, String project, int buildId, Context context);
 
     /**
      * Deletes a build.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
@@ -181,23 +174,25 @@ public interface BuildsClient {
     void delete(String organization, String project, int buildId);
 
     /**
-     * Deletes a build.
-     *
+     * Gets a build.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
-     * @param buildId The ID of the build.
+     * @param buildId The buildId parameter.
+     * @param propertyFilters The propertyFilters parameter.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response.
+     * @return a build along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<Void> deleteWithResponse(String organization, String project, int buildId, Context context);
+    Response<BuildInner> getWithResponse(String organization, String project, int buildId, String propertyFilters,
+        Context context);
 
     /**
      * Gets a build.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The buildId parameter.
@@ -210,25 +205,26 @@ public interface BuildsClient {
     BuildInner get(String organization, String project, int buildId);
 
     /**
-     * Gets a build.
-     *
+     * Updates a build.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
-     * @param buildId The buildId parameter.
-     * @param propertyFilters The propertyFilters parameter.
+     * @param buildId The ID of the build.
+     * @param body The build.
+     * @param retry The retry parameter.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a build.
+     * @return data representation of a build along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<BuildInner> getWithResponse(
-        String organization, String project, int buildId, String propertyFilters, Context context);
+    Response<BuildInner> updateBuildWithResponse(String organization, String project, int buildId, BuildInner body,
+        Boolean retry, Context context);
 
     /**
      * Updates a build.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
@@ -242,26 +238,27 @@ public interface BuildsClient {
     BuildInner updateBuild(String organization, String project, int buildId, BuildInner body);
 
     /**
-     * Updates a build.
-     *
+     * Gets the changes associated with a build.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
-     * @param buildId The ID of the build.
-     * @param body The build.
-     * @param retry The retry parameter.
+     * @param buildId The buildId parameter.
+     * @param continuationToken The continuationToken parameter.
+     * @param top The maximum number of changes to return.
+     * @param includeSourceChange The includeSourceChange parameter.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return data representation of a build.
+     * @return the changes associated with a build along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<BuildInner> updateBuildWithResponse(
-        String organization, String project, int buildId, BuildInner body, Boolean retry, Context context);
+    Response<List<ChangeInner>> getBuildChangesWithResponse(String organization, String project, int buildId,
+        String continuationToken, Integer top, Boolean includeSourceChange, Context context);
 
     /**
      * Gets the changes associated with a build.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The buildId parameter.
@@ -274,33 +271,54 @@ public interface BuildsClient {
     List<ChangeInner> getBuildChanges(String organization, String project, int buildId);
 
     /**
-     * Gets the changes associated with a build.
-     *
+     * Gets all retention leases that apply to a specific build.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
-     * @param buildId The buildId parameter.
-     * @param continuationToken The continuationToken parameter.
-     * @param top The maximum number of changes to return.
-     * @param includeSourceChange The includeSourceChange parameter.
+     * @param buildId The ID of the build.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the changes associated with a build.
+     * @return all retention leases that apply to a specific build along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<List<ChangeInner>> getBuildChangesWithResponse(
-        String organization,
-        String project,
-        int buildId,
-        String continuationToken,
-        Integer top,
-        Boolean includeSourceChange,
+    Response<List<RetentionLeaseInner>> getRetentionLeasesForBuildWithResponse(String organization, String project,
+        int buildId, Context context);
+
+    /**
+     * Gets all retention leases that apply to a specific build.
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param buildId The ID of the build.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return all retention leases that apply to a specific build.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    List<RetentionLeaseInner> getRetentionLeasesForBuild(String organization, String project, int buildId);
+
+    /**
+     * Gets the logs for a build.
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param buildId The ID of the build.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the logs for a build along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Response<List<BuildLogInner>> getBuildLogsWithResponse(String organization, String project, int buildId,
         Context context);
 
     /**
      * Gets the logs for a build.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
@@ -313,24 +331,27 @@ public interface BuildsClient {
     List<BuildLogInner> getBuildLogs(String organization, String project, int buildId);
 
     /**
-     * Gets the logs for a build.
-     *
+     * Gets an individual log file for a build.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
+     * @param logId The ID of the log file.
+     * @param startLine The start line.
+     * @param endLine The end line.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the logs for a build.
+     * @return an individual log file for a build along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<List<BuildLogInner>> getBuildLogsWithResponse(
-        String organization, String project, int buildId, Context context);
+    Response<String> getBuildLogWithResponse(String organization, String project, int buildId, int logId,
+        Long startLine, Long endLine, Context context);
 
     /**
      * Gets an individual log file for a build.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
@@ -344,27 +365,25 @@ public interface BuildsClient {
     String getBuildLog(String organization, String project, int buildId, int logId);
 
     /**
-     * Gets an individual log file for a build.
-     *
+     * Gets the work items associated with a build. Only work items in the same project are returned.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
-     * @param logId The ID of the log file.
-     * @param startLine The start line.
-     * @param endLine The end line.
+     * @param top The maximum number of work items to return.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return an individual log file for a build.
+     * @return the work items associated with a build along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<String> getBuildLogWithResponse(
-        String organization, String project, int buildId, int logId, Long startLine, Long endLine, Context context);
+    Response<List<ResourceRefInner>> getBuildWorkItemsRefsWithResponse(String organization, String project, int buildId,
+        Integer top, Context context);
 
     /**
-     * Gets the work items associated with a build.
-     *
+     * Gets the work items associated with a build. Only work items in the same project are returned.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
@@ -377,60 +396,61 @@ public interface BuildsClient {
     List<ResourceRefInner> getBuildWorkItemsRefs(String organization, String project, int buildId);
 
     /**
-     * Gets the work items associated with a build.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param buildId The ID of the build.
-     * @param top The maximum number of work items to return.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the work items associated with a build.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<List<ResourceRefInner>> getBuildWorkItemsRefsWithResponse(
-        String organization, String project, int buildId, Integer top, Context context);
-
-    /**
      * Gets the work items associated with a build, filtered to specific commits.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param buildId The ID of the build.
-     * @param body A comma-delimited list of commit IDs.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the work items associated with a build, filtered to specific commits.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    List<ResourceRefInner> getBuildWorkItemsRefsFromCommits(
-        String organization, String project, int buildId, List<String> body);
-
-    /**
-     * Gets the work items associated with a build, filtered to specific commits.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
      * @param body A comma-delimited list of commit IDs.
      * @param top The maximum number of work items to return, or the number of commits to consider if no commit IDs are
-     *     specified.
+     * specified.
      * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the work items associated with a build, filtered to specific commits along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Response<List<ResourceRefInner>> getBuildWorkItemsRefsFromCommitsWithResponse(String organization, String project,
+        int buildId, List<String> body, Integer top, Context context);
+
+    /**
+     * Gets the work items associated with a build, filtered to specific commits.
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param buildId The ID of the build.
+     * @param body A comma-delimited list of commit IDs.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the work items associated with a build, filtered to specific commits.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<List<ResourceRefInner>> getBuildWorkItemsRefsFromCommitsWithResponse(
-        String organization, String project, int buildId, List<String> body, Integer top, Context context);
+    List<ResourceRefInner> getBuildWorkItemsRefsFromCommits(String organization, String project, int buildId,
+        List<String> body);
 
     /**
      * Gets the changes made to the repository between two given builds.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param fromBuildId The ID of the first build.
+     * @param toBuildId The ID of the last build.
+     * @param top The maximum number of changes to return.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the changes made to the repository between two given builds along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Response<List<ChangeInner>> getChangesBetweenBuildsWithResponse(String organization, String project,
+        Integer fromBuildId, Integer toBuildId, Integer top, Context context);
+
+    /**
+     * Gets the changes made to the repository between two given builds.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -442,42 +462,8 @@ public interface BuildsClient {
     List<ChangeInner> getChangesBetweenBuilds(String organization, String project);
 
     /**
-     * Gets the changes made to the repository between two given builds.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param fromBuildId The ID of the first build.
-     * @param toBuildId The ID of the last build.
-     * @param top The maximum number of changes to return.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the changes made to the repository between two given builds.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<List<ChangeInner>> getChangesBetweenBuildsWithResponse(
-        String organization, String project, Integer fromBuildId, Integer toBuildId, Integer top, Context context);
-
-    /**
      * Gets all the work items between two builds.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param fromBuildId The ID of the first build.
-     * @param toBuildId The ID of the last build.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return all the work items between two builds.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    List<ResourceRefInner> getWorkItemsBetweenBuilds(
-        String organization, String project, int fromBuildId, int toBuildId);
-
-    /**
-     * Gets all the work items between two builds.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param fromBuildId The ID of the first build.
@@ -487,9 +473,25 @@ public interface BuildsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return all the work items between two builds along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Response<List<ResourceRefInner>> getWorkItemsBetweenBuildsWithResponse(String organization, String project,
+        int fromBuildId, int toBuildId, Integer top, Context context);
+
+    /**
+     * Gets all the work items between two builds.
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param fromBuildId The ID of the first build.
+     * @param toBuildId The ID of the last build.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return all the work items between two builds.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<List<ResourceRefInner>> getWorkItemsBetweenBuildsWithResponse(
-        String organization, String project, int fromBuildId, int toBuildId, Integer top, Context context);
+    List<ResourceRefInner> getWorkItemsBetweenBuilds(String organization, String project, int fromBuildId,
+        int toBuildId);
 }

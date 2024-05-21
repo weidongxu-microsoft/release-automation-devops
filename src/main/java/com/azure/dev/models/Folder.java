@@ -7,60 +7,62 @@ package com.azure.dev.models;
 import com.azure.dev.fluent.models.FolderInner;
 import java.time.OffsetDateTime;
 
-/** An immutable client-side representation of Folder. */
+/**
+ * An immutable client-side representation of Folder.
+ */
 public interface Folder {
     /**
      * Gets the createdBy property: The process or person who created the folder.
-     *
+     * 
      * @return the createdBy value.
      */
     IdentityRef createdBy();
 
     /**
      * Gets the createdOn property: The date the folder was created.
-     *
+     * 
      * @return the createdOn value.
      */
     OffsetDateTime createdOn();
 
     /**
      * Gets the description property: The description.
-     *
+     * 
      * @return the description value.
      */
     String description();
 
     /**
      * Gets the lastChangedBy property: The process or person that last changed the folder.
-     *
+     * 
      * @return the lastChangedBy value.
      */
     IdentityRef lastChangedBy();
 
     /**
      * Gets the lastChangedDate property: The date the folder was last changed.
-     *
+     * 
      * @return the lastChangedDate value.
      */
     OffsetDateTime lastChangedDate();
 
     /**
      * Gets the path property: The full path.
-     *
+     * 
      * @return the path value.
      */
     String path();
 
     /**
      * Gets the project property: The project.
-     *
+     * 
      * @return the project value.
      */
     TeamProjectReference project();
 
     /**
      * Gets the inner com.azure.dev.fluent.models.FolderInner object.
-     *
+     * 
      * @return the inner object.
      */
     FolderInner innerModel();

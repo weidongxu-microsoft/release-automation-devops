@@ -5,15 +5,13 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** The RealtimeBuildEvent model. */
+/**
+ * The RealtimeBuildEvent model.
+ */
 @Fluent
 public class RealtimeBuildEvent {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(RealtimeBuildEvent.class);
-
     /*
      * The buildId property.
      */
@@ -21,8 +19,14 @@ public class RealtimeBuildEvent {
     private Integer buildId;
 
     /**
+     * Creates an instance of RealtimeBuildEvent class.
+     */
+    public RealtimeBuildEvent() {
+    }
+
+    /**
      * Get the buildId property: The buildId property.
-     *
+     * 
      * @return the buildId value.
      */
     public Integer buildId() {
@@ -31,7 +35,7 @@ public class RealtimeBuildEvent {
 
     /**
      * Set the buildId property: The buildId property.
-     *
+     * 
      * @param buildId the buildId value to set.
      * @return the RealtimeBuildEvent object itself.
      */
@@ -42,7 +46,7 @@ public class RealtimeBuildEvent {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

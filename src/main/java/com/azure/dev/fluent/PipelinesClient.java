@@ -12,11 +12,29 @@ import com.azure.core.util.Context;
 import com.azure.dev.fluent.models.PipelineInner;
 import com.azure.dev.models.CreatePipelineParameters;
 
-/** An instance of this class provides access to all the operations defined in PipelinesClient. */
+/**
+ * An instance of this class provides access to all the operations defined in PipelinesClient.
+ */
 public interface PipelinesClient {
     /**
      * Create a pipeline.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param body Input parameters.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return definition of a pipeline along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Response<PipelineInner> createWithResponse(String organization, String project, CreatePipelineParameters body,
+        Context context);
+
+    /**
+     * Create a pipeline.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param body Input parameters.
@@ -29,37 +47,21 @@ public interface PipelinesClient {
     PipelineInner create(String organization, String project, CreatePipelineParameters body);
 
     /**
-     * Create a pipeline.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param body Input parameters.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return definition of a pipeline.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<PipelineInner> createWithResponse(
-        String organization, String project, CreatePipelineParameters body, Context context);
-
-    /**
      * Get a list of pipelines.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of pipelines.
+     * @return a list of pipelines as paginated response with {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     PagedIterable<PipelineInner> list(String organization, String project);
 
     /**
      * Get a list of pipelines.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param orderBy A sort expression. Defaults to "name asc".
@@ -69,15 +71,32 @@ public interface PipelinesClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of pipelines.
+     * @return a list of pipelines as paginated response with {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    PagedIterable<PipelineInner> list(
-        String organization, String project, String orderBy, Integer top, String continuationToken, Context context);
+    PagedIterable<PipelineInner> list(String organization, String project, String orderBy, Integer top,
+        String continuationToken, Context context);
 
     /**
      * Gets a pipeline, optionally at the specified version.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param pipelineId The pipeline ID.
+     * @param pipelineVersion The pipeline version.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return a pipeline, optionally at the specified version along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Response<PipelineInner> getWithResponse(String organization, String project, int pipelineId,
+        Integer pipelineVersion, Context context);
+
+    /**
+     * Gets a pipeline, optionally at the specified version.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param pipelineId The pipeline ID.
@@ -88,21 +107,4 @@ public interface PipelinesClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     PipelineInner get(String organization, String project, int pipelineId);
-
-    /**
-     * Gets a pipeline, optionally at the specified version.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param pipelineId The pipeline ID.
-     * @param pipelineVersion The pipeline version.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a pipeline, optionally at the specified version.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<PipelineInner> getWithResponse(
-        String organization, String project, int pipelineId, Integer pipelineVersion, Context context);
 }

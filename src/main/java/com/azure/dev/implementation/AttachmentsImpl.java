@@ -12,14 +12,13 @@ import com.azure.dev.fluent.AttachmentsClient;
 import com.azure.dev.fluent.models.AttachmentInner;
 import com.azure.dev.models.Attachment;
 import com.azure.dev.models.Attachments;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 public final class AttachmentsImpl implements Attachments {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(AttachmentsImpl.class);
+    private static final ClientLogger LOGGER = new ClientLogger(AttachmentsImpl.class);
 
     private final AttachmentsClient innerClient;
 
@@ -30,55 +29,39 @@ public final class AttachmentsImpl implements Attachments {
         this.serviceManager = serviceManager;
     }
 
-    public void get(
-        String organization, String project, int buildId, UUID timelineId, UUID recordId, String type, String name) {
-        this.serviceClient().get(organization, project, buildId, timelineId, recordId, type, name);
-    }
-
-    public Response<Void> getWithResponse(
-        String organization,
-        String project,
-        int buildId,
-        UUID timelineId,
-        UUID recordId,
-        String type,
-        String name,
-        Context context) {
-        return this
-            .serviceClient()
+    public Response<Void> getWithResponse(String organization, String project, int buildId, UUID timelineId,
+        UUID recordId, String type, String name, Context context) {
+        return this.serviceClient()
             .getWithResponse(organization, project, buildId, timelineId, recordId, type, name, context);
     }
 
-    public List<Attachment> list(String organization, String project, int buildId, String type) {
-        List<AttachmentInner> inner = this.serviceClient().list(organization, project, buildId, type);
-        if (inner != null) {
-            return Collections
-                .unmodifiableList(
-                    inner
-                        .stream()
-                        .map(inner1 -> new AttachmentImpl(inner1, this.manager()))
-                        .collect(Collectors.toList()));
-        } else {
-            return Collections.emptyList();
-        }
+    public void get(String organization, String project, int buildId, UUID timelineId, UUID recordId, String type,
+        String name) {
+        this.serviceClient().get(organization, project, buildId, timelineId, recordId, type, name);
     }
 
-    public Response<List<Attachment>> listWithResponse(
-        String organization, String project, int buildId, String type, Context context) {
-        Response<List<AttachmentInner>> inner =
-            this.serviceClient().listWithResponse(organization, project, buildId, type, context);
+    public Response<List<Attachment>> listWithResponse(String organization, String project, int buildId, String type,
+        Context context) {
+        Response<List<AttachmentInner>> inner
+            = this.serviceClient().listWithResponse(organization, project, buildId, type, context);
         if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                inner
-                    .getValue()
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
+                inner.getValue()
                     .stream()
                     .map(inner1 -> new AttachmentImpl(inner1, this.manager()))
                     .collect(Collectors.toList()));
         } else {
             return null;
+        }
+    }
+
+    public List<Attachment> list(String organization, String project, int buildId, String type) {
+        List<AttachmentInner> inner = this.serviceClient().list(organization, project, buildId, type);
+        if (inner != null) {
+            return Collections.unmodifiableList(
+                inner.stream().map(inner1 -> new AttachmentImpl(inner1, this.manager())).collect(Collectors.toList()));
+        } else {
+            return Collections.emptyList();
         }
     }
 

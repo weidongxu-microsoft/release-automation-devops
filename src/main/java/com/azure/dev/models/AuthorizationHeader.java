@@ -5,15 +5,13 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** The AuthorizationHeader model. */
+/**
+ * The AuthorizationHeader model.
+ */
 @Fluent
 public final class AuthorizationHeader {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(AuthorizationHeader.class);
-
     /*
      * The name property.
      */
@@ -27,8 +25,14 @@ public final class AuthorizationHeader {
     private String value;
 
     /**
+     * Creates an instance of AuthorizationHeader class.
+     */
+    public AuthorizationHeader() {
+    }
+
+    /**
      * Get the name property: The name property.
-     *
+     * 
      * @return the name value.
      */
     public String name() {
@@ -37,7 +41,7 @@ public final class AuthorizationHeader {
 
     /**
      * Set the name property: The name property.
-     *
+     * 
      * @param name the name value to set.
      * @return the AuthorizationHeader object itself.
      */
@@ -48,7 +52,7 @@ public final class AuthorizationHeader {
 
     /**
      * Get the value property: The value property.
-     *
+     * 
      * @return the value value.
      */
     public String value() {
@@ -57,7 +61,7 @@ public final class AuthorizationHeader {
 
     /**
      * Set the value property: The value property.
-     *
+     * 
      * @param value the value value to set.
      * @return the AuthorizationHeader object itself.
      */
@@ -68,7 +72,7 @@ public final class AuthorizationHeader {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

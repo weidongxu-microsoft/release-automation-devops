@@ -5,18 +5,16 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.Map;
 
-/** The TaskInputDefinitionBase model. */
+/**
+ * The TaskInputDefinitionBase model.
+ */
 @Fluent
 public final class TaskInputDefinitionBase {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(TaskInputDefinitionBase.class);
-
     /*
      * The aliases property.
      */
@@ -92,8 +90,14 @@ public final class TaskInputDefinitionBase {
     private String visibleRule;
 
     /**
+     * Creates an instance of TaskInputDefinitionBase class.
+     */
+    public TaskInputDefinitionBase() {
+    }
+
+    /**
      * Get the aliases property: The aliases property.
-     *
+     * 
      * @return the aliases value.
      */
     public List<String> aliases() {
@@ -102,7 +106,7 @@ public final class TaskInputDefinitionBase {
 
     /**
      * Set the aliases property: The aliases property.
-     *
+     * 
      * @param aliases the aliases value to set.
      * @return the TaskInputDefinitionBase object itself.
      */
@@ -113,7 +117,7 @@ public final class TaskInputDefinitionBase {
 
     /**
      * Get the defaultValue property: The defaultValue property.
-     *
+     * 
      * @return the defaultValue value.
      */
     public String defaultValue() {
@@ -122,7 +126,7 @@ public final class TaskInputDefinitionBase {
 
     /**
      * Set the defaultValue property: The defaultValue property.
-     *
+     * 
      * @param defaultValue the defaultValue value to set.
      * @return the TaskInputDefinitionBase object itself.
      */
@@ -133,7 +137,7 @@ public final class TaskInputDefinitionBase {
 
     /**
      * Get the groupName property: The groupName property.
-     *
+     * 
      * @return the groupName value.
      */
     public String groupName() {
@@ -142,7 +146,7 @@ public final class TaskInputDefinitionBase {
 
     /**
      * Set the groupName property: The groupName property.
-     *
+     * 
      * @param groupName the groupName value to set.
      * @return the TaskInputDefinitionBase object itself.
      */
@@ -153,7 +157,7 @@ public final class TaskInputDefinitionBase {
 
     /**
      * Get the helpMarkDown property: The helpMarkDown property.
-     *
+     * 
      * @return the helpMarkDown value.
      */
     public String helpMarkDown() {
@@ -162,7 +166,7 @@ public final class TaskInputDefinitionBase {
 
     /**
      * Set the helpMarkDown property: The helpMarkDown property.
-     *
+     * 
      * @param helpMarkDown the helpMarkDown value to set.
      * @return the TaskInputDefinitionBase object itself.
      */
@@ -173,7 +177,7 @@ public final class TaskInputDefinitionBase {
 
     /**
      * Get the label property: The label property.
-     *
+     * 
      * @return the label value.
      */
     public String label() {
@@ -182,7 +186,7 @@ public final class TaskInputDefinitionBase {
 
     /**
      * Set the label property: The label property.
-     *
+     * 
      * @param label the label value to set.
      * @return the TaskInputDefinitionBase object itself.
      */
@@ -193,7 +197,7 @@ public final class TaskInputDefinitionBase {
 
     /**
      * Get the name property: The name property.
-     *
+     * 
      * @return the name value.
      */
     public String name() {
@@ -202,7 +206,7 @@ public final class TaskInputDefinitionBase {
 
     /**
      * Set the name property: The name property.
-     *
+     * 
      * @param name the name value to set.
      * @return the TaskInputDefinitionBase object itself.
      */
@@ -213,7 +217,7 @@ public final class TaskInputDefinitionBase {
 
     /**
      * Get the options property: Dictionary of &lt;string&gt;.
-     *
+     * 
      * @return the options value.
      */
     public Map<String, String> options() {
@@ -222,7 +226,7 @@ public final class TaskInputDefinitionBase {
 
     /**
      * Set the options property: Dictionary of &lt;string&gt;.
-     *
+     * 
      * @param options the options value to set.
      * @return the TaskInputDefinitionBase object itself.
      */
@@ -233,7 +237,7 @@ public final class TaskInputDefinitionBase {
 
     /**
      * Get the properties property: Dictionary of &lt;string&gt;.
-     *
+     * 
      * @return the properties value.
      */
     public Map<String, String> properties() {
@@ -242,7 +246,7 @@ public final class TaskInputDefinitionBase {
 
     /**
      * Set the properties property: Dictionary of &lt;string&gt;.
-     *
+     * 
      * @param properties the properties value to set.
      * @return the TaskInputDefinitionBase object itself.
      */
@@ -253,7 +257,7 @@ public final class TaskInputDefinitionBase {
 
     /**
      * Get the required property: The required property.
-     *
+     * 
      * @return the required value.
      */
     public Boolean required() {
@@ -262,7 +266,7 @@ public final class TaskInputDefinitionBase {
 
     /**
      * Set the required property: The required property.
-     *
+     * 
      * @param required the required value to set.
      * @return the TaskInputDefinitionBase object itself.
      */
@@ -273,7 +277,7 @@ public final class TaskInputDefinitionBase {
 
     /**
      * Get the type property: The type property.
-     *
+     * 
      * @return the type value.
      */
     public String type() {
@@ -282,7 +286,7 @@ public final class TaskInputDefinitionBase {
 
     /**
      * Set the type property: The type property.
-     *
+     * 
      * @param type the type value to set.
      * @return the TaskInputDefinitionBase object itself.
      */
@@ -293,7 +297,7 @@ public final class TaskInputDefinitionBase {
 
     /**
      * Get the validation property: The validation property.
-     *
+     * 
      * @return the validation value.
      */
     public TaskInputValidation validation() {
@@ -302,7 +306,7 @@ public final class TaskInputDefinitionBase {
 
     /**
      * Set the validation property: The validation property.
-     *
+     * 
      * @param validation the validation value to set.
      * @return the TaskInputDefinitionBase object itself.
      */
@@ -313,7 +317,7 @@ public final class TaskInputDefinitionBase {
 
     /**
      * Get the visibleRule property: The visibleRule property.
-     *
+     * 
      * @return the visibleRule value.
      */
     public String visibleRule() {
@@ -322,7 +326,7 @@ public final class TaskInputDefinitionBase {
 
     /**
      * Set the visibleRule property: The visibleRule property.
-     *
+     * 
      * @param visibleRule the visibleRule value to set.
      * @return the TaskInputDefinitionBase object itself.
      */
@@ -333,7 +337,7 @@ public final class TaskInputDefinitionBase {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

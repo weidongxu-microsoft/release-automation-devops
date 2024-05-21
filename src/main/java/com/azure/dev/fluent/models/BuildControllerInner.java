@@ -5,19 +5,17 @@
 package com.azure.dev.fluent.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.models.ControllerStatus;
 import com.azure.dev.models.ReferenceLinks;
 import com.azure.dev.models.XamlBuildControllerReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 
-/** The BuildController model. */
+/**
+ * The BuildController model.
+ */
 @Fluent
 public final class BuildControllerInner extends XamlBuildControllerReference {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(BuildControllerInner.class);
-
     /*
      * The class to represent a collection of REST reference links.
      */
@@ -61,8 +59,14 @@ public final class BuildControllerInner extends XamlBuildControllerReference {
     private String uri;
 
     /**
+     * Creates an instance of BuildControllerInner class.
+     */
+    public BuildControllerInner() {
+    }
+
+    /**
      * Get the links property: The class to represent a collection of REST reference links.
-     *
+     * 
      * @return the links value.
      */
     public ReferenceLinks links() {
@@ -71,7 +75,7 @@ public final class BuildControllerInner extends XamlBuildControllerReference {
 
     /**
      * Set the links property: The class to represent a collection of REST reference links.
-     *
+     * 
      * @param links the links value to set.
      * @return the BuildControllerInner object itself.
      */
@@ -82,7 +86,7 @@ public final class BuildControllerInner extends XamlBuildControllerReference {
 
     /**
      * Get the createdDate property: The date the controller was created.
-     *
+     * 
      * @return the createdDate value.
      */
     public OffsetDateTime createdDate() {
@@ -91,7 +95,7 @@ public final class BuildControllerInner extends XamlBuildControllerReference {
 
     /**
      * Set the createdDate property: The date the controller was created.
-     *
+     * 
      * @param createdDate the createdDate value to set.
      * @return the BuildControllerInner object itself.
      */
@@ -102,7 +106,7 @@ public final class BuildControllerInner extends XamlBuildControllerReference {
 
     /**
      * Get the description property: The description of the controller.
-     *
+     * 
      * @return the description value.
      */
     public String description() {
@@ -111,7 +115,7 @@ public final class BuildControllerInner extends XamlBuildControllerReference {
 
     /**
      * Set the description property: The description of the controller.
-     *
+     * 
      * @param description the description value to set.
      * @return the BuildControllerInner object itself.
      */
@@ -122,7 +126,7 @@ public final class BuildControllerInner extends XamlBuildControllerReference {
 
     /**
      * Get the enabled property: Indicates whether the controller is enabled.
-     *
+     * 
      * @return the enabled value.
      */
     public Boolean enabled() {
@@ -131,7 +135,7 @@ public final class BuildControllerInner extends XamlBuildControllerReference {
 
     /**
      * Set the enabled property: Indicates whether the controller is enabled.
-     *
+     * 
      * @param enabled the enabled value to set.
      * @return the BuildControllerInner object itself.
      */
@@ -142,7 +146,7 @@ public final class BuildControllerInner extends XamlBuildControllerReference {
 
     /**
      * Get the status property: The status of the controller.
-     *
+     * 
      * @return the status value.
      */
     public ControllerStatus status() {
@@ -151,7 +155,7 @@ public final class BuildControllerInner extends XamlBuildControllerReference {
 
     /**
      * Set the status property: The status of the controller.
-     *
+     * 
      * @param status the status value to set.
      * @return the BuildControllerInner object itself.
      */
@@ -162,7 +166,7 @@ public final class BuildControllerInner extends XamlBuildControllerReference {
 
     /**
      * Get the updatedDate property: The date the controller was last updated.
-     *
+     * 
      * @return the updatedDate value.
      */
     public OffsetDateTime updatedDate() {
@@ -171,7 +175,7 @@ public final class BuildControllerInner extends XamlBuildControllerReference {
 
     /**
      * Set the updatedDate property: The date the controller was last updated.
-     *
+     * 
      * @param updatedDate the updatedDate value to set.
      * @return the BuildControllerInner object itself.
      */
@@ -182,7 +186,7 @@ public final class BuildControllerInner extends XamlBuildControllerReference {
 
     /**
      * Get the uri property: The controller's URI.
-     *
+     * 
      * @return the uri value.
      */
     public String uri() {
@@ -191,7 +195,7 @@ public final class BuildControllerInner extends XamlBuildControllerReference {
 
     /**
      * Set the uri property: The controller's URI.
-     *
+     * 
      * @param uri the uri value to set.
      * @return the BuildControllerInner object itself.
      */
@@ -200,21 +204,27 @@ public final class BuildControllerInner extends XamlBuildControllerReference {
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildControllerInner withId(Integer id) {
         super.withId(id);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildControllerInner withName(String name) {
         super.withName(name);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildControllerInner withUrl(String url) {
         super.withUrl(url);
@@ -223,7 +233,7 @@ public final class BuildControllerInner extends XamlBuildControllerReference {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     @Override

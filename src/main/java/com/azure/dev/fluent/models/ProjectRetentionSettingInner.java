@@ -5,19 +5,16 @@
 package com.azure.dev.fluent.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.models.RetentionSetting;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Contains the settings for the retention rules. */
+/**
+ * Contains the settings for the retention rules.
+ */
 @Fluent
 public final class ProjectRetentionSettingInner {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(ProjectRetentionSettingInner.class);
-
     /*
-     * The rules for artifact retention. Artifacts can not live longer than a
-     * run, so will be overridden by a shorter run purge setting.
+     * The rules for artifact retention. Artifacts can not live longer than a run, so will be overridden by a shorter run purge setting.
      */
     @JsonProperty(value = "purgeArtifacts")
     private RetentionSetting purgeArtifacts;
@@ -41,9 +38,15 @@ public final class ProjectRetentionSettingInner {
     private RetentionSetting retainRunsPerProtectedBranch;
 
     /**
+     * Creates an instance of ProjectRetentionSettingInner class.
+     */
+    public ProjectRetentionSettingInner() {
+    }
+
+    /**
      * Get the purgeArtifacts property: The rules for artifact retention. Artifacts can not live longer than a run, so
      * will be overridden by a shorter run purge setting.
-     *
+     * 
      * @return the purgeArtifacts value.
      */
     public RetentionSetting purgeArtifacts() {
@@ -53,7 +56,7 @@ public final class ProjectRetentionSettingInner {
     /**
      * Set the purgeArtifacts property: The rules for artifact retention. Artifacts can not live longer than a run, so
      * will be overridden by a shorter run purge setting.
-     *
+     * 
      * @param purgeArtifacts the purgeArtifacts value to set.
      * @return the ProjectRetentionSettingInner object itself.
      */
@@ -64,7 +67,7 @@ public final class ProjectRetentionSettingInner {
 
     /**
      * Get the purgePullRequestRuns property: The rules for pull request pipeline run retention.
-     *
+     * 
      * @return the purgePullRequestRuns value.
      */
     public RetentionSetting purgePullRequestRuns() {
@@ -73,7 +76,7 @@ public final class ProjectRetentionSettingInner {
 
     /**
      * Set the purgePullRequestRuns property: The rules for pull request pipeline run retention.
-     *
+     * 
      * @param purgePullRequestRuns the purgePullRequestRuns value to set.
      * @return the ProjectRetentionSettingInner object itself.
      */
@@ -84,7 +87,7 @@ public final class ProjectRetentionSettingInner {
 
     /**
      * Get the purgeRuns property: The rules for pipeline run retention.
-     *
+     * 
      * @return the purgeRuns value.
      */
     public RetentionSetting purgeRuns() {
@@ -93,7 +96,7 @@ public final class ProjectRetentionSettingInner {
 
     /**
      * Set the purgeRuns property: The rules for pipeline run retention.
-     *
+     * 
      * @param purgeRuns the purgeRuns value to set.
      * @return the ProjectRetentionSettingInner object itself.
      */
@@ -104,7 +107,7 @@ public final class ProjectRetentionSettingInner {
 
     /**
      * Get the retainRunsPerProtectedBranch property: The rules for retaining runs per protected branch.
-     *
+     * 
      * @return the retainRunsPerProtectedBranch value.
      */
     public RetentionSetting retainRunsPerProtectedBranch() {
@@ -113,19 +116,19 @@ public final class ProjectRetentionSettingInner {
 
     /**
      * Set the retainRunsPerProtectedBranch property: The rules for retaining runs per protected branch.
-     *
+     * 
      * @param retainRunsPerProtectedBranch the retainRunsPerProtectedBranch value to set.
      * @return the ProjectRetentionSettingInner object itself.
      */
-    public ProjectRetentionSettingInner withRetainRunsPerProtectedBranch(
-        RetentionSetting retainRunsPerProtectedBranch) {
+    public ProjectRetentionSettingInner
+        withRetainRunsPerProtectedBranch(RetentionSetting retainRunsPerProtectedBranch) {
         this.retainRunsPerProtectedBranch = retainRunsPerProtectedBranch;
         return this;
     }
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

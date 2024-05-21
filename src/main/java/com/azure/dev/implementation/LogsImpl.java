@@ -15,10 +15,9 @@ import com.azure.dev.models.GetLogExpandOptions;
 import com.azure.dev.models.Log;
 import com.azure.dev.models.LogCollection;
 import com.azure.dev.models.Logs;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public final class LogsImpl implements Logs {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(LogsImpl.class);
+    private static final ClientLogger LOGGER = new ClientLogger(LogsImpl.class);
 
     private final LogsClient innerClient;
 
@@ -27,6 +26,18 @@ public final class LogsImpl implements Logs {
     public LogsImpl(LogsClient innerClient, com.azure.dev.DevManager serviceManager) {
         this.innerClient = innerClient;
         this.serviceManager = serviceManager;
+    }
+
+    public Response<LogCollection> listWithResponse(String organization, String project, int pipelineId, int runId,
+        GetLogExpandOptions expand, Context context) {
+        Response<LogCollectionInner> inner
+            = this.serviceClient().listWithResponse(organization, project, pipelineId, runId, expand, context);
+        if (inner != null) {
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
+                new LogCollectionImpl(inner.getValue(), this.manager()));
+        } else {
+            return null;
+        }
     }
 
     public LogCollection list(String organization, String project, int pipelineId, int runId) {
@@ -38,16 +49,13 @@ public final class LogsImpl implements Logs {
         }
     }
 
-    public Response<LogCollection> listWithResponse(
-        String organization, String project, int pipelineId, int runId, GetLogExpandOptions expand, Context context) {
-        Response<LogCollectionInner> inner =
-            this.serviceClient().listWithResponse(organization, project, pipelineId, runId, expand, context);
+    public Response<Log> getWithResponse(String organization, String project, int pipelineId, int runId, int logId,
+        GetLogExpandOptions expand, Context context) {
+        Response<LogInner> inner
+            = this.serviceClient().getWithResponse(organization, project, pipelineId, runId, logId, expand, context);
         if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                new LogCollectionImpl(inner.getValue(), this.manager()));
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
+                new LogImpl(inner.getValue(), this.manager()));
         } else {
             return null;
         }
@@ -57,27 +65,6 @@ public final class LogsImpl implements Logs {
         LogInner inner = this.serviceClient().get(organization, project, pipelineId, runId, logId);
         if (inner != null) {
             return new LogImpl(inner, this.manager());
-        } else {
-            return null;
-        }
-    }
-
-    public Response<Log> getWithResponse(
-        String organization,
-        String project,
-        int pipelineId,
-        int runId,
-        int logId,
-        GetLogExpandOptions expand,
-        Context context) {
-        Response<LogInner> inner =
-            this.serviceClient().getWithResponse(organization, project, pipelineId, runId, logId, expand, context);
-        if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                new LogImpl(inner.getValue(), this.manager()));
         } else {
             return null;
         }

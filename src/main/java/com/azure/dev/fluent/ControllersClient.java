@@ -11,11 +11,27 @@ import com.azure.core.util.Context;
 import com.azure.dev.fluent.models.BuildControllerInner;
 import java.util.List;
 
-/** An instance of this class provides access to all the operations defined in ControllersClient. */
+/**
+ * An instance of this class provides access to all the operations defined in ControllersClient.
+ */
 public interface ControllersClient {
     /**
      * Gets controller, optionally filtered by name.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param name The name parameter.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return controller, optionally filtered by name along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Response<List<BuildControllerInner>> listWithResponse(String organization, String name, Context context);
+
+    /**
+     * Gets controller, optionally filtered by name.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
@@ -26,22 +42,22 @@ public interface ControllersClient {
     List<BuildControllerInner> list(String organization);
 
     /**
-     * Gets controller, optionally filtered by name.
-     *
+     * Gets a controller.
+     * 
      * @param organization The name of the Azure DevOps organization.
-     * @param name The name parameter.
+     * @param controllerId The controllerId parameter.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return controller, optionally filtered by name.
+     * @return a controller along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<List<BuildControllerInner>> listWithResponse(String organization, String name, Context context);
+    Response<BuildControllerInner> getWithResponse(String organization, int controllerId, Context context);
 
     /**
      * Gets a controller.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param controllerId The controllerId parameter.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -51,18 +67,4 @@ public interface ControllersClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     BuildControllerInner get(String organization, int controllerId);
-
-    /**
-     * Gets a controller.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param controllerId The controllerId parameter.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a controller.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<BuildControllerInner> getWithResponse(String organization, int controllerId, Context context);
 }

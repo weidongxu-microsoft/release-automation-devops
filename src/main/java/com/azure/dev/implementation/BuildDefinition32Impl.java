@@ -109,12 +109,8 @@ public final class BuildDefinition32Impl implements BuildDefinition32 {
     public List<BuildMetric> metrics() {
         List<BuildMetricInner> inner = this.innerModel().metrics();
         if (inner != null) {
-            return Collections
-                .unmodifiableList(
-                    inner
-                        .stream()
-                        .map(inner1 -> new BuildMetricImpl(inner1, this.manager()))
-                        .collect(Collectors.toList()));
+            return Collections.unmodifiableList(
+                inner.stream().map(inner1 -> new BuildMetricImpl(inner1, this.manager())).collect(Collectors.toList()));
         } else {
             return Collections.emptyList();
         }

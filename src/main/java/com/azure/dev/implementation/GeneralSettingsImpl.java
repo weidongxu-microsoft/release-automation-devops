@@ -12,10 +12,9 @@ import com.azure.dev.fluent.GeneralSettingsClient;
 import com.azure.dev.fluent.models.PipelineGeneralSettingsInner;
 import com.azure.dev.models.GeneralSettings;
 import com.azure.dev.models.PipelineGeneralSettings;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public final class GeneralSettingsImpl implements GeneralSettings {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(GeneralSettingsImpl.class);
+    private static final ClientLogger LOGGER = new ClientLogger(GeneralSettingsImpl.class);
 
     private final GeneralSettingsClient innerClient;
 
@@ -24,6 +23,17 @@ public final class GeneralSettingsImpl implements GeneralSettings {
     public GeneralSettingsImpl(GeneralSettingsClient innerClient, com.azure.dev.DevManager serviceManager) {
         this.innerClient = innerClient;
         this.serviceManager = serviceManager;
+    }
+
+    public Response<PipelineGeneralSettings> getWithResponse(String organization, String project, Context context) {
+        Response<PipelineGeneralSettingsInner> inner
+            = this.serviceClient().getWithResponse(organization, project, context);
+        if (inner != null) {
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
+                new PipelineGeneralSettingsImpl(inner.getValue(), this.manager()));
+        } else {
+            return null;
+        }
     }
 
     public PipelineGeneralSettings get(String organization, String project) {
@@ -35,14 +45,12 @@ public final class GeneralSettingsImpl implements GeneralSettings {
         }
     }
 
-    public Response<PipelineGeneralSettings> getWithResponse(String organization, String project, Context context) {
-        Response<PipelineGeneralSettingsInner> inner =
-            this.serviceClient().getWithResponse(organization, project, context);
+    public Response<PipelineGeneralSettings> updateWithResponse(String organization, String project,
+        PipelineGeneralSettingsInner body, Context context) {
+        Response<PipelineGeneralSettingsInner> inner
+            = this.serviceClient().updateWithResponse(organization, project, body, context);
         if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
                 new PipelineGeneralSettingsImpl(inner.getValue(), this.manager()));
         } else {
             return null;
@@ -53,21 +61,6 @@ public final class GeneralSettingsImpl implements GeneralSettings {
         PipelineGeneralSettingsInner inner = this.serviceClient().update(organization, project, body);
         if (inner != null) {
             return new PipelineGeneralSettingsImpl(inner, this.manager());
-        } else {
-            return null;
-        }
-    }
-
-    public Response<PipelineGeneralSettings> updateWithResponse(
-        String organization, String project, PipelineGeneralSettingsInner body, Context context) {
-        Response<PipelineGeneralSettingsInner> inner =
-            this.serviceClient().updateWithResponse(organization, project, body, context);
-        if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                new PipelineGeneralSettingsImpl(inner.getValue(), this.manager()));
         } else {
             return null;
         }

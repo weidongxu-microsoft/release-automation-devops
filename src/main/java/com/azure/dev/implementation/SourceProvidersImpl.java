@@ -21,14 +21,13 @@ import com.azure.dev.models.SourceProviderAttributes;
 import com.azure.dev.models.SourceProviders;
 import com.azure.dev.models.SourceRepositories;
 import com.azure.dev.models.SourceRepositoryItem;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 public final class SourceProvidersImpl implements SourceProviders {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(SourceProvidersImpl.class);
+    private static final ClientLogger LOGGER = new ClientLogger(SourceProvidersImpl.class);
 
     private final SourceProvidersClient innerClient;
 
@@ -39,37 +38,37 @@ public final class SourceProvidersImpl implements SourceProviders {
         this.serviceManager = serviceManager;
     }
 
-    public List<SourceProviderAttributes> list(String organization, String project) {
-        List<SourceProviderAttributesInner> inner = this.serviceClient().list(organization, project);
+    public Response<List<SourceProviderAttributes>> listWithResponse(String organization, String project,
+        Context context) {
+        Response<List<SourceProviderAttributesInner>> inner
+            = this.serviceClient().listWithResponse(organization, project, context);
         if (inner != null) {
-            return Collections
-                .unmodifiableList(
-                    inner
-                        .stream()
-                        .map(inner1 -> new SourceProviderAttributesImpl(inner1, this.manager()))
-                        .collect(Collectors.toList()));
-        } else {
-            return Collections.emptyList();
-        }
-    }
-
-    public Response<List<SourceProviderAttributes>> listWithResponse(
-        String organization, String project, Context context) {
-        Response<List<SourceProviderAttributesInner>> inner =
-            this.serviceClient().listWithResponse(organization, project, context);
-        if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                inner
-                    .getValue()
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
+                inner.getValue()
                     .stream()
                     .map(inner1 -> new SourceProviderAttributesImpl(inner1, this.manager()))
                     .collect(Collectors.toList()));
         } else {
             return null;
         }
+    }
+
+    public List<SourceProviderAttributes> list(String organization, String project) {
+        List<SourceProviderAttributesInner> inner = this.serviceClient().list(organization, project);
+        if (inner != null) {
+            return Collections.unmodifiableList(inner.stream()
+                .map(inner1 -> new SourceProviderAttributesImpl(inner1, this.manager()))
+                .collect(Collectors.toList()));
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
+    public Response<List<String>> listBranchesWithResponse(String organization, String project, String providerName,
+        UUID serviceEndpointId, String repository, String branchName, Context context) {
+        return this.serviceClient()
+            .listBranchesWithResponse(organization, project, providerName, serviceEndpointId, repository, branchName,
+                context);
     }
 
     public List<String> listBranches(String organization, String project, String providerName) {
@@ -81,75 +80,26 @@ public final class SourceProvidersImpl implements SourceProviders {
         }
     }
 
-    public Response<List<String>> listBranchesWithResponse(
-        String organization,
-        String project,
-        String providerName,
-        UUID serviceEndpointId,
-        String repository,
-        String branchName,
-        Context context) {
-        return this
-            .serviceClient()
-            .listBranchesWithResponse(
-                organization, project, providerName, serviceEndpointId, repository, branchName, context);
+    public Response<String> getFileContentsWithResponse(String organization, String project, String providerName,
+        UUID serviceEndpointId, String repository, String commitOrBranch, String path, Context context) {
+        return this.serviceClient()
+            .getFileContentsWithResponse(organization, project, providerName, serviceEndpointId, repository,
+                commitOrBranch, path, context);
     }
 
     public String getFileContents(String organization, String project, String providerName) {
         return this.serviceClient().getFileContents(organization, project, providerName);
     }
 
-    public Response<String> getFileContentsWithResponse(
-        String organization,
-        String project,
-        String providerName,
-        UUID serviceEndpointId,
-        String repository,
-        String commitOrBranch,
-        String path,
+    public Response<List<SourceRepositoryItem>> getPathContentsWithResponse(String organization, String project,
+        String providerName, UUID serviceEndpointId, String repository, String commitOrBranch, String path,
         Context context) {
-        return this
-            .serviceClient()
-            .getFileContentsWithResponse(
-                organization, project, providerName, serviceEndpointId, repository, commitOrBranch, path, context);
-    }
-
-    public List<SourceRepositoryItem> getPathContents(String organization, String project, String providerName) {
-        List<SourceRepositoryItemInner> inner =
-            this.serviceClient().getPathContents(organization, project, providerName);
+        Response<List<SourceRepositoryItemInner>> inner = this.serviceClient()
+            .getPathContentsWithResponse(organization, project, providerName, serviceEndpointId, repository,
+                commitOrBranch, path, context);
         if (inner != null) {
-            return Collections
-                .unmodifiableList(
-                    inner
-                        .stream()
-                        .map(inner1 -> new SourceRepositoryItemImpl(inner1, this.manager()))
-                        .collect(Collectors.toList()));
-        } else {
-            return Collections.emptyList();
-        }
-    }
-
-    public Response<List<SourceRepositoryItem>> getPathContentsWithResponse(
-        String organization,
-        String project,
-        String providerName,
-        UUID serviceEndpointId,
-        String repository,
-        String commitOrBranch,
-        String path,
-        Context context) {
-        Response<List<SourceRepositoryItemInner>> inner =
-            this
-                .serviceClient()
-                .getPathContentsWithResponse(
-                    organization, project, providerName, serviceEndpointId, repository, commitOrBranch, path, context);
-        if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                inner
-                    .getValue()
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
+                inner.getValue()
                     .stream()
                     .map(inner1 -> new SourceRepositoryItemImpl(inner1, this.manager()))
                     .collect(Collectors.toList()));
@@ -158,9 +108,34 @@ public final class SourceProvidersImpl implements SourceProviders {
         }
     }
 
+    public List<SourceRepositoryItem> getPathContents(String organization, String project, String providerName) {
+        List<SourceRepositoryItemInner> inner
+            = this.serviceClient().getPathContents(organization, project, providerName);
+        if (inner != null) {
+            return Collections.unmodifiableList(inner.stream()
+                .map(inner1 -> new SourceRepositoryItemImpl(inner1, this.manager()))
+                .collect(Collectors.toList()));
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
+    public Response<PullRequest> getPullRequestWithResponse(String organization, String project, String providerName,
+        String pullRequestId, String repositoryId, UUID serviceEndpointId, Context context) {
+        Response<PullRequestInner> inner = this.serviceClient()
+            .getPullRequestWithResponse(organization, project, providerName, pullRequestId, repositoryId,
+                serviceEndpointId, context);
+        if (inner != null) {
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
+                new PullRequestImpl(inner.getValue(), this.manager()));
+        } else {
+            return null;
+        }
+    }
+
     public PullRequest getPullRequest(String organization, String project, String providerName, String pullRequestId) {
-        PullRequestInner inner =
-            this.serviceClient().getPullRequest(organization, project, providerName, pullRequestId);
+        PullRequestInner inner
+            = this.serviceClient().getPullRequest(organization, project, providerName, pullRequestId);
         if (inner != null) {
             return new PullRequestImpl(inner, this.manager());
         } else {
@@ -168,25 +143,15 @@ public final class SourceProvidersImpl implements SourceProviders {
         }
     }
 
-    public Response<PullRequest> getPullRequestWithResponse(
-        String organization,
-        String project,
-        String providerName,
-        String pullRequestId,
-        String repositoryId,
-        UUID serviceEndpointId,
-        Context context) {
-        Response<PullRequestInner> inner =
-            this
-                .serviceClient()
-                .getPullRequestWithResponse(
-                    organization, project, providerName, pullRequestId, repositoryId, serviceEndpointId, context);
+    public Response<SourceRepositories> listRepositoriesWithResponse(String organization, String project,
+        String providerName, UUID serviceEndpointId, String repository, ResultSet resultSet, Boolean pageResults,
+        String continuationToken, Context context) {
+        Response<SourceRepositoriesInner> inner = this.serviceClient()
+            .listRepositoriesWithResponse(organization, project, providerName, serviceEndpointId, repository, resultSet,
+                pageResults, continuationToken, context);
         if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                new PullRequestImpl(inner.getValue(), this.manager()));
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
+                new SourceRepositoriesImpl(inner.getValue(), this.manager()));
         } else {
             return null;
         }
@@ -201,95 +166,40 @@ public final class SourceProvidersImpl implements SourceProviders {
         }
     }
 
-    public Response<SourceRepositories> listRepositoriesWithResponse(
-        String organization,
-        String project,
-        String providerName,
-        UUID serviceEndpointId,
-        String repository,
-        ResultSet resultSet,
-        Boolean pageResults,
-        String continuationToken,
-        Context context) {
-        Response<SourceRepositoriesInner> inner =
-            this
-                .serviceClient()
-                .listRepositoriesWithResponse(
-                    organization,
-                    project,
-                    providerName,
-                    serviceEndpointId,
-                    repository,
-                    resultSet,
-                    pageResults,
-                    continuationToken,
-                    context);
-        if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                new SourceRepositoriesImpl(inner.getValue(), this.manager()));
-        } else {
-            return null;
-        }
+    public Response<Void> restoreWebhooksWithResponse(String organization, String project, String providerName,
+        List<String> body, UUID serviceEndpointId, String repository, Context context) {
+        return this.serviceClient()
+            .restoreWebhooksWithResponse(organization, project, providerName, body, serviceEndpointId, repository,
+                context);
     }
 
     public void restoreWebhooks(String organization, String project, String providerName, List<String> body) {
         this.serviceClient().restoreWebhooks(organization, project, providerName, body);
     }
 
-    public Response<Void> restoreWebhooksWithResponse(
-        String organization,
-        String project,
-        String providerName,
-        List<String> body,
-        UUID serviceEndpointId,
-        String repository,
-        Context context) {
-        return this
-            .serviceClient()
-            .restoreWebhooksWithResponse(
-                organization, project, providerName, body, serviceEndpointId, repository, context);
-    }
-
-    public List<RepositoryWebhook> listWebhooks(String organization, String project, String providerName) {
-        List<RepositoryWebhookInner> inner = this.serviceClient().listWebhooks(organization, project, providerName);
+    public Response<List<RepositoryWebhook>> listWebhooksWithResponse(String organization, String project,
+        String providerName, UUID serviceEndpointId, String repository, Context context) {
+        Response<List<RepositoryWebhookInner>> inner = this.serviceClient()
+            .listWebhooksWithResponse(organization, project, providerName, serviceEndpointId, repository, context);
         if (inner != null) {
-            return Collections
-                .unmodifiableList(
-                    inner
-                        .stream()
-                        .map(inner1 -> new RepositoryWebhookImpl(inner1, this.manager()))
-                        .collect(Collectors.toList()));
-        } else {
-            return Collections.emptyList();
-        }
-    }
-
-    public Response<List<RepositoryWebhook>> listWebhooksWithResponse(
-        String organization,
-        String project,
-        String providerName,
-        UUID serviceEndpointId,
-        String repository,
-        Context context) {
-        Response<List<RepositoryWebhookInner>> inner =
-            this
-                .serviceClient()
-                .listWebhooksWithResponse(organization, project, providerName, serviceEndpointId, repository, context);
-        if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                inner
-                    .getValue()
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
+                inner.getValue()
                     .stream()
                     .map(inner1 -> new RepositoryWebhookImpl(inner1, this.manager()))
                     .collect(Collectors.toList()));
         } else {
             return null;
+        }
+    }
+
+    public List<RepositoryWebhook> listWebhooks(String organization, String project, String providerName) {
+        List<RepositoryWebhookInner> inner = this.serviceClient().listWebhooks(organization, project, providerName);
+        if (inner != null) {
+            return Collections.unmodifiableList(inner.stream()
+                .map(inner1 -> new RepositoryWebhookImpl(inner1, this.manager()))
+                .collect(Collectors.toList()));
+        } else {
+            return Collections.emptyList();
         }
     }
 

@@ -5,19 +5,17 @@
 package com.azure.dev.fluent.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.models.AggregatedResultsAnalysis;
 import com.azure.dev.models.AssociatedWorkItem;
 import com.azure.dev.models.TimelineRecord;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** The BuildCompletedEvent model. */
+/**
+ * The BuildCompletedEvent model.
+ */
 @Fluent
 public final class BuildCompletedEventInner extends BuildUpdatedEventInner {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(BuildCompletedEventInner.class);
-
     /*
      * Changes associated with a build used for build notifications
      */
@@ -49,8 +47,14 @@ public final class BuildCompletedEventInner extends BuildUpdatedEventInner {
     private List<AssociatedWorkItem> workItems;
 
     /**
+     * Creates an instance of BuildCompletedEventInner class.
+     */
+    public BuildCompletedEventInner() {
+    }
+
+    /**
      * Get the changes property: Changes associated with a build used for build notifications.
-     *
+     * 
      * @return the changes value.
      */
     public List<ChangeInner> changes() {
@@ -59,7 +63,7 @@ public final class BuildCompletedEventInner extends BuildUpdatedEventInner {
 
     /**
      * Set the changes property: Changes associated with a build used for build notifications.
-     *
+     * 
      * @param changes the changes value to set.
      * @return the BuildCompletedEventInner object itself.
      */
@@ -70,7 +74,7 @@ public final class BuildCompletedEventInner extends BuildUpdatedEventInner {
 
     /**
      * Get the pullRequest property: Pull request for the build used for build notifications.
-     *
+     * 
      * @return the pullRequest value.
      */
     public PullRequestInner pullRequest() {
@@ -79,7 +83,7 @@ public final class BuildCompletedEventInner extends BuildUpdatedEventInner {
 
     /**
      * Set the pullRequest property: Pull request for the build used for build notifications.
-     *
+     * 
      * @param pullRequest the pullRequest value to set.
      * @return the BuildCompletedEventInner object itself.
      */
@@ -90,7 +94,7 @@ public final class BuildCompletedEventInner extends BuildUpdatedEventInner {
 
     /**
      * Get the testResults property: Test results associated with a build used for build notifications.
-     *
+     * 
      * @return the testResults value.
      */
     public AggregatedResultsAnalysis testResults() {
@@ -99,7 +103,7 @@ public final class BuildCompletedEventInner extends BuildUpdatedEventInner {
 
     /**
      * Set the testResults property: Test results associated with a build used for build notifications.
-     *
+     * 
      * @param testResults the testResults value to set.
      * @return the BuildCompletedEventInner object itself.
      */
@@ -110,7 +114,7 @@ public final class BuildCompletedEventInner extends BuildUpdatedEventInner {
 
     /**
      * Get the timelineRecords property: Timeline records associated with a build used for build notifications.
-     *
+     * 
      * @return the timelineRecords value.
      */
     public List<TimelineRecord> timelineRecords() {
@@ -119,7 +123,7 @@ public final class BuildCompletedEventInner extends BuildUpdatedEventInner {
 
     /**
      * Set the timelineRecords property: Timeline records associated with a build used for build notifications.
-     *
+     * 
      * @param timelineRecords the timelineRecords value to set.
      * @return the BuildCompletedEventInner object itself.
      */
@@ -130,7 +134,7 @@ public final class BuildCompletedEventInner extends BuildUpdatedEventInner {
 
     /**
      * Get the workItems property: Work items associated with a build used for build notifications.
-     *
+     * 
      * @return the workItems value.
      */
     public List<AssociatedWorkItem> workItems() {
@@ -139,7 +143,7 @@ public final class BuildCompletedEventInner extends BuildUpdatedEventInner {
 
     /**
      * Set the workItems property: Work items associated with a build used for build notifications.
-     *
+     * 
      * @param workItems the workItems value to set.
      * @return the BuildCompletedEventInner object itself.
      */
@@ -148,14 +152,18 @@ public final class BuildCompletedEventInner extends BuildUpdatedEventInner {
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildCompletedEventInner withBuild(BuildInner build) {
         super.withBuild(build);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildCompletedEventInner withBuildId(Integer buildId) {
         super.withBuildId(buildId);
@@ -164,7 +172,7 @@ public final class BuildCompletedEventInner extends BuildUpdatedEventInner {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     @Override

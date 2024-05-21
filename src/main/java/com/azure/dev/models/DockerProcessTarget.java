@@ -5,15 +5,21 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
-/** Represents the target for the docker build process. */
+/**
+ * Represents the target for the docker build process.
+ */
 @Fluent
 public final class DockerProcessTarget extends DesignerProcessTarget {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(DockerProcessTarget.class);
+    /**
+     * Creates an instance of DockerProcessTarget class.
+     */
+    public DockerProcessTarget() {
+    }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public DockerProcessTarget withAgentSpecification(AgentSpecification agentSpecification) {
         super.withAgentSpecification(agentSpecification);
@@ -22,7 +28,7 @@ public final class DockerProcessTarget extends DesignerProcessTarget {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     @Override

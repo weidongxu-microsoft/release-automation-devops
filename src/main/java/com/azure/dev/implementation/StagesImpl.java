@@ -10,10 +10,9 @@ import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.fluent.StagesClient;
 import com.azure.dev.models.Stages;
 import com.azure.dev.models.UpdateStageParameters;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public final class StagesImpl implements Stages {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(StagesImpl.class);
+    private static final ClientLogger LOGGER = new ClientLogger(StagesImpl.class);
 
     private final StagesClient innerClient;
 
@@ -24,19 +23,14 @@ public final class StagesImpl implements Stages {
         this.serviceManager = serviceManager;
     }
 
-    public void update(
-        String organization, int buildId, String stageRefName, String project, UpdateStageParameters body) {
-        this.serviceClient().update(organization, buildId, stageRefName, project, body);
+    public Response<Void> updateWithResponse(String organization, int buildId, String stageRefName, String project,
+        UpdateStageParameters body, Context context) {
+        return this.serviceClient().updateWithResponse(organization, buildId, stageRefName, project, body, context);
     }
 
-    public Response<Void> updateWithResponse(
-        String organization,
-        int buildId,
-        String stageRefName,
-        String project,
-        UpdateStageParameters body,
-        Context context) {
-        return this.serviceClient().updateWithResponse(organization, buildId, stageRefName, project, body, context);
+    public void update(String organization, int buildId, String stageRefName, String project,
+        UpdateStageParameters body) {
+        this.serviceClient().update(organization, buildId, stageRefName, project, body);
     }
 
     private StagesClient serviceClient() {

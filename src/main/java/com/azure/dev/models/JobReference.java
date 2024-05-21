@@ -5,15 +5,13 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Job in pipeline. This is related to matrixing in YAML. */
+/**
+ * Job in pipeline. This is related to matrixing in YAML.
+ */
 @Fluent
 public final class JobReference {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(JobReference.class);
-
     /*
      * Attempt number of the job
      */
@@ -21,16 +19,20 @@ public final class JobReference {
     private Integer attempt;
 
     /*
-     * Matrixing in YAML generates copies of a job with different inputs in
-     * matrix. JobName is the name of those input. Maximum supported length for
-     * name is 256 character.
+     * Matrixing in YAML generates copies of a job with different inputs in matrix. JobName is the name of those input. Maximum supported length for name is 256 character.
      */
     @JsonProperty(value = "jobName")
     private String jobName;
 
     /**
+     * Creates an instance of JobReference class.
+     */
+    public JobReference() {
+    }
+
+    /**
      * Get the attempt property: Attempt number of the job.
-     *
+     * 
      * @return the attempt value.
      */
     public Integer attempt() {
@@ -39,7 +41,7 @@ public final class JobReference {
 
     /**
      * Set the attempt property: Attempt number of the job.
-     *
+     * 
      * @param attempt the attempt value to set.
      * @return the JobReference object itself.
      */
@@ -51,7 +53,7 @@ public final class JobReference {
     /**
      * Get the jobName property: Matrixing in YAML generates copies of a job with different inputs in matrix. JobName is
      * the name of those input. Maximum supported length for name is 256 character.
-     *
+     * 
      * @return the jobName value.
      */
     public String jobName() {
@@ -61,7 +63,7 @@ public final class JobReference {
     /**
      * Set the jobName property: Matrixing in YAML generates copies of a job with different inputs in matrix. JobName is
      * the name of those input. Maximum supported length for name is 256 character.
-     *
+     * 
      * @param jobName the jobName value to set.
      * @return the JobReference object itself.
      */
@@ -72,7 +74,7 @@ public final class JobReference {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

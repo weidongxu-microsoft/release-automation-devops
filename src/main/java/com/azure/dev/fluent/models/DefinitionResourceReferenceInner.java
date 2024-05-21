@@ -5,15 +5,13 @@
 package com.azure.dev.fluent.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** The DefinitionResourceReference model. */
+/**
+ * The DefinitionResourceReference model.
+ */
 @Fluent
 public final class DefinitionResourceReferenceInner {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(DefinitionResourceReferenceInner.class);
-
     /*
      * Indicates whether the resource is authorized for use.
      */
@@ -39,8 +37,14 @@ public final class DefinitionResourceReferenceInner {
     private String type;
 
     /**
+     * Creates an instance of DefinitionResourceReferenceInner class.
+     */
+    public DefinitionResourceReferenceInner() {
+    }
+
+    /**
      * Get the authorized property: Indicates whether the resource is authorized for use.
-     *
+     * 
      * @return the authorized value.
      */
     public Boolean authorized() {
@@ -49,7 +53,7 @@ public final class DefinitionResourceReferenceInner {
 
     /**
      * Set the authorized property: Indicates whether the resource is authorized for use.
-     *
+     * 
      * @param authorized the authorized value to set.
      * @return the DefinitionResourceReferenceInner object itself.
      */
@@ -60,7 +64,7 @@ public final class DefinitionResourceReferenceInner {
 
     /**
      * Get the id property: The id of the resource.
-     *
+     * 
      * @return the id value.
      */
     public String id() {
@@ -69,7 +73,7 @@ public final class DefinitionResourceReferenceInner {
 
     /**
      * Set the id property: The id of the resource.
-     *
+     * 
      * @param id the id value to set.
      * @return the DefinitionResourceReferenceInner object itself.
      */
@@ -80,7 +84,7 @@ public final class DefinitionResourceReferenceInner {
 
     /**
      * Get the name property: A friendly name for the resource.
-     *
+     * 
      * @return the name value.
      */
     public String name() {
@@ -89,7 +93,7 @@ public final class DefinitionResourceReferenceInner {
 
     /**
      * Set the name property: A friendly name for the resource.
-     *
+     * 
      * @param name the name value to set.
      * @return the DefinitionResourceReferenceInner object itself.
      */
@@ -100,7 +104,7 @@ public final class DefinitionResourceReferenceInner {
 
     /**
      * Get the type property: The type of the resource.
-     *
+     * 
      * @return the type value.
      */
     public String type() {
@@ -109,7 +113,7 @@ public final class DefinitionResourceReferenceInner {
 
     /**
      * Set the type property: The type of the resource.
-     *
+     * 
      * @param type the type value to set.
      * @return the DefinitionResourceReferenceInner object itself.
      */
@@ -120,7 +124,7 @@ public final class DefinitionResourceReferenceInner {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

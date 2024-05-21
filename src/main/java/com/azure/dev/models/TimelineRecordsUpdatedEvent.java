@@ -5,16 +5,14 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** The TimelineRecordsUpdatedEvent model. */
+/**
+ * The TimelineRecordsUpdatedEvent model.
+ */
 @Fluent
 public final class TimelineRecordsUpdatedEvent extends RealtimeBuildEvent {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(TimelineRecordsUpdatedEvent.class);
-
     /*
      * The timelineRecords property.
      */
@@ -22,8 +20,14 @@ public final class TimelineRecordsUpdatedEvent extends RealtimeBuildEvent {
     private List<TimelineRecord> timelineRecords;
 
     /**
+     * Creates an instance of TimelineRecordsUpdatedEvent class.
+     */
+    public TimelineRecordsUpdatedEvent() {
+    }
+
+    /**
      * Get the timelineRecords property: The timelineRecords property.
-     *
+     * 
      * @return the timelineRecords value.
      */
     public List<TimelineRecord> timelineRecords() {
@@ -32,7 +36,7 @@ public final class TimelineRecordsUpdatedEvent extends RealtimeBuildEvent {
 
     /**
      * Set the timelineRecords property: The timelineRecords property.
-     *
+     * 
      * @param timelineRecords the timelineRecords value to set.
      * @return the TimelineRecordsUpdatedEvent object itself.
      */
@@ -41,7 +45,9 @@ public final class TimelineRecordsUpdatedEvent extends RealtimeBuildEvent {
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public TimelineRecordsUpdatedEvent withBuildId(Integer buildId) {
         super.withBuildId(buildId);
@@ -50,7 +56,7 @@ public final class TimelineRecordsUpdatedEvent extends RealtimeBuildEvent {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     @Override

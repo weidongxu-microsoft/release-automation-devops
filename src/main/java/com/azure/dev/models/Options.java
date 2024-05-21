@@ -8,11 +8,26 @@ import com.azure.core.http.rest.Response;
 import com.azure.core.util.Context;
 import java.util.List;
 
-/** Resource collection API of Options. */
+/**
+ * Resource collection API of Options.
+ */
 public interface Options {
     /**
      * Gets all build definition options supported by the system.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return all build definition options supported by the system along with {@link Response}.
+     */
+    Response<List<BuildOptionDefinition>> listWithResponse(String organization, String project, Context context);
+
+    /**
+     * Gets all build definition options supported by the system.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -21,17 +36,4 @@ public interface Options {
      * @return all build definition options supported by the system.
      */
     List<BuildOptionDefinition> list(String organization, String project);
-
-    /**
-     * Gets all build definition options supported by the system.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return all build definition options supported by the system.
-     */
-    Response<List<BuildOptionDefinition>> listWithResponse(String organization, String project, Context context);
 }

@@ -5,7 +5,6 @@
 package com.azure.dev.fluent.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.models.AgentPoolQueue;
 import com.azure.dev.models.BuildAuthorizationScope;
 import com.azure.dev.models.BuildDefinitionVariable;
@@ -24,18 +23,17 @@ import com.azure.dev.models.ReferenceLinks;
 import com.azure.dev.models.RetentionPolicy;
 import com.azure.dev.models.TeamProjectReference;
 import com.azure.dev.models.VariableGroup;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 
-/** Represents a build definition. */
+/**
+ * Represents a build definition.
+ */
 @Fluent
 public final class BuildDefinitionInner extends BuildDefinitionReferenceInner {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(BuildDefinitionInner.class);
-
     /*
      * Indicates whether badges are enabled for this definition.
      */
@@ -79,15 +77,13 @@ public final class BuildDefinitionInner extends BuildDefinitionReferenceInner {
     private BuildAuthorizationScope jobAuthorizationScope;
 
     /*
-     * The job cancel timeout (in minutes) for builds cancelled by user for
-     * this definition.
+     * The job cancel timeout (in minutes) for builds cancelled by user for this definition.
      */
     @JsonProperty(value = "jobCancelTimeoutInMinutes")
     private Integer jobCancelTimeoutInMinutes;
 
     /*
-     * The job execution timeout (in minutes) for builds queued against this
-     * definition.
+     * The job execution timeout (in minutes) for builds queued against this definition.
      */
     @JsonProperty(value = "jobTimeoutInMinutes")
     private Integer jobTimeoutInMinutes;
@@ -111,12 +107,7 @@ public final class BuildDefinitionInner extends BuildDefinitionReferenceInner {
     private ProcessParameters processParameters;
 
     /*
-     * The class represents a property bag as a collection of key-value pairs.
-     * Values of all primitive types (any type with a `TypeCode !=
-     * TypeCode.Object`) except for `DBNull` are accepted. Values of type
-     * Byte[], Int32, Double, DateType and String preserve their type, other
-     * primitives are retuned as a String. Byte[] expected as base64 encoded
-     * string.
+     * The class represents a property bag as a collection of key-value pairs. Values of all primitive types (any type with a `TypeCode != TypeCode.Object`) except for `DBNull` are accepted. Values of type Byte[], Int32, Double, DateType and String preserve their type, other primitives are retuned as a String. Byte[] expected as base64 encoded string.
      */
     @JsonProperty(value = "properties")
     private PropertiesCollectionInner properties;
@@ -159,8 +150,14 @@ public final class BuildDefinitionInner extends BuildDefinitionReferenceInner {
     private Map<String, BuildDefinitionVariable> variables;
 
     /**
+     * Creates an instance of BuildDefinitionInner class.
+     */
+    public BuildDefinitionInner() {
+    }
+
+    /**
      * Get the badgeEnabled property: Indicates whether badges are enabled for this definition.
-     *
+     * 
      * @return the badgeEnabled value.
      */
     public Boolean badgeEnabled() {
@@ -169,7 +166,7 @@ public final class BuildDefinitionInner extends BuildDefinitionReferenceInner {
 
     /**
      * Set the badgeEnabled property: Indicates whether badges are enabled for this definition.
-     *
+     * 
      * @param badgeEnabled the badgeEnabled value to set.
      * @return the BuildDefinitionInner object itself.
      */
@@ -180,7 +177,7 @@ public final class BuildDefinitionInner extends BuildDefinitionReferenceInner {
 
     /**
      * Get the buildNumberFormat property: The build number format.
-     *
+     * 
      * @return the buildNumberFormat value.
      */
     public String buildNumberFormat() {
@@ -189,7 +186,7 @@ public final class BuildDefinitionInner extends BuildDefinitionReferenceInner {
 
     /**
      * Set the buildNumberFormat property: The build number format.
-     *
+     * 
      * @param buildNumberFormat the buildNumberFormat value to set.
      * @return the BuildDefinitionInner object itself.
      */
@@ -200,7 +197,7 @@ public final class BuildDefinitionInner extends BuildDefinitionReferenceInner {
 
     /**
      * Get the comment property: A save-time comment for the definition.
-     *
+     * 
      * @return the comment value.
      */
     public String comment() {
@@ -209,7 +206,7 @@ public final class BuildDefinitionInner extends BuildDefinitionReferenceInner {
 
     /**
      * Set the comment property: A save-time comment for the definition.
-     *
+     * 
      * @param comment the comment value to set.
      * @return the BuildDefinitionInner object itself.
      */
@@ -220,7 +217,7 @@ public final class BuildDefinitionInner extends BuildDefinitionReferenceInner {
 
     /**
      * Get the demands property: The demands property.
-     *
+     * 
      * @return the demands value.
      */
     public List<Demand> demands() {
@@ -229,7 +226,7 @@ public final class BuildDefinitionInner extends BuildDefinitionReferenceInner {
 
     /**
      * Set the demands property: The demands property.
-     *
+     * 
      * @param demands the demands value to set.
      * @return the BuildDefinitionInner object itself.
      */
@@ -240,7 +237,7 @@ public final class BuildDefinitionInner extends BuildDefinitionReferenceInner {
 
     /**
      * Get the description property: The description.
-     *
+     * 
      * @return the description value.
      */
     public String description() {
@@ -249,7 +246,7 @@ public final class BuildDefinitionInner extends BuildDefinitionReferenceInner {
 
     /**
      * Set the description property: The description.
-     *
+     * 
      * @param description the description value to set.
      * @return the BuildDefinitionInner object itself.
      */
@@ -260,7 +257,7 @@ public final class BuildDefinitionInner extends BuildDefinitionReferenceInner {
 
     /**
      * Get the dropLocation property: The drop location for the definition.
-     *
+     * 
      * @return the dropLocation value.
      */
     public String dropLocation() {
@@ -269,7 +266,7 @@ public final class BuildDefinitionInner extends BuildDefinitionReferenceInner {
 
     /**
      * Set the dropLocation property: The drop location for the definition.
-     *
+     * 
      * @param dropLocation the dropLocation value to set.
      * @return the BuildDefinitionInner object itself.
      */
@@ -280,7 +277,7 @@ public final class BuildDefinitionInner extends BuildDefinitionReferenceInner {
 
     /**
      * Get the jobAuthorizationScope property: The job authorization scope for builds queued against this definition.
-     *
+     * 
      * @return the jobAuthorizationScope value.
      */
     public BuildAuthorizationScope jobAuthorizationScope() {
@@ -289,7 +286,7 @@ public final class BuildDefinitionInner extends BuildDefinitionReferenceInner {
 
     /**
      * Set the jobAuthorizationScope property: The job authorization scope for builds queued against this definition.
-     *
+     * 
      * @param jobAuthorizationScope the jobAuthorizationScope value to set.
      * @return the BuildDefinitionInner object itself.
      */
@@ -301,7 +298,7 @@ public final class BuildDefinitionInner extends BuildDefinitionReferenceInner {
     /**
      * Get the jobCancelTimeoutInMinutes property: The job cancel timeout (in minutes) for builds cancelled by user for
      * this definition.
-     *
+     * 
      * @return the jobCancelTimeoutInMinutes value.
      */
     public Integer jobCancelTimeoutInMinutes() {
@@ -311,7 +308,7 @@ public final class BuildDefinitionInner extends BuildDefinitionReferenceInner {
     /**
      * Set the jobCancelTimeoutInMinutes property: The job cancel timeout (in minutes) for builds cancelled by user for
      * this definition.
-     *
+     * 
      * @param jobCancelTimeoutInMinutes the jobCancelTimeoutInMinutes value to set.
      * @return the BuildDefinitionInner object itself.
      */
@@ -323,7 +320,7 @@ public final class BuildDefinitionInner extends BuildDefinitionReferenceInner {
     /**
      * Get the jobTimeoutInMinutes property: The job execution timeout (in minutes) for builds queued against this
      * definition.
-     *
+     * 
      * @return the jobTimeoutInMinutes value.
      */
     public Integer jobTimeoutInMinutes() {
@@ -333,7 +330,7 @@ public final class BuildDefinitionInner extends BuildDefinitionReferenceInner {
     /**
      * Set the jobTimeoutInMinutes property: The job execution timeout (in minutes) for builds queued against this
      * definition.
-     *
+     * 
      * @param jobTimeoutInMinutes the jobTimeoutInMinutes value to set.
      * @return the BuildDefinitionInner object itself.
      */
@@ -344,7 +341,7 @@ public final class BuildDefinitionInner extends BuildDefinitionReferenceInner {
 
     /**
      * Get the options property: The options property.
-     *
+     * 
      * @return the options value.
      */
     public List<BuildOption> options() {
@@ -353,7 +350,7 @@ public final class BuildDefinitionInner extends BuildDefinitionReferenceInner {
 
     /**
      * Set the options property: The options property.
-     *
+     * 
      * @param options the options value to set.
      * @return the BuildDefinitionInner object itself.
      */
@@ -364,7 +361,7 @@ public final class BuildDefinitionInner extends BuildDefinitionReferenceInner {
 
     /**
      * Get the process property: The build process.
-     *
+     * 
      * @return the process value.
      */
     public BuildProcess process() {
@@ -373,7 +370,7 @@ public final class BuildDefinitionInner extends BuildDefinitionReferenceInner {
 
     /**
      * Set the process property: The build process.
-     *
+     * 
      * @param process the process value to set.
      * @return the BuildDefinitionInner object itself.
      */
@@ -384,7 +381,7 @@ public final class BuildDefinitionInner extends BuildDefinitionReferenceInner {
 
     /**
      * Get the processParameters property: The process parameters for this definition.
-     *
+     * 
      * @return the processParameters value.
      */
     public ProcessParameters processParameters() {
@@ -393,7 +390,7 @@ public final class BuildDefinitionInner extends BuildDefinitionReferenceInner {
 
     /**
      * Set the processParameters property: The process parameters for this definition.
-     *
+     * 
      * @param processParameters the processParameters value to set.
      * @return the BuildDefinitionInner object itself.
      */
@@ -407,7 +404,7 @@ public final class BuildDefinitionInner extends BuildDefinitionReferenceInner {
      * all primitive types (any type with a `TypeCode != TypeCode.Object`) except for `DBNull` are accepted. Values of
      * type Byte[], Int32, Double, DateType and String preserve their type, other primitives are retuned as a String.
      * Byte[] expected as base64 encoded string.
-     *
+     * 
      * @return the properties value.
      */
     public PropertiesCollectionInner properties() {
@@ -419,7 +416,7 @@ public final class BuildDefinitionInner extends BuildDefinitionReferenceInner {
      * all primitive types (any type with a `TypeCode != TypeCode.Object`) except for `DBNull` are accepted. Values of
      * type Byte[], Int32, Double, DateType and String preserve their type, other primitives are retuned as a String.
      * Byte[] expected as base64 encoded string.
-     *
+     * 
      * @param properties the properties value to set.
      * @return the BuildDefinitionInner object itself.
      */
@@ -430,7 +427,7 @@ public final class BuildDefinitionInner extends BuildDefinitionReferenceInner {
 
     /**
      * Get the repository property: The repository.
-     *
+     * 
      * @return the repository value.
      */
     public BuildRepository repository() {
@@ -439,7 +436,7 @@ public final class BuildDefinitionInner extends BuildDefinitionReferenceInner {
 
     /**
      * Set the repository property: The repository.
-     *
+     * 
      * @param repository the repository value to set.
      * @return the BuildDefinitionInner object itself.
      */
@@ -450,7 +447,7 @@ public final class BuildDefinitionInner extends BuildDefinitionReferenceInner {
 
     /**
      * Get the retentionRules property: The retentionRules property.
-     *
+     * 
      * @return the retentionRules value.
      */
     public List<RetentionPolicy> retentionRules() {
@@ -459,7 +456,7 @@ public final class BuildDefinitionInner extends BuildDefinitionReferenceInner {
 
     /**
      * Set the retentionRules property: The retentionRules property.
-     *
+     * 
      * @param retentionRules the retentionRules value to set.
      * @return the BuildDefinitionInner object itself.
      */
@@ -470,7 +467,7 @@ public final class BuildDefinitionInner extends BuildDefinitionReferenceInner {
 
     /**
      * Get the tags property: The tags property.
-     *
+     * 
      * @return the tags value.
      */
     public List<String> tags() {
@@ -479,7 +476,7 @@ public final class BuildDefinitionInner extends BuildDefinitionReferenceInner {
 
     /**
      * Set the tags property: The tags property.
-     *
+     * 
      * @param tags the tags value to set.
      * @return the BuildDefinitionInner object itself.
      */
@@ -490,7 +487,7 @@ public final class BuildDefinitionInner extends BuildDefinitionReferenceInner {
 
     /**
      * Get the triggers property: The triggers property.
-     *
+     * 
      * @return the triggers value.
      */
     public List<BuildTrigger> triggers() {
@@ -499,7 +496,7 @@ public final class BuildDefinitionInner extends BuildDefinitionReferenceInner {
 
     /**
      * Set the triggers property: The triggers property.
-     *
+     * 
      * @param triggers the triggers value to set.
      * @return the BuildDefinitionInner object itself.
      */
@@ -510,7 +507,7 @@ public final class BuildDefinitionInner extends BuildDefinitionReferenceInner {
 
     /**
      * Get the variableGroups property: The variableGroups property.
-     *
+     * 
      * @return the variableGroups value.
      */
     public List<VariableGroup> variableGroups() {
@@ -519,7 +516,7 @@ public final class BuildDefinitionInner extends BuildDefinitionReferenceInner {
 
     /**
      * Set the variableGroups property: The variableGroups property.
-     *
+     * 
      * @param variableGroups the variableGroups value to set.
      * @return the BuildDefinitionInner object itself.
      */
@@ -530,7 +527,7 @@ public final class BuildDefinitionInner extends BuildDefinitionReferenceInner {
 
     /**
      * Get the variables property: Dictionary of &lt;BuildDefinitionVariable&gt;.
-     *
+     * 
      * @return the variables value.
      */
     public Map<String, BuildDefinitionVariable> variables() {
@@ -539,7 +536,7 @@ public final class BuildDefinitionInner extends BuildDefinitionReferenceInner {
 
     /**
      * Set the variables property: Dictionary of &lt;BuildDefinitionVariable&gt;.
-     *
+     * 
      * @param variables the variables value to set.
      * @return the BuildDefinitionInner object itself.
      */
@@ -548,133 +545,171 @@ public final class BuildDefinitionInner extends BuildDefinitionReferenceInner {
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinitionInner withLinks(ReferenceLinks links) {
         super.withLinks(links);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinitionInner withAuthoredBy(IdentityRef authoredBy) {
         super.withAuthoredBy(authoredBy);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinitionInner withDraftOf(DefinitionReference draftOf) {
         super.withDraftOf(draftOf);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinitionInner withDrafts(List<DefinitionReference> drafts) {
         super.withDrafts(drafts);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinitionInner withLatestBuild(BuildInner latestBuild) {
         super.withLatestBuild(latestBuild);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinitionInner withLatestCompletedBuild(BuildInner latestCompletedBuild) {
         super.withLatestCompletedBuild(latestCompletedBuild);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinitionInner withMetrics(List<BuildMetricInner> metrics) {
         super.withMetrics(metrics);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinitionInner withQuality(DefinitionQuality quality) {
         super.withQuality(quality);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinitionInner withQueue(AgentPoolQueue queue) {
         super.withQueue(queue);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinitionInner withCreatedDate(OffsetDateTime createdDate) {
         super.withCreatedDate(createdDate);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinitionInner withId(Integer id) {
         super.withId(id);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinitionInner withName(String name) {
         super.withName(name);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinitionInner withPath(String path) {
         super.withPath(path);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinitionInner withProject(TeamProjectReference project) {
         super.withProject(project);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinitionInner withQueueStatus(DefinitionQueueStatus queueStatus) {
         super.withQueueStatus(queueStatus);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinitionInner withRevision(Integer revision) {
         super.withRevision(revision);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinitionInner withType(DefinitionType type) {
         super.withType(type);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinitionInner withUri(String uri) {
         super.withUri(uri);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinitionInner withUrl(String url) {
         super.withUrl(url);
@@ -683,7 +718,7 @@ public final class BuildDefinitionInner extends BuildDefinitionReferenceInner {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     @Override
@@ -717,14 +752,11 @@ public final class BuildDefinitionInner extends BuildDefinitionReferenceInner {
             variableGroups().forEach(e -> e.validate());
         }
         if (variables() != null) {
-            variables()
-                .values()
-                .forEach(
-                    e -> {
-                        if (e != null) {
-                            e.validate();
-                        }
-                    });
+            variables().values().forEach(e -> {
+                if (e != null) {
+                    e.validate();
+                }
+            });
         }
     }
 }

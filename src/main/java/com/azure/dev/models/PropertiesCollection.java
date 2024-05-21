@@ -7,39 +7,41 @@ package com.azure.dev.models;
 import com.azure.dev.fluent.models.PropertiesCollectionInner;
 import java.util.List;
 
-/** An immutable client-side representation of PropertiesCollection. */
+/**
+ * An immutable client-side representation of PropertiesCollection.
+ */
 public interface PropertiesCollection {
     /**
      * Gets the count property: The count of properties in the collection.
-     *
+     * 
      * @return the count value.
      */
     Integer count();
 
     /**
      * Gets the item property: Any object.
-     *
+     * 
      * @return the item value.
      */
     Object item();
 
     /**
      * Gets the keys property: The set of keys in the collection.
-     *
+     * 
      * @return the keys value.
      */
     List<String> keys();
 
     /**
      * Gets the values property: The set of values in the collection.
-     *
+     * 
      * @return the values value.
      */
     List<String> values();
 
     /**
      * Gets the inner com.azure.dev.fluent.models.PropertiesCollectionInner object.
-     *
+     * 
      * @return the inner object.
      */
     PropertiesCollectionInner innerModel();

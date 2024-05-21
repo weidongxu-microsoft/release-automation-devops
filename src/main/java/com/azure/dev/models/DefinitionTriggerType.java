@@ -7,36 +7,58 @@ package com.azure.dev.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/** Defines values for DefinitionTriggerType. */
+/**
+ * Which trigger types are supported by this definition source provider.
+ */
 public enum DefinitionTriggerType {
-    /** Enum value none. */
+    /**
+     * Enum value none.
+     */
     NONE("none"),
 
-    /** Enum value continuousIntegration. */
+    /**
+     * Enum value continuousIntegration.
+     */
     CONTINUOUS_INTEGRATION("continuousIntegration"),
 
-    /** Enum value batchedContinuousIntegration. */
+    /**
+     * Enum value batchedContinuousIntegration.
+     */
     BATCHED_CONTINUOUS_INTEGRATION("batchedContinuousIntegration"),
 
-    /** Enum value schedule. */
+    /**
+     * Enum value schedule.
+     */
     SCHEDULE("schedule"),
 
-    /** Enum value gatedCheckIn. */
+    /**
+     * Enum value gatedCheckIn.
+     */
     GATED_CHECK_IN("gatedCheckIn"),
 
-    /** Enum value batchedGatedCheckIn. */
+    /**
+     * Enum value batchedGatedCheckIn.
+     */
     BATCHED_GATED_CHECK_IN("batchedGatedCheckIn"),
 
-    /** Enum value pullRequest. */
+    /**
+     * Enum value pullRequest.
+     */
     PULL_REQUEST("pullRequest"),
 
-    /** Enum value buildCompletion. */
+    /**
+     * Enum value buildCompletion.
+     */
     BUILD_COMPLETION("buildCompletion"),
 
-    /** Enum value all. */
+    /**
+     * Enum value all.
+     */
     ALL("all");
 
-    /** The actual serialized value for a DefinitionTriggerType instance. */
+    /**
+     * The actual serialized value for a DefinitionTriggerType instance.
+     */
     private final String value;
 
     DefinitionTriggerType(String value) {
@@ -45,12 +67,15 @@ public enum DefinitionTriggerType {
 
     /**
      * Parses a serialized value to a DefinitionTriggerType instance.
-     *
+     * 
      * @param value the serialized value to parse.
      * @return the parsed DefinitionTriggerType object, or null if unable to parse.
      */
     @JsonCreator
     public static DefinitionTriggerType fromString(String value) {
+        if (value == null) {
+            return null;
+        }
         DefinitionTriggerType[] items = DefinitionTriggerType.values();
         for (DefinitionTriggerType item : items) {
             if (item.toString().equalsIgnoreCase(value)) {
@@ -60,6 +85,9 @@ public enum DefinitionTriggerType {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @JsonValue
     @Override
     public String toString() {

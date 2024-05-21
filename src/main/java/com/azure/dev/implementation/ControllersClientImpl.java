@@ -21,30 +21,33 @@ import com.azure.core.http.rest.RestProxy;
 import com.azure.core.management.exception.ManagementException;
 import com.azure.core.util.Context;
 import com.azure.core.util.FluxUtil;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.fluent.ControllersClient;
 import com.azure.dev.fluent.models.BuildControllerInner;
 import java.util.List;
 import reactor.core.publisher.Mono;
 
-/** An instance of this class provides access to all the operations defined in ControllersClient. */
+/**
+ * An instance of this class provides access to all the operations defined in ControllersClient.
+ */
 public final class ControllersClientImpl implements ControllersClient {
-    private final ClientLogger logger = new ClientLogger(ControllersClientImpl.class);
-
-    /** The proxy service used to perform REST calls. */
+    /**
+     * The proxy service used to perform REST calls.
+     */
     private final ControllersService service;
 
-    /** The service client containing this operation class. */
+    /**
+     * The service client containing this operation class.
+     */
     private final DevClientImpl client;
 
     /**
      * Initializes an instance of ControllersClientImpl.
-     *
+     * 
      * @param client the instance of the service client containing this operation class.
      */
     ControllersClientImpl(DevClientImpl client) {
-        this.service =
-            RestProxy.create(ControllersService.class, client.getHttpPipeline(), client.getSerializerAdapter());
+        this.service
+            = RestProxy.create(ControllersService.class, client.getHttpPipeline(), client.getSerializerAdapter());
         this.client = client;
     }
 
@@ -54,139 +57,113 @@ public final class ControllersClientImpl implements ControllersClient {
      */
     @Host("{$host}")
     @ServiceInterface(name = "DevClientControllers")
-    private interface ControllersService {
-        @Headers({"Content-Type: application/json"})
+    public interface ControllersService {
+        @Headers({ "Content-Type: application/json" })
         @Get("/{organization}/_apis/build/controllers")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<List<BuildControllerInner>>> list(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @QueryParam("name") String name,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<List<BuildControllerInner>>> list(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @QueryParam("name") String name,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
         @Get("/{organization}/_apis/build/controllers/{controllerId}")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<BuildControllerInner>> get(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("controllerId") int controllerId,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<BuildControllerInner>> get(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("controllerId") int controllerId,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
     }
 
     /**
      * Gets controller, optionally filtered by name.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param name The name parameter.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return controller, optionally filtered by name.
+     * @return controller, optionally filtered by name along with {@link Response} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<Response<List<BuildControllerInner>>> listWithResponseAsync(String organization, String name) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context -> service.list(this.client.getEndpoint(), organization, name, apiVersion, accept, context))
+            .withContext(context -> service.list(this.client.getEndpoint(), organization, name,
+                this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Gets controller, optionally filtered by name.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param name The name parameter.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return controller, optionally filtered by name.
+     * @return controller, optionally filtered by name along with {@link Response} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<BuildControllerInner>>> listWithResponseAsync(
-        String organization, String name, Context context) {
+    private Mono<Response<List<BuildControllerInner>>> listWithResponseAsync(String organization, String name,
+        Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service.list(this.client.getEndpoint(), organization, name, apiVersion, accept, context);
+        return service.list(this.client.getEndpoint(), organization, name, this.client.getApiVersion(), accept,
+            context);
     }
 
     /**
      * Gets controller, optionally filtered by name.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param name The name parameter.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return controller, optionally filtered by name.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<List<BuildControllerInner>> listAsync(String organization, String name) {
-        return listWithResponseAsync(organization, name)
-            .flatMap(
-                (Response<List<BuildControllerInner>> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
-    }
-
-    /**
-     * Gets controller, optionally filtered by name.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return controller, optionally filtered by name.
+     * @return controller, optionally filtered by name on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<List<BuildControllerInner>> listAsync(String organization) {
         final String name = null;
-        return listWithResponseAsync(organization, name)
-            .flatMap(
-                (Response<List<BuildControllerInner>> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+        return listWithResponseAsync(organization, name).flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Gets controller, optionally filtered by name.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param name The name parameter.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return controller, optionally filtered by name along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<List<BuildControllerInner>> listWithResponse(String organization, String name, Context context) {
+        return listWithResponseAsync(organization, name, context).block();
+    }
+
+    /**
+     * Gets controller, optionally filtered by name.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
@@ -196,110 +173,96 @@ public final class ControllersClientImpl implements ControllersClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public List<BuildControllerInner> list(String organization) {
         final String name = null;
-        return listAsync(organization, name).block();
-    }
-
-    /**
-     * Gets controller, optionally filtered by name.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param name The name parameter.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return controller, optionally filtered by name.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<List<BuildControllerInner>> listWithResponse(String organization, String name, Context context) {
-        return listWithResponseAsync(organization, name, context).block();
+        return listWithResponse(organization, name, Context.NONE).getValue();
     }
 
     /**
      * Gets a controller.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param controllerId The controllerId parameter.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a controller.
+     * @return a controller along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<Response<BuildControllerInner>> getWithResponseAsync(String organization, int controllerId) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service.get(this.client.getEndpoint(), organization, controllerId, apiVersion, accept, context))
+            .withContext(context -> service.get(this.client.getEndpoint(), organization, controllerId,
+                this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Gets a controller.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param controllerId The controllerId parameter.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a controller.
+     * @return a controller along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<BuildControllerInner>> getWithResponseAsync(
-        String organization, int controllerId, Context context) {
+    private Mono<Response<BuildControllerInner>> getWithResponseAsync(String organization, int controllerId,
+        Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service.get(this.client.getEndpoint(), organization, controllerId, apiVersion, accept, context);
+        return service.get(this.client.getEndpoint(), organization, controllerId, this.client.getApiVersion(), accept,
+            context);
     }
 
     /**
      * Gets a controller.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param controllerId The controllerId parameter.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a controller.
+     * @return a controller on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<BuildControllerInner> getAsync(String organization, int controllerId) {
-        return getWithResponseAsync(organization, controllerId)
-            .flatMap(
-                (Response<BuildControllerInner> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+        return getWithResponseAsync(organization, controllerId).flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Gets a controller.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param controllerId The controllerId parameter.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return a controller along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<BuildControllerInner> getWithResponse(String organization, int controllerId, Context context) {
+        return getWithResponseAsync(organization, controllerId, context).block();
+    }
+
+    /**
+     * Gets a controller.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param controllerId The controllerId parameter.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -309,22 +272,6 @@ public final class ControllersClientImpl implements ControllersClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public BuildControllerInner get(String organization, int controllerId) {
-        return getAsync(organization, controllerId).block();
-    }
-
-    /**
-     * Gets a controller.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param controllerId The controllerId parameter.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a controller.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<BuildControllerInner> getWithResponse(String organization, int controllerId, Context context) {
-        return getWithResponseAsync(organization, controllerId, context).block();
+        return getWithResponse(organization, controllerId, Context.NONE).getValue();
     }
 }

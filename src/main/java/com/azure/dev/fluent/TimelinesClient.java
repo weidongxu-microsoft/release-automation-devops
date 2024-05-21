@@ -11,11 +11,32 @@ import com.azure.core.util.Context;
 import com.azure.dev.fluent.models.TimelineInner;
 import java.util.UUID;
 
-/** An instance of this class provides access to all the operations defined in TimelinesClient. */
+/**
+ * An instance of this class provides access to all the operations defined in TimelinesClient.
+ */
 public interface TimelinesClient {
     /**
      * Gets details for a build.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param buildId The buildId parameter.
+     * @param timelineId The timelineId parameter.
+     * @param changeId The changeId parameter.
+     * @param planId The planId parameter.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return details for a build along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Response<TimelineInner> getWithResponse(String organization, String project, int buildId, UUID timelineId,
+        Integer changeId, UUID planId, Context context);
+
+    /**
+     * Gets details for a build.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The buildId parameter.
@@ -27,29 +48,4 @@ public interface TimelinesClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     TimelineInner get(String organization, String project, int buildId, UUID timelineId);
-
-    /**
-     * Gets details for a build.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param buildId The buildId parameter.
-     * @param timelineId The timelineId parameter.
-     * @param changeId The changeId parameter.
-     * @param planId The planId parameter.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return details for a build.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<TimelineInner> getWithResponse(
-        String organization,
-        String project,
-        int buildId,
-        UUID timelineId,
-        Integer changeId,
-        UUID planId,
-        Context context);
 }

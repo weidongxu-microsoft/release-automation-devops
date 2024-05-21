@@ -27,7 +27,6 @@ import com.spotify.github.v3.clients.GitHubClient;
 import com.spotify.github.v3.clients.IssueClient;
 import com.spotify.github.v3.clients.PullRequestClient;
 import com.spotify.github.v3.clients.RepositoryClient;
-import com.spotify.github.v3.comment.Comment;
 import com.spotify.github.v3.prs.ImmutableMergeParameters;
 import com.spotify.github.v3.prs.ImmutableReviewParameters;
 import com.spotify.github.v3.prs.MergeMethod;
@@ -273,6 +272,12 @@ public class LiteRelease {
         Pipeline pipeline = findSdkPipeline(manager, sdk, false);
 
         if (pipeline != null) {
+            Map<String, Object> buildDefinition = Utils.getDefinition(manager, ORGANIZATION, PROJECT_INTERNAL, pipeline.id());
+            if (!Utils.isDefinitionEnabled(buildDefinition)) {
+                OUT.println("enable pipeline");
+                Utils.enableDefinition(manager, ORGANIZATION, PROJECT_INTERNAL, pipeline.id(), buildDefinition);
+            }
+
             Map<String, String> templateParameters = new HashMap<>();
             for (String releaseTemplateParameter : releaseTemplateParameters) {
                 templateParameters.put(releaseTemplateParameter,
@@ -396,6 +401,16 @@ public class LiteRelease {
         String javaSdkCheckName = pipeline != null ? pipeline.name() : ("java - " + sdk + " - ci");
 
         boolean ciPipelineReady = pipeline != null;
+        boolean ciPipelineEnabled = true;
+
+        if (ciPipelineReady) {
+            Map<String, Object> buildDefinition = Utils.getDefinition(manager, ORGANIZATION, PROJECT_PUBLIC, pipeline.id());
+            if (!Utils.isDefinitionEnabled(buildDefinition)) {
+                ciPipelineEnabled = false;
+                OUT.println("enable pipeline");
+                Utils.enableDefinition(manager, ORGANIZATION, PROJECT_PUBLIC, pipeline.id(), buildDefinition);
+            }
+        }
 
         if (!ciPipelineReady) {
             LOGGER.info("prepare pipeline");
@@ -403,23 +418,31 @@ public class LiteRelease {
             IssueClient issueClient = client.createIssueClient();
 
             // comment to create sdk CI
-            Comment comment = issueClient.createComment(prNumber, "/azp run prepare-pipelines").get();
+            issueClient.createComment(prNumber, "/azp run prepare-pipelines").get();
 
             // wait for prepare pipelines
             PullRequest pr = prClient.get(prNumber).get();
             waitForCheckSuccess(prClient, prNumber, CI_PREPARE_PIPELINES_NAME, pr.head().sha());
 
             // comment to run the newly created sdk CI
-            comment = issueClient.createComment(prNumber, "/azp run " + javaSdkCheckName).get();
+            issueClient.createComment(prNumber, "/azp run " + javaSdkCheckName).get();
         } else {
+            // comment to run the previously disabled sdk CI
+            IssueClient issueClient = client.createIssueClient();
+            if (!ciPipelineEnabled) {
+                issueClient.createComment(prNumber, "/azp run " + javaSdkCheckName).get();
+                // wait a bit before potentially another "/azp run" comment
+                OUT.println("wait 1 minutes");
+                Thread.sleep(POLL_SHORT_INTERVAL_MINUTE * MILLISECOND_PER_MINUTE);
+            }
+
             // trigger live tests, if available
             String testPipelineName = "java - " + sdk + " - mgmt - tests";
             boolean testPipelineAvailable = manager.pipelines().list(ORGANIZATION, PROJECT_INTERNAL).stream()
                     .anyMatch(p -> p.name().equals(testPipelineName));
             if (testPipelineAvailable) {
-                IssueClient issueClient = client.createIssueClient();
                 // comment to trigger tests.mgmt
-                Comment comment = issueClient.createComment(prNumber, "/azp run " + testPipelineName).get();
+                issueClient.createComment(prNumber, "/azp run " + testPipelineName).get();
             }
         }
 

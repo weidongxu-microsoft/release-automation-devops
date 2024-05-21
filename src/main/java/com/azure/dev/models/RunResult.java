@@ -7,21 +7,33 @@ package com.azure.dev.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/** Defines values for RunResult. */
+/**
+ * Defines values for RunResult.
+ */
 public enum RunResult {
-    /** Enum value unknown. */
+    /**
+     * Enum value unknown.
+     */
     UNKNOWN("unknown"),
 
-    /** Enum value succeeded. */
+    /**
+     * Enum value succeeded.
+     */
     SUCCEEDED("succeeded"),
 
-    /** Enum value failed. */
+    /**
+     * Enum value failed.
+     */
     FAILED("failed"),
 
-    /** Enum value canceled. */
+    /**
+     * Enum value canceled.
+     */
     CANCELED("canceled");
 
-    /** The actual serialized value for a RunResult instance. */
+    /**
+     * The actual serialized value for a RunResult instance.
+     */
     private final String value;
 
     RunResult(String value) {
@@ -30,12 +42,15 @@ public enum RunResult {
 
     /**
      * Parses a serialized value to a RunResult instance.
-     *
+     * 
      * @param value the serialized value to parse.
      * @return the parsed RunResult object, or null if unable to parse.
      */
     @JsonCreator
     public static RunResult fromString(String value) {
+        if (value == null) {
+            return null;
+        }
         RunResult[] items = RunResult.values();
         for (RunResult item : items) {
             if (item.toString().equalsIgnoreCase(value)) {
@@ -45,6 +60,9 @@ public enum RunResult {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @JsonValue
     @Override
     public String toString() {

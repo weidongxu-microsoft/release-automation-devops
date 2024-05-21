@@ -5,15 +5,13 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Parameters to create a pipeline. */
+/**
+ * Parameters to create a pipeline.
+ */
 @Fluent
 public final class CreatePipelineParameters {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(CreatePipelineParameters.class);
-
     /*
      * Configuration parameters of the pipeline.
      */
@@ -33,8 +31,14 @@ public final class CreatePipelineParameters {
     private String name;
 
     /**
+     * Creates an instance of CreatePipelineParameters class.
+     */
+    public CreatePipelineParameters() {
+    }
+
+    /**
      * Get the configuration property: Configuration parameters of the pipeline.
-     *
+     * 
      * @return the configuration value.
      */
     public CreatePipelineConfigurationParameters configuration() {
@@ -43,7 +47,7 @@ public final class CreatePipelineParameters {
 
     /**
      * Set the configuration property: Configuration parameters of the pipeline.
-     *
+     * 
      * @param configuration the configuration value to set.
      * @return the CreatePipelineParameters object itself.
      */
@@ -54,7 +58,7 @@ public final class CreatePipelineParameters {
 
     /**
      * Get the folder property: Folder of the pipeline.
-     *
+     * 
      * @return the folder value.
      */
     public String folder() {
@@ -63,7 +67,7 @@ public final class CreatePipelineParameters {
 
     /**
      * Set the folder property: Folder of the pipeline.
-     *
+     * 
      * @param folder the folder value to set.
      * @return the CreatePipelineParameters object itself.
      */
@@ -74,7 +78,7 @@ public final class CreatePipelineParameters {
 
     /**
      * Get the name property: Name of the pipeline.
-     *
+     * 
      * @return the name value.
      */
     public String name() {
@@ -83,7 +87,7 @@ public final class CreatePipelineParameters {
 
     /**
      * Set the name property: Name of the pipeline.
-     *
+     * 
      * @param name the name value to set.
      * @return the CreatePipelineParameters object itself.
      */
@@ -94,7 +98,7 @@ public final class CreatePipelineParameters {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

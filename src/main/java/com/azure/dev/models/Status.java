@@ -7,14 +7,40 @@ package com.azure.dev.models;
 import com.azure.core.http.rest.Response;
 import com.azure.core.util.Context;
 
-/** Resource collection API of Status. */
+/**
+ * Resource collection API of Status.
+ */
 public interface Status {
     /**
      * &lt;p&gt;Gets the build status for a definition, optionally scoped to a specific branch, stage, job, and
      * configuration.&lt;/p&gt; &lt;p&gt;If there are more than one, then it is required to pass in a stageName value
      * when specifying a jobName, and the same rule then applies for both if passing a configuration
      * parameter.&lt;/p&gt;.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param definition Either the definition name with optional leading folder path, or the definition id.
+     * @param branchName Only consider the most recent build for this branch. If not specified, the default branch is
+     * used.
+     * @param stageName Use this stage within the pipeline to render the status.
+     * @param jobName Use this job within a stage of the pipeline to render the status.
+     * @param configuration Use this job configuration to render the status.
+     * @param label Replaces the default text on the left side of the badge.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the response body along with {@link Response}.
+     */
+    Response<String> getWithResponse(String organization, String project, String definition, String branchName,
+        String stageName, String jobName, String configuration, String label, Context context);
+
+    /**
+     * &lt;p&gt;Gets the build status for a definition, optionally scoped to a specific branch, stage, job, and
+     * configuration.&lt;/p&gt; &lt;p&gt;If there are more than one, then it is required to pass in a stageName value
+     * when specifying a jobName, and the same rule then applies for both if passing a configuration
+     * parameter.&lt;/p&gt;.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definition Either the definition name with optional leading folder path, or the definition id.
@@ -24,35 +50,4 @@ public interface Status {
      * @return the response.
      */
     String get(String organization, String project, String definition);
-
-    /**
-     * &lt;p&gt;Gets the build status for a definition, optionally scoped to a specific branch, stage, job, and
-     * configuration.&lt;/p&gt; &lt;p&gt;If there are more than one, then it is required to pass in a stageName value
-     * when specifying a jobName, and the same rule then applies for both if passing a configuration
-     * parameter.&lt;/p&gt;.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param definition Either the definition name with optional leading folder path, or the definition id.
-     * @param branchName Only consider the most recent build for this branch.
-     * @param stageName Use this stage within the pipeline to render the status.
-     * @param jobName Use this job within a stage of the pipeline to render the status.
-     * @param configuration Use this job configuration to render the status.
-     * @param label Replaces the default text on the left side of the badge.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response.
-     */
-    Response<String> getWithResponse(
-        String organization,
-        String project,
-        String definition,
-        String branchName,
-        String stageName,
-        String jobName,
-        String configuration,
-        String label,
-        Context context);
 }

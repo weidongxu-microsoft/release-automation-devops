@@ -5,20 +5,18 @@
 package com.azure.dev.fluent.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.models.BuildOptionDefinitionReference;
 import com.azure.dev.models.BuildOptionGroupDefinition;
 import com.azure.dev.models.BuildOptionInputDefinition;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.UUID;
 
-/** Represents an optional behavior that can be applied to a build definition. */
+/**
+ * Represents an optional behavior that can be applied to a build definition.
+ */
 @Fluent
 public final class BuildOptionDefinitionInner extends BuildOptionDefinitionReference {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(BuildOptionDefinitionInner.class);
-
     /*
      * The description.
      */
@@ -44,15 +42,20 @@ public final class BuildOptionDefinitionInner extends BuildOptionDefinitionRefer
     private String name;
 
     /*
-     * A value that indicates the relative order in which the behavior should
-     * be applied.
+     * A value that indicates the relative order in which the behavior should be applied.
      */
     @JsonProperty(value = "ordinal")
     private Integer ordinal;
 
     /**
+     * Creates an instance of BuildOptionDefinitionInner class.
+     */
+    public BuildOptionDefinitionInner() {
+    }
+
+    /**
      * Get the description property: The description.
-     *
+     * 
      * @return the description value.
      */
     public String description() {
@@ -61,7 +64,7 @@ public final class BuildOptionDefinitionInner extends BuildOptionDefinitionRefer
 
     /**
      * Set the description property: The description.
-     *
+     * 
      * @param description the description value to set.
      * @return the BuildOptionDefinitionInner object itself.
      */
@@ -72,7 +75,7 @@ public final class BuildOptionDefinitionInner extends BuildOptionDefinitionRefer
 
     /**
      * Get the groups property: The list of input groups defined for the build option.
-     *
+     * 
      * @return the groups value.
      */
     public List<BuildOptionGroupDefinition> groups() {
@@ -81,7 +84,7 @@ public final class BuildOptionDefinitionInner extends BuildOptionDefinitionRefer
 
     /**
      * Set the groups property: The list of input groups defined for the build option.
-     *
+     * 
      * @param groups the groups value to set.
      * @return the BuildOptionDefinitionInner object itself.
      */
@@ -92,7 +95,7 @@ public final class BuildOptionDefinitionInner extends BuildOptionDefinitionRefer
 
     /**
      * Get the inputs property: The list of inputs defined for the build option.
-     *
+     * 
      * @return the inputs value.
      */
     public List<BuildOptionInputDefinition> inputs() {
@@ -101,7 +104,7 @@ public final class BuildOptionDefinitionInner extends BuildOptionDefinitionRefer
 
     /**
      * Set the inputs property: The list of inputs defined for the build option.
-     *
+     * 
      * @param inputs the inputs value to set.
      * @return the BuildOptionDefinitionInner object itself.
      */
@@ -112,7 +115,7 @@ public final class BuildOptionDefinitionInner extends BuildOptionDefinitionRefer
 
     /**
      * Get the name property: The name of the build option.
-     *
+     * 
      * @return the name value.
      */
     public String name() {
@@ -121,7 +124,7 @@ public final class BuildOptionDefinitionInner extends BuildOptionDefinitionRefer
 
     /**
      * Set the name property: The name of the build option.
-     *
+     * 
      * @param name the name value to set.
      * @return the BuildOptionDefinitionInner object itself.
      */
@@ -132,7 +135,7 @@ public final class BuildOptionDefinitionInner extends BuildOptionDefinitionRefer
 
     /**
      * Get the ordinal property: A value that indicates the relative order in which the behavior should be applied.
-     *
+     * 
      * @return the ordinal value.
      */
     public Integer ordinal() {
@@ -141,7 +144,7 @@ public final class BuildOptionDefinitionInner extends BuildOptionDefinitionRefer
 
     /**
      * Set the ordinal property: A value that indicates the relative order in which the behavior should be applied.
-     *
+     * 
      * @param ordinal the ordinal value to set.
      * @return the BuildOptionDefinitionInner object itself.
      */
@@ -150,7 +153,9 @@ public final class BuildOptionDefinitionInner extends BuildOptionDefinitionRefer
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildOptionDefinitionInner withId(UUID id) {
         super.withId(id);
@@ -159,7 +164,7 @@ public final class BuildOptionDefinitionInner extends BuildOptionDefinitionRefer
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     @Override

@@ -7,30 +7,48 @@ package com.azure.dev.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/** Defines values for ProjectState. */
+/**
+ * Project state.
+ */
 public enum ProjectState {
-    /** Enum value deleting. */
+    /**
+     * Enum value deleting.
+     */
     DELETING("deleting"),
 
-    /** Enum value new. */
+    /**
+     * Enum value new.
+     */
     NEW("new"),
 
-    /** Enum value wellFormed. */
+    /**
+     * Enum value wellFormed.
+     */
     WELL_FORMED("wellFormed"),
 
-    /** Enum value createPending. */
+    /**
+     * Enum value createPending.
+     */
     CREATE_PENDING("createPending"),
 
-    /** Enum value all. */
+    /**
+     * Enum value all.
+     */
     ALL("all"),
 
-    /** Enum value unchanged. */
+    /**
+     * Enum value unchanged.
+     */
     UNCHANGED("unchanged"),
 
-    /** Enum value deleted. */
+    /**
+     * Enum value deleted.
+     */
     DELETED("deleted");
 
-    /** The actual serialized value for a ProjectState instance. */
+    /**
+     * The actual serialized value for a ProjectState instance.
+     */
     private final String value;
 
     ProjectState(String value) {
@@ -39,12 +57,15 @@ public enum ProjectState {
 
     /**
      * Parses a serialized value to a ProjectState instance.
-     *
+     * 
      * @param value the serialized value to parse.
      * @return the parsed ProjectState object, or null if unable to parse.
      */
     @JsonCreator
     public static ProjectState fromString(String value) {
+        if (value == null) {
+            return null;
+        }
         ProjectState[] items = ProjectState.values();
         for (ProjectState item : items) {
             if (item.toString().equalsIgnoreCase(value)) {
@@ -54,6 +75,9 @@ public enum ProjectState {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @JsonValue
     @Override
     public String toString() {

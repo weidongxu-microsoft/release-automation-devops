@@ -5,15 +5,13 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Configuration parameters of the pipeline. */
+/**
+ * Configuration parameters of the pipeline.
+ */
 @Fluent
 public final class CreatePipelineConfigurationParameters {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(CreatePipelineConfigurationParameters.class);
-
     /*
      * Type of configuration.
      */
@@ -21,8 +19,14 @@ public final class CreatePipelineConfigurationParameters {
     private ConfigurationType type;
 
     /**
+     * Creates an instance of CreatePipelineConfigurationParameters class.
+     */
+    public CreatePipelineConfigurationParameters() {
+    }
+
+    /**
      * Get the type property: Type of configuration.
-     *
+     * 
      * @return the type value.
      */
     public ConfigurationType type() {
@@ -31,7 +35,7 @@ public final class CreatePipelineConfigurationParameters {
 
     /**
      * Set the type property: Type of configuration.
-     *
+     * 
      * @param type the type value to set.
      * @return the CreatePipelineConfigurationParameters object itself.
      */
@@ -42,7 +46,7 @@ public final class CreatePipelineConfigurationParameters {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

@@ -5,21 +5,18 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.Map;
 
-/** Settings which influence pipeline runs. */
+/**
+ * Settings which influence pipeline runs.
+ */
 @Fluent
 public final class RunPipelineParameters {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(RunPipelineParameters.class);
-
     /*
-     * If true, don't actually create a new run. Instead, return the final YAML
-     * document after parsing templates.
+     * If true, don't actually create a new run. Instead, return the final YAML document after parsing templates.
      */
     @JsonProperty(value = "previewRun")
     private Boolean previewRun;
@@ -51,17 +48,21 @@ public final class RunPipelineParameters {
     private Map<String, Variable> variables;
 
     /*
-     * If you use the preview run option, you may optionally supply different
-     * YAML. This allows you to preview the final YAML document without
-     * committing a changed file.
+     * If you use the preview run option, you may optionally supply different YAML. This allows you to preview the final YAML document without committing a changed file.
      */
     @JsonProperty(value = "yamlOverride")
     private String yamlOverride;
 
     /**
+     * Creates an instance of RunPipelineParameters class.
+     */
+    public RunPipelineParameters() {
+    }
+
+    /**
      * Get the previewRun property: If true, don't actually create a new run. Instead, return the final YAML document
      * after parsing templates.
-     *
+     * 
      * @return the previewRun value.
      */
     public Boolean previewRun() {
@@ -71,7 +72,7 @@ public final class RunPipelineParameters {
     /**
      * Set the previewRun property: If true, don't actually create a new run. Instead, return the final YAML document
      * after parsing templates.
-     *
+     * 
      * @param previewRun the previewRun value to set.
      * @return the RunPipelineParameters object itself.
      */
@@ -82,7 +83,7 @@ public final class RunPipelineParameters {
 
     /**
      * Get the resources property: The resources the run requires.
-     *
+     * 
      * @return the resources value.
      */
     public RunResourcesParameters resources() {
@@ -91,7 +92,7 @@ public final class RunPipelineParameters {
 
     /**
      * Set the resources property: The resources the run requires.
-     *
+     * 
      * @param resources the resources value to set.
      * @return the RunPipelineParameters object itself.
      */
@@ -102,7 +103,7 @@ public final class RunPipelineParameters {
 
     /**
      * Get the stagesToSkip property: The stagesToSkip property.
-     *
+     * 
      * @return the stagesToSkip value.
      */
     public List<String> stagesToSkip() {
@@ -111,7 +112,7 @@ public final class RunPipelineParameters {
 
     /**
      * Set the stagesToSkip property: The stagesToSkip property.
-     *
+     * 
      * @param stagesToSkip the stagesToSkip value to set.
      * @return the RunPipelineParameters object itself.
      */
@@ -122,7 +123,7 @@ public final class RunPipelineParameters {
 
     /**
      * Get the templateParameters property: Dictionary of &lt;string&gt;.
-     *
+     * 
      * @return the templateParameters value.
      */
     public Map<String, String> templateParameters() {
@@ -131,7 +132,7 @@ public final class RunPipelineParameters {
 
     /**
      * Set the templateParameters property: Dictionary of &lt;string&gt;.
-     *
+     * 
      * @param templateParameters the templateParameters value to set.
      * @return the RunPipelineParameters object itself.
      */
@@ -142,7 +143,7 @@ public final class RunPipelineParameters {
 
     /**
      * Get the variables property: Dictionary of &lt;Variable&gt;.
-     *
+     * 
      * @return the variables value.
      */
     public Map<String, Variable> variables() {
@@ -151,7 +152,7 @@ public final class RunPipelineParameters {
 
     /**
      * Set the variables property: Dictionary of &lt;Variable&gt;.
-     *
+     * 
      * @param variables the variables value to set.
      * @return the RunPipelineParameters object itself.
      */
@@ -163,7 +164,7 @@ public final class RunPipelineParameters {
     /**
      * Get the yamlOverride property: If you use the preview run option, you may optionally supply different YAML. This
      * allows you to preview the final YAML document without committing a changed file.
-     *
+     * 
      * @return the yamlOverride value.
      */
     public String yamlOverride() {
@@ -173,7 +174,7 @@ public final class RunPipelineParameters {
     /**
      * Set the yamlOverride property: If you use the preview run option, you may optionally supply different YAML. This
      * allows you to preview the final YAML document without committing a changed file.
-     *
+     * 
      * @param yamlOverride the yamlOverride value to set.
      * @return the RunPipelineParameters object itself.
      */
@@ -184,7 +185,7 @@ public final class RunPipelineParameters {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {
@@ -192,14 +193,11 @@ public final class RunPipelineParameters {
             resources().validate();
         }
         if (variables() != null) {
-            variables()
-                .values()
-                .forEach(
-                    e -> {
-                        if (e != null) {
-                            e.validate();
-                        }
-                    });
+            variables().values().forEach(e -> {
+                if (e != null) {
+                    e.validate();
+                }
+            });
         }
     }
 }

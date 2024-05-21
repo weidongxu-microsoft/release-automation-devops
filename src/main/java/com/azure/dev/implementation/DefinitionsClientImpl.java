@@ -26,7 +26,6 @@ import com.azure.core.http.rest.RestProxy;
 import com.azure.core.management.exception.ManagementException;
 import com.azure.core.util.Context;
 import com.azure.core.util.FluxUtil;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.fluent.DefinitionsClient;
 import com.azure.dev.fluent.models.BuildDefinitionInner;
 import com.azure.dev.fluent.models.BuildDefinitionReferenceInner;
@@ -37,24 +36,28 @@ import java.util.List;
 import java.util.UUID;
 import reactor.core.publisher.Mono;
 
-/** An instance of this class provides access to all the operations defined in DefinitionsClient. */
+/**
+ * An instance of this class provides access to all the operations defined in DefinitionsClient.
+ */
 public final class DefinitionsClientImpl implements DefinitionsClient {
-    private final ClientLogger logger = new ClientLogger(DefinitionsClientImpl.class);
-
-    /** The proxy service used to perform REST calls. */
+    /**
+     * The proxy service used to perform REST calls.
+     */
     private final DefinitionsService service;
 
-    /** The service client containing this operation class. */
+    /**
+     * The service client containing this operation class.
+     */
     private final DevClientImpl client;
 
     /**
      * Initializes an instance of DefinitionsClientImpl.
-     *
+     * 
      * @param client the instance of the service client containing this operation class.
      */
     DefinitionsClientImpl(DevClientImpl client) {
-        this.service =
-            RestProxy.create(DefinitionsService.class, client.getHttpPipeline(), client.getSerializerAdapter());
+        this.service
+            = RestProxy.create(DefinitionsService.class, client.getHttpPipeline(), client.getSerializerAdapter());
         this.client = client;
     }
 
@@ -64,126 +67,92 @@ public final class DefinitionsClientImpl implements DefinitionsClient {
      */
     @Host("{$host}")
     @ServiceInterface(name = "DevClientDefinitions")
-    private interface DefinitionsService {
-        @Headers({"Content-Type: application/json"})
+    public interface DefinitionsService {
+        @Headers({ "Content-Type: application/json" })
         @Post("/{organization}/{project}/_apis/build/definitions")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<BuildDefinitionInner>> create(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
+        Mono<Response<BuildDefinitionInner>> create(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
             @QueryParam("definitionToCloneId") Integer definitionToCloneId,
             @QueryParam("definitionToCloneRevision") Integer definitionToCloneRevision,
-            @QueryParam("api-version") String apiVersion,
-            @BodyParam("application/json") BuildDefinitionInner body,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @QueryParam("api-version") String apiVersion, @BodyParam("application/json") BuildDefinitionInner body,
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
         @Get("/{organization}/{project}/_apis/build/definitions")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<List<BuildDefinitionReferenceInner>>> list(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
-            @QueryParam("name") String name,
-            @QueryParam("repositoryId") String repositoryId,
+        Mono<Response<List<BuildDefinitionReferenceInner>>> list(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
+            @QueryParam("name") String name, @QueryParam("repositoryId") String repositoryId,
             @QueryParam("repositoryType") String repositoryType,
-            @QueryParam("queryOrder") DefinitionQueryOrder queryOrder,
-            @QueryParam("$top") Integer top,
+            @QueryParam("queryOrder") DefinitionQueryOrder queryOrder, @QueryParam("$top") Integer top,
             @QueryParam("continuationToken") String continuationToken,
             @QueryParam("minMetricsTime") OffsetDateTime minMetricsTime,
-            @QueryParam("definitionIds") String definitionIds,
-            @QueryParam("path") String path,
+            @QueryParam("definitionIds") String definitionIds, @QueryParam("path") String path,
             @QueryParam("builtAfter") OffsetDateTime builtAfter,
             @QueryParam("notBuiltAfter") OffsetDateTime notBuiltAfter,
             @QueryParam("includeAllProperties") Boolean includeAllProperties,
             @QueryParam("includeLatestBuilds") Boolean includeLatestBuilds,
-            @QueryParam("taskIdFilter") UUID taskIdFilter,
-            @QueryParam("processType") Integer processType,
-            @QueryParam("yamlFilename") String yamlFilename,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @QueryParam("taskIdFilter") UUID taskIdFilter, @QueryParam("processType") Integer processType,
+            @QueryParam("yamlFilename") String yamlFilename, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Accept: application/json;q=0.9", "Content-Type: application/json"})
+        @Headers({ "Accept: application/json;q=0.9", "Content-Type: application/json" })
         @Delete("/{organization}/{project}/_apis/build/definitions/{definitionId}")
-        @ExpectedResponses({200, 204})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<Void>> delete(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
-            @PathParam("definitionId") int definitionId,
-            @QueryParam("api-version") String apiVersion,
-            Context context);
+        Mono<Response<Void>> delete(@HostParam("$host") String endpoint, @PathParam("organization") String organization,
+            @PathParam("project") String project, @PathParam("definitionId") int definitionId,
+            @QueryParam("api-version") String apiVersion, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
         @Get("/{organization}/{project}/_apis/build/definitions/{definitionId}")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<BuildDefinitionInner>> get(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
-            @PathParam("definitionId") int definitionId,
-            @QueryParam("revision") Integer revision,
+        Mono<Response<BuildDefinitionInner>> get(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
+            @PathParam("definitionId") int definitionId, @QueryParam("revision") Integer revision,
             @QueryParam("minMetricsTime") OffsetDateTime minMetricsTime,
             @QueryParam("propertyFilters") String propertyFilters,
             @QueryParam("includeLatestBuilds") Boolean includeLatestBuilds,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
         @Patch("/{organization}/{project}/_apis/build/definitions/{definitionId}")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<BuildDefinitionInner>> restoreDefinition(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
-            @PathParam("definitionId") int definitionId,
-            @QueryParam("deleted") boolean deleted,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<BuildDefinitionInner>> restoreDefinition(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
+            @PathParam("definitionId") int definitionId, @QueryParam("deleted") boolean deleted,
+            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
         @Put("/{organization}/{project}/_apis/build/definitions/{definitionId}")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<BuildDefinitionInner>> update(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
+        Mono<Response<BuildDefinitionInner>> update(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
             @PathParam("definitionId") int definitionId,
             @QueryParam("secretsSourceDefinitionId") Integer secretsSourceDefinitionId,
             @QueryParam("secretsSourceDefinitionRevision") Integer secretsSourceDefinitionRevision,
-            @QueryParam("api-version") String apiVersion,
-            @BodyParam("application/json") BuildDefinitionInner body,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @QueryParam("api-version") String apiVersion, @BodyParam("application/json") BuildDefinitionInner body,
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
         @Get("/{organization}/{project}/_apis/build/definitions/{definitionId}/revisions")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<List<BuildDefinitionRevisionInner>>> getDefinitionRevisions(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
-            @PathParam("definitionId") int definitionId,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<List<BuildDefinitionRevisionInner>>> getDefinitionRevisions(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
+            @PathParam("definitionId") int definitionId, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, Context context);
     }
 
     /**
      * Creates a new definition.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param body The definition.
@@ -192,20 +161,14 @@ public final class DefinitionsClientImpl implements DefinitionsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return represents a build definition.
+     * @return represents a build definition along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<BuildDefinitionInner>> createWithResponseAsync(
-        String organization,
-        String project,
-        BuildDefinitionInner body,
-        Integer definitionToCloneId,
-        Integer definitionToCloneRevision) {
+    private Mono<Response<BuildDefinitionInner>> createWithResponseAsync(String organization, String project,
+        BuildDefinitionInner body, Integer definitionToCloneId, Integer definitionToCloneRevision) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -218,28 +181,16 @@ public final class DefinitionsClientImpl implements DefinitionsClient {
         } else {
             body.validate();
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .create(
-                            this.client.getEndpoint(),
-                            organization,
-                            project,
-                            definitionToCloneId,
-                            definitionToCloneRevision,
-                            apiVersion,
-                            body,
-                            accept,
-                            context))
+            .withContext(context -> service.create(this.client.getEndpoint(), organization, project,
+                definitionToCloneId, definitionToCloneRevision, this.client.getApiVersion(), body, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Creates a new definition.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param body The definition.
@@ -249,21 +200,14 @@ public final class DefinitionsClientImpl implements DefinitionsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return represents a build definition.
+     * @return represents a build definition along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<BuildDefinitionInner>> createWithResponseAsync(
-        String organization,
-        String project,
-        BuildDefinitionInner body,
-        Integer definitionToCloneId,
-        Integer definitionToCloneRevision,
-        Context context) {
+    private Mono<Response<BuildDefinitionInner>> createWithResponseAsync(String organization, String project,
+        BuildDefinitionInner body, Integer definitionToCloneId, Integer definitionToCloneRevision, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -276,82 +220,55 @@ public final class DefinitionsClientImpl implements DefinitionsClient {
         } else {
             body.validate();
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .create(
-                this.client.getEndpoint(),
-                organization,
-                project,
-                definitionToCloneId,
-                definitionToCloneRevision,
-                apiVersion,
-                body,
-                accept,
-                context);
+        return service.create(this.client.getEndpoint(), organization, project, definitionToCloneId,
+            definitionToCloneRevision, this.client.getApiVersion(), body, accept, context);
     }
 
     /**
      * Creates a new definition.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param body The definition.
-     * @param definitionToCloneId The definitionToCloneId parameter.
-     * @param definitionToCloneRevision The definitionToCloneRevision parameter.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return represents a build definition.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<BuildDefinitionInner> createAsync(
-        String organization,
-        String project,
-        BuildDefinitionInner body,
-        Integer definitionToCloneId,
-        Integer definitionToCloneRevision) {
-        return createWithResponseAsync(organization, project, body, definitionToCloneId, definitionToCloneRevision)
-            .flatMap(
-                (Response<BuildDefinitionInner> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
-    }
-
-    /**
-     * Creates a new definition.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param body The definition.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return represents a build definition.
+     * @return represents a build definition on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<BuildDefinitionInner> createAsync(String organization, String project, BuildDefinitionInner body) {
         final Integer definitionToCloneId = null;
         final Integer definitionToCloneRevision = null;
         return createWithResponseAsync(organization, project, body, definitionToCloneId, definitionToCloneRevision)
-            .flatMap(
-                (Response<BuildDefinitionInner> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+            .flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Creates a new definition.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param body The definition.
+     * @param definitionToCloneId The definitionToCloneId parameter.
+     * @param definitionToCloneRevision The definitionToCloneRevision parameter.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return represents a build definition along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<BuildDefinitionInner> createWithResponse(String organization, String project,
+        BuildDefinitionInner body, Integer definitionToCloneId, Integer definitionToCloneRevision, Context context) {
+        return createWithResponseAsync(organization, project, body, definitionToCloneId, definitionToCloneRevision,
+            context).block();
+    }
+
+    /**
+     * Creates a new definition.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param body The definition.
@@ -364,39 +281,13 @@ public final class DefinitionsClientImpl implements DefinitionsClient {
     public BuildDefinitionInner create(String organization, String project, BuildDefinitionInner body) {
         final Integer definitionToCloneId = null;
         final Integer definitionToCloneRevision = null;
-        return createAsync(organization, project, body, definitionToCloneId, definitionToCloneRevision).block();
-    }
-
-    /**
-     * Creates a new definition.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param body The definition.
-     * @param definitionToCloneId The definitionToCloneId parameter.
-     * @param definitionToCloneRevision The definitionToCloneRevision parameter.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return represents a build definition.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<BuildDefinitionInner> createWithResponse(
-        String organization,
-        String project,
-        BuildDefinitionInner body,
-        Integer definitionToCloneId,
-        Integer definitionToCloneRevision,
-        Context context) {
-        return createWithResponseAsync(
-                organization, project, body, definitionToCloneId, definitionToCloneRevision, context)
-            .block();
+        return createWithResponse(organization, project, body, definitionToCloneId, definitionToCloneRevision,
+            Context.NONE).getValue();
     }
 
     /**
      * Gets a list of definitions.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param name If specified, filters to definitions whose names match this pattern.
@@ -405,49 +296,34 @@ public final class DefinitionsClientImpl implements DefinitionsClient {
      * @param queryOrder Indicates the order in which definitions should be returned.
      * @param top The maximum number of definitions to return.
      * @param continuationToken A continuation token, returned by a previous call to this method, that can be used to
-     *     return the next set of definitions.
+     * return the next set of definitions.
      * @param minMetricsTime If specified, indicates the date from which metrics should be included.
      * @param definitionIds A comma-delimited list that specifies the IDs of definitions to retrieve.
      * @param path If specified, filters to definitions under this folder.
      * @param builtAfter If specified, filters to definitions that have builds after this date.
      * @param notBuiltAfter If specified, filters to definitions that do not have builds after this date.
      * @param includeAllProperties Indicates whether the full definitions should be returned. By default, shallow
-     *     representations of the definitions are returned.
+     * representations of the definitions are returned.
      * @param includeLatestBuilds Indicates whether to return the latest and latest completed builds for this
-     *     definition.
+     * definition.
      * @param taskIdFilter If specified, filters to definitions that use the specified task.
      * @param processType If specified, filters to definitions with the given process type.
-     * @param yamlFilename If specified, filters to YAML definitions that match the given filename.
+     * @param yamlFilename If specified, filters to YAML definitions that match the given filename. To use this filter
+     * includeAllProperties should be set to true.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of definitions.
+     * @return a list of definitions along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<BuildDefinitionReferenceInner>>> listWithResponseAsync(
-        String organization,
-        String project,
-        String name,
-        String repositoryId,
-        String repositoryType,
-        DefinitionQueryOrder queryOrder,
-        Integer top,
-        String continuationToken,
-        OffsetDateTime minMetricsTime,
-        String definitionIds,
-        String path,
-        OffsetDateTime builtAfter,
-        OffsetDateTime notBuiltAfter,
-        Boolean includeAllProperties,
-        Boolean includeLatestBuilds,
-        UUID taskIdFilter,
-        Integer processType,
-        String yamlFilename) {
+    private Mono<Response<List<BuildDefinitionReferenceInner>>> listWithResponseAsync(String organization,
+        String project, String name, String repositoryId, String repositoryType, DefinitionQueryOrder queryOrder,
+        Integer top, String continuationToken, OffsetDateTime minMetricsTime, String definitionIds, String path,
+        OffsetDateTime builtAfter, OffsetDateTime notBuiltAfter, Boolean includeAllProperties,
+        Boolean includeLatestBuilds, UUID taskIdFilter, Integer processType, String yamlFilename) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -455,41 +331,18 @@ public final class DefinitionsClientImpl implements DefinitionsClient {
         if (project == null) {
             return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .list(
-                            this.client.getEndpoint(),
-                            organization,
-                            project,
-                            name,
-                            repositoryId,
-                            repositoryType,
-                            queryOrder,
-                            top,
-                            continuationToken,
-                            minMetricsTime,
-                            definitionIds,
-                            path,
-                            builtAfter,
-                            notBuiltAfter,
-                            includeAllProperties,
-                            includeLatestBuilds,
-                            taskIdFilter,
-                            processType,
-                            yamlFilename,
-                            apiVersion,
-                            accept,
-                            context))
+            .withContext(context -> service.list(this.client.getEndpoint(), organization, project, name, repositoryId,
+                repositoryType, queryOrder, top, continuationToken, minMetricsTime, definitionIds, path, builtAfter,
+                notBuiltAfter, includeAllProperties, includeLatestBuilds, taskIdFilter, processType, yamlFilename,
+                this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Gets a list of definitions.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param name If specified, filters to definitions whose names match this pattern.
@@ -498,51 +351,35 @@ public final class DefinitionsClientImpl implements DefinitionsClient {
      * @param queryOrder Indicates the order in which definitions should be returned.
      * @param top The maximum number of definitions to return.
      * @param continuationToken A continuation token, returned by a previous call to this method, that can be used to
-     *     return the next set of definitions.
+     * return the next set of definitions.
      * @param minMetricsTime If specified, indicates the date from which metrics should be included.
      * @param definitionIds A comma-delimited list that specifies the IDs of definitions to retrieve.
      * @param path If specified, filters to definitions under this folder.
      * @param builtAfter If specified, filters to definitions that have builds after this date.
      * @param notBuiltAfter If specified, filters to definitions that do not have builds after this date.
      * @param includeAllProperties Indicates whether the full definitions should be returned. By default, shallow
-     *     representations of the definitions are returned.
+     * representations of the definitions are returned.
      * @param includeLatestBuilds Indicates whether to return the latest and latest completed builds for this
-     *     definition.
+     * definition.
      * @param taskIdFilter If specified, filters to definitions that use the specified task.
      * @param processType If specified, filters to definitions with the given process type.
-     * @param yamlFilename If specified, filters to YAML definitions that match the given filename.
+     * @param yamlFilename If specified, filters to YAML definitions that match the given filename. To use this filter
+     * includeAllProperties should be set to true.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of definitions.
+     * @return a list of definitions along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<BuildDefinitionReferenceInner>>> listWithResponseAsync(
-        String organization,
-        String project,
-        String name,
-        String repositoryId,
-        String repositoryType,
-        DefinitionQueryOrder queryOrder,
-        Integer top,
-        String continuationToken,
-        OffsetDateTime minMetricsTime,
-        String definitionIds,
-        String path,
-        OffsetDateTime builtAfter,
-        OffsetDateTime notBuiltAfter,
-        Boolean includeAllProperties,
-        Boolean includeLatestBuilds,
-        UUID taskIdFilter,
-        Integer processType,
-        String yamlFilename,
-        Context context) {
+    private Mono<Response<List<BuildDefinitionReferenceInner>>> listWithResponseAsync(String organization,
+        String project, String name, String repositoryId, String repositoryType, DefinitionQueryOrder queryOrder,
+        Integer top, String continuationToken, OffsetDateTime minMetricsTime, String definitionIds, String path,
+        OffsetDateTime builtAfter, OffsetDateTime notBuiltAfter, Boolean includeAllProperties,
+        Boolean includeLatestBuilds, UUID taskIdFilter, Integer processType, String yamlFilename, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -550,122 +387,23 @@ public final class DefinitionsClientImpl implements DefinitionsClient {
         if (project == null) {
             return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .list(
-                this.client.getEndpoint(),
-                organization,
-                project,
-                name,
-                repositoryId,
-                repositoryType,
-                queryOrder,
-                top,
-                continuationToken,
-                minMetricsTime,
-                definitionIds,
-                path,
-                builtAfter,
-                notBuiltAfter,
-                includeAllProperties,
-                includeLatestBuilds,
-                taskIdFilter,
-                processType,
-                yamlFilename,
-                apiVersion,
-                accept,
-                context);
+        return service.list(this.client.getEndpoint(), organization, project, name, repositoryId, repositoryType,
+            queryOrder, top, continuationToken, minMetricsTime, definitionIds, path, builtAfter, notBuiltAfter,
+            includeAllProperties, includeLatestBuilds, taskIdFilter, processType, yamlFilename,
+            this.client.getApiVersion(), accept, context);
     }
 
     /**
      * Gets a list of definitions.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param name If specified, filters to definitions whose names match this pattern.
-     * @param repositoryId A repository ID. If specified, filters to definitions that use this repository.
-     * @param repositoryType If specified, filters to definitions that have a repository of this type.
-     * @param queryOrder Indicates the order in which definitions should be returned.
-     * @param top The maximum number of definitions to return.
-     * @param continuationToken A continuation token, returned by a previous call to this method, that can be used to
-     *     return the next set of definitions.
-     * @param minMetricsTime If specified, indicates the date from which metrics should be included.
-     * @param definitionIds A comma-delimited list that specifies the IDs of definitions to retrieve.
-     * @param path If specified, filters to definitions under this folder.
-     * @param builtAfter If specified, filters to definitions that have builds after this date.
-     * @param notBuiltAfter If specified, filters to definitions that do not have builds after this date.
-     * @param includeAllProperties Indicates whether the full definitions should be returned. By default, shallow
-     *     representations of the definitions are returned.
-     * @param includeLatestBuilds Indicates whether to return the latest and latest completed builds for this
-     *     definition.
-     * @param taskIdFilter If specified, filters to definitions that use the specified task.
-     * @param processType If specified, filters to definitions with the given process type.
-     * @param yamlFilename If specified, filters to YAML definitions that match the given filename.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of definitions.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<List<BuildDefinitionReferenceInner>> listAsync(
-        String organization,
-        String project,
-        String name,
-        String repositoryId,
-        String repositoryType,
-        DefinitionQueryOrder queryOrder,
-        Integer top,
-        String continuationToken,
-        OffsetDateTime minMetricsTime,
-        String definitionIds,
-        String path,
-        OffsetDateTime builtAfter,
-        OffsetDateTime notBuiltAfter,
-        Boolean includeAllProperties,
-        Boolean includeLatestBuilds,
-        UUID taskIdFilter,
-        Integer processType,
-        String yamlFilename) {
-        return listWithResponseAsync(
-                organization,
-                project,
-                name,
-                repositoryId,
-                repositoryType,
-                queryOrder,
-                top,
-                continuationToken,
-                minMetricsTime,
-                definitionIds,
-                path,
-                builtAfter,
-                notBuiltAfter,
-                includeAllProperties,
-                includeLatestBuilds,
-                taskIdFilter,
-                processType,
-                yamlFilename)
-            .flatMap(
-                (Response<List<BuildDefinitionReferenceInner>> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
-    }
-
-    /**
-     * Gets a list of definitions.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of definitions.
+     * @return a list of definitions on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<List<BuildDefinitionReferenceInner>> listAsync(String organization, String project) {
@@ -685,38 +423,57 @@ public final class DefinitionsClientImpl implements DefinitionsClient {
         final UUID taskIdFilter = null;
         final Integer processType = null;
         final String yamlFilename = null;
-        return listWithResponseAsync(
-                organization,
-                project,
-                name,
-                repositoryId,
-                repositoryType,
-                queryOrder,
-                top,
-                continuationToken,
-                minMetricsTime,
-                definitionIds,
-                path,
-                builtAfter,
-                notBuiltAfter,
-                includeAllProperties,
-                includeLatestBuilds,
-                taskIdFilter,
-                processType,
-                yamlFilename)
-            .flatMap(
-                (Response<List<BuildDefinitionReferenceInner>> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+        return listWithResponseAsync(organization, project, name, repositoryId, repositoryType, queryOrder, top,
+            continuationToken, minMetricsTime, definitionIds, path, builtAfter, notBuiltAfter, includeAllProperties,
+            includeLatestBuilds, taskIdFilter, processType, yamlFilename)
+            .flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Gets a list of definitions.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param name If specified, filters to definitions whose names match this pattern.
+     * @param repositoryId A repository ID. If specified, filters to definitions that use this repository.
+     * @param repositoryType If specified, filters to definitions that have a repository of this type.
+     * @param queryOrder Indicates the order in which definitions should be returned.
+     * @param top The maximum number of definitions to return.
+     * @param continuationToken A continuation token, returned by a previous call to this method, that can be used to
+     * return the next set of definitions.
+     * @param minMetricsTime If specified, indicates the date from which metrics should be included.
+     * @param definitionIds A comma-delimited list that specifies the IDs of definitions to retrieve.
+     * @param path If specified, filters to definitions under this folder.
+     * @param builtAfter If specified, filters to definitions that have builds after this date.
+     * @param notBuiltAfter If specified, filters to definitions that do not have builds after this date.
+     * @param includeAllProperties Indicates whether the full definitions should be returned. By default, shallow
+     * representations of the definitions are returned.
+     * @param includeLatestBuilds Indicates whether to return the latest and latest completed builds for this
+     * definition.
+     * @param taskIdFilter If specified, filters to definitions that use the specified task.
+     * @param processType If specified, filters to definitions with the given process type.
+     * @param yamlFilename If specified, filters to YAML definitions that match the given filename. To use this filter
+     * includeAllProperties should be set to true.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return a list of definitions along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<List<BuildDefinitionReferenceInner>> listWithResponse(String organization, String project,
+        String name, String repositoryId, String repositoryType, DefinitionQueryOrder queryOrder, Integer top,
+        String continuationToken, OffsetDateTime minMetricsTime, String definitionIds, String path,
+        OffsetDateTime builtAfter, OffsetDateTime notBuiltAfter, Boolean includeAllProperties,
+        Boolean includeLatestBuilds, UUID taskIdFilter, Integer processType, String yamlFilename, Context context) {
+        return listWithResponseAsync(organization, project, name, repositoryId, repositoryType, queryOrder, top,
+            continuationToken, minMetricsTime, definitionIds, path, builtAfter, notBuiltAfter, includeAllProperties,
+            includeLatestBuilds, taskIdFilter, processType, yamlFilename, context).block();
+    }
+
+    /**
+     * Gets a list of definitions.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -742,120 +499,27 @@ public final class DefinitionsClientImpl implements DefinitionsClient {
         final UUID taskIdFilter = null;
         final Integer processType = null;
         final String yamlFilename = null;
-        return listAsync(
-                organization,
-                project,
-                name,
-                repositoryId,
-                repositoryType,
-                queryOrder,
-                top,
-                continuationToken,
-                minMetricsTime,
-                definitionIds,
-                path,
-                builtAfter,
-                notBuiltAfter,
-                includeAllProperties,
-                includeLatestBuilds,
-                taskIdFilter,
-                processType,
-                yamlFilename)
-            .block();
-    }
-
-    /**
-     * Gets a list of definitions.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param name If specified, filters to definitions whose names match this pattern.
-     * @param repositoryId A repository ID. If specified, filters to definitions that use this repository.
-     * @param repositoryType If specified, filters to definitions that have a repository of this type.
-     * @param queryOrder Indicates the order in which definitions should be returned.
-     * @param top The maximum number of definitions to return.
-     * @param continuationToken A continuation token, returned by a previous call to this method, that can be used to
-     *     return the next set of definitions.
-     * @param minMetricsTime If specified, indicates the date from which metrics should be included.
-     * @param definitionIds A comma-delimited list that specifies the IDs of definitions to retrieve.
-     * @param path If specified, filters to definitions under this folder.
-     * @param builtAfter If specified, filters to definitions that have builds after this date.
-     * @param notBuiltAfter If specified, filters to definitions that do not have builds after this date.
-     * @param includeAllProperties Indicates whether the full definitions should be returned. By default, shallow
-     *     representations of the definitions are returned.
-     * @param includeLatestBuilds Indicates whether to return the latest and latest completed builds for this
-     *     definition.
-     * @param taskIdFilter If specified, filters to definitions that use the specified task.
-     * @param processType If specified, filters to definitions with the given process type.
-     * @param yamlFilename If specified, filters to YAML definitions that match the given filename.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of definitions.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<List<BuildDefinitionReferenceInner>> listWithResponse(
-        String organization,
-        String project,
-        String name,
-        String repositoryId,
-        String repositoryType,
-        DefinitionQueryOrder queryOrder,
-        Integer top,
-        String continuationToken,
-        OffsetDateTime minMetricsTime,
-        String definitionIds,
-        String path,
-        OffsetDateTime builtAfter,
-        OffsetDateTime notBuiltAfter,
-        Boolean includeAllProperties,
-        Boolean includeLatestBuilds,
-        UUID taskIdFilter,
-        Integer processType,
-        String yamlFilename,
-        Context context) {
-        return listWithResponseAsync(
-                organization,
-                project,
-                name,
-                repositoryId,
-                repositoryType,
-                queryOrder,
-                top,
-                continuationToken,
-                minMetricsTime,
-                definitionIds,
-                path,
-                builtAfter,
-                notBuiltAfter,
-                includeAllProperties,
-                includeLatestBuilds,
-                taskIdFilter,
-                processType,
-                yamlFilename,
-                context)
-            .block();
+        return listWithResponse(organization, project, name, repositoryId, repositoryType, queryOrder, top,
+            continuationToken, minMetricsTime, definitionIds, path, builtAfter, notBuiltAfter, includeAllProperties,
+            includeLatestBuilds, taskIdFilter, processType, yamlFilename, Context.NONE).getValue();
     }
 
     /**
      * Deletes a definition and all associated builds.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the completion.
+     * @return the {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<Response<Void>> deleteWithResponseAsync(String organization, String project, int definitionId) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -863,17 +527,15 @@ public final class DefinitionsClientImpl implements DefinitionsClient {
         if (project == null) {
             return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         return FluxUtil
-            .withContext(
-                context ->
-                    service.delete(this.client.getEndpoint(), organization, project, definitionId, apiVersion, context))
+            .withContext(context -> service.delete(this.client.getEndpoint(), organization, project, definitionId,
+                this.client.getApiVersion(), context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Deletes a definition and all associated builds.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
@@ -881,16 +543,14 @@ public final class DefinitionsClientImpl implements DefinitionsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the completion.
+     * @return the {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Void>> deleteWithResponseAsync(
-        String organization, String project, int definitionId, Context context) {
+    private Mono<Response<Void>> deleteWithResponseAsync(String organization, String project, int definitionId,
+        Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -898,31 +558,47 @@ public final class DefinitionsClientImpl implements DefinitionsClient {
         if (project == null) {
             return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         context = this.client.mergeContext(context);
-        return service.delete(this.client.getEndpoint(), organization, project, definitionId, apiVersion, context);
+        return service.delete(this.client.getEndpoint(), organization, project, definitionId,
+            this.client.getApiVersion(), context);
     }
 
     /**
      * Deletes a definition and all associated builds.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the completion.
+     * @return A {@link Mono} that completes when a successful response is received.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<Void> deleteAsync(String organization, String project, int definitionId) {
-        return deleteWithResponseAsync(organization, project, definitionId)
-            .flatMap((Response<Void> res) -> Mono.empty());
+        return deleteWithResponseAsync(organization, project, definitionId).flatMap(ignored -> Mono.empty());
     }
 
     /**
      * Deletes a definition and all associated builds.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param definitionId The ID of the definition.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<Void> deleteWithResponse(String organization, String project, int definitionId, Context context) {
+        return deleteWithResponseAsync(organization, project, definitionId, context).block();
+    }
+
+    /**
+     * Deletes a definition and all associated builds.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
@@ -932,29 +608,12 @@ public final class DefinitionsClientImpl implements DefinitionsClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public void delete(String organization, String project, int definitionId) {
-        deleteAsync(organization, project, definitionId).block();
-    }
-
-    /**
-     * Deletes a definition and all associated builds.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param definitionId The ID of the definition.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<Void> deleteWithResponse(String organization, String project, int definitionId, Context context) {
-        return deleteWithResponseAsync(organization, project, definitionId, context).block();
+        deleteWithResponse(organization, project, definitionId, Context.NONE);
     }
 
     /**
      * Gets a definition, optionally at a specific revision.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
@@ -965,22 +624,16 @@ public final class DefinitionsClientImpl implements DefinitionsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a definition, optionally at a specific revision.
+     * @return a definition, optionally at a specific revision along with {@link Response} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<BuildDefinitionInner>> getWithResponseAsync(
-        String organization,
-        String project,
-        int definitionId,
-        Integer revision,
-        OffsetDateTime minMetricsTime,
-        String propertyFilters,
+    private Mono<Response<BuildDefinitionInner>> getWithResponseAsync(String organization, String project,
+        int definitionId, Integer revision, OffsetDateTime minMetricsTime, String propertyFilters,
         Boolean includeLatestBuilds) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -988,30 +641,17 @@ public final class DefinitionsClientImpl implements DefinitionsClient {
         if (project == null) {
             return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         return FluxUtil
             .withContext(
-                context ->
-                    service
-                        .get(
-                            this.client.getEndpoint(),
-                            organization,
-                            project,
-                            definitionId,
-                            revision,
-                            minMetricsTime,
-                            propertyFilters,
-                            includeLatestBuilds,
-                            apiVersion,
-                            accept,
-                            context))
+                context -> service.get(this.client.getEndpoint(), organization, project, definitionId, revision,
+                    minMetricsTime, propertyFilters, includeLatestBuilds, this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Gets a definition, optionally at a specific revision.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
@@ -1023,23 +663,16 @@ public final class DefinitionsClientImpl implements DefinitionsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a definition, optionally at a specific revision.
+     * @return a definition, optionally at a specific revision along with {@link Response} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<BuildDefinitionInner>> getWithResponseAsync(
-        String organization,
-        String project,
-        int definitionId,
-        Integer revision,
-        OffsetDateTime minMetricsTime,
-        String propertyFilters,
-        Boolean includeLatestBuilds,
-        Context context) {
+    private Mono<Response<BuildDefinitionInner>> getWithResponseAsync(String organization, String project,
+        int definitionId, Integer revision, OffsetDateTime minMetricsTime, String propertyFilters,
+        Boolean includeLatestBuilds, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -1047,70 +680,22 @@ public final class DefinitionsClientImpl implements DefinitionsClient {
         if (project == null) {
             return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .get(
-                this.client.getEndpoint(),
-                organization,
-                project,
-                definitionId,
-                revision,
-                minMetricsTime,
-                propertyFilters,
-                includeLatestBuilds,
-                apiVersion,
-                accept,
-                context);
+        return service.get(this.client.getEndpoint(), organization, project, definitionId, revision, minMetricsTime,
+            propertyFilters, includeLatestBuilds, this.client.getApiVersion(), accept, context);
     }
 
     /**
      * Gets a definition, optionally at a specific revision.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param definitionId The ID of the definition.
-     * @param revision The revision number to retrieve. If this is not specified, the latest version will be returned.
-     * @param minMetricsTime If specified, indicates the date from which metrics should be included.
-     * @param propertyFilters A comma-delimited list of properties to include in the results.
-     * @param includeLatestBuilds The includeLatestBuilds parameter.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a definition, optionally at a specific revision.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<BuildDefinitionInner> getAsync(
-        String organization,
-        String project,
-        int definitionId,
-        Integer revision,
-        OffsetDateTime minMetricsTime,
-        String propertyFilters,
-        Boolean includeLatestBuilds) {
-        return getWithResponseAsync(
-                organization, project, definitionId, revision, minMetricsTime, propertyFilters, includeLatestBuilds)
-            .flatMap(
-                (Response<BuildDefinitionInner> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
-    }
-
-    /**
-     * Gets a definition, optionally at a specific revision.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a definition, optionally at a specific revision.
+     * @return a definition, optionally at a specific revision on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<BuildDefinitionInner> getAsync(String organization, String project, int definitionId) {
@@ -1118,21 +703,37 @@ public final class DefinitionsClientImpl implements DefinitionsClient {
         final OffsetDateTime minMetricsTime = null;
         final String propertyFilters = null;
         final Boolean includeLatestBuilds = null;
-        return getWithResponseAsync(
-                organization, project, definitionId, revision, minMetricsTime, propertyFilters, includeLatestBuilds)
-            .flatMap(
-                (Response<BuildDefinitionInner> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+        return getWithResponseAsync(organization, project, definitionId, revision, minMetricsTime, propertyFilters,
+            includeLatestBuilds).flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Gets a definition, optionally at a specific revision.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param definitionId The ID of the definition.
+     * @param revision The revision number to retrieve. If this is not specified, the latest version will be returned.
+     * @param minMetricsTime If specified, indicates the date from which metrics should be included.
+     * @param propertyFilters A comma-delimited list of properties to include in the results.
+     * @param includeLatestBuilds The includeLatestBuilds parameter.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return a definition, optionally at a specific revision along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<BuildDefinitionInner> getWithResponse(String organization, String project, int definitionId,
+        Integer revision, OffsetDateTime minMetricsTime, String propertyFilters, Boolean includeLatestBuilds,
+        Context context) {
+        return getWithResponseAsync(organization, project, definitionId, revision, minMetricsTime, propertyFilters,
+            includeLatestBuilds, context).block();
+    }
+
+    /**
+     * Gets a definition, optionally at a specific revision.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
@@ -1147,52 +748,13 @@ public final class DefinitionsClientImpl implements DefinitionsClient {
         final OffsetDateTime minMetricsTime = null;
         final String propertyFilters = null;
         final Boolean includeLatestBuilds = null;
-        return getAsync(
-                organization, project, definitionId, revision, minMetricsTime, propertyFilters, includeLatestBuilds)
-            .block();
-    }
-
-    /**
-     * Gets a definition, optionally at a specific revision.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param definitionId The ID of the definition.
-     * @param revision The revision number to retrieve. If this is not specified, the latest version will be returned.
-     * @param minMetricsTime If specified, indicates the date from which metrics should be included.
-     * @param propertyFilters A comma-delimited list of properties to include in the results.
-     * @param includeLatestBuilds The includeLatestBuilds parameter.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a definition, optionally at a specific revision.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<BuildDefinitionInner> getWithResponse(
-        String organization,
-        String project,
-        int definitionId,
-        Integer revision,
-        OffsetDateTime minMetricsTime,
-        String propertyFilters,
-        Boolean includeLatestBuilds,
-        Context context) {
-        return getWithResponseAsync(
-                organization,
-                project,
-                definitionId,
-                revision,
-                minMetricsTime,
-                propertyFilters,
-                includeLatestBuilds,
-                context)
-            .block();
+        return getWithResponse(organization, project, definitionId, revision, minMetricsTime, propertyFilters,
+            includeLatestBuilds, Context.NONE).getValue();
     }
 
     /**
      * Restores a deleted definition.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The identifier of the definition to restore.
@@ -1200,16 +762,14 @@ public final class DefinitionsClientImpl implements DefinitionsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return represents a build definition.
+     * @return represents a build definition along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<BuildDefinitionInner>> restoreDefinitionWithResponseAsync(
-        String organization, String project, int definitionId, boolean deleted) {
+    private Mono<Response<BuildDefinitionInner>> restoreDefinitionWithResponseAsync(String organization, String project,
+        int definitionId, boolean deleted) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -1217,27 +777,16 @@ public final class DefinitionsClientImpl implements DefinitionsClient {
         if (project == null) {
             return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .restoreDefinition(
-                            this.client.getEndpoint(),
-                            organization,
-                            project,
-                            definitionId,
-                            deleted,
-                            apiVersion,
-                            accept,
-                            context))
+            .withContext(context -> service.restoreDefinition(this.client.getEndpoint(), organization, project,
+                definitionId, deleted, this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Restores a deleted definition.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The identifier of the definition to restore.
@@ -1246,16 +795,14 @@ public final class DefinitionsClientImpl implements DefinitionsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return represents a build definition.
+     * @return represents a build definition along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<BuildDefinitionInner>> restoreDefinitionWithResponseAsync(
-        String organization, String project, int definitionId, boolean deleted, Context context) {
+    private Mono<Response<BuildDefinitionInner>> restoreDefinitionWithResponseAsync(String organization, String project,
+        int definitionId, boolean deleted, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -1263,17 +810,15 @@ public final class DefinitionsClientImpl implements DefinitionsClient {
         if (project == null) {
             return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .restoreDefinition(
-                this.client.getEndpoint(), organization, project, definitionId, deleted, apiVersion, accept, context);
+        return service.restoreDefinition(this.client.getEndpoint(), organization, project, definitionId, deleted,
+            this.client.getApiVersion(), accept, context);
     }
 
     /**
      * Restores a deleted definition.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The identifier of the definition to restore.
@@ -1281,43 +826,18 @@ public final class DefinitionsClientImpl implements DefinitionsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return represents a build definition.
+     * @return represents a build definition on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<BuildDefinitionInner> restoreDefinitionAsync(
-        String organization, String project, int definitionId, boolean deleted) {
+    private Mono<BuildDefinitionInner> restoreDefinitionAsync(String organization, String project, int definitionId,
+        boolean deleted) {
         return restoreDefinitionWithResponseAsync(organization, project, definitionId, deleted)
-            .flatMap(
-                (Response<BuildDefinitionInner> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+            .flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Restores a deleted definition.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param definitionId The identifier of the definition to restore.
-     * @param deleted When false, restores a deleted definition.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return represents a build definition.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public BuildDefinitionInner restoreDefinition(
-        String organization, String project, int definitionId, boolean deleted) {
-        return restoreDefinitionAsync(organization, project, definitionId, deleted).block();
-    }
-
-    /**
-     * Restores a deleted definition.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The identifier of the definition to restore.
@@ -1326,41 +846,57 @@ public final class DefinitionsClientImpl implements DefinitionsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return represents a build definition.
+     * @return represents a build definition along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<BuildDefinitionInner> restoreDefinitionWithResponse(
-        String organization, String project, int definitionId, boolean deleted, Context context) {
+    public Response<BuildDefinitionInner> restoreDefinitionWithResponse(String organization, String project,
+        int definitionId, boolean deleted, Context context) {
         return restoreDefinitionWithResponseAsync(organization, project, definitionId, deleted, context).block();
     }
 
     /**
-     * Updates an existing definition.
-     *
+     * Restores a deleted definition.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
-     * @param definitionId The ID of the definition.
-     * @param body The new version of the definition.
-     * @param secretsSourceDefinitionId The secretsSourceDefinitionId parameter.
-     * @param secretsSourceDefinitionRevision The secretsSourceDefinitionRevision parameter.
+     * @param definitionId The identifier of the definition to restore.
+     * @param deleted When false, restores a deleted definition.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return represents a build definition.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<BuildDefinitionInner>> updateWithResponseAsync(
-        String organization,
-        String project,
-        int definitionId,
-        BuildDefinitionInner body,
-        Integer secretsSourceDefinitionId,
+    public BuildDefinitionInner restoreDefinition(String organization, String project, int definitionId,
+        boolean deleted) {
+        return restoreDefinitionWithResponse(organization, project, definitionId, deleted, Context.NONE).getValue();
+    }
+
+    /**
+     * Updates an existing build definition. In order for this operation to succeed, the value of the "Revision"
+     * property of the request body must match the existing build definition's. It is recommended that you obtain the
+     * existing build definition by using GET, modify the build definition as necessary, and then submit the modified
+     * definition with PUT.
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param definitionId The ID of the definition.
+     * @param body The new version of the definition. Its "Revision" property must match the existing definition for the
+     * update to be accepted.
+     * @param secretsSourceDefinitionId The secretsSourceDefinitionId parameter.
+     * @param secretsSourceDefinitionRevision The secretsSourceDefinitionRevision parameter.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return represents a build definition along with {@link Response} on successful completion of {@link Mono}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Mono<Response<BuildDefinitionInner>> updateWithResponseAsync(String organization, String project,
+        int definitionId, BuildDefinitionInner body, Integer secretsSourceDefinitionId,
         Integer secretsSourceDefinitionRevision) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -1373,55 +909,40 @@ public final class DefinitionsClientImpl implements DefinitionsClient {
         } else {
             body.validate();
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .update(
-                            this.client.getEndpoint(),
-                            organization,
-                            project,
-                            definitionId,
-                            secretsSourceDefinitionId,
-                            secretsSourceDefinitionRevision,
-                            apiVersion,
-                            body,
-                            accept,
-                            context))
+            .withContext(context -> service.update(this.client.getEndpoint(), organization, project, definitionId,
+                secretsSourceDefinitionId, secretsSourceDefinitionRevision, this.client.getApiVersion(), body, accept,
+                context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
-     * Updates an existing definition.
-     *
+     * Updates an existing build definition. In order for this operation to succeed, the value of the "Revision"
+     * property of the request body must match the existing build definition's. It is recommended that you obtain the
+     * existing build definition by using GET, modify the build definition as necessary, and then submit the modified
+     * definition with PUT.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
-     * @param body The new version of the definition.
+     * @param body The new version of the definition. Its "Revision" property must match the existing definition for the
+     * update to be accepted.
      * @param secretsSourceDefinitionId The secretsSourceDefinitionId parameter.
      * @param secretsSourceDefinitionRevision The secretsSourceDefinitionRevision parameter.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return represents a build definition.
+     * @return represents a build definition along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<BuildDefinitionInner>> updateWithResponseAsync(
-        String organization,
-        String project,
-        int definitionId,
-        BuildDefinitionInner body,
-        Integer secretsSourceDefinitionId,
-        Integer secretsSourceDefinitionRevision,
-        Context context) {
+    private Mono<Response<BuildDefinitionInner>> updateWithResponseAsync(String organization, String project,
+        int definitionId, BuildDefinitionInner body, Integer secretsSourceDefinitionId,
+        Integer secretsSourceDefinitionRevision, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -1434,162 +955,106 @@ public final class DefinitionsClientImpl implements DefinitionsClient {
         } else {
             body.validate();
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .update(
-                this.client.getEndpoint(),
-                organization,
-                project,
-                definitionId,
-                secretsSourceDefinitionId,
-                secretsSourceDefinitionRevision,
-                apiVersion,
-                body,
-                accept,
-                context);
+        return service.update(this.client.getEndpoint(), organization, project, definitionId, secretsSourceDefinitionId,
+            secretsSourceDefinitionRevision, this.client.getApiVersion(), body, accept, context);
     }
 
     /**
-     * Updates an existing definition.
-     *
+     * Updates an existing build definition. In order for this operation to succeed, the value of the "Revision"
+     * property of the request body must match the existing build definition's. It is recommended that you obtain the
+     * existing build definition by using GET, modify the build definition as necessary, and then submit the modified
+     * definition with PUT.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
-     * @param body The new version of the definition.
-     * @param secretsSourceDefinitionId The secretsSourceDefinitionId parameter.
-     * @param secretsSourceDefinitionRevision The secretsSourceDefinitionRevision parameter.
+     * @param body The new version of the definition. Its "Revision" property must match the existing definition for the
+     * update to be accepted.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return represents a build definition.
+     * @return represents a build definition on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<BuildDefinitionInner> updateAsync(
-        String organization,
-        String project,
-        int definitionId,
-        BuildDefinitionInner body,
-        Integer secretsSourceDefinitionId,
-        Integer secretsSourceDefinitionRevision) {
-        return updateWithResponseAsync(
-                organization, project, definitionId, body, secretsSourceDefinitionId, secretsSourceDefinitionRevision)
-            .flatMap(
-                (Response<BuildDefinitionInner> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
-    }
-
-    /**
-     * Updates an existing definition.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param definitionId The ID of the definition.
-     * @param body The new version of the definition.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return represents a build definition.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<BuildDefinitionInner> updateAsync(
-        String organization, String project, int definitionId, BuildDefinitionInner body) {
+    private Mono<BuildDefinitionInner> updateAsync(String organization, String project, int definitionId,
+        BuildDefinitionInner body) {
         final Integer secretsSourceDefinitionId = null;
         final Integer secretsSourceDefinitionRevision = null;
-        return updateWithResponseAsync(
-                organization, project, definitionId, body, secretsSourceDefinitionId, secretsSourceDefinitionRevision)
-            .flatMap(
-                (Response<BuildDefinitionInner> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+        return updateWithResponseAsync(organization, project, definitionId, body, secretsSourceDefinitionId,
+            secretsSourceDefinitionRevision).flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
-     * Updates an existing definition.
-     *
+     * Updates an existing build definition. In order for this operation to succeed, the value of the "Revision"
+     * property of the request body must match the existing build definition's. It is recommended that you obtain the
+     * existing build definition by using GET, modify the build definition as necessary, and then submit the modified
+     * definition with PUT.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
-     * @param body The new version of the definition.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return represents a build definition.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public BuildDefinitionInner update(
-        String organization, String project, int definitionId, BuildDefinitionInner body) {
-        final Integer secretsSourceDefinitionId = null;
-        final Integer secretsSourceDefinitionRevision = null;
-        return updateAsync(
-                organization, project, definitionId, body, secretsSourceDefinitionId, secretsSourceDefinitionRevision)
-            .block();
-    }
-
-    /**
-     * Updates an existing definition.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param definitionId The ID of the definition.
-     * @param body The new version of the definition.
+     * @param body The new version of the definition. Its "Revision" property must match the existing definition for the
+     * update to be accepted.
      * @param secretsSourceDefinitionId The secretsSourceDefinitionId parameter.
      * @param secretsSourceDefinitionRevision The secretsSourceDefinitionRevision parameter.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return represents a build definition along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<BuildDefinitionInner> updateWithResponse(String organization, String project, int definitionId,
+        BuildDefinitionInner body, Integer secretsSourceDefinitionId, Integer secretsSourceDefinitionRevision,
+        Context context) {
+        return updateWithResponseAsync(organization, project, definitionId, body, secretsSourceDefinitionId,
+            secretsSourceDefinitionRevision, context).block();
+    }
+
+    /**
+     * Updates an existing build definition. In order for this operation to succeed, the value of the "Revision"
+     * property of the request body must match the existing build definition's. It is recommended that you obtain the
+     * existing build definition by using GET, modify the build definition as necessary, and then submit the modified
+     * definition with PUT.
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param definitionId The ID of the definition.
+     * @param body The new version of the definition. Its "Revision" property must match the existing definition for the
+     * update to be accepted.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return represents a build definition.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<BuildDefinitionInner> updateWithResponse(
-        String organization,
-        String project,
-        int definitionId,
-        BuildDefinitionInner body,
-        Integer secretsSourceDefinitionId,
-        Integer secretsSourceDefinitionRevision,
-        Context context) {
-        return updateWithResponseAsync(
-                organization,
-                project,
-                definitionId,
-                body,
-                secretsSourceDefinitionId,
-                secretsSourceDefinitionRevision,
-                context)
-            .block();
+    public BuildDefinitionInner update(String organization, String project, int definitionId,
+        BuildDefinitionInner body) {
+        final Integer secretsSourceDefinitionId = null;
+        final Integer secretsSourceDefinitionRevision = null;
+        return updateWithResponse(organization, project, definitionId, body, secretsSourceDefinitionId,
+            secretsSourceDefinitionRevision, Context.NONE).getValue();
     }
 
     /**
      * Gets all revisions of a definition.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return all revisions of a definition.
+     * @return all revisions of a definition along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<BuildDefinitionRevisionInner>>> getDefinitionRevisionsWithResponseAsync(
-        String organization, String project, int definitionId) {
+    private Mono<Response<List<BuildDefinitionRevisionInner>>>
+        getDefinitionRevisionsWithResponseAsync(String organization, String project, int definitionId) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -1597,26 +1062,16 @@ public final class DefinitionsClientImpl implements DefinitionsClient {
         if (project == null) {
             return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .getDefinitionRevisions(
-                            this.client.getEndpoint(),
-                            organization,
-                            project,
-                            definitionId,
-                            apiVersion,
-                            accept,
-                            context))
+            .withContext(context -> service.getDefinitionRevisions(this.client.getEndpoint(), organization, project,
+                definitionId, this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
      * Gets all revisions of a definition.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
@@ -1624,16 +1079,14 @@ public final class DefinitionsClientImpl implements DefinitionsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return all revisions of a definition.
+     * @return all revisions of a definition along with {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<Response<List<BuildDefinitionRevisionInner>>> getDefinitionRevisionsWithResponseAsync(
         String organization, String project, int definitionId, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -1641,59 +1094,33 @@ public final class DefinitionsClientImpl implements DefinitionsClient {
         if (project == null) {
             return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .getDefinitionRevisions(
-                this.client.getEndpoint(), organization, project, definitionId, apiVersion, accept, context);
+        return service.getDefinitionRevisions(this.client.getEndpoint(), organization, project, definitionId,
+            this.client.getApiVersion(), accept, context);
     }
 
     /**
      * Gets all revisions of a definition.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return all revisions of a definition.
+     * @return all revisions of a definition on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<List<BuildDefinitionRevisionInner>> getDefinitionRevisionsAsync(
-        String organization, String project, int definitionId) {
+    private Mono<List<BuildDefinitionRevisionInner>> getDefinitionRevisionsAsync(String organization, String project,
+        int definitionId) {
         return getDefinitionRevisionsWithResponseAsync(organization, project, definitionId)
-            .flatMap(
-                (Response<List<BuildDefinitionRevisionInner>> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+            .flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
      * Gets all revisions of a definition.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param definitionId The ID of the definition.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return all revisions of a definition.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public List<BuildDefinitionRevisionInner> getDefinitionRevisions(
-        String organization, String project, int definitionId) {
-        return getDefinitionRevisionsAsync(organization, project, definitionId).block();
-    }
-
-    /**
-     * Gets all revisions of a definition.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
@@ -1701,11 +1128,28 @@ public final class DefinitionsClientImpl implements DefinitionsClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return all revisions of a definition along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<List<BuildDefinitionRevisionInner>> getDefinitionRevisionsWithResponse(String organization,
+        String project, int definitionId, Context context) {
+        return getDefinitionRevisionsWithResponseAsync(organization, project, definitionId, context).block();
+    }
+
+    /**
+     * Gets all revisions of a definition.
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param definitionId The ID of the definition.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return all revisions of a definition.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<List<BuildDefinitionRevisionInner>> getDefinitionRevisionsWithResponse(
-        String organization, String project, int definitionId, Context context) {
-        return getDefinitionRevisionsWithResponseAsync(organization, project, definitionId, context).block();
+    public List<BuildDefinitionRevisionInner> getDefinitionRevisions(String organization, String project,
+        int definitionId) {
+        return getDefinitionRevisionsWithResponse(organization, project, definitionId, Context.NONE).getValue();
     }
 }

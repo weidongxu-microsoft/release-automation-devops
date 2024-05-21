@@ -5,16 +5,14 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** Represents a schedule trigger. */
+/**
+ * Represents a schedule trigger.
+ */
 @Fluent
 public final class ScheduleTrigger extends BuildTrigger {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(ScheduleTrigger.class);
-
     /*
      * The schedules property.
      */
@@ -22,8 +20,14 @@ public final class ScheduleTrigger extends BuildTrigger {
     private List<Schedule> schedules;
 
     /**
+     * Creates an instance of ScheduleTrigger class.
+     */
+    public ScheduleTrigger() {
+    }
+
+    /**
      * Get the schedules property: The schedules property.
-     *
+     * 
      * @return the schedules value.
      */
     public List<Schedule> schedules() {
@@ -32,7 +36,7 @@ public final class ScheduleTrigger extends BuildTrigger {
 
     /**
      * Set the schedules property: The schedules property.
-     *
+     * 
      * @param schedules the schedules value to set.
      * @return the ScheduleTrigger object itself.
      */
@@ -41,7 +45,9 @@ public final class ScheduleTrigger extends BuildTrigger {
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ScheduleTrigger withTriggerType(DefinitionTriggerType triggerType) {
         super.withTriggerType(triggerType);
@@ -50,7 +56,7 @@ public final class ScheduleTrigger extends BuildTrigger {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     @Override

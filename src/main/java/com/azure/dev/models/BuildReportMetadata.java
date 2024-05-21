@@ -6,32 +6,34 @@ package com.azure.dev.models;
 
 import com.azure.dev.fluent.models.BuildReportMetadataInner;
 
-/** An immutable client-side representation of BuildReportMetadata. */
+/**
+ * An immutable client-side representation of BuildReportMetadata.
+ */
 public interface BuildReportMetadata {
     /**
      * Gets the buildId property: The Id of the build.
-     *
+     * 
      * @return the buildId value.
      */
     Integer buildId();
 
     /**
      * Gets the content property: The content of the report.
-     *
+     * 
      * @return the content value.
      */
     String content();
 
     /**
      * Gets the type property: The type of the report.
-     *
+     * 
      * @return the type value.
      */
     String type();
 
     /**
      * Gets the inner com.azure.dev.fluent.models.BuildReportMetadataInner object.
-     *
+     * 
      * @return the inner object.
      */
     BuildReportMetadataInner innerModel();

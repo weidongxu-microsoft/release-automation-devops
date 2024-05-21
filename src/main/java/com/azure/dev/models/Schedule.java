@@ -5,17 +5,15 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.UUID;
 
-/** The Schedule model. */
+/**
+ * The Schedule model.
+ */
 @Fluent
 public final class Schedule {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(Schedule.class);
-
     /*
      * The branchFilters property.
      */
@@ -29,19 +27,13 @@ public final class Schedule {
     private ScheduleDays daysToBuild;
 
     /*
-     * The Job Id of the Scheduled job that will queue the scheduled build.
-     * Since a single trigger can have multiple schedules and we want a single
-     * job to process a single schedule (since each schedule has a list of
-     * branches to build), the schedule itself needs to define the Job Id. This
-     * value will be filled in when a definition is added or updated.  The UI
-     * does not provide it or use it.
+     * The Job Id of the Scheduled job that will queue the scheduled build. Since a single trigger can have multiple schedules and we want a single job to process a single schedule (since each schedule has a list of branches to build), the schedule itself needs to define the Job Id. This value will be filled in when a definition is added or updated.  The UI does not provide it or use it.
      */
     @JsonProperty(value = "scheduleJobId")
     private UUID scheduleJobId;
 
     /*
-     * Flag to determine if this schedule should only build if the associated
-     * source has been changed.
+     * Flag to determine if this schedule should only build if the associated source has been changed.
      */
     @JsonProperty(value = "scheduleOnlyWithChanges")
     private Boolean scheduleOnlyWithChanges;
@@ -59,15 +51,20 @@ public final class Schedule {
     private Integer startMinutes;
 
     /*
-     * Time zone of the build schedule (String representation of the time zone
-     * ID)
+     * Time zone of the build schedule (String representation of the time zone ID)
      */
     @JsonProperty(value = "timeZoneId")
     private String timeZoneId;
 
     /**
+     * Creates an instance of Schedule class.
+     */
+    public Schedule() {
+    }
+
+    /**
      * Get the branchFilters property: The branchFilters property.
-     *
+     * 
      * @return the branchFilters value.
      */
     public List<String> branchFilters() {
@@ -76,7 +73,7 @@ public final class Schedule {
 
     /**
      * Set the branchFilters property: The branchFilters property.
-     *
+     * 
      * @param branchFilters the branchFilters value to set.
      * @return the Schedule object itself.
      */
@@ -87,7 +84,7 @@ public final class Schedule {
 
     /**
      * Get the daysToBuild property: Days for a build (flags enum for days of the week).
-     *
+     * 
      * @return the daysToBuild value.
      */
     public ScheduleDays daysToBuild() {
@@ -96,7 +93,7 @@ public final class Schedule {
 
     /**
      * Set the daysToBuild property: Days for a build (flags enum for days of the week).
-     *
+     * 
      * @param daysToBuild the daysToBuild value to set.
      * @return the Schedule object itself.
      */
@@ -110,7 +107,7 @@ public final class Schedule {
      * single trigger can have multiple schedules and we want a single job to process a single schedule (since each
      * schedule has a list of branches to build), the schedule itself needs to define the Job Id. This value will be
      * filled in when a definition is added or updated. The UI does not provide it or use it.
-     *
+     * 
      * @return the scheduleJobId value.
      */
     public UUID scheduleJobId() {
@@ -122,7 +119,7 @@ public final class Schedule {
      * single trigger can have multiple schedules and we want a single job to process a single schedule (since each
      * schedule has a list of branches to build), the schedule itself needs to define the Job Id. This value will be
      * filled in when a definition is added or updated. The UI does not provide it or use it.
-     *
+     * 
      * @param scheduleJobId the scheduleJobId value to set.
      * @return the Schedule object itself.
      */
@@ -134,7 +131,7 @@ public final class Schedule {
     /**
      * Get the scheduleOnlyWithChanges property: Flag to determine if this schedule should only build if the associated
      * source has been changed.
-     *
+     * 
      * @return the scheduleOnlyWithChanges value.
      */
     public Boolean scheduleOnlyWithChanges() {
@@ -144,7 +141,7 @@ public final class Schedule {
     /**
      * Set the scheduleOnlyWithChanges property: Flag to determine if this schedule should only build if the associated
      * source has been changed.
-     *
+     * 
      * @param scheduleOnlyWithChanges the scheduleOnlyWithChanges value to set.
      * @return the Schedule object itself.
      */
@@ -155,7 +152,7 @@ public final class Schedule {
 
     /**
      * Get the startHours property: Local timezone hour to start.
-     *
+     * 
      * @return the startHours value.
      */
     public Integer startHours() {
@@ -164,7 +161,7 @@ public final class Schedule {
 
     /**
      * Set the startHours property: Local timezone hour to start.
-     *
+     * 
      * @param startHours the startHours value to set.
      * @return the Schedule object itself.
      */
@@ -175,7 +172,7 @@ public final class Schedule {
 
     /**
      * Get the startMinutes property: Local timezone minute to start.
-     *
+     * 
      * @return the startMinutes value.
      */
     public Integer startMinutes() {
@@ -184,7 +181,7 @@ public final class Schedule {
 
     /**
      * Set the startMinutes property: Local timezone minute to start.
-     *
+     * 
      * @param startMinutes the startMinutes value to set.
      * @return the Schedule object itself.
      */
@@ -195,7 +192,7 @@ public final class Schedule {
 
     /**
      * Get the timeZoneId property: Time zone of the build schedule (String representation of the time zone ID).
-     *
+     * 
      * @return the timeZoneId value.
      */
     public String timeZoneId() {
@@ -204,7 +201,7 @@ public final class Schedule {
 
     /**
      * Set the timeZoneId property: Time zone of the build schedule (String representation of the time zone ID).
-     *
+     * 
      * @param timeZoneId the timeZoneId value to set.
      * @return the Schedule object itself.
      */
@@ -215,7 +212,7 @@ public final class Schedule {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

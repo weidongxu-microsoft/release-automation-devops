@@ -13,10 +13,9 @@ import com.azure.dev.fluent.models.ProjectRetentionSettingInner;
 import com.azure.dev.models.ProjectRetentionSetting;
 import com.azure.dev.models.Retentions;
 import com.azure.dev.models.UpdateProjectRetentionSettingModel;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public final class RetentionsImpl implements Retentions {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(RetentionsImpl.class);
+    private static final ClientLogger LOGGER = new ClientLogger(RetentionsImpl.class);
 
     private final RetentionsClient innerClient;
 
@@ -25,6 +24,17 @@ public final class RetentionsImpl implements Retentions {
     public RetentionsImpl(RetentionsClient innerClient, com.azure.dev.DevManager serviceManager) {
         this.innerClient = innerClient;
         this.serviceManager = serviceManager;
+    }
+
+    public Response<ProjectRetentionSetting> getWithResponse(String organization, String project, Context context) {
+        Response<ProjectRetentionSettingInner> inner
+            = this.serviceClient().getWithResponse(organization, project, context);
+        if (inner != null) {
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
+                new ProjectRetentionSettingImpl(inner.getValue(), this.manager()));
+        } else {
+            return null;
+        }
     }
 
     public ProjectRetentionSetting get(String organization, String project) {
@@ -36,40 +46,23 @@ public final class RetentionsImpl implements Retentions {
         }
     }
 
-    public Response<ProjectRetentionSetting> getWithResponse(String organization, String project, Context context) {
-        Response<ProjectRetentionSettingInner> inner =
-            this.serviceClient().getWithResponse(organization, project, context);
+    public Response<ProjectRetentionSetting> updateWithResponse(String organization, String project,
+        UpdateProjectRetentionSettingModel body, Context context) {
+        Response<ProjectRetentionSettingInner> inner
+            = this.serviceClient().updateWithResponse(organization, project, body, context);
         if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
                 new ProjectRetentionSettingImpl(inner.getValue(), this.manager()));
         } else {
             return null;
         }
     }
 
-    public ProjectRetentionSetting update(
-        String organization, String project, UpdateProjectRetentionSettingModel body) {
+    public ProjectRetentionSetting update(String organization, String project,
+        UpdateProjectRetentionSettingModel body) {
         ProjectRetentionSettingInner inner = this.serviceClient().update(organization, project, body);
         if (inner != null) {
             return new ProjectRetentionSettingImpl(inner, this.manager());
-        } else {
-            return null;
-        }
-    }
-
-    public Response<ProjectRetentionSetting> updateWithResponse(
-        String organization, String project, UpdateProjectRetentionSettingModel body, Context context) {
-        Response<ProjectRetentionSettingInner> inner =
-            this.serviceClient().updateWithResponse(organization, project, body, context);
-        if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                new ProjectRetentionSettingImpl(inner.getValue(), this.manager()));
         } else {
             return null;
         }

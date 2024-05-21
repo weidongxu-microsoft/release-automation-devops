@@ -8,11 +8,26 @@ import com.azure.core.http.rest.Response;
 import com.azure.core.util.Context;
 import java.util.List;
 
-/** Resource collection API of Controllers. */
+/**
+ * Resource collection API of Controllers.
+ */
 public interface Controllers {
     /**
      * Gets controller, optionally filtered by name.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param name The name parameter.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return controller, optionally filtered by name along with {@link Response}.
+     */
+    Response<List<BuildController>> listWithResponse(String organization, String name, Context context);
+
+    /**
+     * Gets controller, optionally filtered by name.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
@@ -22,21 +37,21 @@ public interface Controllers {
     List<BuildController> list(String organization);
 
     /**
-     * Gets controller, optionally filtered by name.
-     *
+     * Gets a controller.
+     * 
      * @param organization The name of the Azure DevOps organization.
-     * @param name The name parameter.
+     * @param controllerId The controllerId parameter.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return controller, optionally filtered by name.
+     * @return a controller along with {@link Response}.
      */
-    Response<List<BuildController>> listWithResponse(String organization, String name, Context context);
+    Response<BuildController> getWithResponse(String organization, int controllerId, Context context);
 
     /**
      * Gets a controller.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param controllerId The controllerId parameter.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -45,17 +60,4 @@ public interface Controllers {
      * @return a controller.
      */
     BuildController get(String organization, int controllerId);
-
-    /**
-     * Gets a controller.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param controllerId The controllerId parameter.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a controller.
-     */
-    Response<BuildController> getWithResponse(String organization, int controllerId, Context context);
 }

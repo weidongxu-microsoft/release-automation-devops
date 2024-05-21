@@ -6,25 +6,27 @@ package com.azure.dev.models;
 
 import com.azure.dev.fluent.models.AttachmentInner;
 
-/** An immutable client-side representation of Attachment. */
+/**
+ * An immutable client-side representation of Attachment.
+ */
 public interface Attachment {
     /**
      * Gets the links property: The class to represent a collection of REST reference links.
-     *
+     * 
      * @return the links value.
      */
     ReferenceLinks links();
 
     /**
      * Gets the name property: The name of the attachment.
-     *
+     * 
      * @return the name value.
      */
     String name();
 
     /**
      * Gets the inner com.azure.dev.fluent.models.AttachmentInner object.
-     *
+     * 
      * @return the inner object.
      */
     AttachmentInner innerModel();

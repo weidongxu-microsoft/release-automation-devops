@@ -10,13 +10,11 @@ import com.azure.core.util.Context;
 import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.fluent.PropertiesClient;
 import com.azure.dev.fluent.models.PropertiesCollectionInner;
-import com.azure.dev.models.JsonPatchDocument;
 import com.azure.dev.models.Properties;
 import com.azure.dev.models.PropertiesCollection;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public final class PropertiesImpl implements Properties {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(PropertiesImpl.class);
+    private static final ClientLogger LOGGER = new ClientLogger(PropertiesImpl.class);
 
     private final PropertiesClient innerClient;
 
@@ -25,6 +23,18 @@ public final class PropertiesImpl implements Properties {
     public PropertiesImpl(PropertiesClient innerClient, com.azure.dev.DevManager serviceManager) {
         this.innerClient = innerClient;
         this.serviceManager = serviceManager;
+    }
+
+    public Response<PropertiesCollection> getBuildPropertiesWithResponse(String organization, String project,
+        int buildId, String filter, Context context) {
+        Response<PropertiesCollectionInner> inner
+            = this.serviceClient().getBuildPropertiesWithResponse(organization, project, buildId, filter, context);
+        if (inner != null) {
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
+                new PropertiesCollectionImpl(inner.getValue(), this.manager()));
+        } else {
+            return null;
+        }
     }
 
     public PropertiesCollection getBuildProperties(String organization, String project, int buildId) {
@@ -36,25 +46,21 @@ public final class PropertiesImpl implements Properties {
         }
     }
 
-    public Response<PropertiesCollection> getBuildPropertiesWithResponse(
-        String organization, String project, int buildId, String filter, Context context) {
-        Response<PropertiesCollectionInner> inner =
-            this.serviceClient().getBuildPropertiesWithResponse(organization, project, buildId, filter, context);
+    public Response<PropertiesCollection> updateBuildPropertiesWithResponse(String organization, String project,
+        int buildId, Object body, Context context) {
+        Response<PropertiesCollectionInner> inner
+            = this.serviceClient().updateBuildPropertiesWithResponse(organization, project, buildId, body, context);
         if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
                 new PropertiesCollectionImpl(inner.getValue(), this.manager()));
         } else {
             return null;
         }
     }
 
-    public PropertiesCollection updateBuildProperties(
-        String organization, String project, int buildId, JsonPatchDocument body) {
-        PropertiesCollectionInner inner =
-            this.serviceClient().updateBuildProperties(organization, project, buildId, body);
+    public PropertiesCollection updateBuildProperties(String organization, String project, int buildId, Object body) {
+        PropertiesCollectionInner inner
+            = this.serviceClient().updateBuildProperties(organization, project, buildId, body);
         if (inner != null) {
             return new PropertiesCollectionImpl(inner, this.manager());
         } else {
@@ -62,15 +68,12 @@ public final class PropertiesImpl implements Properties {
         }
     }
 
-    public Response<PropertiesCollection> updateBuildPropertiesWithResponse(
-        String organization, String project, int buildId, JsonPatchDocument body, Context context) {
-        Response<PropertiesCollectionInner> inner =
-            this.serviceClient().updateBuildPropertiesWithResponse(organization, project, buildId, body, context);
+    public Response<PropertiesCollection> getDefinitionPropertiesWithResponse(String organization, String project,
+        int definitionId, String filter, Context context) {
+        Response<PropertiesCollectionInner> inner = this.serviceClient()
+            .getDefinitionPropertiesWithResponse(organization, project, definitionId, filter, context);
         if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
                 new PropertiesCollectionImpl(inner.getValue(), this.manager()));
         } else {
             return null;
@@ -78,8 +81,8 @@ public final class PropertiesImpl implements Properties {
     }
 
     public PropertiesCollection getDefinitionProperties(String organization, String project, int definitionId) {
-        PropertiesCollectionInner inner =
-            this.serviceClient().getDefinitionProperties(organization, project, definitionId);
+        PropertiesCollectionInner inner
+            = this.serviceClient().getDefinitionProperties(organization, project, definitionId);
         if (inner != null) {
             return new PropertiesCollectionImpl(inner, this.manager());
         } else {
@@ -87,46 +90,24 @@ public final class PropertiesImpl implements Properties {
         }
     }
 
-    public Response<PropertiesCollection> getDefinitionPropertiesWithResponse(
-        String organization, String project, int definitionId, String filter, Context context) {
-        Response<PropertiesCollectionInner> inner =
-            this
-                .serviceClient()
-                .getDefinitionPropertiesWithResponse(organization, project, definitionId, filter, context);
+    public Response<PropertiesCollection> updateDefinitionPropertiesWithResponse(String organization, String project,
+        int definitionId, Object body, Context context) {
+        Response<PropertiesCollectionInner> inner = this.serviceClient()
+            .updateDefinitionPropertiesWithResponse(organization, project, definitionId, body, context);
         if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
                 new PropertiesCollectionImpl(inner.getValue(), this.manager()));
         } else {
             return null;
         }
     }
 
-    public PropertiesCollection updateDefinitionProperties(
-        String organization, String project, int definitionId, JsonPatchDocument body) {
-        PropertiesCollectionInner inner =
-            this.serviceClient().updateDefinitionProperties(organization, project, definitionId, body);
+    public PropertiesCollection updateDefinitionProperties(String organization, String project, int definitionId,
+        Object body) {
+        PropertiesCollectionInner inner
+            = this.serviceClient().updateDefinitionProperties(organization, project, definitionId, body);
         if (inner != null) {
             return new PropertiesCollectionImpl(inner, this.manager());
-        } else {
-            return null;
-        }
-    }
-
-    public Response<PropertiesCollection> updateDefinitionPropertiesWithResponse(
-        String organization, String project, int definitionId, JsonPatchDocument body, Context context) {
-        Response<PropertiesCollectionInner> inner =
-            this
-                .serviceClient()
-                .updateDefinitionPropertiesWithResponse(organization, project, definitionId, body, context);
-        if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                new PropertiesCollectionImpl(inner.getValue(), this.manager()));
         } else {
             return null;
         }

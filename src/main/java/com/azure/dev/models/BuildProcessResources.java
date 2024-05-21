@@ -5,16 +5,14 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** Represents resources used by a build process. */
+/**
+ * Represents resources used by a build process.
+ */
 @Fluent
 public final class BuildProcessResources {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(BuildProcessResources.class);
-
     /*
      * The endpoints property.
      */
@@ -40,8 +38,14 @@ public final class BuildProcessResources {
     private List<VariableGroupReference> variableGroups;
 
     /**
+     * Creates an instance of BuildProcessResources class.
+     */
+    public BuildProcessResources() {
+    }
+
+    /**
      * Get the endpoints property: The endpoints property.
-     *
+     * 
      * @return the endpoints value.
      */
     public List<ServiceEndpointReference> endpoints() {
@@ -50,7 +54,7 @@ public final class BuildProcessResources {
 
     /**
      * Set the endpoints property: The endpoints property.
-     *
+     * 
      * @param endpoints the endpoints value to set.
      * @return the BuildProcessResources object itself.
      */
@@ -61,7 +65,7 @@ public final class BuildProcessResources {
 
     /**
      * Get the files property: The files property.
-     *
+     * 
      * @return the files value.
      */
     public List<SecureFileReference> files() {
@@ -70,7 +74,7 @@ public final class BuildProcessResources {
 
     /**
      * Set the files property: The files property.
-     *
+     * 
      * @param files the files value to set.
      * @return the BuildProcessResources object itself.
      */
@@ -81,7 +85,7 @@ public final class BuildProcessResources {
 
     /**
      * Get the queues property: The queues property.
-     *
+     * 
      * @return the queues value.
      */
     public List<AgentPoolQueueReference> queues() {
@@ -90,7 +94,7 @@ public final class BuildProcessResources {
 
     /**
      * Set the queues property: The queues property.
-     *
+     * 
      * @param queues the queues value to set.
      * @return the BuildProcessResources object itself.
      */
@@ -101,7 +105,7 @@ public final class BuildProcessResources {
 
     /**
      * Get the variableGroups property: The variableGroups property.
-     *
+     * 
      * @return the variableGroups value.
      */
     public List<VariableGroupReference> variableGroups() {
@@ -110,7 +114,7 @@ public final class BuildProcessResources {
 
     /**
      * Set the variableGroups property: The variableGroups property.
-     *
+     * 
      * @param variableGroups the variableGroups value to set.
      * @return the BuildProcessResources object itself.
      */
@@ -121,7 +125,7 @@ public final class BuildProcessResources {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

@@ -5,15 +5,13 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Represents a reference to a resource. */
+/**
+ * Represents a reference to a resource.
+ */
 @Fluent
 public class ResourceReference {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(ResourceReference.class);
-
     /*
      * An alias to be used when referencing the resource.
      */
@@ -21,8 +19,14 @@ public class ResourceReference {
     private String alias;
 
     /**
+     * Creates an instance of ResourceReference class.
+     */
+    public ResourceReference() {
+    }
+
+    /**
      * Get the alias property: An alias to be used when referencing the resource.
-     *
+     * 
      * @return the alias value.
      */
     public String alias() {
@@ -31,7 +35,7 @@ public class ResourceReference {
 
     /**
      * Set the alias property: An alias to be used when referencing the resource.
-     *
+     * 
      * @param alias the alias value to set.
      * @return the ResourceReference object itself.
      */
@@ -42,7 +46,7 @@ public class ResourceReference {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

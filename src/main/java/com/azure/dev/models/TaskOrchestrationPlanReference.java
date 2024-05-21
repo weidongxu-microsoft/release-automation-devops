@@ -5,16 +5,14 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.UUID;
 
-/** Represents a reference to an orchestration plan. */
+/**
+ * Represents a reference to an orchestration plan.
+ */
 @Fluent
 public final class TaskOrchestrationPlanReference {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(TaskOrchestrationPlanReference.class);
-
     /*
      * The type of the plan.
      */
@@ -28,8 +26,14 @@ public final class TaskOrchestrationPlanReference {
     private UUID planId;
 
     /**
+     * Creates an instance of TaskOrchestrationPlanReference class.
+     */
+    public TaskOrchestrationPlanReference() {
+    }
+
+    /**
      * Get the orchestrationType property: The type of the plan.
-     *
+     * 
      * @return the orchestrationType value.
      */
     public Integer orchestrationType() {
@@ -38,7 +42,7 @@ public final class TaskOrchestrationPlanReference {
 
     /**
      * Set the orchestrationType property: The type of the plan.
-     *
+     * 
      * @param orchestrationType the orchestrationType value to set.
      * @return the TaskOrchestrationPlanReference object itself.
      */
@@ -49,7 +53,7 @@ public final class TaskOrchestrationPlanReference {
 
     /**
      * Get the planId property: The ID of the plan.
-     *
+     * 
      * @return the planId value.
      */
     public UUID planId() {
@@ -58,7 +62,7 @@ public final class TaskOrchestrationPlanReference {
 
     /**
      * Set the planId property: The ID of the plan.
-     *
+     * 
      * @param planId the planId value to set.
      * @return the TaskOrchestrationPlanReference object itself.
      */
@@ -69,7 +73,7 @@ public final class TaskOrchestrationPlanReference {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

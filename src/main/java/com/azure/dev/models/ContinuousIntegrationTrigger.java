@@ -5,20 +5,17 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.UUID;
 
-/** Represents a continuous integration (CI) trigger. */
+/**
+ * Represents a continuous integration (CI) trigger.
+ */
 @Fluent
 public final class ContinuousIntegrationTrigger extends BuildTrigger {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(ContinuousIntegrationTrigger.class);
-
     /*
-     * Indicates whether changes should be batched while another CI build is
-     * running.
+     * Indicates whether changes should be batched while another CI build is running.
      */
     @JsonProperty(value = "batchChanges")
     private Boolean batchChanges;
@@ -60,8 +57,14 @@ public final class ContinuousIntegrationTrigger extends BuildTrigger {
     private Integer settingsSourceType;
 
     /**
+     * Creates an instance of ContinuousIntegrationTrigger class.
+     */
+    public ContinuousIntegrationTrigger() {
+    }
+
+    /**
      * Get the batchChanges property: Indicates whether changes should be batched while another CI build is running.
-     *
+     * 
      * @return the batchChanges value.
      */
     public Boolean batchChanges() {
@@ -70,7 +73,7 @@ public final class ContinuousIntegrationTrigger extends BuildTrigger {
 
     /**
      * Set the batchChanges property: Indicates whether changes should be batched while another CI build is running.
-     *
+     * 
      * @param batchChanges the batchChanges value to set.
      * @return the ContinuousIntegrationTrigger object itself.
      */
@@ -81,7 +84,7 @@ public final class ContinuousIntegrationTrigger extends BuildTrigger {
 
     /**
      * Get the branchFilters property: The branchFilters property.
-     *
+     * 
      * @return the branchFilters value.
      */
     public List<String> branchFilters() {
@@ -90,7 +93,7 @@ public final class ContinuousIntegrationTrigger extends BuildTrigger {
 
     /**
      * Set the branchFilters property: The branchFilters property.
-     *
+     * 
      * @param branchFilters the branchFilters value to set.
      * @return the ContinuousIntegrationTrigger object itself.
      */
@@ -102,7 +105,7 @@ public final class ContinuousIntegrationTrigger extends BuildTrigger {
     /**
      * Get the maxConcurrentBuildsPerBranch property: The maximum number of simultaneous CI builds that will run per
      * branch.
-     *
+     * 
      * @return the maxConcurrentBuildsPerBranch value.
      */
     public Integer maxConcurrentBuildsPerBranch() {
@@ -112,7 +115,7 @@ public final class ContinuousIntegrationTrigger extends BuildTrigger {
     /**
      * Set the maxConcurrentBuildsPerBranch property: The maximum number of simultaneous CI builds that will run per
      * branch.
-     *
+     * 
      * @param maxConcurrentBuildsPerBranch the maxConcurrentBuildsPerBranch value to set.
      * @return the ContinuousIntegrationTrigger object itself.
      */
@@ -123,7 +126,7 @@ public final class ContinuousIntegrationTrigger extends BuildTrigger {
 
     /**
      * Get the pathFilters property: The pathFilters property.
-     *
+     * 
      * @return the pathFilters value.
      */
     public List<String> pathFilters() {
@@ -132,7 +135,7 @@ public final class ContinuousIntegrationTrigger extends BuildTrigger {
 
     /**
      * Set the pathFilters property: The pathFilters property.
-     *
+     * 
      * @param pathFilters the pathFilters value to set.
      * @return the ContinuousIntegrationTrigger object itself.
      */
@@ -143,7 +146,7 @@ public final class ContinuousIntegrationTrigger extends BuildTrigger {
 
     /**
      * Get the pollingInterval property: The polling interval, in seconds.
-     *
+     * 
      * @return the pollingInterval value.
      */
     public Integer pollingInterval() {
@@ -152,7 +155,7 @@ public final class ContinuousIntegrationTrigger extends BuildTrigger {
 
     /**
      * Set the pollingInterval property: The polling interval, in seconds.
-     *
+     * 
      * @param pollingInterval the pollingInterval value to set.
      * @return the ContinuousIntegrationTrigger object itself.
      */
@@ -163,7 +166,7 @@ public final class ContinuousIntegrationTrigger extends BuildTrigger {
 
     /**
      * Get the pollingJobId property: The ID of the job used to poll an external repository.
-     *
+     * 
      * @return the pollingJobId value.
      */
     public UUID pollingJobId() {
@@ -172,7 +175,7 @@ public final class ContinuousIntegrationTrigger extends BuildTrigger {
 
     /**
      * Set the pollingJobId property: The ID of the job used to poll an external repository.
-     *
+     * 
      * @param pollingJobId the pollingJobId value to set.
      * @return the ContinuousIntegrationTrigger object itself.
      */
@@ -183,7 +186,7 @@ public final class ContinuousIntegrationTrigger extends BuildTrigger {
 
     /**
      * Get the settingsSourceType property: The settingsSourceType property.
-     *
+     * 
      * @return the settingsSourceType value.
      */
     public Integer settingsSourceType() {
@@ -192,7 +195,7 @@ public final class ContinuousIntegrationTrigger extends BuildTrigger {
 
     /**
      * Set the settingsSourceType property: The settingsSourceType property.
-     *
+     * 
      * @param settingsSourceType the settingsSourceType value to set.
      * @return the ContinuousIntegrationTrigger object itself.
      */
@@ -201,7 +204,9 @@ public final class ContinuousIntegrationTrigger extends BuildTrigger {
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ContinuousIntegrationTrigger withTriggerType(DefinitionTriggerType triggerType) {
         super.withTriggerType(triggerType);
@@ -210,7 +215,7 @@ public final class ContinuousIntegrationTrigger extends BuildTrigger {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     @Override

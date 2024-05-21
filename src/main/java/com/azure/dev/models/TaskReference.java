@@ -5,16 +5,14 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.UUID;
 
-/** Represents a reference to a task. */
+/**
+ * Represents a reference to a task.
+ */
 @Fluent
 public final class TaskReference {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(TaskReference.class);
-
     /*
      * The ID of the task definition.
      */
@@ -34,8 +32,14 @@ public final class TaskReference {
     private String version;
 
     /**
+     * Creates an instance of TaskReference class.
+     */
+    public TaskReference() {
+    }
+
+    /**
      * Get the id property: The ID of the task definition.
-     *
+     * 
      * @return the id value.
      */
     public UUID id() {
@@ -44,7 +48,7 @@ public final class TaskReference {
 
     /**
      * Set the id property: The ID of the task definition.
-     *
+     * 
      * @param id the id value to set.
      * @return the TaskReference object itself.
      */
@@ -55,7 +59,7 @@ public final class TaskReference {
 
     /**
      * Get the name property: The name of the task definition.
-     *
+     * 
      * @return the name value.
      */
     public String name() {
@@ -64,7 +68,7 @@ public final class TaskReference {
 
     /**
      * Set the name property: The name of the task definition.
-     *
+     * 
      * @param name the name value to set.
      * @return the TaskReference object itself.
      */
@@ -75,7 +79,7 @@ public final class TaskReference {
 
     /**
      * Get the version property: The version of the task definition.
-     *
+     * 
      * @return the version value.
      */
     public String version() {
@@ -84,7 +88,7 @@ public final class TaskReference {
 
     /**
      * Set the version property: The version of the task definition.
-     *
+     * 
      * @param version the version value to set.
      * @return the TaskReference object itself.
      */
@@ -95,7 +99,7 @@ public final class TaskReference {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

@@ -5,15 +5,13 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Contains the minimum, maximum, and current value for a retention setting. */
+/**
+ * Contains the minimum, maximum, and current value for a retention setting.
+ */
 @Fluent
 public final class RetentionSetting {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(RetentionSetting.class);
-
     /*
      * The max property.
      */
@@ -33,8 +31,14 @@ public final class RetentionSetting {
     private Integer value;
 
     /**
+     * Creates an instance of RetentionSetting class.
+     */
+    public RetentionSetting() {
+    }
+
+    /**
      * Get the max property: The max property.
-     *
+     * 
      * @return the max value.
      */
     public Integer max() {
@@ -43,7 +47,7 @@ public final class RetentionSetting {
 
     /**
      * Set the max property: The max property.
-     *
+     * 
      * @param max the max value to set.
      * @return the RetentionSetting object itself.
      */
@@ -54,7 +58,7 @@ public final class RetentionSetting {
 
     /**
      * Get the min property: The min property.
-     *
+     * 
      * @return the min value.
      */
     public Integer min() {
@@ -63,7 +67,7 @@ public final class RetentionSetting {
 
     /**
      * Set the min property: The min property.
-     *
+     * 
      * @param min the min value to set.
      * @return the RetentionSetting object itself.
      */
@@ -74,7 +78,7 @@ public final class RetentionSetting {
 
     /**
      * Get the value property: The value property.
-     *
+     * 
      * @return the value value.
      */
     public Integer value() {
@@ -83,7 +87,7 @@ public final class RetentionSetting {
 
     /**
      * Set the value property: The value property.
-     *
+     * 
      * @param value the value value to set.
      * @return the RetentionSetting object itself.
      */
@@ -94,7 +98,7 @@ public final class RetentionSetting {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

@@ -5,18 +5,16 @@
 package com.azure.dev.fluent.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.models.PipelineBase;
 import com.azure.dev.models.PipelineConfiguration;
 import com.azure.dev.models.ReferenceLinks;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Definition of a pipeline. */
+/**
+ * Definition of a pipeline.
+ */
 @Fluent
 public final class PipelineInner extends PipelineBase {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(PipelineInner.class);
-
     /*
      * The class to represent a collection of REST reference links.
      */
@@ -36,8 +34,14 @@ public final class PipelineInner extends PipelineBase {
     private String url;
 
     /**
+     * Creates an instance of PipelineInner class.
+     */
+    public PipelineInner() {
+    }
+
+    /**
      * Get the links property: The class to represent a collection of REST reference links.
-     *
+     * 
      * @return the links value.
      */
     public ReferenceLinks links() {
@@ -46,7 +50,7 @@ public final class PipelineInner extends PipelineBase {
 
     /**
      * Set the links property: The class to represent a collection of REST reference links.
-     *
+     * 
      * @param links the links value to set.
      * @return the PipelineInner object itself.
      */
@@ -57,7 +61,7 @@ public final class PipelineInner extends PipelineBase {
 
     /**
      * Get the configuration property: The configuration property.
-     *
+     * 
      * @return the configuration value.
      */
     public PipelineConfiguration configuration() {
@@ -66,7 +70,7 @@ public final class PipelineInner extends PipelineBase {
 
     /**
      * Set the configuration property: The configuration property.
-     *
+     * 
      * @param configuration the configuration value to set.
      * @return the PipelineInner object itself.
      */
@@ -77,7 +81,7 @@ public final class PipelineInner extends PipelineBase {
 
     /**
      * Get the url property: URL of the pipeline.
-     *
+     * 
      * @return the url value.
      */
     public String url() {
@@ -86,7 +90,7 @@ public final class PipelineInner extends PipelineBase {
 
     /**
      * Set the url property: URL of the pipeline.
-     *
+     * 
      * @param url the url value to set.
      * @return the PipelineInner object itself.
      */
@@ -95,28 +99,36 @@ public final class PipelineInner extends PipelineBase {
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PipelineInner withFolder(String folder) {
         super.withFolder(folder);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PipelineInner withId(Integer id) {
         super.withId(id);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PipelineInner withName(String name) {
         super.withName(name);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PipelineInner withRevision(Integer revision) {
         super.withRevision(revision);
@@ -125,7 +137,7 @@ public final class PipelineInner extends PipelineBase {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     @Override

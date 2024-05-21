@@ -5,16 +5,14 @@
 package com.azure.dev.fluent.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 
-/** A valid retention lease prevents automated systems from deleting a pipeline run. */
+/**
+ * A valid retention lease prevents automated systems from deleting a pipeline run.
+ */
 @Fluent
 public final class RetentionLeaseInner {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(RetentionLeaseInner.class);
-
     /*
      * When the lease was created.
      */
@@ -40,6 +38,12 @@ public final class RetentionLeaseInner {
     private String ownerId;
 
     /*
+     * If set, this lease will also prevent the pipeline from being deleted while the lease is still valid.
+     */
+    @JsonProperty(value = "protectPipeline")
+    private Boolean protectPipeline;
+
+    /*
      * The pipeline run protected by this lease.
      */
     @JsonProperty(value = "runId")
@@ -52,8 +56,14 @@ public final class RetentionLeaseInner {
     private OffsetDateTime validUntil;
 
     /**
+     * Creates an instance of RetentionLeaseInner class.
+     */
+    public RetentionLeaseInner() {
+    }
+
+    /**
      * Get the createdOn property: When the lease was created.
-     *
+     * 
      * @return the createdOn value.
      */
     public OffsetDateTime createdOn() {
@@ -62,7 +72,7 @@ public final class RetentionLeaseInner {
 
     /**
      * Set the createdOn property: When the lease was created.
-     *
+     * 
      * @param createdOn the createdOn value to set.
      * @return the RetentionLeaseInner object itself.
      */
@@ -73,7 +83,7 @@ public final class RetentionLeaseInner {
 
     /**
      * Get the definitionId property: The pipeline definition of the run.
-     *
+     * 
      * @return the definitionId value.
      */
     public Integer definitionId() {
@@ -82,7 +92,7 @@ public final class RetentionLeaseInner {
 
     /**
      * Set the definitionId property: The pipeline definition of the run.
-     *
+     * 
      * @param definitionId the definitionId value to set.
      * @return the RetentionLeaseInner object itself.
      */
@@ -93,7 +103,7 @@ public final class RetentionLeaseInner {
 
     /**
      * Get the leaseId property: The unique identifier for this lease.
-     *
+     * 
      * @return the leaseId value.
      */
     public Integer leaseId() {
@@ -102,7 +112,7 @@ public final class RetentionLeaseInner {
 
     /**
      * Set the leaseId property: The unique identifier for this lease.
-     *
+     * 
      * @param leaseId the leaseId value to set.
      * @return the RetentionLeaseInner object itself.
      */
@@ -113,7 +123,7 @@ public final class RetentionLeaseInner {
 
     /**
      * Get the ownerId property: Non-unique string that identifies the owner of a retention lease.
-     *
+     * 
      * @return the ownerId value.
      */
     public String ownerId() {
@@ -122,7 +132,7 @@ public final class RetentionLeaseInner {
 
     /**
      * Set the ownerId property: Non-unique string that identifies the owner of a retention lease.
-     *
+     * 
      * @param ownerId the ownerId value to set.
      * @return the RetentionLeaseInner object itself.
      */
@@ -132,8 +142,30 @@ public final class RetentionLeaseInner {
     }
 
     /**
+     * Get the protectPipeline property: If set, this lease will also prevent the pipeline from being deleted while the
+     * lease is still valid.
+     * 
+     * @return the protectPipeline value.
+     */
+    public Boolean protectPipeline() {
+        return this.protectPipeline;
+    }
+
+    /**
+     * Set the protectPipeline property: If set, this lease will also prevent the pipeline from being deleted while the
+     * lease is still valid.
+     * 
+     * @param protectPipeline the protectPipeline value to set.
+     * @return the RetentionLeaseInner object itself.
+     */
+    public RetentionLeaseInner withProtectPipeline(Boolean protectPipeline) {
+        this.protectPipeline = protectPipeline;
+        return this;
+    }
+
+    /**
      * Get the runId property: The pipeline run protected by this lease.
-     *
+     * 
      * @return the runId value.
      */
     public Integer runId() {
@@ -142,7 +174,7 @@ public final class RetentionLeaseInner {
 
     /**
      * Set the runId property: The pipeline run protected by this lease.
-     *
+     * 
      * @param runId the runId value to set.
      * @return the RetentionLeaseInner object itself.
      */
@@ -153,7 +185,7 @@ public final class RetentionLeaseInner {
 
     /**
      * Get the validUntil property: The last day the lease is considered valid.
-     *
+     * 
      * @return the validUntil value.
      */
     public OffsetDateTime validUntil() {
@@ -162,7 +194,7 @@ public final class RetentionLeaseInner {
 
     /**
      * Set the validUntil property: The last day the lease is considered valid.
-     *
+     * 
      * @param validUntil the validUntil value to set.
      * @return the RetentionLeaseInner object itself.
      */
@@ -173,7 +205,7 @@ public final class RetentionLeaseInner {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

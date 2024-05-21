@@ -5,16 +5,14 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 
-/** A signed url allowing limited-time anonymous access to private resources. */
+/**
+ * A signed url allowing limited-time anonymous access to private resources.
+ */
 @Fluent
 public final class SignedUrl {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(SignedUrl.class);
-
     /*
      * Timestamp when access expires.
      */
@@ -28,8 +26,14 @@ public final class SignedUrl {
     private String url;
 
     /**
+     * Creates an instance of SignedUrl class.
+     */
+    public SignedUrl() {
+    }
+
+    /**
      * Get the signatureExpires property: Timestamp when access expires.
-     *
+     * 
      * @return the signatureExpires value.
      */
     public OffsetDateTime signatureExpires() {
@@ -38,7 +42,7 @@ public final class SignedUrl {
 
     /**
      * Set the signatureExpires property: Timestamp when access expires.
-     *
+     * 
      * @param signatureExpires the signatureExpires value to set.
      * @return the SignedUrl object itself.
      */
@@ -49,7 +53,7 @@ public final class SignedUrl {
 
     /**
      * Get the url property: The URL to allow access to.
-     *
+     * 
      * @return the url value.
      */
     public String url() {
@@ -58,7 +62,7 @@ public final class SignedUrl {
 
     /**
      * Set the url property: The URL to allow access to.
-     *
+     * 
      * @param url the url value to set.
      * @return the SignedUrl object itself.
      */
@@ -69,7 +73,7 @@ public final class SignedUrl {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

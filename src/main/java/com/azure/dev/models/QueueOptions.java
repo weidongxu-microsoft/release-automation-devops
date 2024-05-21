@@ -7,15 +7,23 @@ package com.azure.dev.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/** Defines values for QueueOptions. */
+/**
+ * Additional options for queueing the build.
+ */
 public enum QueueOptions {
-    /** Enum value none. */
+    /**
+     * Enum value none.
+     */
     NONE("none"),
 
-    /** Enum value doNotRun. */
+    /**
+     * Enum value doNotRun.
+     */
     DO_NOT_RUN("doNotRun");
 
-    /** The actual serialized value for a QueueOptions instance. */
+    /**
+     * The actual serialized value for a QueueOptions instance.
+     */
     private final String value;
 
     QueueOptions(String value) {
@@ -24,12 +32,15 @@ public enum QueueOptions {
 
     /**
      * Parses a serialized value to a QueueOptions instance.
-     *
+     * 
      * @param value the serialized value to parse.
      * @return the parsed QueueOptions object, or null if unable to parse.
      */
     @JsonCreator
     public static QueueOptions fromString(String value) {
+        if (value == null) {
+            return null;
+        }
         QueueOptions[] items = QueueOptions.values();
         for (QueueOptions item : items) {
             if (item.toString().equalsIgnoreCase(value)) {
@@ -39,6 +50,9 @@ public enum QueueOptions {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @JsonValue
     @Override
     public String toString() {

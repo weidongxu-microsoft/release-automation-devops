@@ -7,30 +7,48 @@ package com.azure.dev.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/** Defines values for BuildOptionInputType. */
+/**
+ * Indicates the type of the input value.
+ */
 public enum BuildOptionInputType {
-    /** Enum value string. */
+    /**
+     * Enum value string.
+     */
     STRING("string"),
 
-    /** Enum value boolean. */
+    /**
+     * Enum value boolean.
+     */
     BOOLEAN("boolean"),
 
-    /** Enum value stringList. */
+    /**
+     * Enum value stringList.
+     */
     STRING_LIST("stringList"),
 
-    /** Enum value radio. */
+    /**
+     * Enum value radio.
+     */
     RADIO("radio"),
 
-    /** Enum value pickList. */
+    /**
+     * Enum value pickList.
+     */
     PICK_LIST("pickList"),
 
-    /** Enum value multiLine. */
+    /**
+     * Enum value multiLine.
+     */
     MULTI_LINE("multiLine"),
 
-    /** Enum value branchFilter. */
+    /**
+     * Enum value branchFilter.
+     */
     BRANCH_FILTER("branchFilter");
 
-    /** The actual serialized value for a BuildOptionInputType instance. */
+    /**
+     * The actual serialized value for a BuildOptionInputType instance.
+     */
     private final String value;
 
     BuildOptionInputType(String value) {
@@ -39,12 +57,15 @@ public enum BuildOptionInputType {
 
     /**
      * Parses a serialized value to a BuildOptionInputType instance.
-     *
+     * 
      * @param value the serialized value to parse.
      * @return the parsed BuildOptionInputType object, or null if unable to parse.
      */
     @JsonCreator
     public static BuildOptionInputType fromString(String value) {
+        if (value == null) {
+            return null;
+        }
         BuildOptionInputType[] items = BuildOptionInputType.values();
         for (BuildOptionInputType item : items) {
             if (item.toString().equalsIgnoreCase(value)) {
@@ -54,6 +75,9 @@ public enum BuildOptionInputType {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @JsonValue
     @Override
     public String toString() {

@@ -5,17 +5,15 @@
 package com.azure.dev.fluent.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.models.SignedUrl;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** A collection of logs. */
+/**
+ * A collection of logs.
+ */
 @Fluent
 public final class LogCollectionInner {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(LogCollectionInner.class);
-
     /*
      * The list of logs.
      */
@@ -23,8 +21,7 @@ public final class LogCollectionInner {
     private List<LogInner> logs;
 
     /*
-     * A signed url allowing limited-time anonymous access to private
-     * resources.
+     * A signed url allowing limited-time anonymous access to private resources.
      */
     @JsonProperty(value = "signedContent")
     private SignedUrl signedContent;
@@ -36,8 +33,14 @@ public final class LogCollectionInner {
     private String url;
 
     /**
+     * Creates an instance of LogCollectionInner class.
+     */
+    public LogCollectionInner() {
+    }
+
+    /**
      * Get the logs property: The list of logs.
-     *
+     * 
      * @return the logs value.
      */
     public List<LogInner> logs() {
@@ -46,7 +49,7 @@ public final class LogCollectionInner {
 
     /**
      * Set the logs property: The list of logs.
-     *
+     * 
      * @param logs the logs value to set.
      * @return the LogCollectionInner object itself.
      */
@@ -57,7 +60,7 @@ public final class LogCollectionInner {
 
     /**
      * Get the signedContent property: A signed url allowing limited-time anonymous access to private resources.
-     *
+     * 
      * @return the signedContent value.
      */
     public SignedUrl signedContent() {
@@ -66,7 +69,7 @@ public final class LogCollectionInner {
 
     /**
      * Set the signedContent property: A signed url allowing limited-time anonymous access to private resources.
-     *
+     * 
      * @param signedContent the signedContent value to set.
      * @return the LogCollectionInner object itself.
      */
@@ -77,7 +80,7 @@ public final class LogCollectionInner {
 
     /**
      * Get the url property: URL of the log.
-     *
+     * 
      * @return the url value.
      */
     public String url() {
@@ -86,7 +89,7 @@ public final class LogCollectionInner {
 
     /**
      * Set the url property: URL of the log.
-     *
+     * 
      * @param url the url value to set.
      * @return the LogCollectionInner object itself.
      */
@@ -97,7 +100,7 @@ public final class LogCollectionInner {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

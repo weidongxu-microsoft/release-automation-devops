@@ -5,17 +5,15 @@
 package com.azure.dev.fluent.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.models.BuildLogReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 
-/** Represents a build log. */
+/**
+ * Represents a build log.
+ */
 @Fluent
 public final class BuildLogInner extends BuildLogReference {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(BuildLogInner.class);
-
     /*
      * The date and time the log was created.
      */
@@ -35,8 +33,14 @@ public final class BuildLogInner extends BuildLogReference {
     private Long lineCount;
 
     /**
+     * Creates an instance of BuildLogInner class.
+     */
+    public BuildLogInner() {
+    }
+
+    /**
      * Get the createdOn property: The date and time the log was created.
-     *
+     * 
      * @return the createdOn value.
      */
     public OffsetDateTime createdOn() {
@@ -45,7 +49,7 @@ public final class BuildLogInner extends BuildLogReference {
 
     /**
      * Set the createdOn property: The date and time the log was created.
-     *
+     * 
      * @param createdOn the createdOn value to set.
      * @return the BuildLogInner object itself.
      */
@@ -56,7 +60,7 @@ public final class BuildLogInner extends BuildLogReference {
 
     /**
      * Get the lastChangedOn property: The date and time the log was last changed.
-     *
+     * 
      * @return the lastChangedOn value.
      */
     public OffsetDateTime lastChangedOn() {
@@ -65,7 +69,7 @@ public final class BuildLogInner extends BuildLogReference {
 
     /**
      * Set the lastChangedOn property: The date and time the log was last changed.
-     *
+     * 
      * @param lastChangedOn the lastChangedOn value to set.
      * @return the BuildLogInner object itself.
      */
@@ -76,7 +80,7 @@ public final class BuildLogInner extends BuildLogReference {
 
     /**
      * Get the lineCount property: The number of lines in the log.
-     *
+     * 
      * @return the lineCount value.
      */
     public Long lineCount() {
@@ -85,7 +89,7 @@ public final class BuildLogInner extends BuildLogReference {
 
     /**
      * Set the lineCount property: The number of lines in the log.
-     *
+     * 
      * @param lineCount the lineCount value to set.
      * @return the BuildLogInner object itself.
      */
@@ -94,21 +98,27 @@ public final class BuildLogInner extends BuildLogReference {
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildLogInner withId(Integer id) {
         super.withId(id);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildLogInner withType(String type) {
         super.withType(type);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildLogInner withUrl(String url) {
         super.withUrl(url);
@@ -117,7 +127,7 @@ public final class BuildLogInner extends BuildLogReference {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     @Override

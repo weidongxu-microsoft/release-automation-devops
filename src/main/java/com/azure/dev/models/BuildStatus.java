@@ -7,30 +7,48 @@ package com.azure.dev.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/** Defines values for BuildStatus. */
+/**
+ * The status of the build.
+ */
 public enum BuildStatus {
-    /** Enum value none. */
+    /**
+     * Enum value none.
+     */
     NONE("none"),
 
-    /** Enum value inProgress. */
+    /**
+     * Enum value inProgress.
+     */
     IN_PROGRESS("inProgress"),
 
-    /** Enum value completed. */
+    /**
+     * Enum value completed.
+     */
     COMPLETED("completed"),
 
-    /** Enum value cancelling. */
+    /**
+     * Enum value cancelling.
+     */
     CANCELLING("cancelling"),
 
-    /** Enum value postponed. */
+    /**
+     * Enum value postponed.
+     */
     POSTPONED("postponed"),
 
-    /** Enum value notStarted. */
+    /**
+     * Enum value notStarted.
+     */
     NOT_STARTED("notStarted"),
 
-    /** Enum value all. */
+    /**
+     * Enum value all.
+     */
     ALL("all");
 
-    /** The actual serialized value for a BuildStatus instance. */
+    /**
+     * The actual serialized value for a BuildStatus instance.
+     */
     private final String value;
 
     BuildStatus(String value) {
@@ -39,12 +57,15 @@ public enum BuildStatus {
 
     /**
      * Parses a serialized value to a BuildStatus instance.
-     *
+     * 
      * @param value the serialized value to parse.
      * @return the parsed BuildStatus object, or null if unable to parse.
      */
     @JsonCreator
     public static BuildStatus fromString(String value) {
+        if (value == null) {
+            return null;
+        }
         BuildStatus[] items = BuildStatus.values();
         for (BuildStatus item : items) {
             if (item.toString().equalsIgnoreCase(value)) {
@@ -54,6 +75,9 @@ public enum BuildStatus {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @JsonValue
     @Override
     public String toString() {

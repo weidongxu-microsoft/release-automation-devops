@@ -5,16 +5,14 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 
-/** Represents a reference to a build. */
+/**
+ * Represents a reference to a build.
+ */
 @Fluent
 public final class BuildReference {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(BuildReference.class);
-
     /*
      * The class to represent a collection of REST reference links.
      */
@@ -76,8 +74,14 @@ public final class BuildReference {
     private BuildStatus status;
 
     /**
+     * Creates an instance of BuildReference class.
+     */
+    public BuildReference() {
+    }
+
+    /**
      * Get the links property: The class to represent a collection of REST reference links.
-     *
+     * 
      * @return the links value.
      */
     public ReferenceLinks links() {
@@ -86,7 +90,7 @@ public final class BuildReference {
 
     /**
      * Set the links property: The class to represent a collection of REST reference links.
-     *
+     * 
      * @param links the links value to set.
      * @return the BuildReference object itself.
      */
@@ -97,7 +101,7 @@ public final class BuildReference {
 
     /**
      * Get the buildNumber property: The build number.
-     *
+     * 
      * @return the buildNumber value.
      */
     public String buildNumber() {
@@ -106,7 +110,7 @@ public final class BuildReference {
 
     /**
      * Set the buildNumber property: The build number.
-     *
+     * 
      * @param buildNumber the buildNumber value to set.
      * @return the BuildReference object itself.
      */
@@ -117,7 +121,7 @@ public final class BuildReference {
 
     /**
      * Get the deleted property: Indicates whether the build has been deleted.
-     *
+     * 
      * @return the deleted value.
      */
     public Boolean deleted() {
@@ -126,7 +130,7 @@ public final class BuildReference {
 
     /**
      * Set the deleted property: Indicates whether the build has been deleted.
-     *
+     * 
      * @param deleted the deleted value to set.
      * @return the BuildReference object itself.
      */
@@ -137,7 +141,7 @@ public final class BuildReference {
 
     /**
      * Get the finishTime property: The time that the build was completed.
-     *
+     * 
      * @return the finishTime value.
      */
     public OffsetDateTime finishTime() {
@@ -146,7 +150,7 @@ public final class BuildReference {
 
     /**
      * Set the finishTime property: The time that the build was completed.
-     *
+     * 
      * @param finishTime the finishTime value to set.
      * @return the BuildReference object itself.
      */
@@ -157,7 +161,7 @@ public final class BuildReference {
 
     /**
      * Get the id property: The ID of the build.
-     *
+     * 
      * @return the id value.
      */
     public Integer id() {
@@ -166,7 +170,7 @@ public final class BuildReference {
 
     /**
      * Set the id property: The ID of the build.
-     *
+     * 
      * @param id the id value to set.
      * @return the BuildReference object itself.
      */
@@ -177,7 +181,7 @@ public final class BuildReference {
 
     /**
      * Get the queueTime property: The time that the build was queued.
-     *
+     * 
      * @return the queueTime value.
      */
     public OffsetDateTime queueTime() {
@@ -186,7 +190,7 @@ public final class BuildReference {
 
     /**
      * Set the queueTime property: The time that the build was queued.
-     *
+     * 
      * @param queueTime the queueTime value to set.
      * @return the BuildReference object itself.
      */
@@ -197,7 +201,7 @@ public final class BuildReference {
 
     /**
      * Get the requestedFor property: The identity on whose behalf the build was queued.
-     *
+     * 
      * @return the requestedFor value.
      */
     public IdentityRef requestedFor() {
@@ -206,7 +210,7 @@ public final class BuildReference {
 
     /**
      * Set the requestedFor property: The identity on whose behalf the build was queued.
-     *
+     * 
      * @param requestedFor the requestedFor value to set.
      * @return the BuildReference object itself.
      */
@@ -217,7 +221,7 @@ public final class BuildReference {
 
     /**
      * Get the result property: The build result.
-     *
+     * 
      * @return the result value.
      */
     public BuildResult result() {
@@ -226,7 +230,7 @@ public final class BuildReference {
 
     /**
      * Set the result property: The build result.
-     *
+     * 
      * @param result the result value to set.
      * @return the BuildReference object itself.
      */
@@ -237,7 +241,7 @@ public final class BuildReference {
 
     /**
      * Get the startTime property: The time that the build was started.
-     *
+     * 
      * @return the startTime value.
      */
     public OffsetDateTime startTime() {
@@ -246,7 +250,7 @@ public final class BuildReference {
 
     /**
      * Set the startTime property: The time that the build was started.
-     *
+     * 
      * @param startTime the startTime value to set.
      * @return the BuildReference object itself.
      */
@@ -257,7 +261,7 @@ public final class BuildReference {
 
     /**
      * Get the status property: The build status.
-     *
+     * 
      * @return the status value.
      */
     public BuildStatus status() {
@@ -266,7 +270,7 @@ public final class BuildReference {
 
     /**
      * Set the status property: The build status.
-     *
+     * 
      * @param status the status value to set.
      * @return the BuildReference object itself.
      */
@@ -277,7 +281,7 @@ public final class BuildReference {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

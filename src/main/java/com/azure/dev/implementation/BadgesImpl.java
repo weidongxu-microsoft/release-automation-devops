@@ -9,11 +9,10 @@ import com.azure.core.util.Context;
 import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.fluent.BadgesClient;
 import com.azure.dev.models.Badges;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.UUID;
 
 public final class BadgesImpl implements Badges {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(BadgesImpl.class);
+    private static final ClientLogger LOGGER = new ClientLogger(BadgesImpl.class);
 
     private final BadgesClient innerClient;
 
@@ -24,24 +23,23 @@ public final class BadgesImpl implements Badges {
         this.serviceManager = serviceManager;
     }
 
+    public Response<String> getWithResponse(String organization, UUID project, int definitionId, String branchName,
+        Context context) {
+        return this.serviceClient().getWithResponse(organization, project, definitionId, branchName, context);
+    }
+
     public String get(String organization, UUID project, int definitionId) {
         return this.serviceClient().get(organization, project, definitionId);
     }
 
-    public Response<String> getWithResponse(
-        String organization, UUID project, int definitionId, String branchName, Context context) {
-        return this.serviceClient().getWithResponse(organization, project, definitionId, branchName, context);
+    public Response<String> getBuildBadgeDataWithResponse(String organization, String project, String repoType,
+        String repoId, String branchName, Context context) {
+        return this.serviceClient()
+            .getBuildBadgeDataWithResponse(organization, project, repoType, repoId, branchName, context);
     }
 
     public String getBuildBadgeData(String organization, String project, String repoType) {
         return this.serviceClient().getBuildBadgeData(organization, project, repoType);
-    }
-
-    public Response<String> getBuildBadgeDataWithResponse(
-        String organization, String project, String repoType, String repoId, String branchName, Context context) {
-        return this
-            .serviceClient()
-            .getBuildBadgeDataWithResponse(organization, project, repoType, repoId, branchName, context);
     }
 
     private BadgesClient serviceClient() {

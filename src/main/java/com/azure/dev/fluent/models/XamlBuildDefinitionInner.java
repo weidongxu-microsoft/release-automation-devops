@@ -5,7 +5,6 @@
 package com.azure.dev.fluent.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.models.BuildReason;
 import com.azure.dev.models.BuildRepository;
 import com.azure.dev.models.DefinitionQueueStatus;
@@ -15,15 +14,14 @@ import com.azure.dev.models.DefinitionType;
 import com.azure.dev.models.ReferenceLinks;
 import com.azure.dev.models.TeamProjectReference;
 import com.azure.dev.models.XamlBuildReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 
-/** The XamlBuildDefinition model. */
+/**
+ * The XamlBuildDefinition model.
+ */
 @Fluent
 public final class XamlBuildDefinitionInner extends DefinitionReference {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(XamlBuildDefinitionInner.class);
-
     /*
      * The class to represent a collection of REST reference links.
      */
@@ -97,8 +95,14 @@ public final class XamlBuildDefinitionInner extends DefinitionReference {
     private DefinitionTriggerType triggerType;
 
     /**
+     * Creates an instance of XamlBuildDefinitionInner class.
+     */
+    public XamlBuildDefinitionInner() {
+    }
+
+    /**
      * Get the links property: The class to represent a collection of REST reference links.
-     *
+     * 
      * @return the links value.
      */
     public ReferenceLinks links() {
@@ -107,7 +111,7 @@ public final class XamlBuildDefinitionInner extends DefinitionReference {
 
     /**
      * Set the links property: The class to represent a collection of REST reference links.
-     *
+     * 
      * @param links the links value to set.
      * @return the XamlBuildDefinitionInner object itself.
      */
@@ -118,7 +122,7 @@ public final class XamlBuildDefinitionInner extends DefinitionReference {
 
     /**
      * Get the batchSize property: Batch size of the definition.
-     *
+     * 
      * @return the batchSize value.
      */
     public Integer batchSize() {
@@ -127,7 +131,7 @@ public final class XamlBuildDefinitionInner extends DefinitionReference {
 
     /**
      * Set the batchSize property: Batch size of the definition.
-     *
+     * 
      * @param batchSize the batchSize value to set.
      * @return the XamlBuildDefinitionInner object itself.
      */
@@ -138,7 +142,7 @@ public final class XamlBuildDefinitionInner extends DefinitionReference {
 
     /**
      * Get the buildArgs property: The buildArgs property.
-     *
+     * 
      * @return the buildArgs value.
      */
     public String buildArgs() {
@@ -147,7 +151,7 @@ public final class XamlBuildDefinitionInner extends DefinitionReference {
 
     /**
      * Set the buildArgs property: The buildArgs property.
-     *
+     * 
      * @param buildArgs the buildArgs value to set.
      * @return the XamlBuildDefinitionInner object itself.
      */
@@ -158,7 +162,7 @@ public final class XamlBuildDefinitionInner extends DefinitionReference {
 
     /**
      * Get the continuousIntegrationQuietPeriod property: The continuous integration quiet period.
-     *
+     * 
      * @return the continuousIntegrationQuietPeriod value.
      */
     public Integer continuousIntegrationQuietPeriod() {
@@ -167,7 +171,7 @@ public final class XamlBuildDefinitionInner extends DefinitionReference {
 
     /**
      * Set the continuousIntegrationQuietPeriod property: The continuous integration quiet period.
-     *
+     * 
      * @param continuousIntegrationQuietPeriod the continuousIntegrationQuietPeriod value to set.
      * @return the XamlBuildDefinitionInner object itself.
      */
@@ -178,7 +182,7 @@ public final class XamlBuildDefinitionInner extends DefinitionReference {
 
     /**
      * Get the controller property: The build controller.
-     *
+     * 
      * @return the controller value.
      */
     public BuildControllerInner controller() {
@@ -187,7 +191,7 @@ public final class XamlBuildDefinitionInner extends DefinitionReference {
 
     /**
      * Set the controller property: The build controller.
-     *
+     * 
      * @param controller the controller value to set.
      * @return the XamlBuildDefinitionInner object itself.
      */
@@ -198,7 +202,7 @@ public final class XamlBuildDefinitionInner extends DefinitionReference {
 
     /**
      * Get the createdOn property: The date this definition was created.
-     *
+     * 
      * @return the createdOn value.
      */
     public OffsetDateTime createdOn() {
@@ -207,7 +211,7 @@ public final class XamlBuildDefinitionInner extends DefinitionReference {
 
     /**
      * Set the createdOn property: The date this definition was created.
-     *
+     * 
      * @param createdOn the createdOn value to set.
      * @return the XamlBuildDefinitionInner object itself.
      */
@@ -218,7 +222,7 @@ public final class XamlBuildDefinitionInner extends DefinitionReference {
 
     /**
      * Get the defaultDropLocation property: Default drop location for builds from this definition.
-     *
+     * 
      * @return the defaultDropLocation value.
      */
     public String defaultDropLocation() {
@@ -227,7 +231,7 @@ public final class XamlBuildDefinitionInner extends DefinitionReference {
 
     /**
      * Set the defaultDropLocation property: Default drop location for builds from this definition.
-     *
+     * 
      * @param defaultDropLocation the defaultDropLocation value to set.
      * @return the XamlBuildDefinitionInner object itself.
      */
@@ -238,7 +242,7 @@ public final class XamlBuildDefinitionInner extends DefinitionReference {
 
     /**
      * Get the description property: Description of the definition.
-     *
+     * 
      * @return the description value.
      */
     public String description() {
@@ -247,7 +251,7 @@ public final class XamlBuildDefinitionInner extends DefinitionReference {
 
     /**
      * Set the description property: Description of the definition.
-     *
+     * 
      * @param description the description value to set.
      * @return the XamlBuildDefinitionInner object itself.
      */
@@ -258,7 +262,7 @@ public final class XamlBuildDefinitionInner extends DefinitionReference {
 
     /**
      * Get the lastBuild property: The last build on this definition.
-     *
+     * 
      * @return the lastBuild value.
      */
     public XamlBuildReference lastBuild() {
@@ -267,7 +271,7 @@ public final class XamlBuildDefinitionInner extends DefinitionReference {
 
     /**
      * Set the lastBuild property: The last build on this definition.
-     *
+     * 
      * @param lastBuild the lastBuild value to set.
      * @return the XamlBuildDefinitionInner object itself.
      */
@@ -278,7 +282,7 @@ public final class XamlBuildDefinitionInner extends DefinitionReference {
 
     /**
      * Get the repository property: The repository.
-     *
+     * 
      * @return the repository value.
      */
     public BuildRepository repository() {
@@ -287,7 +291,7 @@ public final class XamlBuildDefinitionInner extends DefinitionReference {
 
     /**
      * Set the repository property: The repository.
-     *
+     * 
      * @param repository the repository value to set.
      * @return the XamlBuildDefinitionInner object itself.
      */
@@ -298,7 +302,7 @@ public final class XamlBuildDefinitionInner extends DefinitionReference {
 
     /**
      * Get the supportedReasons property: The reasons supported by the template.
-     *
+     * 
      * @return the supportedReasons value.
      */
     public BuildReason supportedReasons() {
@@ -307,7 +311,7 @@ public final class XamlBuildDefinitionInner extends DefinitionReference {
 
     /**
      * Set the supportedReasons property: The reasons supported by the template.
-     *
+     * 
      * @param supportedReasons the supportedReasons value to set.
      * @return the XamlBuildDefinitionInner object itself.
      */
@@ -318,7 +322,7 @@ public final class XamlBuildDefinitionInner extends DefinitionReference {
 
     /**
      * Get the triggerType property: How builds are triggered from this definition.
-     *
+     * 
      * @return the triggerType value.
      */
     public DefinitionTriggerType triggerType() {
@@ -327,7 +331,7 @@ public final class XamlBuildDefinitionInner extends DefinitionReference {
 
     /**
      * Set the triggerType property: How builds are triggered from this definition.
-     *
+     * 
      * @param triggerType the triggerType value to set.
      * @return the XamlBuildDefinitionInner object itself.
      */
@@ -336,70 +340,90 @@ public final class XamlBuildDefinitionInner extends DefinitionReference {
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public XamlBuildDefinitionInner withCreatedDate(OffsetDateTime createdDate) {
         super.withCreatedDate(createdDate);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public XamlBuildDefinitionInner withId(Integer id) {
         super.withId(id);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public XamlBuildDefinitionInner withName(String name) {
         super.withName(name);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public XamlBuildDefinitionInner withPath(String path) {
         super.withPath(path);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public XamlBuildDefinitionInner withProject(TeamProjectReference project) {
         super.withProject(project);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public XamlBuildDefinitionInner withQueueStatus(DefinitionQueueStatus queueStatus) {
         super.withQueueStatus(queueStatus);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public XamlBuildDefinitionInner withRevision(Integer revision) {
         super.withRevision(revision);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public XamlBuildDefinitionInner withType(DefinitionType type) {
         super.withType(type);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public XamlBuildDefinitionInner withUri(String uri) {
         super.withUri(uri);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public XamlBuildDefinitionInner withUrl(String url) {
         super.withUrl(url);
@@ -408,7 +432,7 @@ public final class XamlBuildDefinitionInner extends DefinitionReference {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     @Override

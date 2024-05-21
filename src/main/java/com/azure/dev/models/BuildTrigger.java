@@ -5,24 +5,39 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.HashMap;
+import java.util.Map;
 
-/** Represents a trigger for a buld definition. */
+/**
+ * Represents a trigger for a buld definition.
+ */
 @Fluent
 public class BuildTrigger {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(BuildTrigger.class);
-
     /*
      * The type of the trigger.
      */
     @JsonProperty(value = "triggerType")
     private DefinitionTriggerType triggerType;
 
+    /*
+     * Represents a trigger for a buld definition.
+     */
+    @JsonIgnore
+    private Map<String, Object> additionalProperties;
+
+    /**
+     * Creates an instance of BuildTrigger class.
+     */
+    public BuildTrigger() {
+    }
+
     /**
      * Get the triggerType property: The type of the trigger.
-     *
+     * 
      * @return the triggerType value.
      */
     public DefinitionTriggerType triggerType() {
@@ -31,7 +46,7 @@ public class BuildTrigger {
 
     /**
      * Set the triggerType property: The type of the trigger.
-     *
+     * 
      * @param triggerType the triggerType value to set.
      * @return the BuildTrigger object itself.
      */
@@ -41,8 +56,37 @@ public class BuildTrigger {
     }
 
     /**
+     * Get the additionalProperties property: Represents a trigger for a buld definition.
+     * 
+     * @return the additionalProperties value.
+     */
+    @JsonAnyGetter
+    public Map<String, Object> additionalProperties() {
+        return this.additionalProperties;
+    }
+
+    /**
+     * Set the additionalProperties property: Represents a trigger for a buld definition.
+     * 
+     * @param additionalProperties the additionalProperties value to set.
+     * @return the BuildTrigger object itself.
+     */
+    public BuildTrigger withAdditionalProperties(Map<String, Object> additionalProperties) {
+        this.additionalProperties = additionalProperties;
+        return this;
+    }
+
+    @JsonAnySetter
+    void withAdditionalProperties(String key, Object value) {
+        if (additionalProperties == null) {
+            additionalProperties = new HashMap<>();
+        }
+        additionalProperties.put(key, value);
+    }
+
+    /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

@@ -5,16 +5,14 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** Represents a build process supported by the build definition designer. */
+/**
+ * Represents a build process supported by the build definition designer.
+ */
 @Fluent
 public final class DesignerProcess extends BuildProcess {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(DesignerProcess.class);
-
     /*
      * The phases property.
      */
@@ -28,8 +26,14 @@ public final class DesignerProcess extends BuildProcess {
     private DesignerProcessTarget target;
 
     /**
+     * Creates an instance of DesignerProcess class.
+     */
+    public DesignerProcess() {
+    }
+
+    /**
      * Get the phases property: The phases property.
-     *
+     * 
      * @return the phases value.
      */
     public List<Phase> phases() {
@@ -38,7 +42,7 @@ public final class DesignerProcess extends BuildProcess {
 
     /**
      * Set the phases property: The phases property.
-     *
+     * 
      * @param phases the phases value to set.
      * @return the DesignerProcess object itself.
      */
@@ -49,7 +53,7 @@ public final class DesignerProcess extends BuildProcess {
 
     /**
      * Get the target property: The target for the build process.
-     *
+     * 
      * @return the target value.
      */
     public DesignerProcessTarget target() {
@@ -58,7 +62,7 @@ public final class DesignerProcess extends BuildProcess {
 
     /**
      * Set the target property: The target for the build process.
-     *
+     * 
      * @param target the target value to set.
      * @return the DesignerProcess object itself.
      */
@@ -67,7 +71,9 @@ public final class DesignerProcess extends BuildProcess {
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public DesignerProcess withType(Integer type) {
         super.withType(type);
@@ -76,7 +82,7 @@ public final class DesignerProcess extends BuildProcess {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     @Override

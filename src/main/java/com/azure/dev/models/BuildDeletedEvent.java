@@ -6,25 +6,27 @@ package com.azure.dev.models;
 
 import com.azure.dev.fluent.models.BuildDeletedEventInner;
 
-/** An immutable client-side representation of BuildDeletedEvent. */
+/**
+ * An immutable client-side representation of BuildDeletedEvent.
+ */
 public interface BuildDeletedEvent {
     /**
      * Gets the buildId property: The buildId property.
-     *
+     * 
      * @return the buildId value.
      */
     Integer buildId();
 
     /**
      * Gets the build property: Data representation of a build.
-     *
+     * 
      * @return the build value.
      */
     Build build();
 
     /**
      * Gets the inner com.azure.dev.fluent.models.BuildDeletedEventInner object.
-     *
+     * 
      * @return the inner object.
      */
     BuildDeletedEventInner innerModel();

@@ -7,54 +7,88 @@ package com.azure.dev.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/** Defines values for TestOutcome. */
+/**
+ * Defines values for TestOutcome.
+ */
 public enum TestOutcome {
-    /** Enum value unspecified. */
+    /**
+     * Enum value unspecified.
+     */
     UNSPECIFIED("unspecified"),
 
-    /** Enum value none. */
+    /**
+     * Enum value none.
+     */
     NONE("none"),
 
-    /** Enum value passed. */
+    /**
+     * Enum value passed.
+     */
     PASSED("passed"),
 
-    /** Enum value failed. */
+    /**
+     * Enum value failed.
+     */
     FAILED("failed"),
 
-    /** Enum value inconclusive. */
+    /**
+     * Enum value inconclusive.
+     */
     INCONCLUSIVE("inconclusive"),
 
-    /** Enum value timeout. */
+    /**
+     * Enum value timeout.
+     */
     TIMEOUT("timeout"),
 
-    /** Enum value aborted. */
+    /**
+     * Enum value aborted.
+     */
     ABORTED("aborted"),
 
-    /** Enum value blocked. */
+    /**
+     * Enum value blocked.
+     */
     BLOCKED("blocked"),
 
-    /** Enum value notExecuted. */
+    /**
+     * Enum value notExecuted.
+     */
     NOT_EXECUTED("notExecuted"),
 
-    /** Enum value warning. */
+    /**
+     * Enum value warning.
+     */
     WARNING("warning"),
 
-    /** Enum value error. */
+    /**
+     * Enum value error.
+     */
     ERROR("error"),
 
-    /** Enum value notApplicable. */
+    /**
+     * Enum value notApplicable.
+     */
     NOT_APPLICABLE("notApplicable"),
 
-    /** Enum value paused. */
+    /**
+     * Enum value paused.
+     */
     PAUSED("paused"),
 
-    /** Enum value inProgress. */
+    /**
+     * Enum value inProgress.
+     */
     IN_PROGRESS("inProgress"),
 
-    /** Enum value notImpacted. */
+    /**
+     * Enum value notImpacted.
+     */
     NOT_IMPACTED("notImpacted");
 
-    /** The actual serialized value for a TestOutcome instance. */
+    /**
+     * The actual serialized value for a TestOutcome instance.
+     */
     private final String value;
 
     TestOutcome(String value) {
@@ -63,12 +97,15 @@ public enum TestOutcome {
 
     /**
      * Parses a serialized value to a TestOutcome instance.
-     *
+     * 
      * @param value the serialized value to parse.
      * @return the parsed TestOutcome object, or null if unable to parse.
      */
     @JsonCreator
     public static TestOutcome fromString(String value) {
+        if (value == null) {
+            return null;
+        }
         TestOutcome[] items = TestOutcome.values();
         for (TestOutcome item : items) {
             if (item.toString().equalsIgnoreCase(value)) {
@@ -78,6 +115,9 @@ public enum TestOutcome {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @JsonValue
     @Override
     public String toString() {

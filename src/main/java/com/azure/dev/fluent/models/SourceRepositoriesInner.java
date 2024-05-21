@@ -5,20 +5,17 @@
 package com.azure.dev.fluent.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.models.SourceRepository;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** A set of repositories returned from the source provider. */
+/**
+ * A set of repositories returned from the source provider.
+ */
 @Fluent
 public final class SourceRepositoriesInner {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(SourceRepositoriesInner.class);
-
     /*
-     * A token used to continue this paged request; 'null' if the request is
-     * complete
+     * A token used to continue this paged request; 'null' if the request is complete
      */
     @JsonProperty(value = "continuationToken")
     private String continuationToken;
@@ -42,9 +39,15 @@ public final class SourceRepositoriesInner {
     private Integer totalPageCount;
 
     /**
+     * Creates an instance of SourceRepositoriesInner class.
+     */
+    public SourceRepositoriesInner() {
+    }
+
+    /**
      * Get the continuationToken property: A token used to continue this paged request; 'null' if the request is
      * complete.
-     *
+     * 
      * @return the continuationToken value.
      */
     public String continuationToken() {
@@ -54,7 +57,7 @@ public final class SourceRepositoriesInner {
     /**
      * Set the continuationToken property: A token used to continue this paged request; 'null' if the request is
      * complete.
-     *
+     * 
      * @param continuationToken the continuationToken value to set.
      * @return the SourceRepositoriesInner object itself.
      */
@@ -65,7 +68,7 @@ public final class SourceRepositoriesInner {
 
     /**
      * Get the pageLength property: The number of repositories requested for each page.
-     *
+     * 
      * @return the pageLength value.
      */
     public Integer pageLength() {
@@ -74,7 +77,7 @@ public final class SourceRepositoriesInner {
 
     /**
      * Set the pageLength property: The number of repositories requested for each page.
-     *
+     * 
      * @param pageLength the pageLength value to set.
      * @return the SourceRepositoriesInner object itself.
      */
@@ -85,7 +88,7 @@ public final class SourceRepositoriesInner {
 
     /**
      * Get the repositories property: A list of repositories.
-     *
+     * 
      * @return the repositories value.
      */
     public List<SourceRepository> repositories() {
@@ -94,7 +97,7 @@ public final class SourceRepositoriesInner {
 
     /**
      * Set the repositories property: A list of repositories.
-     *
+     * 
      * @param repositories the repositories value to set.
      * @return the SourceRepositoriesInner object itself.
      */
@@ -105,7 +108,7 @@ public final class SourceRepositoriesInner {
 
     /**
      * Get the totalPageCount property: The total number of pages, or '-1' if unknown.
-     *
+     * 
      * @return the totalPageCount value.
      */
     public Integer totalPageCount() {
@@ -114,7 +117,7 @@ public final class SourceRepositoriesInner {
 
     /**
      * Set the totalPageCount property: The total number of pages, or '-1' if unknown.
-     *
+     * 
      * @param totalPageCount the totalPageCount value to set.
      * @return the SourceRepositoriesInner object itself.
      */
@@ -125,7 +128,7 @@ public final class SourceRepositoriesInner {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

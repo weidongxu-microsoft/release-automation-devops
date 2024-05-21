@@ -7,36 +7,58 @@ package com.azure.dev.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/** Defines values for ScheduleDays. */
+/**
+ * Days for a build (flags enum for days of the week).
+ */
 public enum ScheduleDays {
-    /** Enum value none. */
+    /**
+     * Enum value none.
+     */
     NONE("none"),
 
-    /** Enum value monday. */
+    /**
+     * Enum value monday.
+     */
     MONDAY("monday"),
 
-    /** Enum value tuesday. */
+    /**
+     * Enum value tuesday.
+     */
     TUESDAY("tuesday"),
 
-    /** Enum value wednesday. */
+    /**
+     * Enum value wednesday.
+     */
     WEDNESDAY("wednesday"),
 
-    /** Enum value thursday. */
+    /**
+     * Enum value thursday.
+     */
     THURSDAY("thursday"),
 
-    /** Enum value friday. */
+    /**
+     * Enum value friday.
+     */
     FRIDAY("friday"),
 
-    /** Enum value saturday. */
+    /**
+     * Enum value saturday.
+     */
     SATURDAY("saturday"),
 
-    /** Enum value sunday. */
+    /**
+     * Enum value sunday.
+     */
     SUNDAY("sunday"),
 
-    /** Enum value all. */
+    /**
+     * Enum value all.
+     */
     ALL("all");
 
-    /** The actual serialized value for a ScheduleDays instance. */
+    /**
+     * The actual serialized value for a ScheduleDays instance.
+     */
     private final String value;
 
     ScheduleDays(String value) {
@@ -45,12 +67,15 @@ public enum ScheduleDays {
 
     /**
      * Parses a serialized value to a ScheduleDays instance.
-     *
+     * 
      * @param value the serialized value to parse.
      * @return the parsed ScheduleDays object, or null if unable to parse.
      */
     @JsonCreator
     public static ScheduleDays fromString(String value) {
+        if (value == null) {
+            return null;
+        }
         ScheduleDays[] items = ScheduleDays.values();
         for (ScheduleDays item : items) {
             if (item.toString().equalsIgnoreCase(value)) {
@@ -60,6 +85,9 @@ public enum ScheduleDays {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @JsonValue
     @Override
     public String toString() {

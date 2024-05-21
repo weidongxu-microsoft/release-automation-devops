@@ -5,16 +5,14 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.UUID;
 
-/** Represents a reference to a secure file. */
+/**
+ * Represents a reference to a secure file.
+ */
 @Fluent
 public final class SecureFileReference extends ResourceReference {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(SecureFileReference.class);
-
     /*
      * The ID of the secure file.
      */
@@ -22,8 +20,14 @@ public final class SecureFileReference extends ResourceReference {
     private UUID id;
 
     /**
+     * Creates an instance of SecureFileReference class.
+     */
+    public SecureFileReference() {
+    }
+
+    /**
      * Get the id property: The ID of the secure file.
-     *
+     * 
      * @return the id value.
      */
     public UUID id() {
@@ -32,7 +36,7 @@ public final class SecureFileReference extends ResourceReference {
 
     /**
      * Set the id property: The ID of the secure file.
-     *
+     * 
      * @param id the id value to set.
      * @return the SecureFileReference object itself.
      */
@@ -41,7 +45,9 @@ public final class SecureFileReference extends ResourceReference {
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public SecureFileReference withAlias(String alias) {
         super.withAlias(alias);
@@ -50,7 +56,7 @@ public final class SecureFileReference extends ResourceReference {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     @Override

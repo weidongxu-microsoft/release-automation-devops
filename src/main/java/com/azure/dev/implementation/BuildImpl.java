@@ -49,6 +49,10 @@ public final class BuildImpl implements Build {
         return this.innerModel().agentSpecification();
     }
 
+    public Boolean appendCommitMessageToRunName() {
+        return this.innerModel().appendCommitMessageToRunName();
+    }
+
     public String buildNumber() {
         return this.innerModel().buildNumber();
     }
@@ -101,10 +105,6 @@ public final class BuildImpl implements Build {
 
     public Integer id() {
         return this.innerModel().id();
-    }
-
-    public Boolean keepForever() {
-        return this.innerModel().keepForever();
     }
 
     public IdentityRef lastChangedBy() {
@@ -219,6 +219,15 @@ public final class BuildImpl implements Build {
             return Collections.unmodifiableList(inner);
         } else {
             return Collections.emptyList();
+        }
+    }
+
+    public Map<String, String> templateParameters() {
+        Map<String, String> inner = this.innerModel().templateParameters();
+        if (inner != null) {
+            return Collections.unmodifiableMap(inner);
+        } else {
+            return Collections.emptyMap();
         }
     }
 

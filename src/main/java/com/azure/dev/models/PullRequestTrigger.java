@@ -5,16 +5,14 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** Represents a pull request trigger. */
+/**
+ * Represents a pull request trigger.
+ */
 @Fluent
 public final class PullRequestTrigger extends BuildTrigger {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(PullRequestTrigger.class);
-
     /*
      * Indicates if an update to a PR should delete current in-progress builds.
      */
@@ -46,6 +44,18 @@ public final class PullRequestTrigger extends BuildTrigger {
     private List<String> pathFilters;
 
     /*
+     * Represents the effective settings applicable to individual pipeline triggers.
+     */
+    @JsonProperty(value = "pipelineTriggerSettings")
+    private PipelineTriggerSettings pipelineTriggerSettings;
+
+    /*
+     * The requireCommentsForNonTeamMemberAndNonContributors property.
+     */
+    @JsonProperty(value = "requireCommentsForNonTeamMemberAndNonContributors")
+    private Boolean requireCommentsForNonTeamMemberAndNonContributors;
+
+    /*
      * The requireCommentsForNonTeamMembersOnly property.
      */
     @JsonProperty(value = "requireCommentsForNonTeamMembersOnly")
@@ -58,8 +68,14 @@ public final class PullRequestTrigger extends BuildTrigger {
     private Integer settingsSourceType;
 
     /**
+     * Creates an instance of PullRequestTrigger class.
+     */
+    public PullRequestTrigger() {
+    }
+
+    /**
      * Get the autoCancel property: Indicates if an update to a PR should delete current in-progress builds.
-     *
+     * 
      * @return the autoCancel value.
      */
     public Boolean autoCancel() {
@@ -68,7 +84,7 @@ public final class PullRequestTrigger extends BuildTrigger {
 
     /**
      * Set the autoCancel property: Indicates if an update to a PR should delete current in-progress builds.
-     *
+     * 
      * @param autoCancel the autoCancel value to set.
      * @return the PullRequestTrigger object itself.
      */
@@ -79,7 +95,7 @@ public final class PullRequestTrigger extends BuildTrigger {
 
     /**
      * Get the branchFilters property: The branchFilters property.
-     *
+     * 
      * @return the branchFilters value.
      */
     public List<String> branchFilters() {
@@ -88,7 +104,7 @@ public final class PullRequestTrigger extends BuildTrigger {
 
     /**
      * Set the branchFilters property: The branchFilters property.
-     *
+     * 
      * @param branchFilters the branchFilters value to set.
      * @return the PullRequestTrigger object itself.
      */
@@ -99,7 +115,7 @@ public final class PullRequestTrigger extends BuildTrigger {
 
     /**
      * Get the forks property: Represents the ability to build forks of the selected repository.
-     *
+     * 
      * @return the forks value.
      */
     public Forks forks() {
@@ -108,7 +124,7 @@ public final class PullRequestTrigger extends BuildTrigger {
 
     /**
      * Set the forks property: Represents the ability to build forks of the selected repository.
-     *
+     * 
      * @param forks the forks value to set.
      * @return the PullRequestTrigger object itself.
      */
@@ -119,7 +135,7 @@ public final class PullRequestTrigger extends BuildTrigger {
 
     /**
      * Get the isCommentRequiredForPullRequest property: The isCommentRequiredForPullRequest property.
-     *
+     * 
      * @return the isCommentRequiredForPullRequest value.
      */
     public Boolean isCommentRequiredForPullRequest() {
@@ -128,7 +144,7 @@ public final class PullRequestTrigger extends BuildTrigger {
 
     /**
      * Set the isCommentRequiredForPullRequest property: The isCommentRequiredForPullRequest property.
-     *
+     * 
      * @param isCommentRequiredForPullRequest the isCommentRequiredForPullRequest value to set.
      * @return the PullRequestTrigger object itself.
      */
@@ -139,7 +155,7 @@ public final class PullRequestTrigger extends BuildTrigger {
 
     /**
      * Get the pathFilters property: The pathFilters property.
-     *
+     * 
      * @return the pathFilters value.
      */
     public List<String> pathFilters() {
@@ -148,7 +164,7 @@ public final class PullRequestTrigger extends BuildTrigger {
 
     /**
      * Set the pathFilters property: The pathFilters property.
-     *
+     * 
      * @param pathFilters the pathFilters value to set.
      * @return the PullRequestTrigger object itself.
      */
@@ -158,8 +174,54 @@ public final class PullRequestTrigger extends BuildTrigger {
     }
 
     /**
+     * Get the pipelineTriggerSettings property: Represents the effective settings applicable to individual pipeline
+     * triggers.
+     * 
+     * @return the pipelineTriggerSettings value.
+     */
+    public PipelineTriggerSettings pipelineTriggerSettings() {
+        return this.pipelineTriggerSettings;
+    }
+
+    /**
+     * Set the pipelineTriggerSettings property: Represents the effective settings applicable to individual pipeline
+     * triggers.
+     * 
+     * @param pipelineTriggerSettings the pipelineTriggerSettings value to set.
+     * @return the PullRequestTrigger object itself.
+     */
+    public PullRequestTrigger withPipelineTriggerSettings(PipelineTriggerSettings pipelineTriggerSettings) {
+        this.pipelineTriggerSettings = pipelineTriggerSettings;
+        return this;
+    }
+
+    /**
+     * Get the requireCommentsForNonTeamMemberAndNonContributors property: The
+     * requireCommentsForNonTeamMemberAndNonContributors property.
+     * 
+     * @return the requireCommentsForNonTeamMemberAndNonContributors value.
+     */
+    public Boolean requireCommentsForNonTeamMemberAndNonContributors() {
+        return this.requireCommentsForNonTeamMemberAndNonContributors;
+    }
+
+    /**
+     * Set the requireCommentsForNonTeamMemberAndNonContributors property: The
+     * requireCommentsForNonTeamMemberAndNonContributors property.
+     * 
+     * @param requireCommentsForNonTeamMemberAndNonContributors the requireCommentsForNonTeamMemberAndNonContributors
+     * value to set.
+     * @return the PullRequestTrigger object itself.
+     */
+    public PullRequestTrigger withRequireCommentsForNonTeamMemberAndNonContributors(
+        Boolean requireCommentsForNonTeamMemberAndNonContributors) {
+        this.requireCommentsForNonTeamMemberAndNonContributors = requireCommentsForNonTeamMemberAndNonContributors;
+        return this;
+    }
+
+    /**
      * Get the requireCommentsForNonTeamMembersOnly property: The requireCommentsForNonTeamMembersOnly property.
-     *
+     * 
      * @return the requireCommentsForNonTeamMembersOnly value.
      */
     public Boolean requireCommentsForNonTeamMembersOnly() {
@@ -168,7 +230,7 @@ public final class PullRequestTrigger extends BuildTrigger {
 
     /**
      * Set the requireCommentsForNonTeamMembersOnly property: The requireCommentsForNonTeamMembersOnly property.
-     *
+     * 
      * @param requireCommentsForNonTeamMembersOnly the requireCommentsForNonTeamMembersOnly value to set.
      * @return the PullRequestTrigger object itself.
      */
@@ -179,7 +241,7 @@ public final class PullRequestTrigger extends BuildTrigger {
 
     /**
      * Get the settingsSourceType property: The settingsSourceType property.
-     *
+     * 
      * @return the settingsSourceType value.
      */
     public Integer settingsSourceType() {
@@ -188,7 +250,7 @@ public final class PullRequestTrigger extends BuildTrigger {
 
     /**
      * Set the settingsSourceType property: The settingsSourceType property.
-     *
+     * 
      * @param settingsSourceType the settingsSourceType value to set.
      * @return the PullRequestTrigger object itself.
      */
@@ -197,7 +259,9 @@ public final class PullRequestTrigger extends BuildTrigger {
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PullRequestTrigger withTriggerType(DefinitionTriggerType triggerType) {
         super.withTriggerType(triggerType);
@@ -206,7 +270,7 @@ public final class PullRequestTrigger extends BuildTrigger {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     @Override
@@ -214,6 +278,9 @@ public final class PullRequestTrigger extends BuildTrigger {
         super.validate();
         if (forks() != null) {
             forks().validate();
+        }
+        if (pipelineTriggerSettings() != null) {
+            pipelineTriggerSettings().validate();
         }
     }
 }

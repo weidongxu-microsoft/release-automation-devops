@@ -12,13 +12,12 @@ import com.azure.dev.fluent.ControllersClient;
 import com.azure.dev.fluent.models.BuildControllerInner;
 import com.azure.dev.models.BuildController;
 import com.azure.dev.models.Controllers;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public final class ControllersImpl implements Controllers {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(ControllersImpl.class);
+    private static final ClientLogger LOGGER = new ClientLogger(ControllersImpl.class);
 
     private final ControllersClient innerClient;
 
@@ -29,32 +28,36 @@ public final class ControllersImpl implements Controllers {
         this.serviceManager = serviceManager;
     }
 
+    public Response<List<BuildController>> listWithResponse(String organization, String name, Context context) {
+        Response<List<BuildControllerInner>> inner = this.serviceClient().listWithResponse(organization, name, context);
+        if (inner != null) {
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
+                inner.getValue()
+                    .stream()
+                    .map(inner1 -> new BuildControllerImpl(inner1, this.manager()))
+                    .collect(Collectors.toList()));
+        } else {
+            return null;
+        }
+    }
+
     public List<BuildController> list(String organization) {
         List<BuildControllerInner> inner = this.serviceClient().list(organization);
         if (inner != null) {
-            return Collections
-                .unmodifiableList(
-                    inner
-                        .stream()
-                        .map(inner1 -> new BuildControllerImpl(inner1, this.manager()))
-                        .collect(Collectors.toList()));
+            return Collections.unmodifiableList(inner.stream()
+                .map(inner1 -> new BuildControllerImpl(inner1, this.manager()))
+                .collect(Collectors.toList()));
         } else {
             return Collections.emptyList();
         }
     }
 
-    public Response<List<BuildController>> listWithResponse(String organization, String name, Context context) {
-        Response<List<BuildControllerInner>> inner = this.serviceClient().listWithResponse(organization, name, context);
+    public Response<BuildController> getWithResponse(String organization, int controllerId, Context context) {
+        Response<BuildControllerInner> inner
+            = this.serviceClient().getWithResponse(organization, controllerId, context);
         if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                inner
-                    .getValue()
-                    .stream()
-                    .map(inner1 -> new BuildControllerImpl(inner1, this.manager()))
-                    .collect(Collectors.toList()));
+            return new SimpleResponse<>(inner.getRequest(), inner.getStatusCode(), inner.getHeaders(),
+                new BuildControllerImpl(inner.getValue(), this.manager()));
         } else {
             return null;
         }
@@ -64,20 +67,6 @@ public final class ControllersImpl implements Controllers {
         BuildControllerInner inner = this.serviceClient().get(organization, controllerId);
         if (inner != null) {
             return new BuildControllerImpl(inner, this.manager());
-        } else {
-            return null;
-        }
-    }
-
-    public Response<BuildController> getWithResponse(String organization, int controllerId, Context context) {
-        Response<BuildControllerInner> inner =
-            this.serviceClient().getWithResponse(organization, controllerId, context);
-        if (inner != null) {
-            return new SimpleResponse<>(
-                inner.getRequest(),
-                inner.getStatusCode(),
-                inner.getHeaders(),
-                new BuildControllerImpl(inner.getValue(), this.manager()));
         } else {
             return null;
         }

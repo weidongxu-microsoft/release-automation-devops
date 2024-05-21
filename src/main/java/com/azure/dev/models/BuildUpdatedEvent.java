@@ -6,25 +6,27 @@ package com.azure.dev.models;
 
 import com.azure.dev.fluent.models.BuildUpdatedEventInner;
 
-/** An immutable client-side representation of BuildUpdatedEvent. */
+/**
+ * An immutable client-side representation of BuildUpdatedEvent.
+ */
 public interface BuildUpdatedEvent {
     /**
      * Gets the buildId property: The buildId property.
-     *
+     * 
      * @return the buildId value.
      */
     Integer buildId();
 
     /**
      * Gets the build property: Data representation of a build.
-     *
+     * 
      * @return the build value.
      */
     Build build();
 
     /**
      * Gets the inner com.azure.dev.fluent.models.BuildUpdatedEventInner object.
-     *
+     * 
      * @return the inner object.
      */
     BuildUpdatedEventInner innerModel();

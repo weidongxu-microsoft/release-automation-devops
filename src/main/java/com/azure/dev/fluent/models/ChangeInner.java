@@ -5,17 +5,15 @@
 package com.azure.dev.fluent.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.models.IdentityRef;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 
-/** Represents a change associated with a build. */
+/**
+ * Represents a change associated with a build.
+ */
 @Fluent
 public final class ChangeInner {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(ChangeInner.class);
-
     /*
      * The author of the change.
      */
@@ -29,8 +27,7 @@ public final class ChangeInner {
     private String displayUri;
 
     /*
-     * The identifier for the change. For a commit, this would be the SHA1. For
-     * a TFVC changeset, this would be the changeset ID.
+     * The identifier for the change. For a commit, this would be the SHA1. For a TFVC changeset, this would be the changeset ID.
      */
     @JsonProperty(value = "id")
     private String id;
@@ -42,8 +39,7 @@ public final class ChangeInner {
     private String location;
 
     /*
-     * The description of the change. This might be a commit message or
-     * changeset description.
+     * The description of the change. This might be a commit message or changeset description.
      */
     @JsonProperty(value = "message")
     private String message;
@@ -73,8 +69,14 @@ public final class ChangeInner {
     private String type;
 
     /**
+     * Creates an instance of ChangeInner class.
+     */
+    public ChangeInner() {
+    }
+
+    /**
      * Get the author property: The author of the change.
-     *
+     * 
      * @return the author value.
      */
     public IdentityRef author() {
@@ -83,7 +85,7 @@ public final class ChangeInner {
 
     /**
      * Set the author property: The author of the change.
-     *
+     * 
      * @param author the author value to set.
      * @return the ChangeInner object itself.
      */
@@ -94,7 +96,7 @@ public final class ChangeInner {
 
     /**
      * Get the displayUri property: The location of a user-friendly representation of the resource.
-     *
+     * 
      * @return the displayUri value.
      */
     public String displayUri() {
@@ -103,7 +105,7 @@ public final class ChangeInner {
 
     /**
      * Set the displayUri property: The location of a user-friendly representation of the resource.
-     *
+     * 
      * @param displayUri the displayUri value to set.
      * @return the ChangeInner object itself.
      */
@@ -115,7 +117,7 @@ public final class ChangeInner {
     /**
      * Get the id property: The identifier for the change. For a commit, this would be the SHA1. For a TFVC changeset,
      * this would be the changeset ID.
-     *
+     * 
      * @return the id value.
      */
     public String id() {
@@ -125,7 +127,7 @@ public final class ChangeInner {
     /**
      * Set the id property: The identifier for the change. For a commit, this would be the SHA1. For a TFVC changeset,
      * this would be the changeset ID.
-     *
+     * 
      * @param id the id value to set.
      * @return the ChangeInner object itself.
      */
@@ -136,7 +138,7 @@ public final class ChangeInner {
 
     /**
      * Get the location property: The location of the full representation of the resource.
-     *
+     * 
      * @return the location value.
      */
     public String location() {
@@ -145,7 +147,7 @@ public final class ChangeInner {
 
     /**
      * Set the location property: The location of the full representation of the resource.
-     *
+     * 
      * @param location the location value to set.
      * @return the ChangeInner object itself.
      */
@@ -156,7 +158,7 @@ public final class ChangeInner {
 
     /**
      * Get the message property: The description of the change. This might be a commit message or changeset description.
-     *
+     * 
      * @return the message value.
      */
     public String message() {
@@ -165,7 +167,7 @@ public final class ChangeInner {
 
     /**
      * Set the message property: The description of the change. This might be a commit message or changeset description.
-     *
+     * 
      * @param message the message value to set.
      * @return the ChangeInner object itself.
      */
@@ -176,7 +178,7 @@ public final class ChangeInner {
 
     /**
      * Get the messageTruncated property: Indicates whether the message was truncated.
-     *
+     * 
      * @return the messageTruncated value.
      */
     public Boolean messageTruncated() {
@@ -185,7 +187,7 @@ public final class ChangeInner {
 
     /**
      * Set the messageTruncated property: Indicates whether the message was truncated.
-     *
+     * 
      * @param messageTruncated the messageTruncated value to set.
      * @return the ChangeInner object itself.
      */
@@ -196,7 +198,7 @@ public final class ChangeInner {
 
     /**
      * Get the pusher property: The person or process that pushed the change.
-     *
+     * 
      * @return the pusher value.
      */
     public String pusher() {
@@ -205,7 +207,7 @@ public final class ChangeInner {
 
     /**
      * Set the pusher property: The person or process that pushed the change.
-     *
+     * 
      * @param pusher the pusher value to set.
      * @return the ChangeInner object itself.
      */
@@ -216,7 +218,7 @@ public final class ChangeInner {
 
     /**
      * Get the timestamp property: The timestamp for the change.
-     *
+     * 
      * @return the timestamp value.
      */
     public OffsetDateTime timestamp() {
@@ -225,7 +227,7 @@ public final class ChangeInner {
 
     /**
      * Set the timestamp property: The timestamp for the change.
-     *
+     * 
      * @param timestamp the timestamp value to set.
      * @return the ChangeInner object itself.
      */
@@ -236,7 +238,7 @@ public final class ChangeInner {
 
     /**
      * Get the type property: The type of change. "commit", "changeset", etc.
-     *
+     * 
      * @return the type value.
      */
     public String type() {
@@ -245,7 +247,7 @@ public final class ChangeInner {
 
     /**
      * Set the type property: The type of change. "commit", "changeset", etc.
-     *
+     * 
      * @param type the type value to set.
      * @return the ChangeInner object itself.
      */
@@ -256,7 +258,7 @@ public final class ChangeInner {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

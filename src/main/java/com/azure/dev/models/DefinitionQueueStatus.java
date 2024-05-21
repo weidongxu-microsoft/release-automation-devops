@@ -7,18 +7,28 @@ package com.azure.dev.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/** Defines values for DefinitionQueueStatus. */
+/**
+ * A value that indicates whether builds can be queued against this definition.
+ */
 public enum DefinitionQueueStatus {
-    /** Enum value enabled. */
+    /**
+     * Enum value enabled.
+     */
     ENABLED("enabled"),
 
-    /** Enum value paused. */
+    /**
+     * Enum value paused.
+     */
     PAUSED("paused"),
 
-    /** Enum value disabled. */
+    /**
+     * Enum value disabled.
+     */
     DISABLED("disabled");
 
-    /** The actual serialized value for a DefinitionQueueStatus instance. */
+    /**
+     * The actual serialized value for a DefinitionQueueStatus instance.
+     */
     private final String value;
 
     DefinitionQueueStatus(String value) {
@@ -27,12 +37,15 @@ public enum DefinitionQueueStatus {
 
     /**
      * Parses a serialized value to a DefinitionQueueStatus instance.
-     *
+     * 
      * @param value the serialized value to parse.
      * @return the parsed DefinitionQueueStatus object, or null if unable to parse.
      */
     @JsonCreator
     public static DefinitionQueueStatus fromString(String value) {
+        if (value == null) {
+            return null;
+        }
         DefinitionQueueStatus[] items = DefinitionQueueStatus.values();
         for (DefinitionQueueStatus item : items) {
             if (item.toString().equalsIgnoreCase(value)) {
@@ -42,6 +55,9 @@ public enum DefinitionQueueStatus {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @JsonValue
     @Override
     public String toString() {

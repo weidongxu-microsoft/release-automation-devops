@@ -7,15 +7,23 @@ package com.azure.dev.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/** Defines values for DefinitionType. */
+/**
+ * The type of the definition.
+ */
 public enum DefinitionType {
-    /** Enum value xaml. */
+    /**
+     * Enum value xaml.
+     */
     XAML("xaml"),
 
-    /** Enum value build. */
+    /**
+     * Enum value build.
+     */
     BUILD("build");
 
-    /** The actual serialized value for a DefinitionType instance. */
+    /**
+     * The actual serialized value for a DefinitionType instance.
+     */
     private final String value;
 
     DefinitionType(String value) {
@@ -24,12 +32,15 @@ public enum DefinitionType {
 
     /**
      * Parses a serialized value to a DefinitionType instance.
-     *
+     * 
      * @param value the serialized value to parse.
      * @return the parsed DefinitionType object, or null if unable to parse.
      */
     @JsonCreator
     public static DefinitionType fromString(String value) {
+        if (value == null) {
+            return null;
+        }
         DefinitionType[] items = DefinitionType.values();
         for (DefinitionType item : items) {
             if (item.toString().equalsIgnoreCase(value)) {
@@ -39,6 +50,9 @@ public enum DefinitionType {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @JsonValue
     @Override
     public String toString() {

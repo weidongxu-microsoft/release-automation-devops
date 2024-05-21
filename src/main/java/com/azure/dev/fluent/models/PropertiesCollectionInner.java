@@ -5,8 +5,6 @@
 package com.azure.dev.fluent.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
@@ -17,8 +15,6 @@ import java.util.List;
  */
 @Fluent
 public final class PropertiesCollectionInner {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(PropertiesCollectionInner.class);
-
     /*
      * The count of properties in the collection.
      */
@@ -44,8 +40,14 @@ public final class PropertiesCollectionInner {
     private List<String> values;
 
     /**
+     * Creates an instance of PropertiesCollectionInner class.
+     */
+    public PropertiesCollectionInner() {
+    }
+
+    /**
      * Get the count property: The count of properties in the collection.
-     *
+     * 
      * @return the count value.
      */
     public Integer count() {
@@ -54,7 +56,7 @@ public final class PropertiesCollectionInner {
 
     /**
      * Set the count property: The count of properties in the collection.
-     *
+     * 
      * @param count the count value to set.
      * @return the PropertiesCollectionInner object itself.
      */
@@ -65,7 +67,7 @@ public final class PropertiesCollectionInner {
 
     /**
      * Get the item property: Any object.
-     *
+     * 
      * @return the item value.
      */
     public Object item() {
@@ -74,7 +76,7 @@ public final class PropertiesCollectionInner {
 
     /**
      * Set the item property: Any object.
-     *
+     * 
      * @param item the item value to set.
      * @return the PropertiesCollectionInner object itself.
      */
@@ -85,7 +87,7 @@ public final class PropertiesCollectionInner {
 
     /**
      * Get the keys property: The set of keys in the collection.
-     *
+     * 
      * @return the keys value.
      */
     public List<String> keys() {
@@ -94,7 +96,7 @@ public final class PropertiesCollectionInner {
 
     /**
      * Set the keys property: The set of keys in the collection.
-     *
+     * 
      * @param keys the keys value to set.
      * @return the PropertiesCollectionInner object itself.
      */
@@ -105,7 +107,7 @@ public final class PropertiesCollectionInner {
 
     /**
      * Get the values property: The set of values in the collection.
-     *
+     * 
      * @return the values value.
      */
     public List<String> values() {
@@ -114,7 +116,7 @@ public final class PropertiesCollectionInner {
 
     /**
      * Set the values property: The set of values in the collection.
-     *
+     * 
      * @param values the values value to set.
      * @return the PropertiesCollectionInner object itself.
      */
@@ -125,7 +127,7 @@ public final class PropertiesCollectionInner {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

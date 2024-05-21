@@ -34,6 +34,10 @@ public final class RetentionLeaseImpl implements RetentionLease {
         return this.innerModel().ownerId();
     }
 
+    public Boolean protectPipeline() {
+        return this.innerModel().protectPipeline();
+    }
+
     public Integer runId() {
         return this.innerModel().runId();
     }

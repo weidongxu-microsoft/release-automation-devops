@@ -5,17 +5,15 @@
 package com.azure.dev.fluent.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.models.IdentityRef;
 import com.azure.dev.models.ReferenceLinks;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Represents a pull request object. These are retrieved from Source Providers. */
+/**
+ * Represents a pull request object. These are retrieved from Source Providers.
+ */
 @Fluent
 public final class PullRequestInner {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(PullRequestInner.class);
-
     /*
      * The links to other objects related to this object.
      */
@@ -29,8 +27,7 @@ public final class PullRequestInner {
     private IdentityRef author;
 
     /*
-     * Current state of the pull request, e.g. open, merged, closed, conflicts,
-     * etc.
+     * Current state of the pull request, e.g. open, merged, closed, conflicts, etc.
      */
     @JsonProperty(value = "currentState")
     private String currentState;
@@ -40,6 +37,12 @@ public final class PullRequestInner {
      */
     @JsonProperty(value = "description")
     private String description;
+
+    /*
+     * Returns if pull request is draft
+     */
+    @JsonProperty(value = "draft")
+    private Boolean draft;
 
     /*
      * Unique identifier for the pull request
@@ -84,8 +87,14 @@ public final class PullRequestInner {
     private String title;
 
     /**
+     * Creates an instance of PullRequestInner class.
+     */
+    public PullRequestInner() {
+    }
+
+    /**
      * Get the links property: The links to other objects related to this object.
-     *
+     * 
      * @return the links value.
      */
     public ReferenceLinks links() {
@@ -94,7 +103,7 @@ public final class PullRequestInner {
 
     /**
      * Set the links property: The links to other objects related to this object.
-     *
+     * 
      * @param links the links value to set.
      * @return the PullRequestInner object itself.
      */
@@ -105,7 +114,7 @@ public final class PullRequestInner {
 
     /**
      * Get the author property: Author of the pull request.
-     *
+     * 
      * @return the author value.
      */
     public IdentityRef author() {
@@ -114,7 +123,7 @@ public final class PullRequestInner {
 
     /**
      * Set the author property: Author of the pull request.
-     *
+     * 
      * @param author the author value to set.
      * @return the PullRequestInner object itself.
      */
@@ -125,7 +134,7 @@ public final class PullRequestInner {
 
     /**
      * Get the currentState property: Current state of the pull request, e.g. open, merged, closed, conflicts, etc.
-     *
+     * 
      * @return the currentState value.
      */
     public String currentState() {
@@ -134,7 +143,7 @@ public final class PullRequestInner {
 
     /**
      * Set the currentState property: Current state of the pull request, e.g. open, merged, closed, conflicts, etc.
-     *
+     * 
      * @param currentState the currentState value to set.
      * @return the PullRequestInner object itself.
      */
@@ -145,7 +154,7 @@ public final class PullRequestInner {
 
     /**
      * Get the description property: Description for the pull request.
-     *
+     * 
      * @return the description value.
      */
     public String description() {
@@ -154,7 +163,7 @@ public final class PullRequestInner {
 
     /**
      * Set the description property: Description for the pull request.
-     *
+     * 
      * @param description the description value to set.
      * @return the PullRequestInner object itself.
      */
@@ -164,8 +173,28 @@ public final class PullRequestInner {
     }
 
     /**
+     * Get the draft property: Returns if pull request is draft.
+     * 
+     * @return the draft value.
+     */
+    public Boolean draft() {
+        return this.draft;
+    }
+
+    /**
+     * Set the draft property: Returns if pull request is draft.
+     * 
+     * @param draft the draft value to set.
+     * @return the PullRequestInner object itself.
+     */
+    public PullRequestInner withDraft(Boolean draft) {
+        this.draft = draft;
+        return this;
+    }
+
+    /**
      * Get the id property: Unique identifier for the pull request.
-     *
+     * 
      * @return the id value.
      */
     public String id() {
@@ -174,7 +203,7 @@ public final class PullRequestInner {
 
     /**
      * Set the id property: Unique identifier for the pull request.
-     *
+     * 
      * @param id the id value to set.
      * @return the PullRequestInner object itself.
      */
@@ -185,7 +214,7 @@ public final class PullRequestInner {
 
     /**
      * Get the providerName property: The name of the provider this pull request is associated with.
-     *
+     * 
      * @return the providerName value.
      */
     public String providerName() {
@@ -194,7 +223,7 @@ public final class PullRequestInner {
 
     /**
      * Set the providerName property: The name of the provider this pull request is associated with.
-     *
+     * 
      * @param providerName the providerName value to set.
      * @return the PullRequestInner object itself.
      */
@@ -205,7 +234,7 @@ public final class PullRequestInner {
 
     /**
      * Get the sourceBranchRef property: Source branch ref of this pull request.
-     *
+     * 
      * @return the sourceBranchRef value.
      */
     public String sourceBranchRef() {
@@ -214,7 +243,7 @@ public final class PullRequestInner {
 
     /**
      * Set the sourceBranchRef property: Source branch ref of this pull request.
-     *
+     * 
      * @param sourceBranchRef the sourceBranchRef value to set.
      * @return the PullRequestInner object itself.
      */
@@ -225,7 +254,7 @@ public final class PullRequestInner {
 
     /**
      * Get the sourceRepositoryOwner property: Owner of the source repository of this pull request.
-     *
+     * 
      * @return the sourceRepositoryOwner value.
      */
     public String sourceRepositoryOwner() {
@@ -234,7 +263,7 @@ public final class PullRequestInner {
 
     /**
      * Set the sourceRepositoryOwner property: Owner of the source repository of this pull request.
-     *
+     * 
      * @param sourceRepositoryOwner the sourceRepositoryOwner value to set.
      * @return the PullRequestInner object itself.
      */
@@ -245,7 +274,7 @@ public final class PullRequestInner {
 
     /**
      * Get the targetBranchRef property: Target branch ref of this pull request.
-     *
+     * 
      * @return the targetBranchRef value.
      */
     public String targetBranchRef() {
@@ -254,7 +283,7 @@ public final class PullRequestInner {
 
     /**
      * Set the targetBranchRef property: Target branch ref of this pull request.
-     *
+     * 
      * @param targetBranchRef the targetBranchRef value to set.
      * @return the PullRequestInner object itself.
      */
@@ -265,7 +294,7 @@ public final class PullRequestInner {
 
     /**
      * Get the targetRepositoryOwner property: Owner of the target repository of this pull request.
-     *
+     * 
      * @return the targetRepositoryOwner value.
      */
     public String targetRepositoryOwner() {
@@ -274,7 +303,7 @@ public final class PullRequestInner {
 
     /**
      * Set the targetRepositoryOwner property: Owner of the target repository of this pull request.
-     *
+     * 
      * @param targetRepositoryOwner the targetRepositoryOwner value to set.
      * @return the PullRequestInner object itself.
      */
@@ -285,7 +314,7 @@ public final class PullRequestInner {
 
     /**
      * Get the title property: Title of the pull request.
-     *
+     * 
      * @return the title value.
      */
     public String title() {
@@ -294,7 +323,7 @@ public final class PullRequestInner {
 
     /**
      * Set the title property: Title of the pull request.
-     *
+     * 
      * @param title the title value to set.
      * @return the PullRequestInner object itself.
      */
@@ -305,7 +334,7 @@ public final class PullRequestInner {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

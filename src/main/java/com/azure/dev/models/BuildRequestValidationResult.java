@@ -5,15 +5,13 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Represents the result of validating a build request. */
+/**
+ * Represents the result of validating a build request.
+ */
 @Fluent
 public final class BuildRequestValidationResult {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(BuildRequestValidationResult.class);
-
     /*
      * The message associated with the result.
      */
@@ -27,8 +25,14 @@ public final class BuildRequestValidationResult {
     private ValidationResult result;
 
     /**
+     * Creates an instance of BuildRequestValidationResult class.
+     */
+    public BuildRequestValidationResult() {
+    }
+
+    /**
      * Get the message property: The message associated with the result.
-     *
+     * 
      * @return the message value.
      */
     public String message() {
@@ -37,7 +41,7 @@ public final class BuildRequestValidationResult {
 
     /**
      * Set the message property: The message associated with the result.
-     *
+     * 
      * @param message the message value to set.
      * @return the BuildRequestValidationResult object itself.
      */
@@ -48,7 +52,7 @@ public final class BuildRequestValidationResult {
 
     /**
      * Get the result property: The result.
-     *
+     * 
      * @return the result value.
      */
     public ValidationResult result() {
@@ -57,7 +61,7 @@ public final class BuildRequestValidationResult {
 
     /**
      * Set the result property: The result.
-     *
+     * 
      * @param result the result value to set.
      * @return the BuildRequestValidationResult object itself.
      */
@@ -68,7 +72,7 @@ public final class BuildRequestValidationResult {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

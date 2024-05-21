@@ -5,15 +5,13 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Represents a queue for running builds. */
+/**
+ * Represents a queue for running builds.
+ */
 @Fluent
 public final class AgentPoolQueue {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(AgentPoolQueue.class);
-
     /*
      * The class to represent a collection of REST reference links.
      */
@@ -45,8 +43,14 @@ public final class AgentPoolQueue {
     private String url;
 
     /**
+     * Creates an instance of AgentPoolQueue class.
+     */
+    public AgentPoolQueue() {
+    }
+
+    /**
      * Get the links property: The class to represent a collection of REST reference links.
-     *
+     * 
      * @return the links value.
      */
     public ReferenceLinks links() {
@@ -55,7 +59,7 @@ public final class AgentPoolQueue {
 
     /**
      * Set the links property: The class to represent a collection of REST reference links.
-     *
+     * 
      * @param links the links value to set.
      * @return the AgentPoolQueue object itself.
      */
@@ -66,7 +70,7 @@ public final class AgentPoolQueue {
 
     /**
      * Get the id property: The ID of the queue.
-     *
+     * 
      * @return the id value.
      */
     public Integer id() {
@@ -75,7 +79,7 @@ public final class AgentPoolQueue {
 
     /**
      * Set the id property: The ID of the queue.
-     *
+     * 
      * @param id the id value to set.
      * @return the AgentPoolQueue object itself.
      */
@@ -86,7 +90,7 @@ public final class AgentPoolQueue {
 
     /**
      * Get the name property: The name of the queue.
-     *
+     * 
      * @return the name value.
      */
     public String name() {
@@ -95,7 +99,7 @@ public final class AgentPoolQueue {
 
     /**
      * Set the name property: The name of the queue.
-     *
+     * 
      * @param name the name value to set.
      * @return the AgentPoolQueue object itself.
      */
@@ -106,7 +110,7 @@ public final class AgentPoolQueue {
 
     /**
      * Get the pool property: The pool used by this queue.
-     *
+     * 
      * @return the pool value.
      */
     public TaskAgentPoolReference pool() {
@@ -115,7 +119,7 @@ public final class AgentPoolQueue {
 
     /**
      * Set the pool property: The pool used by this queue.
-     *
+     * 
      * @param pool the pool value to set.
      * @return the AgentPoolQueue object itself.
      */
@@ -126,7 +130,7 @@ public final class AgentPoolQueue {
 
     /**
      * Get the url property: The full http link to the resource.
-     *
+     * 
      * @return the url value.
      */
     public String url() {
@@ -135,7 +139,7 @@ public final class AgentPoolQueue {
 
     /**
      * Set the url property: The full http link to the resource.
-     *
+     * 
      * @param url the url value to set.
      * @return the AgentPoolQueue object itself.
      */
@@ -146,7 +150,7 @@ public final class AgentPoolQueue {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

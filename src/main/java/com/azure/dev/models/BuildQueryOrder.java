@@ -7,27 +7,43 @@ package com.azure.dev.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/** Defines values for BuildQueryOrder. */
+/**
+ * Defines values for BuildQueryOrder.
+ */
 public enum BuildQueryOrder {
-    /** Enum value finishTimeAscending. */
+    /**
+     * Enum value finishTimeAscending.
+     */
     FINISH_TIME_ASCENDING("finishTimeAscending"),
 
-    /** Enum value finishTimeDescending. */
+    /**
+     * Enum value finishTimeDescending.
+     */
     FINISH_TIME_DESCENDING("finishTimeDescending"),
 
-    /** Enum value queueTimeDescending. */
+    /**
+     * Enum value queueTimeDescending.
+     */
     QUEUE_TIME_DESCENDING("queueTimeDescending"),
 
-    /** Enum value queueTimeAscending. */
+    /**
+     * Enum value queueTimeAscending.
+     */
     QUEUE_TIME_ASCENDING("queueTimeAscending"),
 
-    /** Enum value startTimeDescending. */
+    /**
+     * Enum value startTimeDescending.
+     */
     START_TIME_DESCENDING("startTimeDescending"),
 
-    /** Enum value startTimeAscending. */
+    /**
+     * Enum value startTimeAscending.
+     */
     START_TIME_ASCENDING("startTimeAscending");
 
-    /** The actual serialized value for a BuildQueryOrder instance. */
+    /**
+     * The actual serialized value for a BuildQueryOrder instance.
+     */
     private final String value;
 
     BuildQueryOrder(String value) {
@@ -36,12 +52,15 @@ public enum BuildQueryOrder {
 
     /**
      * Parses a serialized value to a BuildQueryOrder instance.
-     *
+     * 
      * @param value the serialized value to parse.
      * @return the parsed BuildQueryOrder object, or null if unable to parse.
      */
     @JsonCreator
     public static BuildQueryOrder fromString(String value) {
+        if (value == null) {
+            return null;
+        }
         BuildQueryOrder[] items = BuildQueryOrder.values();
         for (BuildQueryOrder item : items) {
             if (item.toString().equalsIgnoreCase(value)) {
@@ -51,6 +70,9 @@ public enum BuildQueryOrder {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @JsonValue
     @Override
     public String toString() {

@@ -5,18 +5,15 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** The IdentityRef model. */
+/**
+ * The IdentityRef model.
+ */
 @Fluent
 public final class IdentityRef extends GraphSubjectBase {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(IdentityRef.class);
-
     /*
-     * Deprecated - Can be retrieved by querying the Graph user referenced in
-     * the "self" entry of the IdentityRef "_links" dictionary
+     * Deprecated - Can be retrieved by querying the Graph user referenced in the "self" entry of the IdentityRef "_links" dictionary
      */
     @JsonProperty(value = "directoryAlias")
     private String directoryAlias;
@@ -28,30 +25,25 @@ public final class IdentityRef extends GraphSubjectBase {
     private String id;
 
     /*
-     * Deprecated - Available in the "avatar" entry of the IdentityRef "_links"
-     * dictionary
+     * Deprecated - Available in the "avatar" entry of the IdentityRef "_links" dictionary
      */
     @JsonProperty(value = "imageUrl")
     private String imageUrl;
 
     /*
-     * Deprecated - Can be retrieved by querying the Graph membership state
-     * referenced in the "membershipState" entry of the GraphUser "_links"
-     * dictionary
+     * Deprecated - Can be retrieved by querying the Graph membership state referenced in the "membershipState" entry of the GraphUser "_links" dictionary
      */
     @JsonProperty(value = "inactive")
     private Boolean inactive;
 
     /*
-     * Deprecated - Can be inferred from the subject type of the descriptor
-     * (Descriptor.IsAadUserType/Descriptor.IsAadGroupType)
+     * Deprecated - Can be inferred from the subject type of the descriptor (Descriptor.IsAadUserType/Descriptor.IsAadGroupType)
      */
     @JsonProperty(value = "isAadIdentity")
     private Boolean isAadIdentity;
 
     /*
-     * Deprecated - Can be inferred from the subject type of the descriptor
-     * (Descriptor.IsGroupType)
+     * Deprecated - Can be inferred from the subject type of the descriptor (Descriptor.IsGroupType)
      */
     @JsonProperty(value = "isContainer")
     private Boolean isContainer;
@@ -63,8 +55,7 @@ public final class IdentityRef extends GraphSubjectBase {
     private Boolean isDeletedInOrigin;
 
     /*
-     * Deprecated - not in use in most preexisting implementations of
-     * ToIdentityRef
+     * Deprecated - not in use in most preexisting implementations of ToIdentityRef
      */
     @JsonProperty(value = "profileUrl")
     private String profileUrl;
@@ -76,9 +67,15 @@ public final class IdentityRef extends GraphSubjectBase {
     private String uniqueName;
 
     /**
+     * Creates an instance of IdentityRef class.
+     */
+    public IdentityRef() {
+    }
+
+    /**
      * Get the directoryAlias property: Deprecated - Can be retrieved by querying the Graph user referenced in the
      * "self" entry of the IdentityRef "_links" dictionary.
-     *
+     * 
      * @return the directoryAlias value.
      */
     public String directoryAlias() {
@@ -88,7 +85,7 @@ public final class IdentityRef extends GraphSubjectBase {
     /**
      * Set the directoryAlias property: Deprecated - Can be retrieved by querying the Graph user referenced in the
      * "self" entry of the IdentityRef "_links" dictionary.
-     *
+     * 
      * @param directoryAlias the directoryAlias value to set.
      * @return the IdentityRef object itself.
      */
@@ -99,7 +96,7 @@ public final class IdentityRef extends GraphSubjectBase {
 
     /**
      * Get the id property: The id property.
-     *
+     * 
      * @return the id value.
      */
     public String id() {
@@ -108,7 +105,7 @@ public final class IdentityRef extends GraphSubjectBase {
 
     /**
      * Set the id property: The id property.
-     *
+     * 
      * @param id the id value to set.
      * @return the IdentityRef object itself.
      */
@@ -119,7 +116,7 @@ public final class IdentityRef extends GraphSubjectBase {
 
     /**
      * Get the imageUrl property: Deprecated - Available in the "avatar" entry of the IdentityRef "_links" dictionary.
-     *
+     * 
      * @return the imageUrl value.
      */
     public String imageUrl() {
@@ -128,7 +125,7 @@ public final class IdentityRef extends GraphSubjectBase {
 
     /**
      * Set the imageUrl property: Deprecated - Available in the "avatar" entry of the IdentityRef "_links" dictionary.
-     *
+     * 
      * @param imageUrl the imageUrl value to set.
      * @return the IdentityRef object itself.
      */
@@ -140,7 +137,7 @@ public final class IdentityRef extends GraphSubjectBase {
     /**
      * Get the inactive property: Deprecated - Can be retrieved by querying the Graph membership state referenced in the
      * "membershipState" entry of the GraphUser "_links" dictionary.
-     *
+     * 
      * @return the inactive value.
      */
     public Boolean inactive() {
@@ -150,7 +147,7 @@ public final class IdentityRef extends GraphSubjectBase {
     /**
      * Set the inactive property: Deprecated - Can be retrieved by querying the Graph membership state referenced in the
      * "membershipState" entry of the GraphUser "_links" dictionary.
-     *
+     * 
      * @param inactive the inactive value to set.
      * @return the IdentityRef object itself.
      */
@@ -162,7 +159,7 @@ public final class IdentityRef extends GraphSubjectBase {
     /**
      * Get the isAadIdentity property: Deprecated - Can be inferred from the subject type of the descriptor
      * (Descriptor.IsAadUserType/Descriptor.IsAadGroupType).
-     *
+     * 
      * @return the isAadIdentity value.
      */
     public Boolean isAadIdentity() {
@@ -172,7 +169,7 @@ public final class IdentityRef extends GraphSubjectBase {
     /**
      * Set the isAadIdentity property: Deprecated - Can be inferred from the subject type of the descriptor
      * (Descriptor.IsAadUserType/Descriptor.IsAadGroupType).
-     *
+     * 
      * @param isAadIdentity the isAadIdentity value to set.
      * @return the IdentityRef object itself.
      */
@@ -184,7 +181,7 @@ public final class IdentityRef extends GraphSubjectBase {
     /**
      * Get the isContainer property: Deprecated - Can be inferred from the subject type of the descriptor
      * (Descriptor.IsGroupType).
-     *
+     * 
      * @return the isContainer value.
      */
     public Boolean isContainer() {
@@ -194,7 +191,7 @@ public final class IdentityRef extends GraphSubjectBase {
     /**
      * Set the isContainer property: Deprecated - Can be inferred from the subject type of the descriptor
      * (Descriptor.IsGroupType).
-     *
+     * 
      * @param isContainer the isContainer value to set.
      * @return the IdentityRef object itself.
      */
@@ -205,7 +202,7 @@ public final class IdentityRef extends GraphSubjectBase {
 
     /**
      * Get the isDeletedInOrigin property: The isDeletedInOrigin property.
-     *
+     * 
      * @return the isDeletedInOrigin value.
      */
     public Boolean isDeletedInOrigin() {
@@ -214,7 +211,7 @@ public final class IdentityRef extends GraphSubjectBase {
 
     /**
      * Set the isDeletedInOrigin property: The isDeletedInOrigin property.
-     *
+     * 
      * @param isDeletedInOrigin the isDeletedInOrigin value to set.
      * @return the IdentityRef object itself.
      */
@@ -225,7 +222,7 @@ public final class IdentityRef extends GraphSubjectBase {
 
     /**
      * Get the profileUrl property: Deprecated - not in use in most preexisting implementations of ToIdentityRef.
-     *
+     * 
      * @return the profileUrl value.
      */
     public String profileUrl() {
@@ -234,7 +231,7 @@ public final class IdentityRef extends GraphSubjectBase {
 
     /**
      * Set the profileUrl property: Deprecated - not in use in most preexisting implementations of ToIdentityRef.
-     *
+     * 
      * @param profileUrl the profileUrl value to set.
      * @return the IdentityRef object itself.
      */
@@ -245,7 +242,7 @@ public final class IdentityRef extends GraphSubjectBase {
 
     /**
      * Get the uniqueName property: Deprecated - use Domain+PrincipalName instead.
-     *
+     * 
      * @return the uniqueName value.
      */
     public String uniqueName() {
@@ -254,7 +251,7 @@ public final class IdentityRef extends GraphSubjectBase {
 
     /**
      * Set the uniqueName property: Deprecated - use Domain+PrincipalName instead.
-     *
+     * 
      * @param uniqueName the uniqueName value to set.
      * @return the IdentityRef object itself.
      */
@@ -263,28 +260,36 @@ public final class IdentityRef extends GraphSubjectBase {
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public IdentityRef withLinks(ReferenceLinks links) {
         super.withLinks(links);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public IdentityRef withDescriptor(String descriptor) {
         super.withDescriptor(descriptor);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public IdentityRef withDisplayName(String displayName) {
         super.withDisplayName(displayName);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public IdentityRef withUrl(String url) {
         super.withUrl(url);
@@ -293,7 +298,7 @@ public final class IdentityRef extends GraphSubjectBase {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     @Override

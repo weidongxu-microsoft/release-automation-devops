@@ -7,18 +7,28 @@ package com.azure.dev.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/** Defines values for SupportLevel. */
+/**
+ * Defines values for SupportLevel.
+ */
 public enum SupportLevel {
-    /** Enum value unsupported. */
+    /**
+     * Enum value unsupported.
+     */
     UNSUPPORTED("unsupported"),
 
-    /** Enum value supported. */
+    /**
+     * Enum value supported.
+     */
     SUPPORTED("supported"),
 
-    /** Enum value required. */
+    /**
+     * Enum value required.
+     */
     REQUIRED("required");
 
-    /** The actual serialized value for a SupportLevel instance. */
+    /**
+     * The actual serialized value for a SupportLevel instance.
+     */
     private final String value;
 
     SupportLevel(String value) {
@@ -27,12 +37,15 @@ public enum SupportLevel {
 
     /**
      * Parses a serialized value to a SupportLevel instance.
-     *
+     * 
      * @param value the serialized value to parse.
      * @return the parsed SupportLevel object, or null if unable to parse.
      */
     @JsonCreator
     public static SupportLevel fromString(String value) {
+        if (value == null) {
+            return null;
+        }
         SupportLevel[] items = SupportLevel.values();
         for (SupportLevel item : items) {
             if (item.toString().equalsIgnoreCase(value)) {
@@ -42,6 +55,9 @@ public enum SupportLevel {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @JsonValue
     @Override
     public String toString() {

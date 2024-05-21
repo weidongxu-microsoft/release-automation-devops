@@ -5,15 +5,13 @@
 package com.azure.dev.fluent.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** The ResourceRef model. */
+/**
+ * The ResourceRef model.
+ */
 @Fluent
 public final class ResourceRefInner {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(ResourceRefInner.class);
-
     /*
      * The id property.
      */
@@ -27,8 +25,14 @@ public final class ResourceRefInner {
     private String url;
 
     /**
+     * Creates an instance of ResourceRefInner class.
+     */
+    public ResourceRefInner() {
+    }
+
+    /**
      * Get the id property: The id property.
-     *
+     * 
      * @return the id value.
      */
     public String id() {
@@ -37,7 +41,7 @@ public final class ResourceRefInner {
 
     /**
      * Set the id property: The id property.
-     *
+     * 
      * @param id the id value to set.
      * @return the ResourceRefInner object itself.
      */
@@ -48,7 +52,7 @@ public final class ResourceRefInner {
 
     /**
      * Get the url property: The url property.
-     *
+     * 
      * @return the url value.
      */
     public String url() {
@@ -57,7 +61,7 @@ public final class ResourceRefInner {
 
     /**
      * Set the url property: The url property.
-     *
+     * 
      * @param url the url value to set.
      * @return the ResourceRefInner object itself.
      */
@@ -68,7 +72,7 @@ public final class ResourceRefInner {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

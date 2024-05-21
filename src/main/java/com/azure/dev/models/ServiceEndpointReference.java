@@ -5,16 +5,14 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.UUID;
 
-/** Represents a referenec to a service endpoint. */
+/**
+ * Represents a referenec to a service endpoint.
+ */
 @Fluent
 public final class ServiceEndpointReference extends ResourceReference {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(ServiceEndpointReference.class);
-
     /*
      * The ID of the service endpoint.
      */
@@ -22,8 +20,14 @@ public final class ServiceEndpointReference extends ResourceReference {
     private UUID id;
 
     /**
+     * Creates an instance of ServiceEndpointReference class.
+     */
+    public ServiceEndpointReference() {
+    }
+
+    /**
      * Get the id property: The ID of the service endpoint.
-     *
+     * 
      * @return the id value.
      */
     public UUID id() {
@@ -32,7 +36,7 @@ public final class ServiceEndpointReference extends ResourceReference {
 
     /**
      * Set the id property: The ID of the service endpoint.
-     *
+     * 
      * @param id the id value to set.
      * @return the ServiceEndpointReference object itself.
      */
@@ -41,7 +45,9 @@ public final class ServiceEndpointReference extends ResourceReference {
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ServiceEndpointReference withAlias(String alias) {
         super.withAlias(alias);
@@ -50,7 +56,7 @@ public final class ServiceEndpointReference extends ResourceReference {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     @Override

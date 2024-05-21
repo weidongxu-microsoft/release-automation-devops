@@ -5,15 +5,13 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Represents a reference to an agent queue. */
+/**
+ * Represents a reference to an agent queue.
+ */
 @Fluent
 public final class AgentPoolQueueReference extends ResourceReference {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(AgentPoolQueueReference.class);
-
     /*
      * The ID of the queue.
      */
@@ -21,8 +19,14 @@ public final class AgentPoolQueueReference extends ResourceReference {
     private Integer id;
 
     /**
+     * Creates an instance of AgentPoolQueueReference class.
+     */
+    public AgentPoolQueueReference() {
+    }
+
+    /**
      * Get the id property: The ID of the queue.
-     *
+     * 
      * @return the id value.
      */
     public Integer id() {
@@ -31,7 +35,7 @@ public final class AgentPoolQueueReference extends ResourceReference {
 
     /**
      * Set the id property: The ID of the queue.
-     *
+     * 
      * @param id the id value to set.
      * @return the AgentPoolQueueReference object itself.
      */
@@ -40,7 +44,9 @@ public final class AgentPoolQueueReference extends ResourceReference {
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public AgentPoolQueueReference withAlias(String alias) {
         super.withAlias(alias);
@@ -49,7 +55,7 @@ public final class AgentPoolQueueReference extends ResourceReference {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     @Override

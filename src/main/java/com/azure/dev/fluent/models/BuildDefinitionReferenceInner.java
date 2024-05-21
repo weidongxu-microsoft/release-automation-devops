@@ -5,7 +5,6 @@
 package com.azure.dev.fluent.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.models.AgentPoolQueue;
 import com.azure.dev.models.DefinitionQuality;
 import com.azure.dev.models.DefinitionQueueStatus;
@@ -14,16 +13,15 @@ import com.azure.dev.models.DefinitionType;
 import com.azure.dev.models.IdentityRef;
 import com.azure.dev.models.ReferenceLinks;
 import com.azure.dev.models.TeamProjectReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 import java.util.List;
 
-/** Represents a reference to a build definition. */
+/**
+ * Represents a reference to a build definition.
+ */
 @Fluent
 public class BuildDefinitionReferenceInner extends DefinitionReference {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(BuildDefinitionReferenceInner.class);
-
     /*
      * The class to represent a collection of REST reference links.
      */
@@ -37,15 +35,13 @@ public class BuildDefinitionReferenceInner extends DefinitionReference {
     private IdentityRef authoredBy;
 
     /*
-     * A reference to the definition that this definition is a draft of, if
-     * this is a draft definition.
+     * A reference to the definition that this definition is a draft of, if this is a draft definition.
      */
     @JsonProperty(value = "draftOf")
     private DefinitionReference draftOf;
 
     /*
-     * The list of drafts associated with this definition, if this is not a
-     * draft definition.
+     * The list of drafts associated with this definition, if this is not a draft definition.
      */
     @JsonProperty(value = "drafts")
     private List<DefinitionReference> drafts;
@@ -81,8 +77,14 @@ public class BuildDefinitionReferenceInner extends DefinitionReference {
     private AgentPoolQueue queue;
 
     /**
+     * Creates an instance of BuildDefinitionReferenceInner class.
+     */
+    public BuildDefinitionReferenceInner() {
+    }
+
+    /**
      * Get the links property: The class to represent a collection of REST reference links.
-     *
+     * 
      * @return the links value.
      */
     public ReferenceLinks links() {
@@ -91,7 +93,7 @@ public class BuildDefinitionReferenceInner extends DefinitionReference {
 
     /**
      * Set the links property: The class to represent a collection of REST reference links.
-     *
+     * 
      * @param links the links value to set.
      * @return the BuildDefinitionReferenceInner object itself.
      */
@@ -102,7 +104,7 @@ public class BuildDefinitionReferenceInner extends DefinitionReference {
 
     /**
      * Get the authoredBy property: The author of the definition.
-     *
+     * 
      * @return the authoredBy value.
      */
     public IdentityRef authoredBy() {
@@ -111,7 +113,7 @@ public class BuildDefinitionReferenceInner extends DefinitionReference {
 
     /**
      * Set the authoredBy property: The author of the definition.
-     *
+     * 
      * @param authoredBy the authoredBy value to set.
      * @return the BuildDefinitionReferenceInner object itself.
      */
@@ -123,7 +125,7 @@ public class BuildDefinitionReferenceInner extends DefinitionReference {
     /**
      * Get the draftOf property: A reference to the definition that this definition is a draft of, if this is a draft
      * definition.
-     *
+     * 
      * @return the draftOf value.
      */
     public DefinitionReference draftOf() {
@@ -133,7 +135,7 @@ public class BuildDefinitionReferenceInner extends DefinitionReference {
     /**
      * Set the draftOf property: A reference to the definition that this definition is a draft of, if this is a draft
      * definition.
-     *
+     * 
      * @param draftOf the draftOf value to set.
      * @return the BuildDefinitionReferenceInner object itself.
      */
@@ -144,7 +146,7 @@ public class BuildDefinitionReferenceInner extends DefinitionReference {
 
     /**
      * Get the drafts property: The list of drafts associated with this definition, if this is not a draft definition.
-     *
+     * 
      * @return the drafts value.
      */
     public List<DefinitionReference> drafts() {
@@ -153,7 +155,7 @@ public class BuildDefinitionReferenceInner extends DefinitionReference {
 
     /**
      * Set the drafts property: The list of drafts associated with this definition, if this is not a draft definition.
-     *
+     * 
      * @param drafts the drafts value to set.
      * @return the BuildDefinitionReferenceInner object itself.
      */
@@ -164,7 +166,7 @@ public class BuildDefinitionReferenceInner extends DefinitionReference {
 
     /**
      * Get the latestBuild property: Data representation of a build.
-     *
+     * 
      * @return the latestBuild value.
      */
     public BuildInner latestBuild() {
@@ -173,7 +175,7 @@ public class BuildDefinitionReferenceInner extends DefinitionReference {
 
     /**
      * Set the latestBuild property: Data representation of a build.
-     *
+     * 
      * @param latestBuild the latestBuild value to set.
      * @return the BuildDefinitionReferenceInner object itself.
      */
@@ -184,7 +186,7 @@ public class BuildDefinitionReferenceInner extends DefinitionReference {
 
     /**
      * Get the latestCompletedBuild property: Data representation of a build.
-     *
+     * 
      * @return the latestCompletedBuild value.
      */
     public BuildInner latestCompletedBuild() {
@@ -193,7 +195,7 @@ public class BuildDefinitionReferenceInner extends DefinitionReference {
 
     /**
      * Set the latestCompletedBuild property: Data representation of a build.
-     *
+     * 
      * @param latestCompletedBuild the latestCompletedBuild value to set.
      * @return the BuildDefinitionReferenceInner object itself.
      */
@@ -204,7 +206,7 @@ public class BuildDefinitionReferenceInner extends DefinitionReference {
 
     /**
      * Get the metrics property: The metrics property.
-     *
+     * 
      * @return the metrics value.
      */
     public List<BuildMetricInner> metrics() {
@@ -213,7 +215,7 @@ public class BuildDefinitionReferenceInner extends DefinitionReference {
 
     /**
      * Set the metrics property: The metrics property.
-     *
+     * 
      * @param metrics the metrics value to set.
      * @return the BuildDefinitionReferenceInner object itself.
      */
@@ -224,7 +226,7 @@ public class BuildDefinitionReferenceInner extends DefinitionReference {
 
     /**
      * Get the quality property: The quality of the definition document (draft, etc.).
-     *
+     * 
      * @return the quality value.
      */
     public DefinitionQuality quality() {
@@ -233,7 +235,7 @@ public class BuildDefinitionReferenceInner extends DefinitionReference {
 
     /**
      * Set the quality property: The quality of the definition document (draft, etc.).
-     *
+     * 
      * @param quality the quality value to set.
      * @return the BuildDefinitionReferenceInner object itself.
      */
@@ -244,7 +246,7 @@ public class BuildDefinitionReferenceInner extends DefinitionReference {
 
     /**
      * Get the queue property: The default queue for builds run against this definition.
-     *
+     * 
      * @return the queue value.
      */
     public AgentPoolQueue queue() {
@@ -253,7 +255,7 @@ public class BuildDefinitionReferenceInner extends DefinitionReference {
 
     /**
      * Set the queue property: The default queue for builds run against this definition.
-     *
+     * 
      * @param queue the queue value to set.
      * @return the BuildDefinitionReferenceInner object itself.
      */
@@ -262,70 +264,90 @@ public class BuildDefinitionReferenceInner extends DefinitionReference {
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinitionReferenceInner withCreatedDate(OffsetDateTime createdDate) {
         super.withCreatedDate(createdDate);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinitionReferenceInner withId(Integer id) {
         super.withId(id);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinitionReferenceInner withName(String name) {
         super.withName(name);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinitionReferenceInner withPath(String path) {
         super.withPath(path);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinitionReferenceInner withProject(TeamProjectReference project) {
         super.withProject(project);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinitionReferenceInner withQueueStatus(DefinitionQueueStatus queueStatus) {
         super.withQueueStatus(queueStatus);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinitionReferenceInner withRevision(Integer revision) {
         super.withRevision(revision);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinitionReferenceInner withType(DefinitionType type) {
         super.withType(type);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinitionReferenceInner withUri(String uri) {
         super.withUri(uri);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BuildDefinitionReferenceInner withUrl(String url) {
         super.withUrl(url);
@@ -334,7 +356,7 @@ public class BuildDefinitionReferenceInner extends DefinitionReference {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     @Override

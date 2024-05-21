@@ -41,6 +41,7 @@ regenerate-pom: false
 
 java: true
 fluent: LITE
+generate-samples: false
 
 pipeline:
   modelerfour:

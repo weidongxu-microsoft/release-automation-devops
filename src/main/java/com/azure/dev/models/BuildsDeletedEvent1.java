@@ -5,17 +5,15 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.UUID;
 
-/** The BuildsDeletedEvent1 model. */
+/**
+ * The BuildsDeletedEvent1 model.
+ */
 @Fluent
 public class BuildsDeletedEvent1 {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(BuildsDeletedEvent1.class);
-
     /*
      * The buildIds property.
      */
@@ -35,8 +33,14 @@ public class BuildsDeletedEvent1 {
     private UUID projectId;
 
     /**
+     * Creates an instance of BuildsDeletedEvent1 class.
+     */
+    public BuildsDeletedEvent1() {
+    }
+
+    /**
      * Get the buildIds property: The buildIds property.
-     *
+     * 
      * @return the buildIds value.
      */
     public List<Integer> buildIds() {
@@ -45,7 +49,7 @@ public class BuildsDeletedEvent1 {
 
     /**
      * Set the buildIds property: The buildIds property.
-     *
+     * 
      * @param buildIds the buildIds value to set.
      * @return the BuildsDeletedEvent1 object itself.
      */
@@ -56,7 +60,7 @@ public class BuildsDeletedEvent1 {
 
     /**
      * Get the definitionId property: The ID of the definition.
-     *
+     * 
      * @return the definitionId value.
      */
     public Integer definitionId() {
@@ -65,7 +69,7 @@ public class BuildsDeletedEvent1 {
 
     /**
      * Set the definitionId property: The ID of the definition.
-     *
+     * 
      * @param definitionId the definitionId value to set.
      * @return the BuildsDeletedEvent1 object itself.
      */
@@ -76,7 +80,7 @@ public class BuildsDeletedEvent1 {
 
     /**
      * Get the projectId property: The ID of the project.
-     *
+     * 
      * @return the projectId value.
      */
     public UUID projectId() {
@@ -85,7 +89,7 @@ public class BuildsDeletedEvent1 {
 
     /**
      * Set the projectId property: The ID of the project.
-     *
+     * 
      * @param projectId the projectId value to set.
      * @return the BuildsDeletedEvent1 object itself.
      */
@@ -96,7 +100,7 @@ public class BuildsDeletedEvent1 {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

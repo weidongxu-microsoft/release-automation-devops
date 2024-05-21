@@ -12,11 +12,30 @@ import com.azure.dev.fluent.models.BuildMetricInner;
 import java.time.OffsetDateTime;
 import java.util.List;
 
-/** An instance of this class provides access to all the operations defined in MetricsClient. */
+/**
+ * An instance of this class provides access to all the operations defined in MetricsClient.
+ */
 public interface MetricsClient {
     /**
      * Gets build metrics for a definition.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param definitionId The ID of the definition.
+     * @param minMetricsTime The date from which to calculate metrics.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return build metrics for a definition along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Response<List<BuildMetricInner>> getDefinitionMetricsWithResponse(String organization, String project,
+        int definitionId, OffsetDateTime minMetricsTime, Context context);
+
+    /**
+     * Gets build metrics for a definition.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
@@ -29,25 +48,25 @@ public interface MetricsClient {
     List<BuildMetricInner> getDefinitionMetrics(String organization, String project, int definitionId);
 
     /**
-     * Gets build metrics for a definition.
-     *
+     * Gets build metrics for a project.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
-     * @param definitionId The ID of the definition.
+     * @param metricAggregationType The aggregation type to use (hourly, daily).
      * @param minMetricsTime The date from which to calculate metrics.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return build metrics for a definition.
+     * @return build metrics for a project along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<List<BuildMetricInner>> getDefinitionMetricsWithResponse(
-        String organization, String project, int definitionId, OffsetDateTime minMetricsTime, Context context);
+    Response<List<BuildMetricInner>> getProjectMetricsWithResponse(String organization, String project,
+        String metricAggregationType, OffsetDateTime minMetricsTime, Context context);
 
     /**
      * Gets build metrics for a project.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param metricAggregationType The aggregation type to use (hourly, daily).
@@ -58,25 +77,4 @@ public interface MetricsClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     List<BuildMetricInner> getProjectMetrics(String organization, String project, String metricAggregationType);
-
-    /**
-     * Gets build metrics for a project.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param metricAggregationType The aggregation type to use (hourly, daily).
-     * @param minMetricsTime The date from which to calculate metrics.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return build metrics for a project.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<List<BuildMetricInner>> getProjectMetricsWithResponse(
-        String organization,
-        String project,
-        String metricAggregationType,
-        OffsetDateTime minMetricsTime,
-        Context context);
 }

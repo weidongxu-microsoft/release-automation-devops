@@ -5,17 +5,15 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
 
-/** The AggregatedRunsByState model. */
+/**
+ * The AggregatedRunsByState model.
+ */
 @Fluent
 public final class AggregatedRunsByState {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(AggregatedRunsByState.class);
-
     /*
      * Dictionary of <AggregatedResultsByOutcome>
      */
@@ -36,8 +34,14 @@ public final class AggregatedRunsByState {
     private TestRunState state;
 
     /**
+     * Creates an instance of AggregatedRunsByState class.
+     */
+    public AggregatedRunsByState() {
+    }
+
+    /**
      * Get the resultsByOutcome property: Dictionary of &lt;AggregatedResultsByOutcome&gt;.
-     *
+     * 
      * @return the resultsByOutcome value.
      */
     public Map<String, AggregatedResultsByOutcome> resultsByOutcome() {
@@ -46,7 +50,7 @@ public final class AggregatedRunsByState {
 
     /**
      * Set the resultsByOutcome property: Dictionary of &lt;AggregatedResultsByOutcome&gt;.
-     *
+     * 
      * @param resultsByOutcome the resultsByOutcome value to set.
      * @return the AggregatedRunsByState object itself.
      */
@@ -57,7 +61,7 @@ public final class AggregatedRunsByState {
 
     /**
      * Get the runsCount property: The runsCount property.
-     *
+     * 
      * @return the runsCount value.
      */
     public Integer runsCount() {
@@ -66,7 +70,7 @@ public final class AggregatedRunsByState {
 
     /**
      * Set the runsCount property: The runsCount property.
-     *
+     * 
      * @param runsCount the runsCount value to set.
      * @return the AggregatedRunsByState object itself.
      */
@@ -77,7 +81,7 @@ public final class AggregatedRunsByState {
 
     /**
      * Get the state property: The state property.
-     *
+     * 
      * @return the state value.
      */
     public TestRunState state() {
@@ -86,7 +90,7 @@ public final class AggregatedRunsByState {
 
     /**
      * Set the state property: The state property.
-     *
+     * 
      * @param state the state value to set.
      * @return the AggregatedRunsByState object itself.
      */
@@ -97,19 +101,16 @@ public final class AggregatedRunsByState {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {
         if (resultsByOutcome() != null) {
-            resultsByOutcome()
-                .values()
-                .forEach(
-                    e -> {
-                        if (e != null) {
-                            e.validate();
-                        }
-                    });
+            resultsByOutcome().values().forEach(e -> {
+                if (e != null) {
+                    e.validate();
+                }
+            });
         }
     }
 }

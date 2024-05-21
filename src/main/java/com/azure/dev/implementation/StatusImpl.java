@@ -9,10 +9,9 @@ import com.azure.core.util.Context;
 import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.fluent.StatusClient;
 import com.azure.dev.models.Status;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public final class StatusImpl implements Status {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(StatusImpl.class);
+    private static final ClientLogger LOGGER = new ClientLogger(StatusImpl.class);
 
     private final StatusClient innerClient;
 
@@ -23,24 +22,15 @@ public final class StatusImpl implements Status {
         this.serviceManager = serviceManager;
     }
 
-    public String get(String organization, String project, String definition) {
-        return this.serviceClient().get(organization, project, definition);
+    public Response<String> getWithResponse(String organization, String project, String definition, String branchName,
+        String stageName, String jobName, String configuration, String label, Context context) {
+        return this.serviceClient()
+            .getWithResponse(organization, project, definition, branchName, stageName, jobName, configuration, label,
+                context);
     }
 
-    public Response<String> getWithResponse(
-        String organization,
-        String project,
-        String definition,
-        String branchName,
-        String stageName,
-        String jobName,
-        String configuration,
-        String label,
-        Context context) {
-        return this
-            .serviceClient()
-            .getWithResponse(
-                organization, project, definition, branchName, stageName, jobName, configuration, label, context);
+    public String get(String organization, String project, String definition) {
+        return this.serviceClient().get(organization, project, definition);
     }
 
     private StatusClient serviceClient() {

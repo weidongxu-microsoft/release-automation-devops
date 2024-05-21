@@ -5,15 +5,13 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Represents a reference to a variable group. */
+/**
+ * Represents a reference to a variable group.
+ */
 @Fluent
 public class VariableGroupReference {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(VariableGroupReference.class);
-
     /*
      * The Name of the variable group.
      */
@@ -27,8 +25,14 @@ public class VariableGroupReference {
     private Integer id;
 
     /**
+     * Creates an instance of VariableGroupReference class.
+     */
+    public VariableGroupReference() {
+    }
+
+    /**
      * Get the alias property: The Name of the variable group.
-     *
+     * 
      * @return the alias value.
      */
     public String alias() {
@@ -37,7 +41,7 @@ public class VariableGroupReference {
 
     /**
      * Set the alias property: The Name of the variable group.
-     *
+     * 
      * @param alias the alias value to set.
      * @return the VariableGroupReference object itself.
      */
@@ -48,7 +52,7 @@ public class VariableGroupReference {
 
     /**
      * Get the id property: The ID of the variable group.
-     *
+     * 
      * @return the id value.
      */
     public Integer id() {
@@ -57,7 +61,7 @@ public class VariableGroupReference {
 
     /**
      * Set the id property: The ID of the variable group.
-     *
+     * 
      * @param id the id value to set.
      * @return the VariableGroupReference object itself.
      */
@@ -68,7 +72,7 @@ public class VariableGroupReference {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

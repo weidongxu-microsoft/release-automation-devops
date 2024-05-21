@@ -5,34 +5,27 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** The GraphSubjectBase model. */
+/**
+ * The GraphSubjectBase model.
+ */
 @Fluent
 public class GraphSubjectBase {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(GraphSubjectBase.class);
-
     /*
-     * This field contains zero or more interesting links about the graph
-     * subject. These links may be invoked to obtain additional relationships
-     * or more detailed information about this graph subject.
+     * This field contains zero or more interesting links about the graph subject. These links may be invoked to obtain additional relationships or more detailed information about this graph subject.
      */
     @JsonProperty(value = "_links")
     private ReferenceLinks links;
 
     /*
-     * The descriptor is the primary way to reference the graph subject while
-     * the system is running. This field will uniquely identify the same graph
-     * subject across both Accounts and Organizations.
+     * The descriptor is the primary way to reference the graph subject while the system is running. This field will uniquely identify the same graph subject across both Accounts and Organizations.
      */
     @JsonProperty(value = "descriptor")
     private String descriptor;
 
     /*
-     * This is the non-unique display name of the graph subject. To change this
-     * field, you must alter its value in the source provider.
+     * This is the non-unique display name of the graph subject. To change this field, you must alter its value in the source provider.
      */
     @JsonProperty(value = "displayName")
     private String displayName;
@@ -44,9 +37,15 @@ public class GraphSubjectBase {
     private String url;
 
     /**
+     * Creates an instance of GraphSubjectBase class.
+     */
+    public GraphSubjectBase() {
+    }
+
+    /**
      * Get the links property: This field contains zero or more interesting links about the graph subject. These links
      * may be invoked to obtain additional relationships or more detailed information about this graph subject.
-     *
+     * 
      * @return the links value.
      */
     public ReferenceLinks links() {
@@ -56,7 +55,7 @@ public class GraphSubjectBase {
     /**
      * Set the links property: This field contains zero or more interesting links about the graph subject. These links
      * may be invoked to obtain additional relationships or more detailed information about this graph subject.
-     *
+     * 
      * @param links the links value to set.
      * @return the GraphSubjectBase object itself.
      */
@@ -68,7 +67,7 @@ public class GraphSubjectBase {
     /**
      * Get the descriptor property: The descriptor is the primary way to reference the graph subject while the system is
      * running. This field will uniquely identify the same graph subject across both Accounts and Organizations.
-     *
+     * 
      * @return the descriptor value.
      */
     public String descriptor() {
@@ -78,7 +77,7 @@ public class GraphSubjectBase {
     /**
      * Set the descriptor property: The descriptor is the primary way to reference the graph subject while the system is
      * running. This field will uniquely identify the same graph subject across both Accounts and Organizations.
-     *
+     * 
      * @param descriptor the descriptor value to set.
      * @return the GraphSubjectBase object itself.
      */
@@ -90,7 +89,7 @@ public class GraphSubjectBase {
     /**
      * Get the displayName property: This is the non-unique display name of the graph subject. To change this field, you
      * must alter its value in the source provider.
-     *
+     * 
      * @return the displayName value.
      */
     public String displayName() {
@@ -100,7 +99,7 @@ public class GraphSubjectBase {
     /**
      * Set the displayName property: This is the non-unique display name of the graph subject. To change this field, you
      * must alter its value in the source provider.
-     *
+     * 
      * @param displayName the displayName value to set.
      * @return the GraphSubjectBase object itself.
      */
@@ -111,7 +110,7 @@ public class GraphSubjectBase {
 
     /**
      * Get the url property: This url is the full route to the source resource of this graph subject.
-     *
+     * 
      * @return the url value.
      */
     public String url() {
@@ -120,7 +119,7 @@ public class GraphSubjectBase {
 
     /**
      * Set the url property: This url is the full route to the source resource of this graph subject.
-     *
+     * 
      * @param url the url value to set.
      * @return the GraphSubjectBase object itself.
      */
@@ -131,7 +130,7 @@ public class GraphSubjectBase {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

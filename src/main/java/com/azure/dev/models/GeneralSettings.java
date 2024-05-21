@@ -8,11 +8,26 @@ import com.azure.core.http.rest.Response;
 import com.azure.core.util.Context;
 import com.azure.dev.fluent.models.PipelineGeneralSettingsInner;
 
-/** Resource collection API of GeneralSettings. */
+/**
+ * Resource collection API of GeneralSettings.
+ */
 public interface GeneralSettings {
     /**
      * Gets pipeline general settings.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return pipeline general settings along with {@link Response}.
+     */
+    Response<PipelineGeneralSettings> getWithResponse(String organization, String project, Context context);
+
+    /**
+     * Gets pipeline general settings.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -23,21 +38,23 @@ public interface GeneralSettings {
     PipelineGeneralSettings get(String organization, String project);
 
     /**
-     * Gets pipeline general settings.
-     *
+     * Updates pipeline general settings.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
+     * @param body Contains pipeline general settings.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return pipeline general settings.
+     * @return contains pipeline general settings along with {@link Response}.
      */
-    Response<PipelineGeneralSettings> getWithResponse(String organization, String project, Context context);
+    Response<PipelineGeneralSettings> updateWithResponse(String organization, String project,
+        PipelineGeneralSettingsInner body, Context context);
 
     /**
      * Updates pipeline general settings.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param body Contains pipeline general settings.
@@ -47,19 +64,4 @@ public interface GeneralSettings {
      * @return contains pipeline general settings.
      */
     PipelineGeneralSettings update(String organization, String project, PipelineGeneralSettingsInner body);
-
-    /**
-     * Updates pipeline general settings.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param body Contains pipeline general settings.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return contains pipeline general settings.
-     */
-    Response<PipelineGeneralSettings> updateWithResponse(
-        String organization, String project, PipelineGeneralSettingsInner body, Context context);
 }

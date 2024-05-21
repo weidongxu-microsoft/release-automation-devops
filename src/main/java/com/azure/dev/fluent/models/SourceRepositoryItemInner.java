@@ -5,15 +5,13 @@
 package com.azure.dev.fluent.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Represents an item in a repository from a source provider. */
+/**
+ * Represents an item in a repository from a source provider.
+ */
 @Fluent
 public final class SourceRepositoryItemInner {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(SourceRepositoryItemInner.class);
-
     /*
      * Whether the item is able to have sub-items (e.g., is a folder).
      */
@@ -39,8 +37,14 @@ public final class SourceRepositoryItemInner {
     private String url;
 
     /**
+     * Creates an instance of SourceRepositoryItemInner class.
+     */
+    public SourceRepositoryItemInner() {
+    }
+
+    /**
      * Get the isContainer property: Whether the item is able to have sub-items (e.g., is a folder).
-     *
+     * 
      * @return the isContainer value.
      */
     public Boolean isContainer() {
@@ -49,7 +53,7 @@ public final class SourceRepositoryItemInner {
 
     /**
      * Set the isContainer property: Whether the item is able to have sub-items (e.g., is a folder).
-     *
+     * 
      * @param isContainer the isContainer value to set.
      * @return the SourceRepositoryItemInner object itself.
      */
@@ -60,7 +64,7 @@ public final class SourceRepositoryItemInner {
 
     /**
      * Get the path property: The full path of the item, relative to the root of the repository.
-     *
+     * 
      * @return the path value.
      */
     public String path() {
@@ -69,7 +73,7 @@ public final class SourceRepositoryItemInner {
 
     /**
      * Set the path property: The full path of the item, relative to the root of the repository.
-     *
+     * 
      * @param path the path value to set.
      * @return the SourceRepositoryItemInner object itself.
      */
@@ -80,7 +84,7 @@ public final class SourceRepositoryItemInner {
 
     /**
      * Get the type property: The type of the item (folder, file, etc).
-     *
+     * 
      * @return the type value.
      */
     public String type() {
@@ -89,7 +93,7 @@ public final class SourceRepositoryItemInner {
 
     /**
      * Set the type property: The type of the item (folder, file, etc).
-     *
+     * 
      * @param type the type value to set.
      * @return the SourceRepositoryItemInner object itself.
      */
@@ -100,7 +104,7 @@ public final class SourceRepositoryItemInner {
 
     /**
      * Get the url property: The URL of the item.
-     *
+     * 
      * @return the url value.
      */
     public String url() {
@@ -109,7 +113,7 @@ public final class SourceRepositoryItemInner {
 
     /**
      * Set the url property: The URL of the item.
-     *
+     * 
      * @param url the url value to set.
      * @return the SourceRepositoryItemInner object itself.
      */
@@ -120,7 +124,7 @@ public final class SourceRepositoryItemInner {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

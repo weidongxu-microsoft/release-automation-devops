@@ -6,39 +6,41 @@ package com.azure.dev.models;
 
 import com.azure.dev.fluent.models.DefinitionResourceReferenceInner;
 
-/** An immutable client-side representation of DefinitionResourceReference. */
+/**
+ * An immutable client-side representation of DefinitionResourceReference.
+ */
 public interface DefinitionResourceReference {
     /**
      * Gets the authorized property: Indicates whether the resource is authorized for use.
-     *
+     * 
      * @return the authorized value.
      */
     Boolean authorized();
 
     /**
      * Gets the id property: The id of the resource.
-     *
+     * 
      * @return the id value.
      */
     String id();
 
     /**
      * Gets the name property: A friendly name for the resource.
-     *
+     * 
      * @return the name value.
      */
     String name();
 
     /**
      * Gets the type property: The type of the resource.
-     *
+     * 
      * @return the type value.
      */
     String type();
 
     /**
      * Gets the inner com.azure.dev.fluent.models.DefinitionResourceReferenceInner object.
-     *
+     * 
      * @return the inner object.
      */
     DefinitionResourceReferenceInner innerModel();

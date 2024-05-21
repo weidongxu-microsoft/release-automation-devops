@@ -5,7 +5,6 @@
 package com.azure.dev.fluent.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.models.AgentPoolQueue;
 import com.azure.dev.models.AgentSpecification;
 import com.azure.dev.models.BuildLogReference;
@@ -22,18 +21,17 @@ import com.azure.dev.models.QueuePriority;
 import com.azure.dev.models.ReferenceLinks;
 import com.azure.dev.models.TaskOrchestrationPlanReference;
 import com.azure.dev.models.TeamProjectReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 
-/** Data representation of a build. */
+/**
+ * Data representation of a build.
+ */
 @Fluent
 public final class BuildInner {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(BuildInner.class);
-
     /*
      * The class to represent a collection of REST reference links.
      */
@@ -45,6 +43,12 @@ public final class BuildInner {
      */
     @JsonProperty(value = "agentSpecification")
     private AgentSpecification agentSpecification;
+
+    /*
+     * Append Commit Message To BuildNumber in UI.
+     */
+    @JsonProperty(value = "appendCommitMessageToRunName")
+    private Boolean appendCommitMessageToRunName;
 
     /*
      * The build number/name of the build.
@@ -95,8 +99,7 @@ public final class BuildInner {
     private String deletedReason;
 
     /*
-     * A list of demands that represents the agent capabilities required by
-     * this build.
+     * A list of demands that represents the agent capabilities required by this build.
      */
     @JsonProperty(value = "demands")
     private List<Demand> demands;
@@ -114,14 +117,7 @@ public final class BuildInner {
     private Integer id;
 
     /*
-     * Indicates whether the build should be skipped by retention policies.
-     */
-    @JsonProperty(value = "keepForever")
-    private Boolean keepForever;
-
-    /*
-     * The identity representing the process or person that last changed the
-     * build.
+     * The identity representing the process or person that last changed the build.
      */
     @JsonProperty(value = "lastChangedBy")
     private IdentityRef lastChangedBy;
@@ -157,7 +153,7 @@ public final class BuildInner {
     private List<TaskOrchestrationPlanReference> plans;
 
     /*
-     * The build's priority.
+     * Azure Pipelines does not support job priority. This field is deprecated.
      */
     @JsonProperty(value = "priority")
     private QueuePriority priority;
@@ -169,12 +165,7 @@ public final class BuildInner {
     private TeamProjectReference project;
 
     /*
-     * The class represents a property bag as a collection of key-value pairs.
-     * Values of all primitive types (any type with a `TypeCode !=
-     * TypeCode.Object`) except for `DBNull` are accepted. Values of type
-     * Byte[], Int32, Double, DateType and String preserve their type, other
-     * primitives are retuned as a String. Byte[] expected as base64 encoded
-     * string.
+     * The class represents a property bag as a collection of key-value pairs. Values of all primitive types (any type with a `TypeCode != TypeCode.Object`) except for `DBNull` are accepted. Values of type Byte[], Int32, Double, DateType and String preserve their type, other primitives are retuned as a String. Byte[] expected as base64 encoded string.
      */
     @JsonProperty(value = "properties")
     private PropertiesCollectionInner properties;
@@ -186,7 +177,7 @@ public final class BuildInner {
     private String quality;
 
     /*
-     * The queue. This is only set if the definition type is Build.
+     * The queue. This is only set if the definition type is Build. WARNING: this field is deprecated and does not corresponds to the jobs queues.
      */
     @JsonProperty(value = "queue")
     private AgentPoolQueue queue;
@@ -276,6 +267,13 @@ public final class BuildInner {
     private List<String> tags;
 
     /*
+     * Parameters to template expression evaluation
+     */
+    @JsonProperty(value = "templateParameters")
+    @JsonInclude(value = JsonInclude.Include.NON_NULL, content = JsonInclude.Include.ALWAYS)
+    private Map<String, String> templateParameters;
+
+    /*
      * The build that triggered this build via a Build completion trigger.
      */
     @JsonProperty(value = "triggeredByBuild")
@@ -307,8 +305,14 @@ public final class BuildInner {
     private List<BuildRequestValidationResult> validationResults;
 
     /**
+     * Creates an instance of BuildInner class.
+     */
+    public BuildInner() {
+    }
+
+    /**
      * Get the links property: The class to represent a collection of REST reference links.
-     *
+     * 
      * @return the links value.
      */
     public ReferenceLinks links() {
@@ -317,7 +321,7 @@ public final class BuildInner {
 
     /**
      * Set the links property: The class to represent a collection of REST reference links.
-     *
+     * 
      * @param links the links value to set.
      * @return the BuildInner object itself.
      */
@@ -328,7 +332,7 @@ public final class BuildInner {
 
     /**
      * Get the agentSpecification property: The agent specification for the build.
-     *
+     * 
      * @return the agentSpecification value.
      */
     public AgentSpecification agentSpecification() {
@@ -337,7 +341,7 @@ public final class BuildInner {
 
     /**
      * Set the agentSpecification property: The agent specification for the build.
-     *
+     * 
      * @param agentSpecification the agentSpecification value to set.
      * @return the BuildInner object itself.
      */
@@ -347,8 +351,28 @@ public final class BuildInner {
     }
 
     /**
+     * Get the appendCommitMessageToRunName property: Append Commit Message To BuildNumber in UI.
+     * 
+     * @return the appendCommitMessageToRunName value.
+     */
+    public Boolean appendCommitMessageToRunName() {
+        return this.appendCommitMessageToRunName;
+    }
+
+    /**
+     * Set the appendCommitMessageToRunName property: Append Commit Message To BuildNumber in UI.
+     * 
+     * @param appendCommitMessageToRunName the appendCommitMessageToRunName value to set.
+     * @return the BuildInner object itself.
+     */
+    public BuildInner withAppendCommitMessageToRunName(Boolean appendCommitMessageToRunName) {
+        this.appendCommitMessageToRunName = appendCommitMessageToRunName;
+        return this;
+    }
+
+    /**
      * Get the buildNumber property: The build number/name of the build.
-     *
+     * 
      * @return the buildNumber value.
      */
     public String buildNumber() {
@@ -357,7 +381,7 @@ public final class BuildInner {
 
     /**
      * Set the buildNumber property: The build number/name of the build.
-     *
+     * 
      * @param buildNumber the buildNumber value to set.
      * @return the BuildInner object itself.
      */
@@ -368,7 +392,7 @@ public final class BuildInner {
 
     /**
      * Get the buildNumberRevision property: The build number revision.
-     *
+     * 
      * @return the buildNumberRevision value.
      */
     public Integer buildNumberRevision() {
@@ -377,7 +401,7 @@ public final class BuildInner {
 
     /**
      * Set the buildNumberRevision property: The build number revision.
-     *
+     * 
      * @param buildNumberRevision the buildNumberRevision value to set.
      * @return the BuildInner object itself.
      */
@@ -388,7 +412,7 @@ public final class BuildInner {
 
     /**
      * Get the controller property: The build controller. This is only set if the definition type is Xaml.
-     *
+     * 
      * @return the controller value.
      */
     public BuildControllerInner controller() {
@@ -397,7 +421,7 @@ public final class BuildInner {
 
     /**
      * Set the controller property: The build controller. This is only set if the definition type is Xaml.
-     *
+     * 
      * @param controller the controller value to set.
      * @return the BuildInner object itself.
      */
@@ -408,7 +432,7 @@ public final class BuildInner {
 
     /**
      * Get the definition property: The definition associated with the build.
-     *
+     * 
      * @return the definition value.
      */
     public DefinitionReference definition() {
@@ -417,7 +441,7 @@ public final class BuildInner {
 
     /**
      * Set the definition property: The definition associated with the build.
-     *
+     * 
      * @param definition the definition value to set.
      * @return the BuildInner object itself.
      */
@@ -428,7 +452,7 @@ public final class BuildInner {
 
     /**
      * Get the deleted property: Indicates whether the build has been deleted.
-     *
+     * 
      * @return the deleted value.
      */
     public Boolean deleted() {
@@ -437,7 +461,7 @@ public final class BuildInner {
 
     /**
      * Set the deleted property: Indicates whether the build has been deleted.
-     *
+     * 
      * @param deleted the deleted value to set.
      * @return the BuildInner object itself.
      */
@@ -448,7 +472,7 @@ public final class BuildInner {
 
     /**
      * Get the deletedBy property: The identity of the process or person that deleted the build.
-     *
+     * 
      * @return the deletedBy value.
      */
     public IdentityRef deletedBy() {
@@ -457,7 +481,7 @@ public final class BuildInner {
 
     /**
      * Set the deletedBy property: The identity of the process or person that deleted the build.
-     *
+     * 
      * @param deletedBy the deletedBy value to set.
      * @return the BuildInner object itself.
      */
@@ -468,7 +492,7 @@ public final class BuildInner {
 
     /**
      * Get the deletedDate property: The date the build was deleted.
-     *
+     * 
      * @return the deletedDate value.
      */
     public OffsetDateTime deletedDate() {
@@ -477,7 +501,7 @@ public final class BuildInner {
 
     /**
      * Set the deletedDate property: The date the build was deleted.
-     *
+     * 
      * @param deletedDate the deletedDate value to set.
      * @return the BuildInner object itself.
      */
@@ -488,7 +512,7 @@ public final class BuildInner {
 
     /**
      * Get the deletedReason property: The description of how the build was deleted.
-     *
+     * 
      * @return the deletedReason value.
      */
     public String deletedReason() {
@@ -497,7 +521,7 @@ public final class BuildInner {
 
     /**
      * Set the deletedReason property: The description of how the build was deleted.
-     *
+     * 
      * @param deletedReason the deletedReason value to set.
      * @return the BuildInner object itself.
      */
@@ -508,7 +532,7 @@ public final class BuildInner {
 
     /**
      * Get the demands property: A list of demands that represents the agent capabilities required by this build.
-     *
+     * 
      * @return the demands value.
      */
     public List<Demand> demands() {
@@ -517,7 +541,7 @@ public final class BuildInner {
 
     /**
      * Set the demands property: A list of demands that represents the agent capabilities required by this build.
-     *
+     * 
      * @param demands the demands value to set.
      * @return the BuildInner object itself.
      */
@@ -528,7 +552,7 @@ public final class BuildInner {
 
     /**
      * Get the finishTime property: The time that the build was completed.
-     *
+     * 
      * @return the finishTime value.
      */
     public OffsetDateTime finishTime() {
@@ -537,7 +561,7 @@ public final class BuildInner {
 
     /**
      * Set the finishTime property: The time that the build was completed.
-     *
+     * 
      * @param finishTime the finishTime value to set.
      * @return the BuildInner object itself.
      */
@@ -548,7 +572,7 @@ public final class BuildInner {
 
     /**
      * Get the id property: The ID of the build.
-     *
+     * 
      * @return the id value.
      */
     public Integer id() {
@@ -557,7 +581,7 @@ public final class BuildInner {
 
     /**
      * Set the id property: The ID of the build.
-     *
+     * 
      * @param id the id value to set.
      * @return the BuildInner object itself.
      */
@@ -567,28 +591,8 @@ public final class BuildInner {
     }
 
     /**
-     * Get the keepForever property: Indicates whether the build should be skipped by retention policies.
-     *
-     * @return the keepForever value.
-     */
-    public Boolean keepForever() {
-        return this.keepForever;
-    }
-
-    /**
-     * Set the keepForever property: Indicates whether the build should be skipped by retention policies.
-     *
-     * @param keepForever the keepForever value to set.
-     * @return the BuildInner object itself.
-     */
-    public BuildInner withKeepForever(Boolean keepForever) {
-        this.keepForever = keepForever;
-        return this;
-    }
-
-    /**
      * Get the lastChangedBy property: The identity representing the process or person that last changed the build.
-     *
+     * 
      * @return the lastChangedBy value.
      */
     public IdentityRef lastChangedBy() {
@@ -597,7 +601,7 @@ public final class BuildInner {
 
     /**
      * Set the lastChangedBy property: The identity representing the process or person that last changed the build.
-     *
+     * 
      * @param lastChangedBy the lastChangedBy value to set.
      * @return the BuildInner object itself.
      */
@@ -608,7 +612,7 @@ public final class BuildInner {
 
     /**
      * Get the lastChangedDate property: The date the build was last changed.
-     *
+     * 
      * @return the lastChangedDate value.
      */
     public OffsetDateTime lastChangedDate() {
@@ -617,7 +621,7 @@ public final class BuildInner {
 
     /**
      * Set the lastChangedDate property: The date the build was last changed.
-     *
+     * 
      * @param lastChangedDate the lastChangedDate value to set.
      * @return the BuildInner object itself.
      */
@@ -628,7 +632,7 @@ public final class BuildInner {
 
     /**
      * Get the logs property: Information about the build logs.
-     *
+     * 
      * @return the logs value.
      */
     public BuildLogReference logs() {
@@ -637,7 +641,7 @@ public final class BuildInner {
 
     /**
      * Set the logs property: Information about the build logs.
-     *
+     * 
      * @param logs the logs value to set.
      * @return the BuildInner object itself.
      */
@@ -648,7 +652,7 @@ public final class BuildInner {
 
     /**
      * Get the orchestrationPlan property: The orchestration plan for the build.
-     *
+     * 
      * @return the orchestrationPlan value.
      */
     public TaskOrchestrationPlanReference orchestrationPlan() {
@@ -657,7 +661,7 @@ public final class BuildInner {
 
     /**
      * Set the orchestrationPlan property: The orchestration plan for the build.
-     *
+     * 
      * @param orchestrationPlan the orchestrationPlan value to set.
      * @return the BuildInner object itself.
      */
@@ -668,7 +672,7 @@ public final class BuildInner {
 
     /**
      * Get the parameters property: The parameters for the build.
-     *
+     * 
      * @return the parameters value.
      */
     public String parameters() {
@@ -677,7 +681,7 @@ public final class BuildInner {
 
     /**
      * Set the parameters property: The parameters for the build.
-     *
+     * 
      * @param parameters the parameters value to set.
      * @return the BuildInner object itself.
      */
@@ -688,7 +692,7 @@ public final class BuildInner {
 
     /**
      * Get the plans property: Orchestration plans associated with the build (build, cleanup).
-     *
+     * 
      * @return the plans value.
      */
     public List<TaskOrchestrationPlanReference> plans() {
@@ -697,7 +701,7 @@ public final class BuildInner {
 
     /**
      * Set the plans property: Orchestration plans associated with the build (build, cleanup).
-     *
+     * 
      * @param plans the plans value to set.
      * @return the BuildInner object itself.
      */
@@ -707,8 +711,8 @@ public final class BuildInner {
     }
 
     /**
-     * Get the priority property: The build's priority.
-     *
+     * Get the priority property: Azure Pipelines does not support job priority. This field is deprecated.
+     * 
      * @return the priority value.
      */
     public QueuePriority priority() {
@@ -716,8 +720,8 @@ public final class BuildInner {
     }
 
     /**
-     * Set the priority property: The build's priority.
-     *
+     * Set the priority property: Azure Pipelines does not support job priority. This field is deprecated.
+     * 
      * @param priority the priority value to set.
      * @return the BuildInner object itself.
      */
@@ -728,7 +732,7 @@ public final class BuildInner {
 
     /**
      * Get the project property: The team project.
-     *
+     * 
      * @return the project value.
      */
     public TeamProjectReference project() {
@@ -737,7 +741,7 @@ public final class BuildInner {
 
     /**
      * Set the project property: The team project.
-     *
+     * 
      * @param project the project value to set.
      * @return the BuildInner object itself.
      */
@@ -751,7 +755,7 @@ public final class BuildInner {
      * all primitive types (any type with a `TypeCode != TypeCode.Object`) except for `DBNull` are accepted. Values of
      * type Byte[], Int32, Double, DateType and String preserve their type, other primitives are retuned as a String.
      * Byte[] expected as base64 encoded string.
-     *
+     * 
      * @return the properties value.
      */
     public PropertiesCollectionInner properties() {
@@ -763,7 +767,7 @@ public final class BuildInner {
      * all primitive types (any type with a `TypeCode != TypeCode.Object`) except for `DBNull` are accepted. Values of
      * type Byte[], Int32, Double, DateType and String preserve their type, other primitives are retuned as a String.
      * Byte[] expected as base64 encoded string.
-     *
+     * 
      * @param properties the properties value to set.
      * @return the BuildInner object itself.
      */
@@ -774,7 +778,7 @@ public final class BuildInner {
 
     /**
      * Get the quality property: The quality of the xaml build (good, bad, etc.).
-     *
+     * 
      * @return the quality value.
      */
     public String quality() {
@@ -783,7 +787,7 @@ public final class BuildInner {
 
     /**
      * Set the quality property: The quality of the xaml build (good, bad, etc.).
-     *
+     * 
      * @param quality the quality value to set.
      * @return the BuildInner object itself.
      */
@@ -793,8 +797,9 @@ public final class BuildInner {
     }
 
     /**
-     * Get the queue property: The queue. This is only set if the definition type is Build.
-     *
+     * Get the queue property: The queue. This is only set if the definition type is Build. WARNING: this field is
+     * deprecated and does not corresponds to the jobs queues.
+     * 
      * @return the queue value.
      */
     public AgentPoolQueue queue() {
@@ -802,8 +807,9 @@ public final class BuildInner {
     }
 
     /**
-     * Set the queue property: The queue. This is only set if the definition type is Build.
-     *
+     * Set the queue property: The queue. This is only set if the definition type is Build. WARNING: this field is
+     * deprecated and does not corresponds to the jobs queues.
+     * 
      * @param queue the queue value to set.
      * @return the BuildInner object itself.
      */
@@ -814,7 +820,7 @@ public final class BuildInner {
 
     /**
      * Get the queueOptions property: Additional options for queueing the build.
-     *
+     * 
      * @return the queueOptions value.
      */
     public QueueOptions queueOptions() {
@@ -823,7 +829,7 @@ public final class BuildInner {
 
     /**
      * Set the queueOptions property: Additional options for queueing the build.
-     *
+     * 
      * @param queueOptions the queueOptions value to set.
      * @return the BuildInner object itself.
      */
@@ -834,7 +840,7 @@ public final class BuildInner {
 
     /**
      * Get the queuePosition property: The current position of the build in the queue.
-     *
+     * 
      * @return the queuePosition value.
      */
     public Integer queuePosition() {
@@ -843,7 +849,7 @@ public final class BuildInner {
 
     /**
      * Set the queuePosition property: The current position of the build in the queue.
-     *
+     * 
      * @param queuePosition the queuePosition value to set.
      * @return the BuildInner object itself.
      */
@@ -854,7 +860,7 @@ public final class BuildInner {
 
     /**
      * Get the queueTime property: The time that the build was queued.
-     *
+     * 
      * @return the queueTime value.
      */
     public OffsetDateTime queueTime() {
@@ -863,7 +869,7 @@ public final class BuildInner {
 
     /**
      * Set the queueTime property: The time that the build was queued.
-     *
+     * 
      * @param queueTime the queueTime value to set.
      * @return the BuildInner object itself.
      */
@@ -874,7 +880,7 @@ public final class BuildInner {
 
     /**
      * Get the reason property: The reason that the build was created.
-     *
+     * 
      * @return the reason value.
      */
     public BuildReason reason() {
@@ -883,7 +889,7 @@ public final class BuildInner {
 
     /**
      * Set the reason property: The reason that the build was created.
-     *
+     * 
      * @param reason the reason value to set.
      * @return the BuildInner object itself.
      */
@@ -894,7 +900,7 @@ public final class BuildInner {
 
     /**
      * Get the repository property: The repository.
-     *
+     * 
      * @return the repository value.
      */
     public BuildRepository repository() {
@@ -903,7 +909,7 @@ public final class BuildInner {
 
     /**
      * Set the repository property: The repository.
-     *
+     * 
      * @param repository the repository value to set.
      * @return the BuildInner object itself.
      */
@@ -914,7 +920,7 @@ public final class BuildInner {
 
     /**
      * Get the requestedBy property: The identity that queued the build.
-     *
+     * 
      * @return the requestedBy value.
      */
     public IdentityRef requestedBy() {
@@ -923,7 +929,7 @@ public final class BuildInner {
 
     /**
      * Set the requestedBy property: The identity that queued the build.
-     *
+     * 
      * @param requestedBy the requestedBy value to set.
      * @return the BuildInner object itself.
      */
@@ -934,7 +940,7 @@ public final class BuildInner {
 
     /**
      * Get the requestedFor property: The identity on whose behalf the build was queued.
-     *
+     * 
      * @return the requestedFor value.
      */
     public IdentityRef requestedFor() {
@@ -943,7 +949,7 @@ public final class BuildInner {
 
     /**
      * Set the requestedFor property: The identity on whose behalf the build was queued.
-     *
+     * 
      * @param requestedFor the requestedFor value to set.
      * @return the BuildInner object itself.
      */
@@ -954,7 +960,7 @@ public final class BuildInner {
 
     /**
      * Get the result property: The build result.
-     *
+     * 
      * @return the result value.
      */
     public BuildResult result() {
@@ -963,7 +969,7 @@ public final class BuildInner {
 
     /**
      * Set the result property: The build result.
-     *
+     * 
      * @param result the result value to set.
      * @return the BuildInner object itself.
      */
@@ -974,7 +980,7 @@ public final class BuildInner {
 
     /**
      * Get the retainedByRelease property: Indicates whether the build is retained by a release.
-     *
+     * 
      * @return the retainedByRelease value.
      */
     public Boolean retainedByRelease() {
@@ -983,7 +989,7 @@ public final class BuildInner {
 
     /**
      * Set the retainedByRelease property: Indicates whether the build is retained by a release.
-     *
+     * 
      * @param retainedByRelease the retainedByRelease value to set.
      * @return the BuildInner object itself.
      */
@@ -994,7 +1000,7 @@ public final class BuildInner {
 
     /**
      * Get the sourceBranch property: The source branch.
-     *
+     * 
      * @return the sourceBranch value.
      */
     public String sourceBranch() {
@@ -1003,7 +1009,7 @@ public final class BuildInner {
 
     /**
      * Set the sourceBranch property: The source branch.
-     *
+     * 
      * @param sourceBranch the sourceBranch value to set.
      * @return the BuildInner object itself.
      */
@@ -1014,7 +1020,7 @@ public final class BuildInner {
 
     /**
      * Get the sourceVersion property: The source version.
-     *
+     * 
      * @return the sourceVersion value.
      */
     public String sourceVersion() {
@@ -1023,7 +1029,7 @@ public final class BuildInner {
 
     /**
      * Set the sourceVersion property: The source version.
-     *
+     * 
      * @param sourceVersion the sourceVersion value to set.
      * @return the BuildInner object itself.
      */
@@ -1034,7 +1040,7 @@ public final class BuildInner {
 
     /**
      * Get the startTime property: The time that the build was started.
-     *
+     * 
      * @return the startTime value.
      */
     public OffsetDateTime startTime() {
@@ -1043,7 +1049,7 @@ public final class BuildInner {
 
     /**
      * Set the startTime property: The time that the build was started.
-     *
+     * 
      * @param startTime the startTime value to set.
      * @return the BuildInner object itself.
      */
@@ -1054,7 +1060,7 @@ public final class BuildInner {
 
     /**
      * Get the status property: The status of the build.
-     *
+     * 
      * @return the status value.
      */
     public BuildStatus status() {
@@ -1063,7 +1069,7 @@ public final class BuildInner {
 
     /**
      * Set the status property: The status of the build.
-     *
+     * 
      * @param status the status value to set.
      * @return the BuildInner object itself.
      */
@@ -1074,7 +1080,7 @@ public final class BuildInner {
 
     /**
      * Get the tags property: The tags property.
-     *
+     * 
      * @return the tags value.
      */
     public List<String> tags() {
@@ -1083,7 +1089,7 @@ public final class BuildInner {
 
     /**
      * Set the tags property: The tags property.
-     *
+     * 
      * @param tags the tags value to set.
      * @return the BuildInner object itself.
      */
@@ -1093,8 +1099,28 @@ public final class BuildInner {
     }
 
     /**
+     * Get the templateParameters property: Parameters to template expression evaluation.
+     * 
+     * @return the templateParameters value.
+     */
+    public Map<String, String> templateParameters() {
+        return this.templateParameters;
+    }
+
+    /**
+     * Set the templateParameters property: Parameters to template expression evaluation.
+     * 
+     * @param templateParameters the templateParameters value to set.
+     * @return the BuildInner object itself.
+     */
+    public BuildInner withTemplateParameters(Map<String, String> templateParameters) {
+        this.templateParameters = templateParameters;
+        return this;
+    }
+
+    /**
      * Get the triggeredByBuild property: The build that triggered this build via a Build completion trigger.
-     *
+     * 
      * @return the triggeredByBuild value.
      */
     public BuildInner triggeredByBuild() {
@@ -1103,7 +1129,7 @@ public final class BuildInner {
 
     /**
      * Set the triggeredByBuild property: The build that triggered this build via a Build completion trigger.
-     *
+     * 
      * @param triggeredByBuild the triggeredByBuild value to set.
      * @return the BuildInner object itself.
      */
@@ -1114,7 +1140,7 @@ public final class BuildInner {
 
     /**
      * Get the triggerInfo property: Sourceprovider-specific information about what triggered the build.
-     *
+     * 
      * @return the triggerInfo value.
      */
     public Map<String, String> triggerInfo() {
@@ -1123,7 +1149,7 @@ public final class BuildInner {
 
     /**
      * Set the triggerInfo property: Sourceprovider-specific information about what triggered the build.
-     *
+     * 
      * @param triggerInfo the triggerInfo value to set.
      * @return the BuildInner object itself.
      */
@@ -1134,7 +1160,7 @@ public final class BuildInner {
 
     /**
      * Get the uri property: The URI of the build.
-     *
+     * 
      * @return the uri value.
      */
     public String uri() {
@@ -1143,7 +1169,7 @@ public final class BuildInner {
 
     /**
      * Set the uri property: The URI of the build.
-     *
+     * 
      * @param uri the uri value to set.
      * @return the BuildInner object itself.
      */
@@ -1154,7 +1180,7 @@ public final class BuildInner {
 
     /**
      * Get the url property: The REST URL of the build.
-     *
+     * 
      * @return the url value.
      */
     public String url() {
@@ -1163,7 +1189,7 @@ public final class BuildInner {
 
     /**
      * Set the url property: The REST URL of the build.
-     *
+     * 
      * @param url the url value to set.
      * @return the BuildInner object itself.
      */
@@ -1174,7 +1200,7 @@ public final class BuildInner {
 
     /**
      * Get the validationResults property: The validationResults property.
-     *
+     * 
      * @return the validationResults value.
      */
     public List<BuildRequestValidationResult> validationResults() {
@@ -1183,7 +1209,7 @@ public final class BuildInner {
 
     /**
      * Set the validationResults property: The validationResults property.
-     *
+     * 
      * @param validationResults the validationResults value to set.
      * @return the BuildInner object itself.
      */
@@ -1194,7 +1220,7 @@ public final class BuildInner {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

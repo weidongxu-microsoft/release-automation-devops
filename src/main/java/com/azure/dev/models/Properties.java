@@ -7,11 +7,29 @@ package com.azure.dev.models;
 import com.azure.core.http.rest.Response;
 import com.azure.core.util.Context;
 
-/** Resource collection API of Properties. */
+/**
+ * Resource collection API of Properties.
+ */
 public interface Properties {
     /**
      * Gets properties for a build.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param buildId The ID of the build.
+     * @param filter A comma-delimited list of properties. If specified, filters to these specific properties.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return properties for a build along with {@link Response}.
+     */
+    Response<PropertiesCollection> getBuildPropertiesWithResponse(String organization, String project, int buildId,
+        String filter, Context context);
+
+    /**
+     * Gets properties for a build.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
@@ -23,55 +41,54 @@ public interface Properties {
     PropertiesCollection getBuildProperties(String organization, String project, int buildId);
 
     /**
-     * Gets properties for a build.
-     *
+     * Updates properties for a build.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param buildId The ID of the build.
+     * @param body Any object.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the class represents a property bag as a collection of key-value pairs along with {@link Response}.
+     */
+    Response<PropertiesCollection> updateBuildPropertiesWithResponse(String organization, String project, int buildId,
+        Object body, Context context);
+
+    /**
+     * Updates properties for a build.
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param buildId The ID of the build.
+     * @param body Any object.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the class represents a property bag as a collection of key-value pairs.
+     */
+    PropertiesCollection updateBuildProperties(String organization, String project, int buildId, Object body);
+
+    /**
+     * Gets properties for a definition.
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param definitionId The ID of the definition.
      * @param filter A comma-delimited list of properties. If specified, filters to these specific properties.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return properties for a build.
+     * @return properties for a definition along with {@link Response}.
      */
-    Response<PropertiesCollection> getBuildPropertiesWithResponse(
-        String organization, String project, int buildId, String filter, Context context);
-
-    /**
-     * Updates properties for a build.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param buildId The ID of the build.
-     * @param body The JSON model for JSON Patch Operations.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the class represents a property bag as a collection of key-value pairs.
-     */
-    PropertiesCollection updateBuildProperties(
-        String organization, String project, int buildId, JsonPatchDocument body);
-
-    /**
-     * Updates properties for a build.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param buildId The ID of the build.
-     * @param body The JSON model for JSON Patch Operations.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the class represents a property bag as a collection of key-value pairs.
-     */
-    Response<PropertiesCollection> updateBuildPropertiesWithResponse(
-        String organization, String project, int buildId, JsonPatchDocument body, Context context);
+    Response<PropertiesCollection> getDefinitionPropertiesWithResponse(String organization, String project,
+        int definitionId, String filter, Context context);
 
     /**
      * Gets properties for a definition.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
@@ -83,49 +100,32 @@ public interface Properties {
     PropertiesCollection getDefinitionProperties(String organization, String project, int definitionId);
 
     /**
-     * Gets properties for a definition.
-     *
+     * Updates properties for a definition.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
-     * @param filter A comma-delimited list of properties. If specified, filters to these specific properties.
+     * @param body Any object.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return properties for a definition.
+     * @return the class represents a property bag as a collection of key-value pairs along with {@link Response}.
      */
-    Response<PropertiesCollection> getDefinitionPropertiesWithResponse(
-        String organization, String project, int definitionId, String filter, Context context);
+    Response<PropertiesCollection> updateDefinitionPropertiesWithResponse(String organization, String project,
+        int definitionId, Object body, Context context);
 
     /**
      * Updates properties for a definition.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The ID of the definition.
-     * @param body The JSON model for JSON Patch Operations.
+     * @param body Any object.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the class represents a property bag as a collection of key-value pairs.
      */
-    PropertiesCollection updateDefinitionProperties(
-        String organization, String project, int definitionId, JsonPatchDocument body);
-
-    /**
-     * Updates properties for a definition.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param definitionId The ID of the definition.
-     * @param body The JSON model for JSON Patch Operations.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the class represents a property bag as a collection of key-value pairs.
-     */
-    Response<PropertiesCollection> updateDefinitionPropertiesWithResponse(
-        String organization, String project, int definitionId, JsonPatchDocument body, Context context);
+    PropertiesCollection updateDefinitionProperties(String organization, String project, int definitionId, Object body);
 }

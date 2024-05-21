@@ -17,8 +17,52 @@ public final class PipelineGeneralSettingsImpl implements PipelineGeneralSetting
         this.serviceManager = serviceManager;
     }
 
+    public Boolean auditEnforceSettableVar() {
+        return this.innerModel().auditEnforceSettableVar();
+    }
+
+    public Boolean buildsEnabledForForks() {
+        return this.innerModel().buildsEnabledForForks();
+    }
+
+    public Boolean disableClassicBuildPipelineCreation() {
+        return this.innerModel().disableClassicBuildPipelineCreation();
+    }
+
+    public Boolean disableClassicPipelineCreation() {
+        return this.innerModel().disableClassicPipelineCreation();
+    }
+
+    public Boolean disableClassicReleasePipelineCreation() {
+        return this.innerModel().disableClassicReleasePipelineCreation();
+    }
+
+    public Boolean disableImpliedYamlCiTrigger() {
+        return this.innerModel().disableImpliedYamlCiTrigger();
+    }
+
+    public Boolean enableShellTasksArgsSanitizing() {
+        return this.innerModel().enableShellTasksArgsSanitizing();
+    }
+
+    public Boolean enableShellTasksArgsSanitizingAudit() {
+        return this.innerModel().enableShellTasksArgsSanitizingAudit();
+    }
+
     public Boolean enforceJobAuthScope() {
         return this.innerModel().enforceJobAuthScope();
+    }
+
+    public Boolean enforceJobAuthScopeForForks() {
+        return this.innerModel().enforceJobAuthScopeForForks();
+    }
+
+    public Boolean enforceJobAuthScopeForReleases() {
+        return this.innerModel().enforceJobAuthScopeForReleases();
+    }
+
+    public Boolean enforceNoAccessToSecretsFromForks() {
+        return this.innerModel().enforceNoAccessToSecretsFromForks();
     }
 
     public Boolean enforceReferencedRepoScopedToken() {
@@ -29,8 +73,24 @@ public final class PipelineGeneralSettingsImpl implements PipelineGeneralSetting
         return this.innerModel().enforceSettableVar();
     }
 
+    public Boolean forkProtectionEnabled() {
+        return this.innerModel().forkProtectionEnabled();
+    }
+
+    public Boolean isCommentRequiredForPullRequest() {
+        return this.innerModel().isCommentRequiredForPullRequest();
+    }
+
     public Boolean publishPipelineMetadata() {
         return this.innerModel().publishPipelineMetadata();
+    }
+
+    public Boolean requireCommentsForNonTeamMemberAndNonContributors() {
+        return this.innerModel().requireCommentsForNonTeamMemberAndNonContributors();
+    }
+
+    public Boolean requireCommentsForNonTeamMembersOnly() {
+        return this.innerModel().requireCommentsForNonTeamMembersOnly();
     }
 
     public Boolean statusBadgesArePrivate() {

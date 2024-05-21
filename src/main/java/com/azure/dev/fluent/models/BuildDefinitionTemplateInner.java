@@ -5,18 +5,16 @@
 package com.azure.dev.fluent.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
 import java.util.UUID;
 
-/** Represents a template from which new build definitions can be created. */
+/**
+ * Represents a template from which new build definitions can be created.
+ */
 @Fluent
 public final class BuildDefinitionTemplateInner {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(BuildDefinitionTemplateInner.class);
-
     /*
      * Indicates whether the template can be deleted.
      */
@@ -49,8 +47,7 @@ public final class BuildDefinitionTemplateInner {
     private Map<String, String> icons;
 
     /*
-     * The ID of the task whose icon is used when showing this template in the
-     * UI.
+     * The ID of the task whose icon is used when showing this template in the UI.
      */
     @JsonProperty(value = "iconTaskId")
     private UUID iconTaskId;
@@ -74,8 +71,14 @@ public final class BuildDefinitionTemplateInner {
     private BuildDefinitionInner template;
 
     /**
+     * Creates an instance of BuildDefinitionTemplateInner class.
+     */
+    public BuildDefinitionTemplateInner() {
+    }
+
+    /**
      * Get the canDelete property: Indicates whether the template can be deleted.
-     *
+     * 
      * @return the canDelete value.
      */
     public Boolean canDelete() {
@@ -84,7 +87,7 @@ public final class BuildDefinitionTemplateInner {
 
     /**
      * Set the canDelete property: Indicates whether the template can be deleted.
-     *
+     * 
      * @param canDelete the canDelete value to set.
      * @return the BuildDefinitionTemplateInner object itself.
      */
@@ -95,7 +98,7 @@ public final class BuildDefinitionTemplateInner {
 
     /**
      * Get the category property: The template category.
-     *
+     * 
      * @return the category value.
      */
     public String category() {
@@ -104,7 +107,7 @@ public final class BuildDefinitionTemplateInner {
 
     /**
      * Set the category property: The template category.
-     *
+     * 
      * @param category the category value to set.
      * @return the BuildDefinitionTemplateInner object itself.
      */
@@ -115,7 +118,7 @@ public final class BuildDefinitionTemplateInner {
 
     /**
      * Get the defaultHostedQueue property: An optional hosted agent queue for the template to use by default.
-     *
+     * 
      * @return the defaultHostedQueue value.
      */
     public String defaultHostedQueue() {
@@ -124,7 +127,7 @@ public final class BuildDefinitionTemplateInner {
 
     /**
      * Set the defaultHostedQueue property: An optional hosted agent queue for the template to use by default.
-     *
+     * 
      * @param defaultHostedQueue the defaultHostedQueue value to set.
      * @return the BuildDefinitionTemplateInner object itself.
      */
@@ -135,7 +138,7 @@ public final class BuildDefinitionTemplateInner {
 
     /**
      * Get the description property: A description of the template.
-     *
+     * 
      * @return the description value.
      */
     public String description() {
@@ -144,7 +147,7 @@ public final class BuildDefinitionTemplateInner {
 
     /**
      * Set the description property: A description of the template.
-     *
+     * 
      * @param description the description value to set.
      * @return the BuildDefinitionTemplateInner object itself.
      */
@@ -155,7 +158,7 @@ public final class BuildDefinitionTemplateInner {
 
     /**
      * Get the icons property: Dictionary of &lt;string&gt;.
-     *
+     * 
      * @return the icons value.
      */
     public Map<String, String> icons() {
@@ -164,7 +167,7 @@ public final class BuildDefinitionTemplateInner {
 
     /**
      * Set the icons property: Dictionary of &lt;string&gt;.
-     *
+     * 
      * @param icons the icons value to set.
      * @return the BuildDefinitionTemplateInner object itself.
      */
@@ -175,7 +178,7 @@ public final class BuildDefinitionTemplateInner {
 
     /**
      * Get the iconTaskId property: The ID of the task whose icon is used when showing this template in the UI.
-     *
+     * 
      * @return the iconTaskId value.
      */
     public UUID iconTaskId() {
@@ -184,7 +187,7 @@ public final class BuildDefinitionTemplateInner {
 
     /**
      * Set the iconTaskId property: The ID of the task whose icon is used when showing this template in the UI.
-     *
+     * 
      * @param iconTaskId the iconTaskId value to set.
      * @return the BuildDefinitionTemplateInner object itself.
      */
@@ -195,7 +198,7 @@ public final class BuildDefinitionTemplateInner {
 
     /**
      * Get the id property: The ID of the template.
-     *
+     * 
      * @return the id value.
      */
     public String id() {
@@ -204,7 +207,7 @@ public final class BuildDefinitionTemplateInner {
 
     /**
      * Set the id property: The ID of the template.
-     *
+     * 
      * @param id the id value to set.
      * @return the BuildDefinitionTemplateInner object itself.
      */
@@ -215,7 +218,7 @@ public final class BuildDefinitionTemplateInner {
 
     /**
      * Get the name property: The name of the template.
-     *
+     * 
      * @return the name value.
      */
     public String name() {
@@ -224,7 +227,7 @@ public final class BuildDefinitionTemplateInner {
 
     /**
      * Set the name property: The name of the template.
-     *
+     * 
      * @param name the name value to set.
      * @return the BuildDefinitionTemplateInner object itself.
      */
@@ -235,7 +238,7 @@ public final class BuildDefinitionTemplateInner {
 
     /**
      * Get the template property: The actual template.
-     *
+     * 
      * @return the template value.
      */
     public BuildDefinitionInner template() {
@@ -244,7 +247,7 @@ public final class BuildDefinitionTemplateInner {
 
     /**
      * Set the template property: The actual template.
-     *
+     * 
      * @param template the template value to set.
      * @return the BuildDefinitionTemplateInner object itself.
      */
@@ -255,7 +258,7 @@ public final class BuildDefinitionTemplateInner {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

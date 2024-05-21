@@ -5,17 +5,15 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
 
-/** The RunResourcesParameters model. */
+/**
+ * The RunResourcesParameters model.
+ */
 @Fluent
 public final class RunResourcesParameters {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(RunResourcesParameters.class);
-
     /*
      * Dictionary of <BuildResourceParameters>
      */
@@ -52,8 +50,14 @@ public final class RunResourcesParameters {
     private Map<String, RepositoryResourceParameters> repositories;
 
     /**
+     * Creates an instance of RunResourcesParameters class.
+     */
+    public RunResourcesParameters() {
+    }
+
+    /**
      * Get the builds property: Dictionary of &lt;BuildResourceParameters&gt;.
-     *
+     * 
      * @return the builds value.
      */
     public Map<String, BuildResourceParameters> builds() {
@@ -62,7 +66,7 @@ public final class RunResourcesParameters {
 
     /**
      * Set the builds property: Dictionary of &lt;BuildResourceParameters&gt;.
-     *
+     * 
      * @param builds the builds value to set.
      * @return the RunResourcesParameters object itself.
      */
@@ -73,7 +77,7 @@ public final class RunResourcesParameters {
 
     /**
      * Get the containers property: Dictionary of &lt;ContainerResourceParameters&gt;.
-     *
+     * 
      * @return the containers value.
      */
     public Map<String, ContainerResourceParameters> containers() {
@@ -82,7 +86,7 @@ public final class RunResourcesParameters {
 
     /**
      * Set the containers property: Dictionary of &lt;ContainerResourceParameters&gt;.
-     *
+     * 
      * @param containers the containers value to set.
      * @return the RunResourcesParameters object itself.
      */
@@ -93,7 +97,7 @@ public final class RunResourcesParameters {
 
     /**
      * Get the packages property: Dictionary of &lt;PackageResourceParameters&gt;.
-     *
+     * 
      * @return the packages value.
      */
     public Map<String, PackageResourceParameters> packages() {
@@ -102,7 +106,7 @@ public final class RunResourcesParameters {
 
     /**
      * Set the packages property: Dictionary of &lt;PackageResourceParameters&gt;.
-     *
+     * 
      * @param packages the packages value to set.
      * @return the RunResourcesParameters object itself.
      */
@@ -113,7 +117,7 @@ public final class RunResourcesParameters {
 
     /**
      * Get the pipelines property: Dictionary of &lt;PipelineResourceParameters&gt;.
-     *
+     * 
      * @return the pipelines value.
      */
     public Map<String, PipelineResourceParameters> pipelines() {
@@ -122,7 +126,7 @@ public final class RunResourcesParameters {
 
     /**
      * Set the pipelines property: Dictionary of &lt;PipelineResourceParameters&gt;.
-     *
+     * 
      * @param pipelines the pipelines value to set.
      * @return the RunResourcesParameters object itself.
      */
@@ -133,7 +137,7 @@ public final class RunResourcesParameters {
 
     /**
      * Get the repositories property: Dictionary of &lt;RepositoryResourceParameters&gt;.
-     *
+     * 
      * @return the repositories value.
      */
     public Map<String, RepositoryResourceParameters> repositories() {
@@ -142,7 +146,7 @@ public final class RunResourcesParameters {
 
     /**
      * Set the repositories property: Dictionary of &lt;RepositoryResourceParameters&gt;.
-     *
+     * 
      * @param repositories the repositories value to set.
      * @return the RunResourcesParameters object itself.
      */
@@ -153,59 +157,44 @@ public final class RunResourcesParameters {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {
         if (builds() != null) {
-            builds()
-                .values()
-                .forEach(
-                    e -> {
-                        if (e != null) {
-                            e.validate();
-                        }
-                    });
+            builds().values().forEach(e -> {
+                if (e != null) {
+                    e.validate();
+                }
+            });
         }
         if (containers() != null) {
-            containers()
-                .values()
-                .forEach(
-                    e -> {
-                        if (e != null) {
-                            e.validate();
-                        }
-                    });
+            containers().values().forEach(e -> {
+                if (e != null) {
+                    e.validate();
+                }
+            });
         }
         if (packages() != null) {
-            packages()
-                .values()
-                .forEach(
-                    e -> {
-                        if (e != null) {
-                            e.validate();
-                        }
-                    });
+            packages().values().forEach(e -> {
+                if (e != null) {
+                    e.validate();
+                }
+            });
         }
         if (pipelines() != null) {
-            pipelines()
-                .values()
-                .forEach(
-                    e -> {
-                        if (e != null) {
-                            e.validate();
-                        }
-                    });
+            pipelines().values().forEach(e -> {
+                if (e != null) {
+                    e.validate();
+                }
+            });
         }
         if (repositories() != null) {
-            repositories()
-                .values()
-                .forEach(
-                    e -> {
-                        if (e != null) {
-                            e.validate();
-                        }
-                    });
+            repositories().values().forEach(e -> {
+                if (e != null) {
+                    e.validate();
+                }
+            });
         }
     }
 }

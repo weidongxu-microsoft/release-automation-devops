@@ -35,6 +35,10 @@ public final class PullRequestImpl implements PullRequest {
         return this.innerModel().description();
     }
 
+    public Boolean draft() {
+        return this.innerModel().draft();
+    }
+
     public String id() {
         return this.innerModel().id();
     }

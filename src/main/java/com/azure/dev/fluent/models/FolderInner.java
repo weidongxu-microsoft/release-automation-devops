@@ -5,18 +5,16 @@
 package com.azure.dev.fluent.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.models.IdentityRef;
 import com.azure.dev.models.TeamProjectReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 
-/** Represents a folder that contains build definitions. */
+/**
+ * Represents a folder that contains build definitions.
+ */
 @Fluent
 public final class FolderInner {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(FolderInner.class);
-
     /*
      * The process or person who created the folder.
      */
@@ -60,8 +58,14 @@ public final class FolderInner {
     private TeamProjectReference project;
 
     /**
+     * Creates an instance of FolderInner class.
+     */
+    public FolderInner() {
+    }
+
+    /**
      * Get the createdBy property: The process or person who created the folder.
-     *
+     * 
      * @return the createdBy value.
      */
     public IdentityRef createdBy() {
@@ -70,7 +74,7 @@ public final class FolderInner {
 
     /**
      * Set the createdBy property: The process or person who created the folder.
-     *
+     * 
      * @param createdBy the createdBy value to set.
      * @return the FolderInner object itself.
      */
@@ -81,7 +85,7 @@ public final class FolderInner {
 
     /**
      * Get the createdOn property: The date the folder was created.
-     *
+     * 
      * @return the createdOn value.
      */
     public OffsetDateTime createdOn() {
@@ -90,7 +94,7 @@ public final class FolderInner {
 
     /**
      * Set the createdOn property: The date the folder was created.
-     *
+     * 
      * @param createdOn the createdOn value to set.
      * @return the FolderInner object itself.
      */
@@ -101,7 +105,7 @@ public final class FolderInner {
 
     /**
      * Get the description property: The description.
-     *
+     * 
      * @return the description value.
      */
     public String description() {
@@ -110,7 +114,7 @@ public final class FolderInner {
 
     /**
      * Set the description property: The description.
-     *
+     * 
      * @param description the description value to set.
      * @return the FolderInner object itself.
      */
@@ -121,7 +125,7 @@ public final class FolderInner {
 
     /**
      * Get the lastChangedBy property: The process or person that last changed the folder.
-     *
+     * 
      * @return the lastChangedBy value.
      */
     public IdentityRef lastChangedBy() {
@@ -130,7 +134,7 @@ public final class FolderInner {
 
     /**
      * Set the lastChangedBy property: The process or person that last changed the folder.
-     *
+     * 
      * @param lastChangedBy the lastChangedBy value to set.
      * @return the FolderInner object itself.
      */
@@ -141,7 +145,7 @@ public final class FolderInner {
 
     /**
      * Get the lastChangedDate property: The date the folder was last changed.
-     *
+     * 
      * @return the lastChangedDate value.
      */
     public OffsetDateTime lastChangedDate() {
@@ -150,7 +154,7 @@ public final class FolderInner {
 
     /**
      * Set the lastChangedDate property: The date the folder was last changed.
-     *
+     * 
      * @param lastChangedDate the lastChangedDate value to set.
      * @return the FolderInner object itself.
      */
@@ -161,7 +165,7 @@ public final class FolderInner {
 
     /**
      * Get the path property: The full path.
-     *
+     * 
      * @return the path value.
      */
     public String path() {
@@ -170,7 +174,7 @@ public final class FolderInner {
 
     /**
      * Set the path property: The full path.
-     *
+     * 
      * @param path the path value to set.
      * @return the FolderInner object itself.
      */
@@ -181,7 +185,7 @@ public final class FolderInner {
 
     /**
      * Get the project property: The project.
-     *
+     * 
      * @return the project value.
      */
     public TeamProjectReference project() {
@@ -190,7 +194,7 @@ public final class FolderInner {
 
     /**
      * Set the project property: The project.
-     *
+     * 
      * @param project the project value to set.
      * @return the FolderInner object itself.
      */
@@ -201,7 +205,7 @@ public final class FolderInner {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

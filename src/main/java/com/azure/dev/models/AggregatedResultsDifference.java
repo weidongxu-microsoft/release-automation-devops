@@ -5,15 +5,13 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** The AggregatedResultsDifference model. */
+/**
+ * The AggregatedResultsDifference model.
+ */
 @Fluent
 public final class AggregatedResultsDifference {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(AggregatedResultsDifference.class);
-
     /*
      * The increaseInDuration property.
      */
@@ -51,8 +49,14 @@ public final class AggregatedResultsDifference {
     private Integer increaseInTotalTests;
 
     /**
+     * Creates an instance of AggregatedResultsDifference class.
+     */
+    public AggregatedResultsDifference() {
+    }
+
+    /**
      * Get the increaseInDuration property: The increaseInDuration property.
-     *
+     * 
      * @return the increaseInDuration value.
      */
     public String increaseInDuration() {
@@ -61,7 +65,7 @@ public final class AggregatedResultsDifference {
 
     /**
      * Set the increaseInDuration property: The increaseInDuration property.
-     *
+     * 
      * @param increaseInDuration the increaseInDuration value to set.
      * @return the AggregatedResultsDifference object itself.
      */
@@ -72,7 +76,7 @@ public final class AggregatedResultsDifference {
 
     /**
      * Get the increaseInFailures property: The increaseInFailures property.
-     *
+     * 
      * @return the increaseInFailures value.
      */
     public Integer increaseInFailures() {
@@ -81,7 +85,7 @@ public final class AggregatedResultsDifference {
 
     /**
      * Set the increaseInFailures property: The increaseInFailures property.
-     *
+     * 
      * @param increaseInFailures the increaseInFailures value to set.
      * @return the AggregatedResultsDifference object itself.
      */
@@ -92,7 +96,7 @@ public final class AggregatedResultsDifference {
 
     /**
      * Get the increaseInNonImpactedTests property: The increaseInNonImpactedTests property.
-     *
+     * 
      * @return the increaseInNonImpactedTests value.
      */
     public Integer increaseInNonImpactedTests() {
@@ -101,7 +105,7 @@ public final class AggregatedResultsDifference {
 
     /**
      * Set the increaseInNonImpactedTests property: The increaseInNonImpactedTests property.
-     *
+     * 
      * @param increaseInNonImpactedTests the increaseInNonImpactedTests value to set.
      * @return the AggregatedResultsDifference object itself.
      */
@@ -112,7 +116,7 @@ public final class AggregatedResultsDifference {
 
     /**
      * Get the increaseInOtherTests property: The increaseInOtherTests property.
-     *
+     * 
      * @return the increaseInOtherTests value.
      */
     public Integer increaseInOtherTests() {
@@ -121,7 +125,7 @@ public final class AggregatedResultsDifference {
 
     /**
      * Set the increaseInOtherTests property: The increaseInOtherTests property.
-     *
+     * 
      * @param increaseInOtherTests the increaseInOtherTests value to set.
      * @return the AggregatedResultsDifference object itself.
      */
@@ -132,7 +136,7 @@ public final class AggregatedResultsDifference {
 
     /**
      * Get the increaseInPassedTests property: The increaseInPassedTests property.
-     *
+     * 
      * @return the increaseInPassedTests value.
      */
     public Integer increaseInPassedTests() {
@@ -141,7 +145,7 @@ public final class AggregatedResultsDifference {
 
     /**
      * Set the increaseInPassedTests property: The increaseInPassedTests property.
-     *
+     * 
      * @param increaseInPassedTests the increaseInPassedTests value to set.
      * @return the AggregatedResultsDifference object itself.
      */
@@ -152,7 +156,7 @@ public final class AggregatedResultsDifference {
 
     /**
      * Get the increaseInTotalTests property: The increaseInTotalTests property.
-     *
+     * 
      * @return the increaseInTotalTests value.
      */
     public Integer increaseInTotalTests() {
@@ -161,7 +165,7 @@ public final class AggregatedResultsDifference {
 
     /**
      * Set the increaseInTotalTests property: The increaseInTotalTests property.
-     *
+     * 
      * @param increaseInTotalTests the increaseInTotalTests value to set.
      * @return the AggregatedResultsDifference object itself.
      */
@@ -172,7 +176,7 @@ public final class AggregatedResultsDifference {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

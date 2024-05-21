@@ -5,15 +5,13 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Represents the target of a phase. */
+/**
+ * Represents the target of a phase.
+ */
 @Fluent
 public class PhaseTarget {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(PhaseTarget.class);
-
     /*
      * The type of the target.
      */
@@ -21,8 +19,14 @@ public class PhaseTarget {
     private Integer type;
 
     /**
+     * Creates an instance of PhaseTarget class.
+     */
+    public PhaseTarget() {
+    }
+
+    /**
      * Get the type property: The type of the target.
-     *
+     * 
      * @return the type value.
      */
     public Integer type() {
@@ -31,7 +35,7 @@ public class PhaseTarget {
 
     /**
      * Set the type property: The type of the target.
-     *
+     * 
      * @param type the type value to set.
      * @return the PhaseTarget object itself.
      */
@@ -42,7 +46,7 @@ public class PhaseTarget {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

@@ -23,30 +23,33 @@ import com.azure.core.http.rest.RestProxy;
 import com.azure.core.management.exception.ManagementException;
 import com.azure.core.util.Context;
 import com.azure.core.util.FluxUtil;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.fluent.ResourcesClient;
 import com.azure.dev.fluent.models.DefinitionResourceReferenceInner;
 import java.util.List;
 import reactor.core.publisher.Mono;
 
-/** An instance of this class provides access to all the operations defined in ResourcesClient. */
+/**
+ * An instance of this class provides access to all the operations defined in ResourcesClient.
+ */
 public final class ResourcesClientImpl implements ResourcesClient {
-    private final ClientLogger logger = new ClientLogger(ResourcesClientImpl.class);
-
-    /** The proxy service used to perform REST calls. */
+    /**
+     * The proxy service used to perform REST calls.
+     */
     private final ResourcesService service;
 
-    /** The service client containing this operation class. */
+    /**
+     * The service client containing this operation class.
+     */
     private final DevClientImpl client;
 
     /**
      * Initializes an instance of ResourcesClientImpl.
-     *
+     * 
      * @param client the instance of the service client containing this operation class.
      */
     ResourcesClientImpl(DevClientImpl client) {
-        this.service =
-            RestProxy.create(ResourcesService.class, client.getHttpPipeline(), client.getSerializerAdapter());
+        this.service
+            = RestProxy.create(ResourcesService.class, client.getHttpPipeline(), client.getSerializerAdapter());
         this.client = client;
     }
 
@@ -56,36 +59,31 @@ public final class ResourcesClientImpl implements ResourcesClient {
      */
     @Host("{$host}")
     @ServiceInterface(name = "DevClientResources")
-    private interface ResourcesService {
-        @Headers({"Content-Type: application/json"})
+    public interface ResourcesService {
+        @Headers({ "Content-Type: application/json" })
         @Patch("/{organization}/{project}/_apis/build/definitions/{definitionId}/resources")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
         Mono<Response<List<DefinitionResourceReferenceInner>>> authorizeDefinitionResources(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
-            @PathParam("definitionId") int definitionId,
+            @HostParam("$host") String endpoint, @PathParam("organization") String organization,
+            @PathParam("project") String project, @PathParam("definitionId") int definitionId,
             @QueryParam("api-version") String apiVersion,
             @BodyParam("application/json") List<DefinitionResourceReferenceInner> body,
-            @HeaderParam("Accept") String accept,
-            Context context);
+            @HeaderParam("Accept") String accept, Context context);
 
-        @Headers({"Content-Type: application/json"})
+        @Headers({ "Content-Type: application/json" })
         @Get("/{organization}/{project}/_apis/build/definitions/{definitionId}/resources")
-        @ExpectedResponses({200})
+        @ExpectedResponses({ 200 })
         @UnexpectedResponseExceptionType(ManagementException.class)
-        Mono<Response<List<DefinitionResourceReferenceInner>>> list(
-            @HostParam("$host") String endpoint,
-            @PathParam("organization") String organization,
-            @PathParam("project") String project,
-            @PathParam("definitionId") int definitionId,
-            @QueryParam("api-version") String apiVersion,
-            @HeaderParam("Accept") String accept,
-            Context context);
+        Mono<Response<List<DefinitionResourceReferenceInner>>> list(@HostParam("$host") String endpoint,
+            @PathParam("organization") String organization, @PathParam("project") String project,
+            @PathParam("definitionId") int definitionId, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, Context context);
     }
 
     /**
+     * The authorizeDefinitionResources operation.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The definitionId parameter.
@@ -93,16 +91,15 @@ public final class ResourcesClientImpl implements ResourcesClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of DefinitionResourceReference.
+     * @return array of DefinitionResourceReference along with {@link Response} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<Response<List<DefinitionResourceReferenceInner>>> authorizeDefinitionResourcesWithResponseAsync(
         String organization, String project, int definitionId, List<DefinitionResourceReferenceInner> body) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -115,25 +112,16 @@ public final class ResourcesClientImpl implements ResourcesClient {
         } else {
             body.forEach(e -> e.validate());
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .authorizeDefinitionResources(
-                            this.client.getEndpoint(),
-                            organization,
-                            project,
-                            definitionId,
-                            apiVersion,
-                            body,
-                            accept,
-                            context))
+            .withContext(context -> service.authorizeDefinitionResources(this.client.getEndpoint(), organization,
+                project, definitionId, this.client.getApiVersion(), body, accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
+     * The authorizeDefinitionResources operation.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The definitionId parameter.
@@ -142,20 +130,16 @@ public final class ResourcesClientImpl implements ResourcesClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of DefinitionResourceReference.
+     * @return array of DefinitionResourceReference along with {@link Response} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<Response<List<DefinitionResourceReferenceInner>>> authorizeDefinitionResourcesWithResponseAsync(
-        String organization,
-        String project,
-        int definitionId,
-        List<DefinitionResourceReferenceInner> body,
+        String organization, String project, int definitionId, List<DefinitionResourceReferenceInner> body,
         Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -168,15 +152,15 @@ public final class ResourcesClientImpl implements ResourcesClient {
         } else {
             body.forEach(e -> e.validate());
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .authorizeDefinitionResources(
-                this.client.getEndpoint(), organization, project, definitionId, apiVersion, body, accept, context);
+        return service.authorizeDefinitionResources(this.client.getEndpoint(), organization, project, definitionId,
+            this.client.getApiVersion(), body, accept, context);
     }
 
     /**
+     * The authorizeDefinitionResources operation.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The definitionId parameter.
@@ -184,39 +168,18 @@ public final class ResourcesClientImpl implements ResourcesClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of DefinitionResourceReference.
+     * @return array of DefinitionResourceReference on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<List<DefinitionResourceReferenceInner>> authorizeDefinitionResourcesAsync(
-        String organization, String project, int definitionId, List<DefinitionResourceReferenceInner> body) {
+    private Mono<List<DefinitionResourceReferenceInner>> authorizeDefinitionResourcesAsync(String organization,
+        String project, int definitionId, List<DefinitionResourceReferenceInner> body) {
         return authorizeDefinitionResourcesWithResponseAsync(organization, project, definitionId, body)
-            .flatMap(
-                (Response<List<DefinitionResourceReferenceInner>> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+            .flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param definitionId The definitionId parameter.
-     * @param body Array of DefinitionResourceReference.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of DefinitionResourceReference.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public List<DefinitionResourceReferenceInner> authorizeDefinitionResources(
-        String organization, String project, int definitionId, List<DefinitionResourceReferenceInner> body) {
-        return authorizeDefinitionResourcesAsync(organization, project, definitionId, body).block();
-    }
-
-    /**
+     * The authorizeDefinitionResources operation.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The definitionId parameter.
@@ -225,36 +188,53 @@ public final class ResourcesClientImpl implements ResourcesClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of DefinitionResourceReference.
+     * @return array of DefinitionResourceReference along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<List<DefinitionResourceReferenceInner>> authorizeDefinitionResourcesWithResponse(
-        String organization,
-        String project,
-        int definitionId,
-        List<DefinitionResourceReferenceInner> body,
+        String organization, String project, int definitionId, List<DefinitionResourceReferenceInner> body,
         Context context) {
         return authorizeDefinitionResourcesWithResponseAsync(organization, project, definitionId, body, context)
             .block();
     }
 
     /**
+     * The authorizeDefinitionResources operation.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The definitionId parameter.
+     * @param body Array of DefinitionResourceReference.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return array of DefinitionResourceReference.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<DefinitionResourceReferenceInner>>> listWithResponseAsync(
-        String organization, String project, int definitionId) {
+    public List<DefinitionResourceReferenceInner> authorizeDefinitionResources(String organization, String project,
+        int definitionId, List<DefinitionResourceReferenceInner> body) {
+        return authorizeDefinitionResourcesWithResponse(organization, project, definitionId, body, Context.NONE)
+            .getValue();
+    }
+
+    /**
+     * The list operation.
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param definitionId The definitionId parameter.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return array of DefinitionResourceReference along with {@link Response} on successful completion of
+     * {@link Mono}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Mono<Response<List<DefinitionResourceReferenceInner>>> listWithResponseAsync(String organization,
+        String project, int definitionId) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -262,24 +242,16 @@ public final class ResourcesClientImpl implements ResourcesClient {
         if (project == null) {
             return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         return FluxUtil
-            .withContext(
-                context ->
-                    service
-                        .list(
-                            this.client.getEndpoint(),
-                            organization,
-                            project,
-                            definitionId,
-                            apiVersion,
-                            accept,
-                            context))
+            .withContext(context -> service.list(this.client.getEndpoint(), organization, project, definitionId,
+                this.client.getApiVersion(), accept, context))
             .contextWrite(context -> context.putAll(FluxUtil.toReactorContext(this.client.getContext()).readOnly()));
     }
 
     /**
+     * The list operation.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The definitionId parameter.
@@ -287,16 +259,15 @@ public final class ResourcesClientImpl implements ResourcesClient {
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of DefinitionResourceReference.
+     * @return array of DefinitionResourceReference along with {@link Response} on successful completion of
+     * {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<List<DefinitionResourceReferenceInner>>> listWithResponseAsync(
-        String organization, String project, int definitionId, Context context) {
+    private Mono<Response<List<DefinitionResourceReferenceInner>>> listWithResponseAsync(String organization,
+        String project, int definitionId, Context context) {
         if (this.client.getEndpoint() == null) {
-            return Mono
-                .error(
-                    new IllegalArgumentException(
-                        "Parameter this.client.getEndpoint() is required and cannot be null."));
+            return Mono.error(
+                new IllegalArgumentException("Parameter this.client.getEndpoint() is required and cannot be null."));
         }
         if (organization == null) {
             return Mono.error(new IllegalArgumentException("Parameter organization is required and cannot be null."));
@@ -304,37 +275,51 @@ public final class ResourcesClientImpl implements ResourcesClient {
         if (project == null) {
             return Mono.error(new IllegalArgumentException("Parameter project is required and cannot be null."));
         }
-        final String apiVersion = "6.0";
         final String accept = "application/json";
         context = this.client.mergeContext(context);
-        return service
-            .list(this.client.getEndpoint(), organization, project, definitionId, apiVersion, accept, context);
+        return service.list(this.client.getEndpoint(), organization, project, definitionId, this.client.getApiVersion(),
+            accept, context);
     }
 
     /**
+     * The list operation.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The definitionId parameter.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of DefinitionResourceReference.
+     * @return array of DefinitionResourceReference on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<List<DefinitionResourceReferenceInner>> listAsync(
-        String organization, String project, int definitionId) {
+    private Mono<List<DefinitionResourceReferenceInner>> listAsync(String organization, String project,
+        int definitionId) {
         return listWithResponseAsync(organization, project, definitionId)
-            .flatMap(
-                (Response<List<DefinitionResourceReferenceInner>> res) -> {
-                    if (res.getValue() != null) {
-                        return Mono.just(res.getValue());
-                    } else {
-                        return Mono.empty();
-                    }
-                });
+            .flatMap(res -> Mono.justOrEmpty(res.getValue()));
     }
 
     /**
+     * The list operation.
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param definitionId The definitionId parameter.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return array of DefinitionResourceReference along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<List<DefinitionResourceReferenceInner>> listWithResponse(String organization, String project,
+        int definitionId, Context context) {
+        return listWithResponseAsync(organization, project, definitionId, context).block();
+    }
+
+    /**
+     * The list operation.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param definitionId The definitionId parameter.
@@ -345,22 +330,6 @@ public final class ResourcesClientImpl implements ResourcesClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public List<DefinitionResourceReferenceInner> list(String organization, String project, int definitionId) {
-        return listAsync(organization, project, definitionId).block();
-    }
-
-    /**
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param definitionId The definitionId parameter.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return array of DefinitionResourceReference.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<List<DefinitionResourceReferenceInner>> listWithResponse(
-        String organization, String project, int definitionId, Context context) {
-        return listWithResponseAsync(organization, project, definitionId, context).block();
+        return listWithResponse(organization, project, definitionId, Context.NONE).getValue();
     }
 }

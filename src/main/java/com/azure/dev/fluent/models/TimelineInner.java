@@ -5,20 +5,18 @@
 package com.azure.dev.fluent.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.models.TimelineRecord;
 import com.azure.dev.models.TimelineReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
-/** Represents the timeline of a build. */
+/**
+ * Represents the timeline of a build.
+ */
 @Fluent
 public final class TimelineInner extends TimelineReference {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(TimelineInner.class);
-
     /*
      * The process or person that last changed the timeline.
      */
@@ -38,8 +36,14 @@ public final class TimelineInner extends TimelineReference {
     private List<TimelineRecord> records;
 
     /**
+     * Creates an instance of TimelineInner class.
+     */
+    public TimelineInner() {
+    }
+
+    /**
      * Get the lastChangedBy property: The process or person that last changed the timeline.
-     *
+     * 
      * @return the lastChangedBy value.
      */
     public UUID lastChangedBy() {
@@ -48,7 +52,7 @@ public final class TimelineInner extends TimelineReference {
 
     /**
      * Set the lastChangedBy property: The process or person that last changed the timeline.
-     *
+     * 
      * @param lastChangedBy the lastChangedBy value to set.
      * @return the TimelineInner object itself.
      */
@@ -59,7 +63,7 @@ public final class TimelineInner extends TimelineReference {
 
     /**
      * Get the lastChangedOn property: The time the timeline was last changed.
-     *
+     * 
      * @return the lastChangedOn value.
      */
     public OffsetDateTime lastChangedOn() {
@@ -68,7 +72,7 @@ public final class TimelineInner extends TimelineReference {
 
     /**
      * Set the lastChangedOn property: The time the timeline was last changed.
-     *
+     * 
      * @param lastChangedOn the lastChangedOn value to set.
      * @return the TimelineInner object itself.
      */
@@ -79,7 +83,7 @@ public final class TimelineInner extends TimelineReference {
 
     /**
      * Get the records property: The records property.
-     *
+     * 
      * @return the records value.
      */
     public List<TimelineRecord> records() {
@@ -88,7 +92,7 @@ public final class TimelineInner extends TimelineReference {
 
     /**
      * Set the records property: The records property.
-     *
+     * 
      * @param records the records value to set.
      * @return the TimelineInner object itself.
      */
@@ -97,21 +101,27 @@ public final class TimelineInner extends TimelineReference {
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public TimelineInner withChangeId(Integer changeId) {
         super.withChangeId(changeId);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public TimelineInner withId(UUID id) {
         super.withId(id);
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public TimelineInner withUrl(String url) {
         super.withUrl(url);
@@ -120,7 +130,7 @@ public final class TimelineInner extends TimelineReference {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     @Override

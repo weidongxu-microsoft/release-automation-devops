@@ -7,18 +7,28 @@ package com.azure.dev.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/** Defines values for TimelineRecordState. */
+/**
+ * The state of the record.
+ */
 public enum TimelineRecordState {
-    /** Enum value pending. */
+    /**
+     * Enum value pending.
+     */
     PENDING("pending"),
 
-    /** Enum value inProgress. */
+    /**
+     * Enum value inProgress.
+     */
     IN_PROGRESS("inProgress"),
 
-    /** Enum value completed. */
+    /**
+     * Enum value completed.
+     */
     COMPLETED("completed");
 
-    /** The actual serialized value for a TimelineRecordState instance. */
+    /**
+     * The actual serialized value for a TimelineRecordState instance.
+     */
     private final String value;
 
     TimelineRecordState(String value) {
@@ -27,12 +37,15 @@ public enum TimelineRecordState {
 
     /**
      * Parses a serialized value to a TimelineRecordState instance.
-     *
+     * 
      * @param value the serialized value to parse.
      * @return the parsed TimelineRecordState object, or null if unable to parse.
      */
     @JsonCreator
     public static TimelineRecordState fromString(String value) {
+        if (value == null) {
+            return null;
+        }
         TimelineRecordState[] items = TimelineRecordState.values();
         for (TimelineRecordState item : items) {
             if (item.toString().equalsIgnoreCase(value)) {
@@ -42,6 +55,9 @@ public enum TimelineRecordState {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @JsonValue
     @Override
     public String toString() {

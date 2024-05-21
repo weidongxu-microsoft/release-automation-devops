@@ -5,17 +5,15 @@
 package com.azure.dev.fluent.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.dev.models.DefinitionTriggerType;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** Represents a repository's webhook returned from a source provider. */
+/**
+ * Represents a repository's webhook returned from a source provider.
+ */
 @Fluent
 public final class RepositoryWebhookInner {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(RepositoryWebhookInner.class);
-
     /*
      * The friendly name of the repository.
      */
@@ -35,8 +33,14 @@ public final class RepositoryWebhookInner {
     private String url;
 
     /**
+     * Creates an instance of RepositoryWebhookInner class.
+     */
+    public RepositoryWebhookInner() {
+    }
+
+    /**
      * Get the name property: The friendly name of the repository.
-     *
+     * 
      * @return the name value.
      */
     public String name() {
@@ -45,7 +49,7 @@ public final class RepositoryWebhookInner {
 
     /**
      * Set the name property: The friendly name of the repository.
-     *
+     * 
      * @param name the name value to set.
      * @return the RepositoryWebhookInner object itself.
      */
@@ -56,7 +60,7 @@ public final class RepositoryWebhookInner {
 
     /**
      * Get the types property: The types property.
-     *
+     * 
      * @return the types value.
      */
     public List<DefinitionTriggerType> types() {
@@ -65,7 +69,7 @@ public final class RepositoryWebhookInner {
 
     /**
      * Set the types property: The types property.
-     *
+     * 
      * @param types the types value to set.
      * @return the RepositoryWebhookInner object itself.
      */
@@ -76,7 +80,7 @@ public final class RepositoryWebhookInner {
 
     /**
      * Get the url property: The URL of the repository.
-     *
+     * 
      * @return the url value.
      */
     public String url() {
@@ -85,7 +89,7 @@ public final class RepositoryWebhookInner {
 
     /**
      * Set the url property: The URL of the repository.
-     *
+     * 
      * @param url the url value to set.
      * @return the RepositoryWebhookInner object itself.
      */
@@ -96,7 +100,7 @@ public final class RepositoryWebhookInner {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

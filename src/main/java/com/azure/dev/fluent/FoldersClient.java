@@ -12,11 +12,30 @@ import com.azure.dev.fluent.models.FolderInner;
 import com.azure.dev.models.FolderQueryOrder;
 import java.util.List;
 
-/** An instance of this class provides access to all the operations defined in FoldersClient. */
+/**
+ * An instance of this class provides access to all the operations defined in FoldersClient.
+ */
 public interface FoldersClient {
     /**
      * Creates a new folder.
-     *
+     * 
+     * @param organization The name of the Azure DevOps organization.
+     * @param project Project ID or project name.
+     * @param path The full path of the folder.
+     * @param body The folder.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return represents a folder that contains build definitions along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    Response<FolderInner> createWithResponse(String organization, String project, String path, FolderInner body,
+        Context context);
+
+    /**
+     * Creates a new folder.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param path The full path of the folder.
@@ -30,25 +49,23 @@ public interface FoldersClient {
     FolderInner create(String organization, String project, String path, FolderInner body);
 
     /**
-     * Creates a new folder.
-     *
+     * Deletes a definition folder. Definitions and their corresponding builds will also be deleted.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
-     * @param path The full path of the folder.
-     * @param body The folder.
+     * @param path The full path to the folder.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return represents a folder that contains build definitions.
+     * @return the {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<FolderInner> createWithResponse(
-        String organization, String project, String path, FolderInner body, Context context);
+    Response<Void> deleteWithResponse(String organization, String project, String path, Context context);
 
     /**
      * Deletes a definition folder. Definitions and their corresponding builds will also be deleted.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param path The full path to the folder.
@@ -60,23 +77,25 @@ public interface FoldersClient {
     void delete(String organization, String project, String path);
 
     /**
-     * Deletes a definition folder. Definitions and their corresponding builds will also be deleted.
-     *
+     * Updates an existing folder at given existing path.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param path The full path to the folder.
+     * @param body The new version of the folder.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return the response.
+     * @return represents a folder that contains build definitions along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<Void> deleteWithResponse(String organization, String project, String path, Context context);
+    Response<FolderInner> updateWithResponse(String organization, String project, String path, FolderInner body,
+        Context context);
 
     /**
      * Updates an existing folder at given existing path.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param path The full path to the folder.
@@ -90,25 +109,25 @@ public interface FoldersClient {
     FolderInner update(String organization, String project, String path, FolderInner body);
 
     /**
-     * Updates an existing folder at given existing path.
-     *
+     * Gets a list of build definition folders.
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
-     * @param path The full path to the folder.
-     * @param body The new version of the folder.
+     * @param path The path to start with.
+     * @param queryOrder The order in which folders should be returned.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return represents a folder that contains build definitions.
+     * @return a list of build definition folders along with {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<FolderInner> updateWithResponse(
-        String organization, String project, String path, FolderInner body, Context context);
+    Response<List<FolderInner>> listWithResponse(String organization, String project, String path,
+        FolderQueryOrder queryOrder, Context context);
 
     /**
      * Gets a list of build definition folders.
-     *
+     * 
      * @param organization The name of the Azure DevOps organization.
      * @param project Project ID or project name.
      * @param path The path to start with.
@@ -119,21 +138,4 @@ public interface FoldersClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     List<FolderInner> list(String organization, String project, String path);
-
-    /**
-     * Gets a list of build definition folders.
-     *
-     * @param organization The name of the Azure DevOps organization.
-     * @param project Project ID or project name.
-     * @param path The path to start with.
-     * @param queryOrder The order in which folders should be returned.
-     * @param context The context to associate with this operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation.
-     * @throws com.azure.core.management.exception.ManagementException thrown if the request is rejected by server.
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return a list of build definition folders.
-     */
-    @ServiceMethod(returns = ReturnType.SINGLE)
-    Response<List<FolderInner>> listWithResponse(
-        String organization, String project, String path, FolderQueryOrder queryOrder, Context context);
 }

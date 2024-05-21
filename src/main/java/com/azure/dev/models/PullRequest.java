@@ -6,88 +6,97 @@ package com.azure.dev.models;
 
 import com.azure.dev.fluent.models.PullRequestInner;
 
-/** An immutable client-side representation of PullRequest. */
+/**
+ * An immutable client-side representation of PullRequest.
+ */
 public interface PullRequest {
     /**
      * Gets the links property: The links to other objects related to this object.
-     *
+     * 
      * @return the links value.
      */
     ReferenceLinks links();
 
     /**
      * Gets the author property: Author of the pull request.
-     *
+     * 
      * @return the author value.
      */
     IdentityRef author();
 
     /**
      * Gets the currentState property: Current state of the pull request, e.g. open, merged, closed, conflicts, etc.
-     *
+     * 
      * @return the currentState value.
      */
     String currentState();
 
     /**
      * Gets the description property: Description for the pull request.
-     *
+     * 
      * @return the description value.
      */
     String description();
 
     /**
+     * Gets the draft property: Returns if pull request is draft.
+     * 
+     * @return the draft value.
+     */
+    Boolean draft();
+
+    /**
      * Gets the id property: Unique identifier for the pull request.
-     *
+     * 
      * @return the id value.
      */
     String id();
 
     /**
      * Gets the providerName property: The name of the provider this pull request is associated with.
-     *
+     * 
      * @return the providerName value.
      */
     String providerName();
 
     /**
      * Gets the sourceBranchRef property: Source branch ref of this pull request.
-     *
+     * 
      * @return the sourceBranchRef value.
      */
     String sourceBranchRef();
 
     /**
      * Gets the sourceRepositoryOwner property: Owner of the source repository of this pull request.
-     *
+     * 
      * @return the sourceRepositoryOwner value.
      */
     String sourceRepositoryOwner();
 
     /**
      * Gets the targetBranchRef property: Target branch ref of this pull request.
-     *
+     * 
      * @return the targetBranchRef value.
      */
     String targetBranchRef();
 
     /**
      * Gets the targetRepositoryOwner property: Owner of the target repository of this pull request.
-     *
+     * 
      * @return the targetRepositoryOwner value.
      */
     String targetRepositoryOwner();
 
     /**
      * Gets the title property: Title of the pull request.
-     *
+     * 
      * @return the title value.
      */
     String title();
 
     /**
      * Gets the inner com.azure.dev.fluent.models.PullRequestInner object.
-     *
+     * 
      * @return the inner object.
      */
     PullRequestInner innerModel();

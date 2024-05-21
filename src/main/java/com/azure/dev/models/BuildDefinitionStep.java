@@ -5,17 +5,15 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
 
-/** Represents a step in a build phase. */
+/**
+ * Represents a step in a build phase.
+ */
 @Fluent
 public final class BuildDefinitionStep {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(BuildDefinitionStep.class);
-
     /*
      * Indicates whether this step should run even if a previous step fails.
      */
@@ -67,6 +65,12 @@ public final class BuildDefinitionStep {
     private String refName;
 
     /*
+     * Number of retries.
+     */
+    @JsonProperty(value = "retryCountOnTaskFailure")
+    private Integer retryCountOnTaskFailure;
+
+    /*
      * The task associated with this step.
      */
     @JsonProperty(value = "task")
@@ -79,8 +83,14 @@ public final class BuildDefinitionStep {
     private Integer timeoutInMinutes;
 
     /**
+     * Creates an instance of BuildDefinitionStep class.
+     */
+    public BuildDefinitionStep() {
+    }
+
+    /**
      * Get the alwaysRun property: Indicates whether this step should run even if a previous step fails.
-     *
+     * 
      * @return the alwaysRun value.
      */
     public Boolean alwaysRun() {
@@ -89,7 +99,7 @@ public final class BuildDefinitionStep {
 
     /**
      * Set the alwaysRun property: Indicates whether this step should run even if a previous step fails.
-     *
+     * 
      * @param alwaysRun the alwaysRun value to set.
      * @return the BuildDefinitionStep object itself.
      */
@@ -100,7 +110,7 @@ public final class BuildDefinitionStep {
 
     /**
      * Get the condition property: A condition that determines whether this step should run.
-     *
+     * 
      * @return the condition value.
      */
     public String condition() {
@@ -109,7 +119,7 @@ public final class BuildDefinitionStep {
 
     /**
      * Set the condition property: A condition that determines whether this step should run.
-     *
+     * 
      * @param condition the condition value to set.
      * @return the BuildDefinitionStep object itself.
      */
@@ -120,7 +130,7 @@ public final class BuildDefinitionStep {
 
     /**
      * Get the continueOnError property: Indicates whether the phase should continue even if this step fails.
-     *
+     * 
      * @return the continueOnError value.
      */
     public Boolean continueOnError() {
@@ -129,7 +139,7 @@ public final class BuildDefinitionStep {
 
     /**
      * Set the continueOnError property: Indicates whether the phase should continue even if this step fails.
-     *
+     * 
      * @param continueOnError the continueOnError value to set.
      * @return the BuildDefinitionStep object itself.
      */
@@ -140,7 +150,7 @@ public final class BuildDefinitionStep {
 
     /**
      * Get the displayName property: The display name for this step.
-     *
+     * 
      * @return the displayName value.
      */
     public String displayName() {
@@ -149,7 +159,7 @@ public final class BuildDefinitionStep {
 
     /**
      * Set the displayName property: The display name for this step.
-     *
+     * 
      * @param displayName the displayName value to set.
      * @return the BuildDefinitionStep object itself.
      */
@@ -160,7 +170,7 @@ public final class BuildDefinitionStep {
 
     /**
      * Get the enabled property: Indicates whether the step is enabled.
-     *
+     * 
      * @return the enabled value.
      */
     public Boolean enabled() {
@@ -169,7 +179,7 @@ public final class BuildDefinitionStep {
 
     /**
      * Set the enabled property: Indicates whether the step is enabled.
-     *
+     * 
      * @param enabled the enabled value to set.
      * @return the BuildDefinitionStep object itself.
      */
@@ -180,7 +190,7 @@ public final class BuildDefinitionStep {
 
     /**
      * Get the environment property: Dictionary of &lt;string&gt;.
-     *
+     * 
      * @return the environment value.
      */
     public Map<String, String> environment() {
@@ -189,7 +199,7 @@ public final class BuildDefinitionStep {
 
     /**
      * Set the environment property: Dictionary of &lt;string&gt;.
-     *
+     * 
      * @param environment the environment value to set.
      * @return the BuildDefinitionStep object itself.
      */
@@ -200,7 +210,7 @@ public final class BuildDefinitionStep {
 
     /**
      * Get the inputs property: Dictionary of &lt;string&gt;.
-     *
+     * 
      * @return the inputs value.
      */
     public Map<String, String> inputs() {
@@ -209,7 +219,7 @@ public final class BuildDefinitionStep {
 
     /**
      * Set the inputs property: Dictionary of &lt;string&gt;.
-     *
+     * 
      * @param inputs the inputs value to set.
      * @return the BuildDefinitionStep object itself.
      */
@@ -220,7 +230,7 @@ public final class BuildDefinitionStep {
 
     /**
      * Get the refName property: The reference name for this step.
-     *
+     * 
      * @return the refName value.
      */
     public String refName() {
@@ -229,7 +239,7 @@ public final class BuildDefinitionStep {
 
     /**
      * Set the refName property: The reference name for this step.
-     *
+     * 
      * @param refName the refName value to set.
      * @return the BuildDefinitionStep object itself.
      */
@@ -239,8 +249,28 @@ public final class BuildDefinitionStep {
     }
 
     /**
+     * Get the retryCountOnTaskFailure property: Number of retries.
+     * 
+     * @return the retryCountOnTaskFailure value.
+     */
+    public Integer retryCountOnTaskFailure() {
+        return this.retryCountOnTaskFailure;
+    }
+
+    /**
+     * Set the retryCountOnTaskFailure property: Number of retries.
+     * 
+     * @param retryCountOnTaskFailure the retryCountOnTaskFailure value to set.
+     * @return the BuildDefinitionStep object itself.
+     */
+    public BuildDefinitionStep withRetryCountOnTaskFailure(Integer retryCountOnTaskFailure) {
+        this.retryCountOnTaskFailure = retryCountOnTaskFailure;
+        return this;
+    }
+
+    /**
      * Get the task property: The task associated with this step.
-     *
+     * 
      * @return the task value.
      */
     public TaskDefinitionReference task() {
@@ -249,7 +279,7 @@ public final class BuildDefinitionStep {
 
     /**
      * Set the task property: The task associated with this step.
-     *
+     * 
      * @param task the task value to set.
      * @return the BuildDefinitionStep object itself.
      */
@@ -260,7 +290,7 @@ public final class BuildDefinitionStep {
 
     /**
      * Get the timeoutInMinutes property: The time, in minutes, that this step is allowed to run.
-     *
+     * 
      * @return the timeoutInMinutes value.
      */
     public Integer timeoutInMinutes() {
@@ -269,7 +299,7 @@ public final class BuildDefinitionStep {
 
     /**
      * Set the timeoutInMinutes property: The time, in minutes, that this step is allowed to run.
-     *
+     * 
      * @param timeoutInMinutes the timeoutInMinutes value to set.
      * @return the BuildDefinitionStep object itself.
      */
@@ -280,7 +310,7 @@ public final class BuildDefinitionStep {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

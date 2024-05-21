@@ -5,16 +5,14 @@
 package com.azure.dev.fluent.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 
-/** Represents metadata about builds in the system. */
+/**
+ * Represents metadata about builds in the system.
+ */
 @Fluent
 public final class BuildMetricInner {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(BuildMetricInner.class);
-
     /*
      * The date for the scope.
      */
@@ -40,8 +38,14 @@ public final class BuildMetricInner {
     private String scope;
 
     /**
+     * Creates an instance of BuildMetricInner class.
+     */
+    public BuildMetricInner() {
+    }
+
+    /**
      * Get the date property: The date for the scope.
-     *
+     * 
      * @return the date value.
      */
     public OffsetDateTime date() {
@@ -50,7 +54,7 @@ public final class BuildMetricInner {
 
     /**
      * Set the date property: The date for the scope.
-     *
+     * 
      * @param date the date value to set.
      * @return the BuildMetricInner object itself.
      */
@@ -61,7 +65,7 @@ public final class BuildMetricInner {
 
     /**
      * Get the intValue property: The value.
-     *
+     * 
      * @return the intValue value.
      */
     public Integer intValue() {
@@ -70,7 +74,7 @@ public final class BuildMetricInner {
 
     /**
      * Set the intValue property: The value.
-     *
+     * 
      * @param intValue the intValue value to set.
      * @return the BuildMetricInner object itself.
      */
@@ -81,7 +85,7 @@ public final class BuildMetricInner {
 
     /**
      * Get the name property: The name of the metric.
-     *
+     * 
      * @return the name value.
      */
     public String name() {
@@ -90,7 +94,7 @@ public final class BuildMetricInner {
 
     /**
      * Set the name property: The name of the metric.
-     *
+     * 
      * @param name the name value to set.
      * @return the BuildMetricInner object itself.
      */
@@ -101,7 +105,7 @@ public final class BuildMetricInner {
 
     /**
      * Get the scope property: The scope.
-     *
+     * 
      * @return the scope value.
      */
     public String scope() {
@@ -110,7 +114,7 @@ public final class BuildMetricInner {
 
     /**
      * Set the scope property: The scope.
-     *
+     * 
      * @param scope the scope value to set.
      * @return the BuildMetricInner object itself.
      */
@@ -121,7 +125,7 @@ public final class BuildMetricInner {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {

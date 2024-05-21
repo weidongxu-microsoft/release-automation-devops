@@ -5,16 +5,14 @@
 package com.azure.dev.models;
 
 import com.azure.core.annotation.Fluent;
-import com.azure.core.util.logging.ClientLogger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.UUID;
 
-/** Represents a reference to a build option definition. */
+/**
+ * Represents a reference to a build option definition.
+ */
 @Fluent
 public class BuildOptionDefinitionReference {
-    @JsonIgnore private final ClientLogger logger = new ClientLogger(BuildOptionDefinitionReference.class);
-
     /*
      * The ID of the referenced build option.
      */
@@ -22,8 +20,14 @@ public class BuildOptionDefinitionReference {
     private UUID id;
 
     /**
+     * Creates an instance of BuildOptionDefinitionReference class.
+     */
+    public BuildOptionDefinitionReference() {
+    }
+
+    /**
      * Get the id property: The ID of the referenced build option.
-     *
+     * 
      * @return the id value.
      */
     public UUID id() {
@@ -32,7 +36,7 @@ public class BuildOptionDefinitionReference {
 
     /**
      * Set the id property: The ID of the referenced build option.
-     *
+     * 
      * @param id the id value to set.
      * @return the BuildOptionDefinitionReference object itself.
      */
@@ -43,7 +47,7 @@ public class BuildOptionDefinitionReference {
 
     /**
      * Validates the instance.
-     *
+     * 
      * @throws IllegalArgumentException thrown if the instance is not valid.
      */
     public void validate() {
