@@ -38,7 +38,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -51,7 +50,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Scanner;
-import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -164,7 +162,7 @@ public class LiteRelease {
         GitHub github = new GitHubBuilder()
                 .withOAuthToken(GITHUB_TOKEN).build();
 
-        GHRepository repositoryClient = github.getRepository(GITHUB_ORGANIZATION + "/" + GITHUB_PROJECT);
+        GHRepository repository = github.getRepository(GITHUB_ORGANIZATION + "/" + GITHUB_PROJECT);
 
         Map<String, Variable> variables = new HashMap<>();
         variables.put("README", new Variable().withValue(swagger));
@@ -187,11 +185,11 @@ public class LiteRelease {
         OUT.println("wait 1 minutes");
         Thread.sleep(POLL_SHORT_INTERVAL_MINUTE * MILLISECOND_PER_MINUTE);
 
-        mergeGithubPR(repositoryClient, manager, swagger, sdk);
+        mergeGithubPR(repository, manager, swagger, sdk);
 
         runLiteRelease(manager, sdk);
 
-        mergeGithubVersionPR(repositoryClient, sdk);
+        mergeGithubVersionPR(repository, sdk);
 
         String sdkMavenUrl = MAVEN_ARTIFACT_PATH_PREFIX + "azure-resourcemanager-" + sdk + "/1.0.0-beta.1/versions";
         Utils.openUrl(sdkMavenUrl);
@@ -216,8 +214,8 @@ public class LiteRelease {
         }
     }
 
-    private static void mergeGithubPR(GHRepository client, DevManager manager, String swagger, String sdk) throws InterruptedException, IOException {
-        List<GHPullRequest> prs = client.getPullRequests(GHIssueState.OPEN);
+    private static void mergeGithubPR(GHRepository repository, DevManager manager, String swagger, String sdk) throws InterruptedException, IOException {
+        List<GHPullRequest> prs = repository.getPullRequests(GHIssueState.OPEN);
 
         GHPullRequest pr = prs.stream()
                 .filter(p -> p.getTitle().startsWith("[Automation] Generate Fluent Lite from") && p.getTitle().contains(swagger))
@@ -231,7 +229,7 @@ public class LiteRelease {
             Utils.openUrl(prUrl);
 
             // wait for CI
-            waitForChecks(client, pr, manager, prNumber, sdk);
+            waitForChecks(pr, manager, prNumber, sdk);
 
             if (PROMPT_CONFIRMATION) {
                 Utils.promptMessageAndWait(IN, OUT,
@@ -320,8 +318,8 @@ public class LiteRelease {
         }
     }
 
-    private static void mergeGithubVersionPR(GHRepository client, String sdk) throws InterruptedException, IOException {
-        List<GHPullRequest> prs = client.getPullRequests(GHIssueState.OPEN);
+    private static void mergeGithubVersionPR(GHRepository repository, String sdk) throws InterruptedException, IOException {
+        List<GHPullRequest> prs = repository.getPullRequests(GHIssueState.OPEN);
 
         GHPullRequest pr = prs.stream()
                 .filter(p -> p.getTitle().equals("Increment versions for " + sdk + " releases")
@@ -380,7 +378,7 @@ public class LiteRelease {
                 .findAny().orElse(null);
     }
 
-    private static void waitForChecks(GHRepository client, GHPullRequest pr, DevManager manager,
+    private static void waitForChecks(GHPullRequest pr, DevManager manager,
                                       int prNumber, String sdk) throws InterruptedException, IOException {
         // wait a bit
         OUT.println("wait 1 minutes");
