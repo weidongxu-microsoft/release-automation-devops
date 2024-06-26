@@ -23,18 +23,13 @@ import com.azure.dev.models.Timeline;
 import com.azure.dev.models.TimelineRecord;
 import com.azure.dev.models.TimelineRecordState;
 import com.azure.dev.models.Variable;
-import com.spotify.github.v3.clients.GitHubClient;
-import com.spotify.github.v3.clients.IssueClient;
-import com.spotify.github.v3.clients.PullRequestClient;
-import com.spotify.github.v3.clients.RepositoryClient;
-import com.spotify.github.v3.prs.ImmutableMergeParameters;
-import com.spotify.github.v3.prs.ImmutableReviewParameters;
-import com.spotify.github.v3.prs.MergeMethod;
-import com.spotify.github.v3.prs.PullRequest;
-import com.spotify.github.v3.prs.PullRequestItem;
-import com.spotify.github.v3.prs.Review;
-import com.spotify.github.v3.prs.requests.ImmutablePullRequestParameters;
-import com.spotify.github.v3.prs.requests.PullRequestParameters;
+import org.kohsuke.github.GHIssueState;
+import org.kohsuke.github.GHPullRequest;
+import org.kohsuke.github.GHPullRequestReview;
+import org.kohsuke.github.GHPullRequestReviewEvent;
+import org.kohsuke.github.GHRepository;
+import org.kohsuke.github.GitHub;
+import org.kohsuke.github.GitHubBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
@@ -43,7 +38,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -56,7 +50,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Scanner;
-import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -90,8 +83,6 @@ public class LiteRelease {
     private static final boolean PROMPT_CONFIRMATION = true;
     private static final boolean PREFER_STABLE_TAG = false;
 
-    private static final PullRequestParameters PR_LIST_PARAMS = ImmutablePullRequestParameters.builder()
-            .state("open").page(1).per_page(10).build();
     private static final long POLL_SHORT_INTERVAL_MINUTE = 1;
     private static final long POLL_LONG_INTERVAL_MINUTE = 5;
     private static final long MILLISECOND_PER_MINUTE = 60 * 1000;
@@ -168,8 +159,10 @@ public class LiteRelease {
                         new BasicAuthenticationCredential(USER, PASS),
                         new AzureProfile(AzureEnvironment.AZURE));
 
-        GitHubClient github = GitHubClient.create(new URI("https://api.github.com/"), GITHUB_TOKEN);
-        RepositoryClient client = github.createRepositoryClient(GITHUB_ORGANIZATION, GITHUB_PROJECT);
+        GitHub github = new GitHubBuilder()
+                .withOAuthToken(GITHUB_TOKEN).build();
+
+        GHRepository repository = github.getRepository(GITHUB_ORGANIZATION + "/" + GITHUB_PROJECT);
 
         Map<String, Variable> variables = new HashMap<>();
         variables.put("README", new Variable().withValue(swagger));
@@ -192,11 +185,11 @@ public class LiteRelease {
         OUT.println("wait 1 minutes");
         Thread.sleep(POLL_SHORT_INTERVAL_MINUTE * MILLISECOND_PER_MINUTE);
 
-        mergeGithubPR(client, manager, swagger, sdk);
+        mergeGithubPR(repository, manager, swagger, sdk);
 
         runLiteRelease(manager, sdk);
 
-        mergeGithubVersionPR(client, sdk);
+        mergeGithubVersionPR(repository, sdk);
 
         String sdkMavenUrl = MAVEN_ARTIFACT_PATH_PREFIX + "azure-resourcemanager-" + sdk + "/1.0.0-beta.1/versions";
         Utils.openUrl(sdkMavenUrl);
@@ -221,23 +214,22 @@ public class LiteRelease {
         }
     }
 
-    private static void mergeGithubPR(RepositoryClient client, DevManager manager, String swagger, String sdk) throws InterruptedException, ExecutionException {
-        PullRequestClient prClient = client.createPullRequestClient();
-        List<PullRequestItem> prs = prClient.list(PR_LIST_PARAMS).get();
+    private static void mergeGithubPR(GHRepository repository, DevManager manager, String swagger, String sdk) throws InterruptedException, IOException {
+        List<GHPullRequest> prs = repository.getPullRequests(GHIssueState.OPEN);
 
-        PullRequestItem pr = prs.stream()
-                .filter(p -> p.title().startsWith("[Automation] Generate Fluent Lite from") && p.title().contains(swagger))
+        GHPullRequest pr = prs.stream()
+                .filter(p -> p.getTitle().startsWith("[Automation] Generate Fluent Lite from") && p.getTitle().contains(swagger))
                 .findFirst().orElse(null);
 
         if (pr != null) {
-            int prNumber = pr.number();
+            int prNumber = pr.getNumber();
 
             String prUrl = "https://github.com/Azure/azure-sdk-for-java/pull/" + prNumber + "/files";
             OUT.println("GitHub pull request: " + prUrl);
             Utils.openUrl(prUrl);
 
             // wait for CI
-            waitForChecks(client, prClient, manager, prNumber, sdk);
+            waitForChecks(pr, manager, prNumber, sdk);
 
             if (PROMPT_CONFIRMATION) {
                 Utils.promptMessageAndWait(IN, OUT,
@@ -249,13 +241,11 @@ public class LiteRelease {
             Thread.sleep(POLL_SHORT_INTERVAL_MINUTE * MILLISECOND_PER_MINUTE);
 
             // approve PR
-            Review review = prClient.createReview(prNumber,
-                    ImmutableReviewParameters.builder().event("APPROVE").build()).get();
+            GHPullRequestReview review = pr.createReview().event(GHPullRequestReviewEvent.APPROVE).create();
 
             // merge PR
-            PullRequest prRefreshed = prClient.get(prNumber).get();
-            prClient.merge(prNumber,
-                    ImmutableMergeParameters.builder().sha(prRefreshed.head().sha()).mergeMethod(MergeMethod.squash).build()).get();
+            pr.refresh();
+            pr.merge("", pr.getHead().getSha(), GHPullRequest.MergeMethod.SQUASH);
             OUT.println("Pull request merged: " + prNumber);
         } else {
             throw new IllegalStateException("github pull request not found");
@@ -328,36 +318,33 @@ public class LiteRelease {
         }
     }
 
-    private static void mergeGithubVersionPR(RepositoryClient client, String sdk) throws InterruptedException, ExecutionException {
-        PullRequestClient prClient = client.createPullRequestClient();
-        List<PullRequestItem> prs = prClient.list(PR_LIST_PARAMS).get();
+    private static void mergeGithubVersionPR(GHRepository repository, String sdk) throws InterruptedException, IOException {
+        List<GHPullRequest> prs = repository.getPullRequests(GHIssueState.OPEN);
 
-        PullRequestItem pr = prs.stream()
-                .filter(p -> p.title().equals("Increment versions for " + sdk + " releases")
-                        || p.title().equals("Increment version for " + sdk + " releases"))
+        GHPullRequest pr = prs.stream()
+                .filter(p -> p.getTitle().equals("Increment versions for " + sdk + " releases")
+                        || p.getTitle().equals("Increment version for " + sdk + " releases"))
                 .findFirst().orElse(null);
 
         if (pr != null) {
-            int prNumber = pr.number();
+            int prNumber = pr.getNumber();
 
             // approve PR
-            Review review = prClient.createReview(pr.number(),
-                    ImmutableReviewParameters.builder().event("APPROVE").build()).get();
+            GHPullRequestReview review = pr.createReview().event(GHPullRequestReviewEvent.APPROVE).create();
 
             String prUrl = "https://github.com/Azure/azure-sdk-for-java/pull/" + prNumber;
             OUT.println("GitHub pull request: " + prUrl);
             Utils.openUrl(prUrl);
 
             // wait for check enforcer
-            waitForCommitSuccess(prClient, prNumber);
+            waitForCommitSuccess(pr, prNumber);
 
-            PullRequest prRefreshed = prClient.get(prNumber).get();
-            if (Boolean.TRUE.equals(prRefreshed.merged())) {
+            pr.refresh();
+            if (Boolean.TRUE.equals(pr.isMerged())) {
                 OUT.println("Pull request auto merged: " + prNumber);
             } else {
                 // merge PR
-                prClient.merge(prNumber,
-                        ImmutableMergeParameters.builder().sha(prRefreshed.head().sha()).mergeMethod(MergeMethod.squash).build()).get();
+                pr.merge("", pr.getHead().getSha(), GHPullRequest.MergeMethod.SQUASH);
                 OUT.println("Pull request merged: " + prNumber);
             }
         } else {
@@ -391,8 +378,8 @@ public class LiteRelease {
                 .findAny().orElse(null);
     }
 
-    private static void waitForChecks(RepositoryClient client, PullRequestClient prClient, DevManager manager,
-                                      int prNumber, String sdk) throws InterruptedException, ExecutionException {
+    private static void waitForChecks(GHPullRequest pr, DevManager manager,
+                                      int prNumber, String sdk) throws InterruptedException, IOException {
         // wait a bit
         OUT.println("wait 1 minutes");
         Thread.sleep(POLL_SHORT_INTERVAL_MINUTE * MILLISECOND_PER_MINUTE);
@@ -415,22 +402,19 @@ public class LiteRelease {
         if (!ciPipelineReady) {
             LOGGER.info("prepare pipeline");
 
-            IssueClient issueClient = client.createIssueClient();
-
             // comment to create sdk CI
-            issueClient.createComment(prNumber, "/azp run prepare-pipelines").get();
+            pr.comment("/azp run prepare-pipelines");
 
             // wait for prepare pipelines
-            PullRequest pr = prClient.get(prNumber).get();
-            waitForCheckSuccess(prClient, prNumber, CI_PREPARE_PIPELINES_NAME, pr.head().sha());
+            pr.refresh();
+            waitForCheckSuccess(pr, prNumber, CI_PREPARE_PIPELINES_NAME, pr.getHead().getSha());
 
             // comment to run the newly created sdk CI
-            issueClient.createComment(prNumber, "/azp run " + javaSdkCheckName).get();
+            pr.comment("/azp run " + javaSdkCheckName);
         } else {
             // comment to run the previously disabled sdk CI
-            IssueClient issueClient = client.createIssueClient();
             if (!ciPipelineEnabled) {
-                issueClient.createComment(prNumber, "/azp run " + javaSdkCheckName).get();
+                pr.comment("/azp run " + javaSdkCheckName);
                 // wait a bit before potentially another "/azp run" comment
                 OUT.println("wait 1 minutes");
                 Thread.sleep(POLL_SHORT_INTERVAL_MINUTE * MILLISECOND_PER_MINUTE);
@@ -442,15 +426,15 @@ public class LiteRelease {
                     .anyMatch(p -> p.name().equals(testPipelineName));
             if (testPipelineAvailable) {
                 // comment to trigger tests.mgmt
-                issueClient.createComment(prNumber, "/azp run " + testPipelineName).get();
+                pr.comment("/azp run " + testPipelineName);
             }
         }
 
         // wait for sdk CI
-        waitForCheckSuccess(prClient, prNumber, javaSdkCheckName);
+        waitForCheckSuccess(pr, prNumber, javaSdkCheckName);
 
         // wait for check enforcer
-        waitForCommitSuccess(prClient, prNumber);
+        waitForCommitSuccess(pr, prNumber);
     }
 
     private static CommitStatus getCommitStatusForCheckEnforcer(String sha) {
@@ -459,9 +443,8 @@ public class LiteRelease {
                 .findFirst().orElse(null);
     }
 
-    private static void waitForCommitSuccess(PullRequestClient prClient, int prNumber) throws ExecutionException, InterruptedException {
-        PullRequest pr = prClient.get(prNumber).get();
-        String commitSHA = pr.head().sha();
+    private static void waitForCommitSuccess(GHPullRequest pr, int prNumber) throws InterruptedException, IOException {
+        String commitSHA = pr.getHead().getSha();
 
         CommitStatus status = getCommitStatusForCheckEnforcer(commitSHA);
         while (status == null || !"success".equals(status.getState())) {
@@ -475,24 +458,24 @@ public class LiteRelease {
             Thread.sleep(POLL_SHORT_INTERVAL_MINUTE * MILLISECOND_PER_MINUTE);
 
             // refresh head commit
-            pr = prClient.get(prNumber).get();
-            commitSHA = pr.head().sha();
+            pr.refresh();
+            commitSHA = pr.getHead().getSha();
             status = getCommitStatusForCheckEnforcer(commitSHA);
         }
     }
 
-    private static void waitForCheckSuccess(PullRequestClient prClient,
-                                            int prNumber, String checkName) throws InterruptedException, ExecutionException {
-        waitForCheckSuccess(prClient, prNumber, checkName, null);
+    private static void waitForCheckSuccess(GHPullRequest pr,
+                                            int prNumber, String checkName) throws InterruptedException, IOException {
+        waitForCheckSuccess(pr, prNumber, checkName, null);
     }
 
-    private static void waitForCheckSuccess(PullRequestClient prClient,
-                                            int prNumber, String checkName, String fixedCommitSHA) throws InterruptedException, ExecutionException {
+    private static void waitForCheckSuccess(GHPullRequest pr,
+                                            int prNumber, String checkName, String fixedCommitSHA) throws InterruptedException, IOException {
         String commitSHA = fixedCommitSHA;
         if (commitSHA == null) {
             // refresh head commit
-            PullRequest pr = prClient.get(prNumber).get();
-            commitSHA = pr.head().sha();
+            pr.refresh();
+            commitSHA = pr.getHead().getSha();
         }
         CheckRunListResult checkRunResult = Utils.getCheckRuns(HTTP_PIPELINE, GITHUB_TOKEN, commitSHA);
         CheckRun check = getCheck(checkRunResult.getCheckRuns(), checkName);
@@ -508,8 +491,8 @@ public class LiteRelease {
 
             if (fixedCommitSHA == null) {
                 // refresh head commit
-                PullRequest pr = prClient.get(prNumber).get();
-                commitSHA = pr.head().sha();
+                pr.refresh();
+                commitSHA = pr.getHead().getSha();
             }
             checkRunResult = Utils.getCheckRuns(HTTP_PIPELINE, GITHUB_TOKEN, commitSHA);
             check = getCheck(checkRunResult.getCheckRuns(), checkName);

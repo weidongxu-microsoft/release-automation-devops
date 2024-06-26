@@ -39,9 +39,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.spotify</groupId>
-            <artifactId>github-client</artifactId>
-            <version>0.1.62</version>
+            <groupId>org.kohsuke</groupId>
+            <artifactId>github-api</artifactId>
+            <version>1.322</version>
         </dependency>
 
         <dependency>
