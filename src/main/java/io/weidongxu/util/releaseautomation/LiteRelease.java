@@ -91,66 +91,95 @@ public class LiteRelease {
         TokenCredential tokenCredential = new BasicAuthenticationCredential(USER, PASS);
 
         Configure configure = getConfigure();
-        String swagger = configure.getSwagger();
-        String sdk = getSdkName(swagger);
-        if (!CoreUtils.isNullOrEmpty(configure.getService())) {
+        String tspConfig = configure.getTspConfig();
+        String sdk;
+        String prKeyword;
+        Map<String, Variable> variables = new HashMap<>();
+
+        if (!CoreUtils.isNullOrEmpty(tspConfig)) { // generate from TypeSpec
             sdk = configure.getService();
-        }
+            prKeyword = sdk;
+            OUT.println("Releasing from TypeSpec, tsp-config file: " + tspConfig);
+            OUT.println("sdk: " + configure.getService());
 
-        OUT.println("swagger: " + swagger);
-        OUT.println("sdk: " + sdk);
-
-        String tag = configure.getTag();
-        if (CoreUtils.isNullOrEmpty(tag)) {
-            ReadmeConfigure readmeConfigure = Utils.getReadmeConfigure(HTTP_PIPELINE, swagger);
-            readmeConfigure.print(OUT, 3);
-
-            tag = readmeConfigure.getDefaultTag();
-            if (tag == null) {
-                tag = readmeConfigure.getTagConfigures().iterator().next().getTagName();
+            variables.put("README", new Variable().withValue(sdk));
+        } else { // generate from Swagger
+            String swagger = configure.getSwagger();
+            prKeyword = swagger;
+            sdk = getSdkName(swagger);
+            if (!CoreUtils.isNullOrEmpty(configure.getService())) {
+                sdk = configure.getService();
             }
-            if (PREFER_STABLE_TAG) {
-                if (tag.endsWith("-preview")) {
-                    Optional<String> stableTag = readmeConfigure.getTagConfigures().stream()
+
+            OUT.println("swagger: " + swagger);
+            OUT.println("sdk: " + sdk);
+
+            String tag = configure.getTag();
+            if (CoreUtils.isNullOrEmpty(tag)) {
+                ReadmeConfigure readmeConfigure = Utils.getReadmeConfigure(HTTP_PIPELINE, swagger);
+                readmeConfigure.print(OUT, 3);
+
+                tag = readmeConfigure.getDefaultTag();
+                if (tag == null) {
+                    tag = readmeConfigure.getTagConfigures().iterator().next().getTagName();
+                }
+                if (PREFER_STABLE_TAG) {
+                    if (tag.endsWith("-preview")) {
+                        Optional<String> stableTag = readmeConfigure.getTagConfigures().stream()
                             .map(ReadmeConfigure.TagConfigure::getTagName)
                             .filter(name -> !name.endsWith("-preview"))
                             .findFirst();
-                    if (stableTag.isPresent()) {
-                        tag = stableTag.get();
+                        if (stableTag.isPresent()) {
+                            tag = stableTag.get();
+                        }
                     }
                 }
+                OUT.println("choose tag: " + tag + ". Override?");
+                Scanner s = new Scanner(IN);
+                String input = s.nextLine();
+                if (!input.trim().isEmpty()) {
+                    tag = input.trim();
+                }
             }
-            OUT.println("choose tag: " + tag + ". Override?");
-            Scanner s = new Scanner(IN);
-            String input = s.nextLine();
-            if (!input.trim().isEmpty()) {
-                tag = input.trim();
-            }
-        }
-        OUT.println("tag: " + tag);
+            OUT.println("tag: " + tag);
 
-        if (configure.isAutoVersioning() && !tag.contains("-preview")) {
-            ReadmeConfigure readmeConfigure = Utils.getReadmeConfigure(HTTP_PIPELINE, swagger);
-            final String tagToRelease = tag;
-            Optional<ReadmeConfigure.TagConfigure> tagConfigure = readmeConfigure.getTagConfigures().stream()
+            if (configure.isAutoVersioning() && !tag.contains("-preview")) {
+                ReadmeConfigure readmeConfigure = Utils.getReadmeConfigure(HTTP_PIPELINE, swagger);
+                final String tagToRelease = tag;
+                Optional<ReadmeConfigure.TagConfigure> tagConfigure = readmeConfigure.getTagConfigures().stream()
                     .filter(t -> Objects.equals(tagToRelease, t.getTagName()))
                     .findFirst();
-            boolean previewInputFileInTag = tagConfigure.isPresent()
+                boolean previewInputFileInTag = tagConfigure.isPresent()
                     && tagConfigure.get().getInputFiles().stream().anyMatch(f -> f.contains("/preview/"));
 
-            if (!previewInputFileInTag) {
-                // if stable is released, and current tag is also stable
-                VersionConfigure.parseVersion(HTTP_PIPELINE, sdk).ifPresent(sdkVersion -> {
-                    if (sdkVersion.isStableReleased()) {
-                        configure.setAutoVersioning(false);
-                        configure.setVersion(sdkVersion.getCurrentVersionAsStable());
+                if (!previewInputFileInTag) {
+                    // if stable is released, and current tag is also stable
+                    VersionConfigure.parseVersion(HTTP_PIPELINE, sdk).ifPresent(sdkVersion -> {
+                        if (sdkVersion.isStableReleased()) {
+                            configure.setAutoVersioning(false);
+                            configure.setVersion(sdkVersion.getCurrentVersionAsStable());
 
-                        OUT.println("release for stable: " + configure.getVersion());
-                    }
-                });
+                            OUT.println("release for stable: " + configure.getVersion());
+                        }
+                    });
+                }
+            }
+
+            variables.put("README", new Variable().withValue(swagger));
+            variables.put("TAG", new Variable().withValue(tag));
+            if (!configure.isAutoVersioning()) {
+                variables.put("VERSION", new Variable().withValue(configure.getVersion()));
+            }
+            if (!CoreUtils.isNullOrEmpty(configure.getService())) {
+                variables.put("SERVICE", new Variable().withValue(configure.getService()));
+            }
+            if (!CoreUtils.isNullOrEmpty(configure.getSuffix())) {
+                variables.put("SUFFIX", new Variable().withValue(configure.getSuffix()));
+            }
+            if (configure.getTests() == Boolean.TRUE) {
+                variables.put("AUTOREST_OPTIONS", new Variable().withValue("--generate-tests"));
             }
         }
-
         DevManager manager = DevManager.configure()
                 .withLogOptions(new HttpLogOptions().setLogLevel(HttpLogDetailLevel.NONE))
                 .withPolicy(new BasicAuthAuthenticationPolicy(tokenCredential))
@@ -164,28 +193,11 @@ public class LiteRelease {
 
         GHRepository repository = github.getRepository(GITHUB_ORGANIZATION + "/" + GITHUB_PROJECT);
 
-        Map<String, Variable> variables = new HashMap<>();
-        variables.put("README", new Variable().withValue(swagger));
-        variables.put("TAG", new Variable().withValue(tag));
-//        variables.put("DRAFT_PULL_REQUEST", new Variable().withValue("false"));
-        if (!configure.isAutoVersioning()) {
-            variables.put("VERSION", new Variable().withValue(configure.getVersion()));
-        }
-        if (!CoreUtils.isNullOrEmpty(configure.getService())) {
-            variables.put("SERVICE", new Variable().withValue(configure.getService()));
-        }
-        if (!CoreUtils.isNullOrEmpty(configure.getSuffix())) {
-            variables.put("SUFFIX", new Variable().withValue(configure.getSuffix()));
-        }
-        if (configure.getTests() == Boolean.TRUE) {
-            variables.put("AUTOREST_OPTIONS", new Variable().withValue("--generate-tests"));
-        }
-
         runLiteCodegen(manager, variables);
         OUT.println("wait 1 minutes");
         Thread.sleep(POLL_SHORT_INTERVAL_MINUTE * MILLISECOND_PER_MINUTE);
 
-        mergeGithubPR(repository, manager, swagger, sdk);
+        mergeGithubPR(repository, manager, prKeyword, sdk);
 
         runLiteRelease(manager, sdk);
 

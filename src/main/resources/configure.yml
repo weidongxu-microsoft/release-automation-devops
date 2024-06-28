@@ -1,4 +1,13 @@
-swagger: mediaservices
-autoVersioning: true
-version: 1.0.0
-tests: true
+# Default is configuration for TypeSpec.
+# If release from Swagger, uncomment Swagger Configuration section and comment out TypeSpec Configuration section.
+
+# TypeSpec Configuration
+service: mongocluster # name for the PR
+tspConfig: https://github.com/Azure/azure-rest-api-specs/blob/7605afe88e3201dc25ce0881c2e49fe1b6bbdd54/specification/mongocluster/DocumentDB.MongoCluster.Management/tspconfig.yaml # url to the tspconfig.yaml file, must contain commitID in the path
+version: 1.0.0-beta.1
+
+# Swagger Configuration
+#swagger: netapp
+#autoVersioning: true # If this mode is enabled, whether SDK is GA or beta will be inferred from the package tag.
+#version: 1.0.0
+#tests: true
