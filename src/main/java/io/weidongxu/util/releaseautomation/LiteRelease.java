@@ -90,24 +90,30 @@ public class LiteRelease {
     public static void main(String[] args) throws Exception {
         TokenCredential tokenCredential = new BasicAuthenticationCredential(USER, PASS);
 
+        GitHub github = new GitHubBuilder()
+            .withOAuthToken(GITHUB_TOKEN).build();
+
+        GHRepository repository = github.getRepository(GITHUB_ORGANIZATION + "/" + GITHUB_PROJECT);
+
         Configure configure = getConfigure();
-        String tspConfig = configure.getTspConfig();
+        String tspConfigUrl = configure.getTspConfig();
         String sdk;
         String prKeyword;
         Map<String, Variable> variables = new HashMap<>();
         Map<String, String> templateParameters = new HashMap<>();
 
-        if (!CoreUtils.isNullOrEmpty(tspConfig)) { // generate from TypeSpec
-            sdk = configure.getService();
+        if (!CoreUtils.isNullOrEmpty(tspConfigUrl)) { // generate from TypeSpec
+            OUT.println("Releasing from TypeSpec, tsp-config file: " + tspConfigUrl);
+            TspConfig tspConfig = TspConfig.parse(repository, HTTP_PIPELINE, tspConfigUrl);
+            sdk = tspConfig.getService();
             if (CoreUtils.isNullOrEmpty(sdk)) {
-                throw new IllegalArgumentException("\"service\" must not be null if Generated from TypeSpec. It's part of the PR title.");
+                throw new IllegalArgumentException("\"service\" must not be null if Generated from TypeSpec.");
             }
             prKeyword = sdk;
-            OUT.println("Releasing from TypeSpec, tsp-config file: " + tspConfig);
             OUT.println("sdk: " + configure.getService());
 
             variables.put("README", new Variable().withValue(sdk));
-            variables.put("TSP_CONFIG", new Variable().withValue(tspConfig));
+            variables.put("TSP_CONFIG", new Variable().withValue(tspConfigUrl));
             templateParameters.put("RELEASE_TYPE", "TypeSpec");
         } else { // generate from Swagger
             String swagger = configure.getSwagger();
@@ -195,11 +201,6 @@ public class LiteRelease {
                 .authenticate(
                         new BasicAuthenticationCredential(USER, PASS),
                         new AzureProfile(AzureEnvironment.AZURE));
-
-        GitHub github = new GitHubBuilder()
-                .withOAuthToken(GITHUB_TOKEN).build();
-
-        GHRepository repository = github.getRepository(GITHUB_ORGANIZATION + "/" + GITHUB_PROJECT);
 
         runLiteCodegen(manager, variables, templateParameters);
         OUT.println("wait 1 minutes");
