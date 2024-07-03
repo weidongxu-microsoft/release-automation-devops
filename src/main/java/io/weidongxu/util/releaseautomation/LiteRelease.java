@@ -95,14 +95,20 @@ public class LiteRelease {
         String sdk;
         String prKeyword;
         Map<String, Variable> variables = new HashMap<>();
+        Map<String, String> templateParameters = new HashMap<>();
 
         if (!CoreUtils.isNullOrEmpty(tspConfig)) { // generate from TypeSpec
             sdk = configure.getService();
+            if (CoreUtils.isNullOrEmpty(sdk)) {
+                throw new IllegalArgumentException("\"service\" must not be null if Generated from TypeSpec. It's part of the PR title.");
+            }
             prKeyword = sdk;
             OUT.println("Releasing from TypeSpec, tsp-config file: " + tspConfig);
             OUT.println("sdk: " + configure.getService());
 
             variables.put("README", new Variable().withValue(sdk));
+            variables.put("TSP_CONFIG", new Variable().withValue(tspConfig));
+            templateParameters.put("RELEASE_TYPE", "TypeSpec");
         } else { // generate from Swagger
             String swagger = configure.getSwagger();
             prKeyword = swagger;
@@ -179,6 +185,8 @@ public class LiteRelease {
             if (configure.getTests() == Boolean.TRUE) {
                 variables.put("AUTOREST_OPTIONS", new Variable().withValue("--generate-tests"));
             }
+
+            templateParameters.put("RELEASE_TYPE", "Swagger");
         }
         DevManager manager = DevManager.configure()
                 .withLogOptions(new HttpLogOptions().setLogLevel(HttpLogDetailLevel.NONE))
@@ -193,7 +201,7 @@ public class LiteRelease {
 
         GHRepository repository = github.getRepository(GITHUB_ORGANIZATION + "/" + GITHUB_PROJECT);
 
-        runLiteCodegen(manager, variables);
+        runLiteCodegen(manager, variables, templateParameters);
         OUT.println("wait 1 minutes");
         Thread.sleep(POLL_SHORT_INTERVAL_MINUTE * MILLISECOND_PER_MINUTE);
 
@@ -209,10 +217,10 @@ public class LiteRelease {
         System.exit(0);
     }
 
-    private static void runLiteCodegen(DevManager manager, Map<String, Variable> variables) throws InterruptedException {
+    private static void runLiteCodegen(DevManager manager, Map<String, Variable> variables, Map<String, String> templateParameters) throws InterruptedException {
         // run pipeline
         Run run = manager.runs().runPipeline(ORGANIZATION, PROJECT_INTERNAL, LITE_CODEGEN_PIPELINE_ID,
-                new RunPipelineParameters().withVariables(variables));
+                new RunPipelineParameters().withVariables(variables).withTemplateParameters(templateParameters));
         int buildId = run.id();
 
         // wait for complete
@@ -226,11 +234,11 @@ public class LiteRelease {
         }
     }
 
-    private static void mergeGithubPR(GHRepository repository, DevManager manager, String swagger, String sdk) throws InterruptedException, IOException {
+    private static void mergeGithubPR(GHRepository repository, DevManager manager, String prKeyword, String sdk) throws InterruptedException, IOException {
         List<GHPullRequest> prs = repository.getPullRequests(GHIssueState.OPEN);
 
         GHPullRequest pr = prs.stream()
-                .filter(p -> p.getTitle().startsWith("[Automation] Generate Fluent Lite from") && p.getTitle().contains(swagger))
+                .filter(p -> p.getTitle().startsWith("[Automation] Generate Fluent Lite from") && p.getTitle().contains(prKeyword))
                 .findFirst().orElse(null);
 
         if (pr != null) {

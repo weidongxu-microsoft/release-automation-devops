@@ -2,7 +2,7 @@
 # If release from Swagger, uncomment Swagger Configuration section and comment out TypeSpec Configuration section.
 
 # TypeSpec Configuration
-service: mongocluster # name for the PR
+service: MongoCluster # name for the PR
 tspConfig: https://github.com/Azure/azure-rest-api-specs/blob/7605afe88e3201dc25ce0881c2e49fe1b6bbdd54/specification/mongocluster/DocumentDB.MongoCluster.Management/tspconfig.yaml # url to the tspconfig.yaml file, must contain commitID in the path
 version: 1.0.0-beta.1
 
