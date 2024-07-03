@@ -4,6 +4,7 @@ import com.azure.core.http.HttpMethod;
 import com.azure.core.http.HttpPipeline;
 import com.azure.core.http.HttpRequest;
 import com.azure.core.http.HttpResponse;
+import com.azure.core.util.CoreUtils;
 import io.weidongxu.util.releaseautomation.util.AnnotatedPropertyUtils;
 import io.weidongxu.util.releaseautomation.util.YamlProperty;
 import org.kohsuke.github.GHRepository;
@@ -11,6 +12,7 @@ import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.representer.Representer;
 
+import java.util.Dictionary;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,6 +20,7 @@ public class TspConfig {
     private static final Pattern MAIN_URL = Pattern.compile("^https://github.com/(?<repo>[^/]*/azure-rest-api-specs(-pr)?)/blob/(main)/(?<path>.*)/tspconfig.yaml$");
     private static final Pattern SHA1_URL = Pattern.compile("^https://github.com/(?<repo>[^/]*/azure-rest-api-specs(-pr)?)/blob/(?<commit>[0-9a-f]{40})/(?<path>.*)/tspconfig.yaml$");
     private static final Pattern GITHUB_URL = Pattern.compile("https://github.com/(.*)/(tree|blob)(/.*)");
+    private static final Pattern SERVICE_DIR = Pattern.compile("^sdk/([\\w_-]+)$");
 
     private static final Yaml YAML;
     static {
@@ -28,8 +31,20 @@ public class TspConfig {
         YAML = new Yaml(representer);
     }
 
+    public String getUrl() {
+        return url;
+    }
+
+    public String getService() {
+        return service;
+    }
+
+    public String getPackageDir() {
+        return packageDir;
+    }
+
     public static TspConfig parse(GHRepository repository, HttpPipeline httpPipeline, String tspConfigUrl) throws Exception {
-        String urlWithSha1;
+        String urlWithSha1; // url for tsp-client
         if (MAIN_URL.matcher(tspConfigUrl).matches()) {
             String sha1 = repository.getBranch("main").getSHA1();
             urlWithSha1 = tspConfigUrl.replace("/main/", String.format("/%s/", sha1));
@@ -41,38 +56,48 @@ public class TspConfig {
             }
         }
         Matcher matcher = GITHUB_URL.matcher(urlWithSha1);
+        String githubRawUrl; // url for getting github file content
         if (matcher.find()) {
-            urlWithSha1 = matcher.replaceFirst("https://raw.githubusercontent.com/$1$3");
+            githubRawUrl = matcher.replaceFirst("https://raw.githubusercontent.com/$1$3");
         } else {
             throw new IllegalArgumentException("Wrong tspConfigUrl: " + urlWithSha1);
         }
-        urlWithSha1 = urlWithSha1.replaceFirst("https://github.com/(.*)/(tree|blob)(/.*)", "https://raw.githubusercontent.com/`$1");
-        try (HttpResponse response = httpPipeline.send(new HttpRequest(HttpMethod.GET, urlWithSha1)).block()) {
+        try (HttpResponse response = httpPipeline.send(new HttpRequest(HttpMethod.GET, githubRawUrl)).block()) {
             if (response.getStatusCode() == 200) {
                 String tspConfig = response.getBodyAsString().block();
                 Config config = YAML.loadAs(tspConfig, Config.class);
                 config.validate();
-                return new TspConfig(config.getParameters().getServiceDir().getDefaultDir(), config.getOptions().getJavaOptions().getPackageDir());
+                TspConfig result = new TspConfig()
+                        .withUrl(urlWithSha1)
+                        .withPackageDir(config.getOptions().getJavaOptions().getPackageDir());
+                Matcher serviceDirMatcher = SERVICE_DIR.matcher(config.getParameters().getServiceDir().getDefaultDir());
+                if (serviceDirMatcher.matches()) {
+                    result.withService(serviceDirMatcher.group(1));
+                }
+                return result;
             } else {
                 throw new IllegalArgumentException(response.getBodyAsString().block());
             }
         }
     }
 
-    private final String service;
-    private final String packageDir;
+    private String service;
+    private String packageDir;
+    private String url;
 
-    private TspConfig(String service, String packageDir) {
+    private TspConfig withService(String service) {
         this.service = service;
+        return this;
+    }
+
+    private TspConfig withPackageDir(String packageDir) {
         this.packageDir = packageDir;
+        return this;
     }
 
-    public String getService() {
-        return service;
-    }
-
-    public String getPackageDir() {
-        return packageDir;
+    private TspConfig withUrl(String url) {
+        this.url = url;
+        return this;
     }
 
     public static class Config {
@@ -99,6 +124,11 @@ public class TspConfig {
             if (parameters == null) {
                 throw new IllegalArgumentException("\"parameters\" null");
             }
+            parameters.validate();
+            if (options == null) {
+                throw new IllegalArgumentException("\"options\" null");
+            }
+            options.validate();
         }
     }
 
@@ -113,6 +143,13 @@ public class TspConfig {
         public void setServiceDir(ServiceDir serviceDir) {
             this.serviceDir = serviceDir;
         }
+
+        public void validate() {
+            if (serviceDir == null) {
+                throw new IllegalArgumentException("\"service-dir\" null");
+            }
+            serviceDir.validate();
+        }
     }
 
     public static class ServiceDir {
@@ -125,6 +162,15 @@ public class TspConfig {
 
         public void setDefaultDir(String defaultDir) {
             this.defaultDir = defaultDir;
+        }
+
+        public void validate() {
+            if (CoreUtils.isNullOrEmpty(defaultDir)) {
+                throw new IllegalArgumentException("\"service-dir\" null");
+            }
+            if (!SERVICE_DIR.matcher(defaultDir).matches()) {
+                throw new IllegalArgumentException("Illegal \"service-dir\": " + defaultDir);
+            }
         }
     }
 
@@ -139,6 +185,13 @@ public class TspConfig {
         public void setJavaOptions(JavaOptions javaOptions) {
             this.javaOptions = javaOptions;
         }
+
+        public void validate() {
+            if (javaOptions == null) {
+                throw new IllegalArgumentException("\"options\" null");
+            }
+            javaOptions.validate();
+        }
     }
 
     public static class JavaOptions {
@@ -151,6 +204,12 @@ public class TspConfig {
 
         public void setPackageDir(String packageDir) {
             this.packageDir = packageDir;
+        }
+
+        public void validate() {
+            if (CoreUtils.isNullOrEmpty(packageDir)) {
+                throw new IllegalArgumentException("\"package-dir\" null");
+            }
         }
     }
 }

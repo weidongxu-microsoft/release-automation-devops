@@ -1,12 +1,12 @@
-# Default is configuration for TypeSpec.
-# If release from Swagger, uncomment Swagger Configuration section and comment out TypeSpec Configuration section.
-
-# TypeSpec Configuration
-tspConfig: https://github.com/Azure/azure-rest-api-specs/blob/main/specification/mongocluster/DocumentDB.MongoCluster.Management/tspconfig.yaml # Required. URL to the tspconfig.yaml file. If main branch, will use latest commit ID. If commit ID is provided, will use that commit ID.
-version: 1.0.0-beta.1 # Optional, SDK version
+# Default is configuration for Swagger.
+# If release from TypeSpec, comment out Swagger Configuration section and uncomment TypeSpec Configuration section.
 
 # Swagger Configuration
-#swagger: netapp
-#autoVersioning: true # If this mode is enabled, whether SDK is GA or beta will be inferred from the package tag.
-#version: 1.0.0
-#tests: true
+swagger: netapp
+autoVersioning: true # If this mode is enabled, whether SDK is GA or beta will be inferred from the package tag.
+version: 1.0.0
+tests: true
+
+# TypeSpec Configuration
+#tspConfig: https://github.com/Azure/azure-rest-api-specs/blob/main/specification/mongocluster/DocumentDB.MongoCluster.Management/tspconfig.yaml # Required. URL to the tspconfig.yaml file. If main branch, will use latest commit ID. If commit ID is provided, will use that commit ID.
+#version: 1.0.0-beta.1 # Optional, SDK version

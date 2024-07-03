@@ -67,6 +67,7 @@ public class LiteRelease {
     private static final String GITHUB_TOKEN = Configuration.getGlobalConfiguration().get("GITHUB_PAT");
     private static final String GITHUB_ORGANIZATION = "Azure";
     private static final String GITHUB_PROJECT = "azure-sdk-for-java";
+    private static final String SPECS_PROJECT = "azure-rest-api-specs";
 
     private static final int LITE_CODEGEN_PIPELINE_ID = 2238;
 
@@ -93,7 +94,8 @@ public class LiteRelease {
         GitHub github = new GitHubBuilder()
             .withOAuthToken(GITHUB_TOKEN).build();
 
-        GHRepository repository = github.getRepository(GITHUB_ORGANIZATION + "/" + GITHUB_PROJECT);
+        GHRepository sdkRepository = github.getRepository(GITHUB_ORGANIZATION + "/" + GITHUB_PROJECT);
+        GHRepository specsRepository = github.getRepository(GITHUB_ORGANIZATION + "/" + SPECS_PROJECT);
 
         Configure configure = getConfigure();
         String tspConfigUrl = configure.getTspConfig();
@@ -103,17 +105,18 @@ public class LiteRelease {
         Map<String, String> templateParameters = new HashMap<>();
 
         if (!CoreUtils.isNullOrEmpty(tspConfigUrl)) { // generate from TypeSpec
-            OUT.println("Releasing from TypeSpec, tsp-config file: " + tspConfigUrl);
-            TspConfig tspConfig = TspConfig.parse(repository, HTTP_PIPELINE, tspConfigUrl);
+            TspConfig tspConfig = TspConfig.parse(specsRepository, HTTP_PIPELINE, tspConfigUrl);
             sdk = tspConfig.getService();
             if (CoreUtils.isNullOrEmpty(sdk)) {
                 throw new IllegalArgumentException("\"service\" must not be null if Generated from TypeSpec.");
             }
             prKeyword = sdk;
-            OUT.println("sdk: " + configure.getService());
+            OUT.println("Releasing from TypeSpec, tsp-config file with commitID: \n" + tspConfig.getUrl());
+            OUT.println("sdk: " + sdk);
+            OUT.println("package-dir: " + tspConfig.getPackageDir());
 
             variables.put("README", new Variable().withValue(sdk));
-            variables.put("TSP_CONFIG", new Variable().withValue(tspConfigUrl));
+            variables.put("TSP_CONFIG", new Variable().withValue(tspConfig.getUrl()));
             templateParameters.put("RELEASE_TYPE", "TypeSpec");
         } else { // generate from Swagger
             String swagger = configure.getSwagger();
@@ -206,11 +209,11 @@ public class LiteRelease {
         OUT.println("wait 1 minutes");
         Thread.sleep(POLL_SHORT_INTERVAL_MINUTE * MILLISECOND_PER_MINUTE);
 
-        mergeGithubPR(repository, manager, prKeyword, sdk);
+        mergeGithubPR(sdkRepository, manager, prKeyword, sdk);
 
         runLiteRelease(manager, sdk);
 
-        mergeGithubVersionPR(repository, sdk);
+        mergeGithubVersionPR(sdkRepository, sdk);
 
         String sdkMavenUrl = MAVEN_ARTIFACT_PATH_PREFIX + "azure-resourcemanager-" + sdk + "/1.0.0-beta.1/versions";
         Utils.openUrl(sdkMavenUrl);
