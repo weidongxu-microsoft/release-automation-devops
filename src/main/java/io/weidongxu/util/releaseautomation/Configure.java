@@ -5,6 +5,11 @@ public class Configure {
     // the service name at https://github.com/Azure/azure-rest-api-specs/tree/main/specification
     private String swagger;
 
+    // url to the tspconfig.yaml file, can be either from main branch, or specific commitID
+    // e.g. From main branch: https://github.com/Azure/azure-rest-api-specs/blob/main/specification/mongocluster/DocumentDB.MongoCluster.Management/tspconfig.yaml
+    // From specific commitID: https://github.com/Azure/azure-rest-api-specs/blob/7605afe88e3201dc25ce0881c2e49fe1b6bbdd54/specification/mongocluster/DocumentDB.MongoCluster.Management/tspconfig.yaml
+    private String tspConfig;
+
     // preview release
     private boolean autoVersioning = true;
 
@@ -32,6 +37,14 @@ public class Configure {
 
     public void setSwagger(String swagger) {
         this.swagger = swagger;
+    }
+
+    public String getTspConfig() {
+        return tspConfig;
+    }
+
+    public void setTspConfig(String tspConfig) {
+        this.tspConfig = tspConfig;
     }
 
     public boolean isAutoVersioning() {

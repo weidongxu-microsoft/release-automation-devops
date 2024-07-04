@@ -55,6 +55,13 @@
             <artifactId>slf4j-simple</artifactId>
             <version>1.7.36</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.azure</groupId>
+            <artifactId>azure-core-test</artifactId>
+            <version>1.26.0</version> <!-- {x-version-update;com.azure:azure-core-test;dependency} -->
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
