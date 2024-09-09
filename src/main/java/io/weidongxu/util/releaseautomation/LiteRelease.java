@@ -23,6 +23,7 @@ import com.azure.dev.models.Timeline;
 import com.azure.dev.models.TimelineRecord;
 import com.azure.dev.models.TimelineRecordState;
 import com.azure.dev.models.Variable;
+import com.azure.identity.AzureCliCredentialBuilder;
 import org.kohsuke.github.GHIssueState;
 import org.kohsuke.github.GHPullRequest;
 import org.kohsuke.github.GHPullRequestReview;
@@ -89,7 +90,19 @@ public class LiteRelease {
     private static final long MILLISECOND_PER_MINUTE = 60 * 1000;
 
     public static void main(String[] args) throws Exception {
-        TokenCredential tokenCredential = new BasicAuthenticationCredential(USER, PASS);
+        TokenCredential tokenCredential;
+        if (CoreUtils.isNullOrEmpty(PASS)) {
+            LOGGER.info("No AzureDevOps PAT provided, using Azure DevOps CLI authentication.");
+            tokenCredential = new AzureCliCredentialBuilder().build();
+        } else {
+            LOGGER.info("AzureDevOps PAT found, using Basic authentication.");
+            tokenCredential = new BasicAuthenticationCredential(USER, PASS);
+        }
+        DevManager manager = DevManager.configure()
+            .withLogOptions(new HttpLogOptions().setLogLevel(HttpLogDetailLevel.NONE))
+            .authenticate(
+                tokenCredential,
+                new AzureProfile(AzureEnvironment.AZURE));
 
         GitHub github = new GitHubBuilder()
             .withOAuthToken(GITHUB_TOKEN).build();
@@ -197,13 +210,6 @@ public class LiteRelease {
 
             templateParameters.put("RELEASE_TYPE", "Swagger");
         }
-        DevManager manager = DevManager.configure()
-                .withLogOptions(new HttpLogOptions().setLogLevel(HttpLogDetailLevel.NONE))
-                .withPolicy(new BasicAuthAuthenticationPolicy(tokenCredential))
-//                .withPolicy(new HttpDebugLoggingPolicy())
-                .authenticate(
-                        new BasicAuthenticationCredential(USER, PASS),
-                        new AzureProfile(AzureEnvironment.AZURE));
 
         runLiteCodegen(manager, variables, templateParameters);
         OUT.println("wait 1 minutes");
