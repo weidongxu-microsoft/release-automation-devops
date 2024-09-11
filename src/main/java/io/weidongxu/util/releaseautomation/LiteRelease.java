@@ -610,7 +610,7 @@ public class LiteRelease {
         String ciUrl = String.format(url);
 
         HttpRequest request = new HttpRequest(HttpMethod.GET, ciUrl);
-        HttpResponse response = manager.serviceClient().getHttpPipeline().send(request).block();
+        HttpResponse response = HTTP_PIPELINE.send(request).block();
         System.out.println("response status code: " + response.getStatusCode());
         if (response.getStatusCode() != 200) {
             System.out.println("response body: " + response.getBodyAsString().block());
