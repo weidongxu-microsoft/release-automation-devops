@@ -130,6 +130,9 @@ public class LiteRelease {
 
             variables.put("README", new Variable().withValue(sdk));
             variables.put("TSP_CONFIG", new Variable().withValue(tspConfig.getUrl()));
+            if (!CoreUtils.isNullOrEmpty(configure.getVersion())) {
+                variables.put("VERSION", new Variable().withValue(configure.getVersion()));
+            }
             templateParameters.put("RELEASE_TYPE", "TypeSpec");
         } else { // generate from Swagger
             String swagger = configure.getSwagger();
