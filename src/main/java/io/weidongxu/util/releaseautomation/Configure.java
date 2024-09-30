@@ -94,4 +94,18 @@ public class Configure {
     public void setTests(Boolean tests) {
         this.tests = tests;
     }
+
+    @Override
+    public String toString() {
+        return "Configure{" +
+            "swagger='" + swagger + '\'' +
+            ", tspConfig='" + tspConfig + '\'' +
+            ", autoVersioning=" + autoVersioning +
+            ", version='" + version + '\'' +
+            ", tag='" + tag + '\'' +
+            ", service='" + service + '\'' +
+            ", suffix='" + suffix + '\'' +
+            ", tests=" + tests +
+            '}';
+    }
 }

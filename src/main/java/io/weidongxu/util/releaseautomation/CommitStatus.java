@@ -4,7 +4,7 @@ public class CommitStatus {
 
     private Long id;
 
-    private String state;
+    private String state = "HttpFailure";
 
     private String context;
 
