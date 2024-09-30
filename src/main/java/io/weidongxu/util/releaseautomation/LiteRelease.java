@@ -27,7 +27,19 @@ public class LiteRelease {
             List<Configure> configures = parseConfigureList();
             CountDownLatch cdl = new CountDownLatch(configures.size());
             List<ReleaseResult> resultList = new CopyOnWriteArrayList<>();
-            configures.forEach(configure -> releasePlanner.submit(configure, () -> resultList.add(ReleaseResult.success(configure)), () -> resultList.add(ReleaseResult.failure(configure))));
+            configures.forEach(configure -> releasePlanner.submit(configure, () -> {
+                try {
+                    resultList.add(ReleaseResult.success(configure));
+                } finally {
+                    cdl.countDown();
+                }
+            }, () -> {
+                try {
+                    resultList.add(ReleaseResult.failure(configure));
+                } finally {
+                    cdl.countDown();
+                }
+            }));
             cdl.await();
             System.out.println("Release result: " + resultList);
             System.exit(0);

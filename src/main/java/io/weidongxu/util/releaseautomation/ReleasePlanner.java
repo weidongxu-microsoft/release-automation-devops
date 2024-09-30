@@ -119,7 +119,7 @@ public class ReleasePlanner {
             this.executor = Executors.newFixedThreadPool(options.parallelism);
         }
 
-        OUT.printf("release mode: %s", options.isBatch() ? "BATCH" : "SERIALIZE");
+        OUT.printf("release mode: %s", options.isBatch() ? "BATCH" : "DEFAULT");
     }
 
     public void submit(Configure configure, Runnable onSuccess, Runnable onFailure) {
