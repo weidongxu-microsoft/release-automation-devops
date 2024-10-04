@@ -1,11 +1,7 @@
 package io.weidongxu.util.releaseautomation;
 
-import com.azure.core.util.Configuration;
-import com.azure.core.util.CoreUtils;
 import org.yaml.snakeyaml.DumperOptions;
-import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.representer.Representer;
 
 import java.io.FileInputStream;
@@ -15,19 +11,20 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 
 public class LiteRelease {
     public static void main(String[] args) throws Exception {
-        ReleasePlanner.Options options = getConfigure(ReleasePlanner.Options.class);
-        ReleasePlanner releasePlanner = new ReleasePlanner(options);
+        ReleaseHandler.Options options = getConfigure(ReleaseHandler.Options.class);
+        ReleaseHandler releaseHandler = ReleaseHandler.getReleaseHandler(options);
 
         if (options.isBatch()) {
             List<Configure> configures = parseConfigureList();
             CountDownLatch cdl = new CountDownLatch(configures.size());
             List<ReleaseResult> resultList = new CopyOnWriteArrayList<>();
-            configures.forEach(configure -> releasePlanner.submit(configure, () -> {
+            configures.forEach(configure -> releaseHandler.submit(configure, () -> {
                 try {
                     resultList.add(ReleaseResult.success(configure));
                 } finally {
@@ -45,7 +42,7 @@ public class LiteRelease {
             System.exit(0);
         } else {
             Configure configure = getConfigure();
-            releasePlanner.submit(configure, () -> System.exit(0), () -> System.exit(0));
+            releaseHandler.submit(configure, () -> System.exit(0), () -> System.exit(0));
         }
     }
 
@@ -55,7 +52,14 @@ public class LiteRelease {
 
     private static List<Configure> parseConfigureList() throws IOException {
         Config config = getConfigure(Config.class);
-        return config.getConfigs();
+        List<Configure> configs = config.getConfigs();
+        configs.forEach(configure -> {
+            // configuration validation for Swagger batch release
+            if (configure.getSwagger() != null) {
+                Objects.requireNonNull(configure.getTag(), "[Configuration Validation] 'tag' can't be null! Swagger: " + configure.getSwagger());
+            }
+        });
+        return configs;
     }
 
     private static <T> T getConfigure(Class<T> clazz) throws IOException{
