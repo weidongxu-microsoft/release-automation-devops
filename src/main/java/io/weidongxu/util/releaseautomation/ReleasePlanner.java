@@ -286,10 +286,9 @@ public class ReleasePlanner {
             waitForChecks(pr, manager, prNumber, sdk);
 
             if (this.options.isBatch()) {
+                waitForSelfApproval(pr);
                 // make PR ready
                 Utils.prReady(HTTP_PIPELINE, GITHUB_TOKEN, prNumber);
-
-                waitForSelfApproval(pr);
             } else {
                 if (PROMPT_CONFIRMATION) {
                     Utils.promptMessageAndWait(IN, OUT,
@@ -306,8 +305,10 @@ public class ReleasePlanner {
 
             // merge PR
             pr.refresh();
-            pr.merge("", pr.getHead().getSha(), GHPullRequest.MergeMethod.SQUASH);
-            OUT.println("Pull request merged: " + prNumber);
+            if (!pr.isMerged()) {
+                pr.merge("", pr.getHead().getSha(), GHPullRequest.MergeMethod.SQUASH);
+                OUT.println("Pull request merged: " + prNumber);
+            }
         } else {
             throw new IllegalStateException("github pull request not found");
         }
@@ -317,7 +318,8 @@ public class ReleasePlanner {
         GHUser self = github.getMyself();
         while (true) {
             try {
-                if (pr.listReviews().toList().stream().noneMatch(review ->
+                pr.refresh();
+                if (pr.listReviews().toList().stream().anyMatch(review ->
                 {
                     try {
                         return review.getState() == GHPullRequestReviewState.APPROVED
@@ -326,9 +328,11 @@ public class ReleasePlanner {
                         throw new RuntimeException(e);
                     }
                 })) {
-                    LOGGER.info("waiting for self approval");
-                } else {
                     break;
+                } else if (pr.getState() == GHIssueState.CLOSED && !pr.isMerged()) {
+                    throw new IllegalStateException(String.format("PR[%d] is closed, cancel release", pr.getId()));
+                } else {
+                    LOGGER.info("PR[{}] waiting for self approval", pr.getId());
                 }
             } catch (IOException e) {
                 LOGGER.error(e.getMessage());
