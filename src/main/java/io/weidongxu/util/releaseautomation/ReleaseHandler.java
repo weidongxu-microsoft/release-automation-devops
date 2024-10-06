@@ -1,20 +1,25 @@
 package io.weidongxu.util.releaseautomation;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 
 public abstract class ReleaseHandler {
 
-    public static ReleaseHandler getReleaseHandler(Options options) throws IOException {
-        Objects.requireNonNull(options);
+    public static ReleaseHandler getReleaseHandler() throws IOException {
+        Options options = ConfigureHelper.getConfigure(Options.class);
         if (options.isBatch()) {
+            System.out.println("mode: batch");
             return new BatchReleaseHandler(options);
         } else {
+            System.out.println("mode: simple");
             return new SimpleReleaseHandler();
         }
     }
 
-    public abstract void submit(Configure configure, Runnable onSuccess, Runnable onFailure);
+    public abstract List<Configure> getTaskList() throws IOException;
+
+    public abstract List<ReleaseResult> release(List<Configure> tasks) throws Exception;
 
     public static class Options {
         private boolean batch;
