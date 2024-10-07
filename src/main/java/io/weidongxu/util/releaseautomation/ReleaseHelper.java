@@ -24,6 +24,10 @@ import com.azure.dev.models.TimelineRecord;
 import com.azure.dev.models.TimelineRecordState;
 import com.azure.dev.models.Variable;
 import com.azure.identity.AzureCliCredentialBuilder;
+import io.weidongxu.util.releaseautomation.store.LiteReleaseState;
+import io.weidongxu.util.releaseautomation.store.NoOpTaskStore;
+import io.weidongxu.util.releaseautomation.store.ReleaseTask;
+import io.weidongxu.util.releaseautomation.store.TaskStore;
 import org.kohsuke.github.GHIssueState;
 import org.kohsuke.github.GHPullRequest;
 import org.kohsuke.github.GHPullRequestReview;
@@ -40,6 +44,7 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -54,7 +59,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class ReleaseHelper {
-    private static final Logger LOGGER = LoggerFactory.getLogger(LiteRelease.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ReleaseHelper.class);
     private static final String USER = Configuration.getGlobalConfiguration().get("DEVOPS_USER");
     private static final String SPECS_PROJECT = "azure-rest-api-specs";
     private static final String PASS = Configuration.getGlobalConfiguration().get("DEVOPS_PAT");
@@ -91,6 +96,7 @@ public class ReleaseHelper {
     private boolean tagConfirmation;
     private boolean mergePrConfirmation;
     private boolean releaseConfirmation;
+    private TaskStore taskStore = new NoOpTaskStore();
 
     public void doRelease(Configure configure) throws Exception {
         String tspConfigUrl = configure.getTspConfig();
@@ -99,11 +105,20 @@ public class ReleaseHelper {
         Map<String, Variable> variables = new HashMap<>();
         Map<String, String> templateParameters = new HashMap<>();
 
+        ReleaseTask task = taskStore.create(new ReleaseTask(configure));
+
         if (!CoreUtils.isNullOrEmpty(tspConfigUrl)) { // generate from TypeSpec
-            TspConfig tspConfig = TspConfig.parse(specsRepository, HTTP_PIPELINE, tspConfigUrl);
-            sdk = tspConfig.getService();
-            if (CoreUtils.isNullOrEmpty(sdk)) {
-                throw new IllegalArgumentException("\"service\" must not be null if Generated from TypeSpec.");
+            TspConfig tspConfig = null;
+            try {
+                tspConfig = TspConfig.parse(specsRepository, HTTP_PIPELINE, tspConfigUrl);
+                sdk = tspConfig.getService();
+                if (CoreUtils.isNullOrEmpty(sdk)) {
+                    throw new IllegalArgumentException("\"service\" must not be null if Generated from TypeSpec.");
+                }
+            } catch (IllegalArgumentException e) {
+                task.setState(LiteReleaseState.VERIFICATION_FAILED);
+                taskStore.update(task);
+                throw e;
             }
             prKeyword = sdk;
             OUT.println("Releasing from TypeSpec, tsp-config file with commitID: \n" + tspConfig.getUrl());
@@ -128,56 +143,61 @@ public class ReleaseHelper {
             OUT.println("sdk: " + sdk);
 
             String tag = configure.getTag();
-            if (CoreUtils.isNullOrEmpty(tag)) {
-                ReadmeConfigure readmeConfigure = Utils.getReadmeConfigure(HTTP_PIPELINE, swagger);
-                readmeConfigure.print(OUT, 3);
+            try {
+                if (CoreUtils.isNullOrEmpty(tag)) {
+                    ReadmeConfigure readmeConfigure = Utils.getReadmeConfigure(HTTP_PIPELINE, swagger);
+                    readmeConfigure.print(OUT, 3);
 
-                tag = readmeConfigure.getDefaultTag();
-                if (tag == null) {
-                    tag = readmeConfigure.getTagConfigures().iterator().next().getTagName();
-                }
-                if (PREFER_STABLE_TAG) {
-                    if (tag.endsWith("-preview")) {
-                        Optional<String> stableTag = readmeConfigure.getTagConfigures().stream()
-                                .map(ReadmeConfigure.TagConfigure::getTagName)
-                                .filter(name -> !name.endsWith("-preview"))
-                                .findFirst();
-                        if (stableTag.isPresent()) {
-                            tag = stableTag.get();
+                    tag = readmeConfigure.getDefaultTag();
+                    if (tag == null) {
+                        tag = readmeConfigure.getTagConfigures().iterator().next().getTagName();
+                    }
+                    if (PREFER_STABLE_TAG) {
+                        if (tag.endsWith("-preview")) {
+                            Optional<String> stableTag = readmeConfigure.getTagConfigures().stream()
+                                    .map(ReadmeConfigure.TagConfigure::getTagName)
+                                    .filter(name -> !name.endsWith("-preview"))
+                                    .findFirst();
+                            if (stableTag.isPresent()) {
+                                tag = stableTag.get();
+                            }
+                        }
+                    }
+                    if (tagConfirmation) {
+                        OUT.println("choose tag: " + tag + ". Override?");
+                        Scanner s = new Scanner(IN);
+                        String input = s.nextLine();
+                        if (!input.trim().isEmpty()) {
+                            tag = input.trim();
                         }
                     }
                 }
-                if (tagConfirmation) {
-                    OUT.println("choose tag: " + tag + ". Override?");
-                    Scanner s = new Scanner(IN);
-                    String input = s.nextLine();
-                    if (!input.trim().isEmpty()) {
-                        tag = input.trim();
+                OUT.println("tag: " + tag);
+
+                if (configure.isAutoVersioning() && !tag.contains("-preview")) {
+                    ReadmeConfigure readmeConfigure = Utils.getReadmeConfigure(HTTP_PIPELINE, swagger);
+                    final String tagToRelease = tag;
+                    Optional<ReadmeConfigure.TagConfigure> tagConfigure = readmeConfigure.getTagConfigures().stream()
+                            .filter(t -> Objects.equals(tagToRelease, t.getTagName()))
+                            .findFirst();
+                    boolean previewInputFileInTag = tagConfigure.isPresent()
+                            && tagConfigure.get().getInputFiles().stream().anyMatch(f -> f.contains("/preview/"));
+
+                    if (!previewInputFileInTag) {
+                        // if stable is released, and current tag is also stable
+                        VersionConfigure.parseVersion(HTTP_PIPELINE, sdk).ifPresent(sdkVersion -> {
+                            if (sdkVersion.isStableReleased()) {
+                                configure.setAutoVersioning(false);
+                                configure.setVersion(sdkVersion.getCurrentVersionAsStable());
+
+                                OUT.println("release for stable: " + configure.getVersion());
+                            }
+                        });
                     }
                 }
-            }
-            OUT.println("tag: " + tag);
-
-            if (configure.isAutoVersioning() && !tag.contains("-preview")) {
-                ReadmeConfigure readmeConfigure = Utils.getReadmeConfigure(HTTP_PIPELINE, swagger);
-                final String tagToRelease = tag;
-                Optional<ReadmeConfigure.TagConfigure> tagConfigure = readmeConfigure.getTagConfigures().stream()
-                        .filter(t -> Objects.equals(tagToRelease, t.getTagName()))
-                        .findFirst();
-                boolean previewInputFileInTag = tagConfigure.isPresent()
-                        && tagConfigure.get().getInputFiles().stream().anyMatch(f -> f.contains("/preview/"));
-
-                if (!previewInputFileInTag) {
-                    // if stable is released, and current tag is also stable
-                    VersionConfigure.parseVersion(HTTP_PIPELINE, sdk).ifPresent(sdkVersion -> {
-                        if (sdkVersion.isStableReleased()) {
-                            configure.setAutoVersioning(false);
-                            configure.setVersion(sdkVersion.getCurrentVersionAsStable());
-
-                            OUT.println("release for stable: " + configure.getVersion());
-                        }
-                    });
-                }
+            } catch (MalformedURLException e) {
+                task.setState(LiteReleaseState.VERIFICATION_FAILED);
+                throw e;
             }
 
             variables.put("README", new Variable().withValue(swagger));
@@ -198,22 +218,22 @@ public class ReleaseHelper {
             templateParameters.put("RELEASE_TYPE", "Swagger");
         }
 
-        runLiteCodegen(manager, variables, templateParameters);
+        runLiteCodegen(manager, variables, templateParameters, task);
         OUT.println("wait 1 minutes");
         Thread.sleep(POLL_SHORT_INTERVAL_MINUTE * MILLISECOND_PER_MINUTE);
 
-        mergeGithubPR(sdkRepository, manager, prKeyword, sdk);
+        mergeGithubPR(sdkRepository, manager, prKeyword, sdk, task);
 
-        runLiteRelease(manager, sdk);
+        runLiteRelease(manager, sdk, task);
 
-        mergeGithubVersionPR(sdkRepository, sdk);
+        mergeGithubVersionPR(sdkRepository, sdk, task);
 
         String sdkMavenUrl = MAVEN_ARTIFACT_PATH_PREFIX + "azure-resourcemanager-" + sdk + "/1.0.0-beta.1/versions";
         Utils.openUrl(sdkMavenUrl);
     }
 
 
-    private void mergeGithubPR(GHRepository repository, DevManager manager, String prKeyword, String sdk) throws InterruptedException, IOException {
+    private void mergeGithubPR(GHRepository repository, DevManager manager, String prKeyword, String sdk, ReleaseTask task) throws InterruptedException, IOException {
         List<GHPullRequest> prs = repository.getPullRequests(GHIssueState.OPEN);
 
         GHPullRequest pr = prs.stream()
@@ -228,7 +248,13 @@ public class ReleaseHelper {
             Utils.openUrl(prUrl);
 
             // wait for CI
+            task.setState(LiteReleaseState.PR_DRAFT);
+            taskStore.update(task);
+
             waitForChecks(pr, manager, prNumber, sdk);
+
+            task.setState(LiteReleaseState.PR_CI_SUCCEEDED);
+            taskStore.update(task);
 
             if (mergePrConfirmation) {
                 Utils.promptMessageAndWait(IN, OUT,
@@ -237,13 +263,22 @@ public class ReleaseHelper {
                 // make PR ready
                 Utils.prReady(HTTP_PIPELINE, GITHUB_TOKEN, prNumber);
                 Thread.sleep(POLL_SHORT_INTERVAL_MINUTE * MILLISECOND_PER_MINUTE);
+                task.setState(LiteReleaseState.PR_READY);
+                taskStore.update(task);
 
                 // approve PR
                 GHPullRequestReview review = pr.createReview().event(GHPullRequestReviewEvent.APPROVE).create();
+                task.setState(LiteReleaseState.PR_APPROVED);
+                taskStore.update(task);
             } else {
-                waitForSelfApproval(pr);
+                waitForSelfApproval(pr, task);
+                task.setState(LiteReleaseState.PR_APPROVED);
+                taskStore.update(task);
+
                 // make PR ready
                 Utils.prReady(HTTP_PIPELINE, GITHUB_TOKEN, prNumber);
+                task.setState(LiteReleaseState.PR_READY);
+                taskStore.update(task);
             }
 
             // merge PR
@@ -252,12 +287,14 @@ public class ReleaseHelper {
                 pr.merge("", pr.getHead().getSha(), GHPullRequest.MergeMethod.SQUASH);
                 OUT.println("Pull request merged: " + prNumber);
             }
+            task.setState(LiteReleaseState.PR_MERGED);
+            taskStore.update(task);
         } else {
             throw new IllegalStateException("github pull request not found");
         }
     }
 
-    private void waitForSelfApproval(GHPullRequest pr) throws IOException, InterruptedException {
+    private void waitForSelfApproval(GHPullRequest pr, ReleaseTask task) throws IOException, InterruptedException {
         GHUser self = github.getMyself();
         while (true) {
             try {
@@ -273,6 +310,8 @@ public class ReleaseHelper {
                 })) {
                     break;
                 } else if (pr.getState() == GHIssueState.CLOSED && !pr.isMerged()) {
+                    task.setState(LiteReleaseState.PR_CLOSED);
+                    taskStore.update(task);
                     throw new IllegalStateException(String.format("PR[%d] is closed, cancel release", pr.getId()));
                 } else {
                     LOGGER.info("PR[{}] waiting for self approval", pr.getId());
@@ -284,7 +323,7 @@ public class ReleaseHelper {
         }
     }
 
-    private void runLiteRelease(DevManager manager, String sdk) throws InterruptedException {
+    private void runLiteRelease(DevManager manager, String sdk, ReleaseTask task) throws InterruptedException {
         List<String> releaseTemplateParameters = getReleaseTemplateParameters(manager, GITHUB_ORGANIZATION, GITHUB_PROJECT, sdk);
         if (releaseTemplateParameters.isEmpty()) {
             LOGGER.warn("release parameters not found in ci.yml");
@@ -315,6 +354,10 @@ public class ReleaseHelper {
             OUT.println("DevOps build: " + buildUrl);
             Utils.openUrl(buildUrl);
 
+            task.setState(LiteReleaseState.RELEASE_CI);
+            task.setTrackUrl(buildUrl);
+            taskStore.update(task);
+
             OUT.println("wait 5 minutes");
             Thread.sleep(POLL_LONG_INTERVAL_MINUTE * MILLISECOND_PER_MINUTE);
             // poll until approval is available
@@ -337,6 +380,9 @@ public class ReleaseHelper {
             Utils.approve(state.getApprovalIds(), manager, ORGANIZATION, PROJECT_INTERNAL);
             OUT.println("approved release: " + state.getName());
 
+            task.setState(LiteReleaseState.RELEASE_APPROVED);
+            taskStore.update(task);
+
             // poll until release completion
             while (state.getState() != TimelineRecordState.COMPLETED) {
                 OUT.println("wait 5 minutes");
@@ -345,12 +391,16 @@ public class ReleaseHelper {
                 Timeline timeline = manager.timelines().get(ORGANIZATION, PROJECT_INTERNAL, buildId, null);
                 state = getReleaseState(timeline);
             }
+
+            task.setState(LiteReleaseState.RELEASE_SUCCEEDED);
+            taskStore.update(task);
+
         } else {
             throw new IllegalStateException("release pipeline not found for sdk: " + sdk);
         }
     }
 
-    private static void mergeGithubVersionPR(GHRepository repository, String sdk) throws InterruptedException, IOException {
+    private void mergeGithubVersionPR(GHRepository repository, String sdk, ReleaseTask task) throws InterruptedException, IOException {
         List<GHPullRequest> prs = repository.getPullRequests(GHIssueState.OPEN);
 
         GHPullRequest pr = prs.stream()
@@ -368,6 +418,9 @@ public class ReleaseHelper {
             OUT.println("GitHub pull request: " + prUrl);
             Utils.openUrl(prUrl);
 
+            task.setState(LiteReleaseState.VERSION_PR);
+            taskStore.update(task);
+
             // wait for check enforcer
             waitForCommitSuccess(pr, prNumber);
 
@@ -379,6 +432,9 @@ public class ReleaseHelper {
                 pr.merge("", pr.getHead().getSha(), GHPullRequest.MergeMethod.SQUASH);
                 OUT.println("Pull request merged: " + prNumber);
             }
+
+            task.setState(LiteReleaseState.VERSION_PR_MERGED);
+            taskStore.update(task);
         } else {
             throw new IllegalStateException("github pull request not found");
         }
@@ -573,11 +629,15 @@ public class ReleaseHelper {
         }
     }
 
-    private static void runLiteCodegen(DevManager manager, Map<String, Variable> variables, Map<String, String> templateParameters) throws InterruptedException {
+    private void runLiteCodegen(DevManager manager, Map<String, Variable> variables, Map<String, String> templateParameters, ReleaseTask task) throws InterruptedException {
         // run pipeline
         Run run = manager.runs().runPipeline(ORGANIZATION, PROJECT_INTERNAL, LITE_CODEGEN_PIPELINE_ID,
                 new RunPipelineParameters().withVariables(variables).withTemplateParameters(templateParameters));
         int buildId = run.id();
+
+        task.setState(LiteReleaseState.LITE_GEN);
+        task.setTrackUrl(run.url());
+        taskStore.update(task);
 
         // wait for complete
         while (run.state() != RunState.COMPLETED && run.state() != RunState.CANCELING) {
@@ -594,6 +654,15 @@ public class ReleaseHelper {
             OUT.println("wait 1 minutes");
             Thread.sleep(POLL_SHORT_INTERVAL_MINUTE * MILLISECOND_PER_MINUTE);
         }
+
+        if (run.state() != RunState.COMPLETED) {
+            task.setState(LiteReleaseState.LITE_GEN_FAILED);
+            taskStore.update(task);
+            throw new IllegalArgumentException("lite gen failed for run: " + run.url());
+        }
+
+        task.setState(LiteReleaseState.LITE_GEN_SUCCEEDED);
+        taskStore.update(task);
     }
 
 
@@ -691,6 +760,12 @@ public class ReleaseHelper {
 
         public Builder withReleaseConfirmation() {
             releaseHelper.releaseConfirmation = true;
+            return this;
+        }
+
+        public Builder withTaskStore(TaskStore taskStore) {
+            Objects.requireNonNull(taskStore);
+            releaseHelper.taskStore = taskStore;
             return this;
         }
 

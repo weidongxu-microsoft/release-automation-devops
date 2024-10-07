@@ -6,6 +6,10 @@ import java.util.Objects;
 
 public abstract class ReleaseHandler {
 
+    public abstract List<Configure> getTaskList() throws IOException;
+
+    public abstract List<ReleaseResult> release(List<Configure> tasks) throws Exception;
+
     public static ReleaseHandler getReleaseHandler() throws IOException {
         Options options = ConfigureHelper.getConfigure(Options.class);
         if (options.isBatch()) {
@@ -16,10 +20,6 @@ public abstract class ReleaseHandler {
             return new SimpleReleaseHandler();
         }
     }
-
-    public abstract List<Configure> getTaskList() throws IOException;
-
-    public abstract List<ReleaseResult> release(List<Configure> tasks) throws Exception;
 
     public static class Options {
         private boolean batch;

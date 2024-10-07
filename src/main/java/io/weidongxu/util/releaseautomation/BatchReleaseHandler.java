@@ -1,6 +1,8 @@
 package io.weidongxu.util.releaseautomation;
 
 import io.netty.util.concurrent.DefaultThreadFactory;
+import io.weidongxu.util.releaseautomation.store.FileTaskStore;
+import io.weidongxu.util.releaseautomation.store.TaskStore;
 
 import java.io.IOException;
 import java.util.List;
@@ -13,9 +15,12 @@ import java.util.concurrent.Executors;
 public class BatchReleaseHandler extends ReleaseHandler {
     private final ExecutorService executor;
     private final ReleaseHelper releaseHelper;
+    private final TaskStore taskStore;
+
     protected BatchReleaseHandler(Options options) throws IOException {
         this.executor = Executors.newFixedThreadPool(options.getParallelism(), new DefaultThreadFactory("batch-release-handler"));
-        this.releaseHelper = new ReleaseHelper.Builder().build();
+        this.taskStore = new FileTaskStore();
+        this.releaseHelper = new ReleaseHelper.Builder().withTaskStore(taskStore).build();
     }
 
     @Override
@@ -46,6 +51,7 @@ public class BatchReleaseHandler extends ReleaseHandler {
             }
         }));
         cdl.await();
+        taskStore.close();
         return resultList;
     }
 
