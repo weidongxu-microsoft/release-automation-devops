@@ -249,6 +249,7 @@ public class ReleaseHelper {
 
             // wait for CI
             task.setState(LiteReleaseState.PR_DRAFT);
+            task.setTrackUrl(prUrl);
             taskStore.update(task);
 
             waitForChecks(pr, manager, prNumber, sdk);
@@ -350,7 +351,7 @@ public class ReleaseHelper {
                     new RunPipelineParameters().withTemplateParameters(templateParameters));
             int buildId = run.id();
 
-            String buildUrl = "https://dev.azure.com/azure-sdk/internal/_build/results?buildId=" + buildId;
+            String buildUrl = getBuildUrl(buildId);
             OUT.println("DevOps build: " + buildUrl);
             Utils.openUrl(buildUrl);
 
@@ -400,6 +401,11 @@ public class ReleaseHelper {
         }
     }
 
+    private static String getBuildUrl(int buildId) {
+        String buildUrl = "https://dev.azure.com/azure-sdk/internal/_build/results?buildId=" + buildId;
+        return buildUrl;
+    }
+
     private void mergeGithubVersionPR(GHRepository repository, String sdk, ReleaseTask task) throws InterruptedException, IOException {
         List<GHPullRequest> prs = repository.getPullRequests(GHIssueState.OPEN);
 
@@ -419,6 +425,7 @@ public class ReleaseHelper {
             Utils.openUrl(prUrl);
 
             task.setState(LiteReleaseState.VERSION_PR);
+            task.setTrackUrl(prUrl);
             taskStore.update(task);
 
             // wait for check enforcer
@@ -636,7 +643,7 @@ public class ReleaseHelper {
         int buildId = run.id();
 
         task.setState(LiteReleaseState.LITE_GEN);
-        task.setTrackUrl(run.url());
+        task.setTrackUrl(getBuildUrl(buildId));
         taskStore.update(task);
 
         // wait for complete
