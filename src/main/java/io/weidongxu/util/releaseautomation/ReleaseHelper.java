@@ -197,6 +197,7 @@ public class ReleaseHelper {
                 }
             } catch (MalformedURLException e) {
                 task.setState(LiteReleaseState.VERIFICATION_FAILED);
+                taskStore.update(task);
                 throw e;
             }
 
