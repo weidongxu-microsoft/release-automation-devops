@@ -11,7 +11,7 @@ import java.io.IOException;
 public class FileStoreTests {
 
     @Test
-    public void testFileStore() throws IOException {
+    public void testFileStore() {
         FileTaskStore taskStore = new FileTaskStore();
         Configure configure = new Configure();
         configure.setSwagger("testSwagger");

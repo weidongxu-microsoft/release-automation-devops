@@ -23,15 +23,14 @@ public class FileTaskStore implements TaskStore {
     private volatile boolean closed;
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
     private final Map<String, ReleaseTask> taskMap = new HashMap<>();
-    private final FileWriter fileWriter;
+    private final File logFile;
     private final ScheduledExecutorService fileSync;
 
-    public FileTaskStore() throws IOException {
+    public FileTaskStore() {
         new File("logs").mkdirs();
-        File file = new File(String.format("logs/%s.log", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss"))));
+        logFile = new File("logs", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss")) + ".log");
         fileSync = Executors.newScheduledThreadPool(1, new DefaultThreadFactory("file-sync"));
         fileSync.scheduleAtFixedRate(dumpToFile(), 30, 10, TimeUnit.SECONDS);
-        fileWriter = new FileWriter(file);
     }
 
     @Override
@@ -80,7 +79,7 @@ public class FileTaskStore implements TaskStore {
                         sb.append(releaseTask);
                         sb.append("\n");
                     });
-                    try {
+                    try (FileWriter fileWriter = new FileWriter(logFile)) {
                         fileWriter.write(sb.toString());
                         fileWriter.flush();
                     } catch (IOException e) {
