@@ -107,130 +107,134 @@ public class ReleaseHelper {
 
         ReleaseTask task = taskStore.create(new ReleaseTask(configure));
 
-        if (!CoreUtils.isNullOrEmpty(tspConfigUrl)) { // generate from TypeSpec
-            TspConfig tspConfig = null;
-            try {
+        try {
+            if (!CoreUtils.isNullOrEmpty(tspConfigUrl)) { // generate from TypeSpec
+                TspConfig tspConfig = null;
                 tspConfig = TspConfig.parse(specsRepository, HTTP_PIPELINE, tspConfigUrl);
                 sdk = tspConfig.getService();
                 if (CoreUtils.isNullOrEmpty(sdk)) {
-                    throw new IllegalArgumentException("\"service\" must not be null if Generated from TypeSpec.");
+                    throw new ReleaseException(LiteReleaseState.VERIFICATION_FAILED, "\"service\" must not be null if Generated from TypeSpec.");
                 }
-            } catch (IllegalArgumentException e) {
-                task.setState(LiteReleaseState.VERIFICATION_FAILED);
-                taskStore.update(task);
-                throw e;
-            }
-            prKeyword = sdk;
-            OUT.println("Releasing from TypeSpec, tsp-config file with commitID: \n" + tspConfig.getUrl());
-            OUT.println("sdk: " + sdk);
-            OUT.println("package-dir: " + tspConfig.getPackageDir());
+                prKeyword = sdk;
+                OUT.println("Releasing from TypeSpec, tsp-config file with commitID: \n" + tspConfig.getUrl());
+                OUT.println("sdk: " + sdk);
+                OUT.println("package-dir: " + tspConfig.getPackageDir());
 
-            variables.put("README", new Variable().withValue(sdk));
-            variables.put("TSP_CONFIG", new Variable().withValue(tspConfig.getUrl()));
-            if (!CoreUtils.isNullOrEmpty(configure.getVersion())) {
-                variables.put("VERSION", new Variable().withValue(configure.getVersion()));
-            }
-            templateParameters.put("RELEASE_TYPE", "TypeSpec");
-        } else { // generate from Swagger
-            String swagger = configure.getSwagger();
-            prKeyword = swagger;
-            sdk = getSdkName(swagger);
-            if (!CoreUtils.isNullOrEmpty(configure.getService())) {
-                sdk = configure.getService();
-            }
+                variables.put("README", new Variable().withValue(sdk));
+                variables.put("TSP_CONFIG", new Variable().withValue(tspConfig.getUrl()));
+                if (!CoreUtils.isNullOrEmpty(configure.getVersion())) {
+                    variables.put("VERSION", new Variable().withValue(configure.getVersion()));
+                }
+                templateParameters.put("RELEASE_TYPE", "TypeSpec");
+            } else { // generate from Swagger
+                String swagger = configure.getSwagger();
+                prKeyword = swagger;
+                sdk = getSdkName(swagger);
+                if (!CoreUtils.isNullOrEmpty(configure.getService())) {
+                    sdk = configure.getService();
+                }
 
-            OUT.println("swagger: " + swagger);
-            OUT.println("sdk: " + sdk);
+                OUT.println("swagger: " + swagger);
+                OUT.println("sdk: " + sdk);
 
-            String tag = configure.getTag();
-            try {
-                if (CoreUtils.isNullOrEmpty(tag)) {
-                    ReadmeConfigure readmeConfigure = Utils.getReadmeConfigure(HTTP_PIPELINE, swagger);
-                    readmeConfigure.print(OUT, 3);
+                String tag = configure.getTag();
+                try {
+                    if (CoreUtils.isNullOrEmpty(tag)) {
+                        ReadmeConfigure readmeConfigure = Utils.getReadmeConfigure(HTTP_PIPELINE, swagger);
+                        readmeConfigure.print(OUT, 3);
 
-                    tag = readmeConfigure.getDefaultTag();
-                    if (tag == null) {
-                        tag = readmeConfigure.getTagConfigures().iterator().next().getTagName();
-                    }
-                    if (PREFER_STABLE_TAG) {
-                        if (tag.endsWith("-preview")) {
-                            Optional<String> stableTag = readmeConfigure.getTagConfigures().stream()
-                                    .map(ReadmeConfigure.TagConfigure::getTagName)
-                                    .filter(name -> !name.endsWith("-preview"))
-                                    .findFirst();
-                            if (stableTag.isPresent()) {
-                                tag = stableTag.get();
+                        tag = readmeConfigure.getDefaultTag();
+                        if (tag == null) {
+                            tag = readmeConfigure.getTagConfigures().iterator().next().getTagName();
+                        }
+                        if (PREFER_STABLE_TAG) {
+                            if (tag.endsWith("-preview")) {
+                                Optional<String> stableTag = readmeConfigure.getTagConfigures().stream()
+                                        .map(ReadmeConfigure.TagConfigure::getTagName)
+                                        .filter(name -> !name.endsWith("-preview"))
+                                        .findFirst();
+                                if (stableTag.isPresent()) {
+                                    tag = stableTag.get();
+                                }
+                            }
+                        }
+                        if (tagConfirmation) {
+                            OUT.println("choose tag: " + tag + ". Override?");
+                            Scanner s = new Scanner(IN);
+                            String input = s.nextLine();
+                            if (!input.trim().isEmpty()) {
+                                tag = input.trim();
                             }
                         }
                     }
-                    if (tagConfirmation) {
-                        OUT.println("choose tag: " + tag + ". Override?");
-                        Scanner s = new Scanner(IN);
-                        String input = s.nextLine();
-                        if (!input.trim().isEmpty()) {
-                            tag = input.trim();
+                    OUT.println("tag: " + tag);
+
+                    if (configure.isAutoVersioning() && !tag.contains("-preview")) {
+                        ReadmeConfigure readmeConfigure = Utils.getReadmeConfigure(HTTP_PIPELINE, swagger);
+                        final String tagToRelease = tag;
+                        Optional<ReadmeConfigure.TagConfigure> tagConfigure = readmeConfigure.getTagConfigures().stream()
+                                .filter(t -> Objects.equals(tagToRelease, t.getTagName()))
+                                .findFirst();
+                        boolean previewInputFileInTag = tagConfigure.isPresent()
+                                && tagConfigure.get().getInputFiles().stream().anyMatch(f -> f.contains("/preview/"));
+
+                        if (!previewInputFileInTag) {
+                            // if stable is released, and current tag is also stable
+                            VersionConfigure.parseVersion(HTTP_PIPELINE, sdk).ifPresent(sdkVersion -> {
+                                if (sdkVersion.isStableReleased()) {
+                                    configure.setAutoVersioning(false);
+                                    configure.setVersion(sdkVersion.getCurrentVersionAsStable());
+
+                                    OUT.println("release for stable: " + configure.getVersion());
+                                }
+                            });
                         }
                     }
+                } catch (MalformedURLException e) {
+                    throw new ReleaseException(LiteReleaseState.VERIFICATION_FAILED, e);
                 }
-                OUT.println("tag: " + tag);
 
-                if (configure.isAutoVersioning() && !tag.contains("-preview")) {
-                    ReadmeConfigure readmeConfigure = Utils.getReadmeConfigure(HTTP_PIPELINE, swagger);
-                    final String tagToRelease = tag;
-                    Optional<ReadmeConfigure.TagConfigure> tagConfigure = readmeConfigure.getTagConfigures().stream()
-                            .filter(t -> Objects.equals(tagToRelease, t.getTagName()))
-                            .findFirst();
-                    boolean previewInputFileInTag = tagConfigure.isPresent()
-                            && tagConfigure.get().getInputFiles().stream().anyMatch(f -> f.contains("/preview/"));
-
-                    if (!previewInputFileInTag) {
-                        // if stable is released, and current tag is also stable
-                        VersionConfigure.parseVersion(HTTP_PIPELINE, sdk).ifPresent(sdkVersion -> {
-                            if (sdkVersion.isStableReleased()) {
-                                configure.setAutoVersioning(false);
-                                configure.setVersion(sdkVersion.getCurrentVersionAsStable());
-
-                                OUT.println("release for stable: " + configure.getVersion());
-                            }
-                        });
-                    }
+                variables.put("README", new Variable().withValue(swagger));
+                variables.put("TAG", new Variable().withValue(tag));
+                if (!configure.isAutoVersioning()) {
+                    variables.put("VERSION", new Variable().withValue(configure.getVersion()));
                 }
-            } catch (MalformedURLException e) {
-                task.setState(LiteReleaseState.VERIFICATION_FAILED);
-                taskStore.update(task);
-                throw e;
+                if (!CoreUtils.isNullOrEmpty(configure.getService())) {
+                    variables.put("SERVICE", new Variable().withValue(configure.getService()));
+                }
+                if (!CoreUtils.isNullOrEmpty(configure.getSuffix())) {
+                    variables.put("SUFFIX", new Variable().withValue(configure.getSuffix()));
+                }
+                if (configure.getTests() == Boolean.TRUE) {
+                    variables.put("AUTOREST_OPTIONS", new Variable().withValue("--generate-tests"));
+                }
+
+                templateParameters.put("RELEASE_TYPE", "Swagger");
             }
 
-            variables.put("README", new Variable().withValue(swagger));
-            variables.put("TAG", new Variable().withValue(tag));
-            if (!configure.isAutoVersioning()) {
-                variables.put("VERSION", new Variable().withValue(configure.getVersion()));
-            }
-            if (!CoreUtils.isNullOrEmpty(configure.getService())) {
-                variables.put("SERVICE", new Variable().withValue(configure.getService()));
-            }
-            if (!CoreUtils.isNullOrEmpty(configure.getSuffix())) {
-                variables.put("SUFFIX", new Variable().withValue(configure.getSuffix()));
-            }
-            if (configure.getTests() == Boolean.TRUE) {
-                variables.put("AUTOREST_OPTIONS", new Variable().withValue("--generate-tests"));
-            }
+            runLiteCodegen(manager, variables, templateParameters, task);
+            OUT.println("wait 1 minutes");
+            Thread.sleep(POLL_SHORT_INTERVAL_MINUTE * MILLISECOND_PER_MINUTE);
 
-            templateParameters.put("RELEASE_TYPE", "Swagger");
+            mergeGithubPR(sdkRepository, manager, prKeyword, sdk, task);
+
+            runLiteRelease(manager, sdk, task);
+
+            mergeGithubVersionPR(sdkRepository, sdk, task);
+
+            String sdkMavenUrl = MAVEN_ARTIFACT_PATH_PREFIX + "azure-resourcemanager-" + sdk + "/1.0.0-beta.1/versions";
+            Utils.openUrl(sdkMavenUrl);
+        } catch (ReleaseException e) {
+            LOGGER.error("release exception", e);
+            task.setState(e.getState());
+            task.setErrorMessage(e.getMessage());
+        } catch (Exception e) {
+            LOGGER.error("lite release failed", e);
+            task.setState(LiteReleaseState.UNKNOWN_EXCEPTION);
+            task.setErrorMessage(e.getMessage());
+        } finally {
+            taskStore.update(task);
         }
-
-        runLiteCodegen(manager, variables, templateParameters, task);
-        OUT.println("wait 1 minutes");
-        Thread.sleep(POLL_SHORT_INTERVAL_MINUTE * MILLISECOND_PER_MINUTE);
-
-        mergeGithubPR(sdkRepository, manager, prKeyword, sdk, task);
-
-        runLiteRelease(manager, sdk, task);
-
-        mergeGithubVersionPR(sdkRepository, sdk, task);
-
-        String sdkMavenUrl = MAVEN_ARTIFACT_PATH_PREFIX + "azure-resourcemanager-" + sdk + "/1.0.0-beta.1/versions";
-        Utils.openUrl(sdkMavenUrl);
     }
 
 
@@ -274,25 +278,32 @@ public class ReleaseHelper {
                 taskStore.update(task);
             } else {
                 waitForSelfApproval(pr, task);
-                task.setState(LiteReleaseState.PR_APPROVED);
-                taskStore.update(task);
+                if (!pr.isMerged()) {
+                    task.setState(LiteReleaseState.PR_APPROVED);
+                    taskStore.update(task);
 
-                // make PR ready
-                Utils.prReady(HTTP_PIPELINE, GITHUB_TOKEN, prNumber);
-                task.setState(LiteReleaseState.PR_READY);
-                taskStore.update(task);
+                    // make PR ready
+                    Utils.prReady(HTTP_PIPELINE, GITHUB_TOKEN, prNumber);
+                    Thread.sleep(POLL_SHORT_INTERVAL_MINUTE * MILLISECOND_PER_MINUTE);
+                    task.setState(LiteReleaseState.PR_READY);
+                    taskStore.update(task);
+                }
             }
 
             // merge PR
             pr.refresh();
             if (!pr.isMerged()) {
-                pr.merge("", pr.getHead().getSha(), GHPullRequest.MergeMethod.SQUASH);
+                try {
+                    pr.merge("", pr.getHead().getSha(), GHPullRequest.MergeMethod.SQUASH);
+                } catch (Exception e) {
+                    throw new ReleaseException(LiteReleaseState.PR_MERGE_FAILED, e);
+                }
                 OUT.println("Pull request merged: " + prNumber);
             }
             task.setState(LiteReleaseState.PR_MERGED);
             taskStore.update(task);
         } else {
-            throw new IllegalStateException("github pull request not found");
+            throw new ReleaseException(LiteReleaseState.LITE_GEN_FAILED, "github pull request not found");
         }
     }
 
@@ -314,9 +325,13 @@ public class ReleaseHelper {
                 } else if (pr.getState() == GHIssueState.CLOSED && !pr.isMerged()) {
                     task.setState(LiteReleaseState.PR_CLOSED);
                     taskStore.update(task);
-                    throw new IllegalStateException(String.format("PR[%d] is closed, cancel release", pr.getId()));
+                    throw new IllegalStateException(String.format("PR[%d] is closed, cancel release", pr.getNumber()));
+                } else if (pr.isMerged()) {
+                    task.setState(LiteReleaseState.PR_MERGED);
+                    taskStore.update(task);
+                    break;
                 } else {
-                    LOGGER.info("PR[{}] waiting for self approval", pr.getId());
+                    LOGGER.info("PR[{}] waiting for self approval", pr.getNumber());
                 }
             } catch (IOException e) {
                 LOGGER.error(e.getMessage());
@@ -398,13 +413,12 @@ public class ReleaseHelper {
             taskStore.update(task);
 
         } else {
-            throw new IllegalStateException("release pipeline not found for sdk: " + sdk);
+            throw new ReleaseException(LiteReleaseState.RELEASE_CI_NOT_FOUND, "release ci not found");
         }
     }
 
     private static String getBuildUrl(int buildId) {
-        String buildUrl = "https://dev.azure.com/azure-sdk/internal/_build/results?buildId=" + buildId;
-        return buildUrl;
+        return "https://dev.azure.com/azure-sdk/internal/_build/results?buildId=" + buildId;
     }
 
     private void mergeGithubVersionPR(GHRepository repository, String sdk, ReleaseTask task) throws InterruptedException, IOException {
@@ -444,7 +458,7 @@ public class ReleaseHelper {
             task.setState(LiteReleaseState.VERSION_PR_MERGED);
             taskStore.update(task);
         } else {
-            throw new IllegalStateException("github pull request not found");
+            throw new ReleaseException(LiteReleaseState.VERSION_PR_NOT_FOUND);
         }
     }
 
@@ -462,7 +476,7 @@ public class ReleaseHelper {
             OUT.println("release: " + state.getName() + ", state: " + state.getState());
             return state;
         } else {
-            throw new IllegalStateException("release candidate not correct");
+            throw new ReleaseException(LiteReleaseState.MULTIPLE_RELEASE_ARTIFACTS);
         }
     }
 
@@ -639,8 +653,13 @@ public class ReleaseHelper {
 
     private void runLiteCodegen(DevManager manager, Map<String, Variable> variables, Map<String, String> templateParameters, ReleaseTask task) throws InterruptedException {
         // run pipeline
-        Run run = manager.runs().runPipeline(ORGANIZATION, PROJECT_INTERNAL, LITE_CODEGEN_PIPELINE_ID,
-                new RunPipelineParameters().withVariables(variables).withTemplateParameters(templateParameters));
+        Run run;
+        try {
+            run = manager.runs().runPipeline(ORGANIZATION, PROJECT_INTERNAL, LITE_CODEGEN_PIPELINE_ID,
+                    new RunPipelineParameters().withVariables(variables).withTemplateParameters(templateParameters));
+        } catch (Exception e) {
+            throw new ReleaseException(LiteReleaseState.LITE_GEN_FAILED, e);
+        }
         int buildId = run.id();
 
         task.setState(LiteReleaseState.LITE_GEN);
@@ -655,7 +674,7 @@ public class ReleaseHelper {
                 run = manager.runs().get(ORGANIZATION, PROJECT_INTERNAL, LITE_CODEGEN_PIPELINE_ID, buildId);
             } catch (Exception e) {
                 LOGGER.warn("error getting codegen run state, retrying...");
-                Thread.sleep(1000);
+                Thread.sleep(POLL_SHORT_INTERVAL_MINUTE * MILLISECOND_PER_MINUTE);
                 continue;
             }
 
@@ -664,9 +683,7 @@ public class ReleaseHelper {
         }
 
         if (run.state() != RunState.COMPLETED) {
-            task.setState(LiteReleaseState.LITE_GEN_FAILED);
-            taskStore.update(task);
-            throw new IllegalArgumentException("lite gen failed for run: " + run.url());
+            throw new ReleaseException(LiteReleaseState.LITE_GEN_FAILED, "lite gen failed for run: " + run.url());
         }
 
         task.setState(LiteReleaseState.LITE_GEN_SUCCEEDED);

@@ -8,8 +8,10 @@ import java.util.UUID;
 public class ReleaseTask {
     private String id;
     private String details;
+    private LiteReleaseState prevState;
     private LiteReleaseState state;
     private String trackUrl;
+    private String errorMessage;
 
     public ReleaseTask(Configure configure) {
         Objects.requireNonNull(configure);
@@ -30,6 +32,7 @@ public class ReleaseTask {
     }
 
     public void setState(LiteReleaseState state) {
+        this.prevState = this.state;
         this.state = state;
     }
 
@@ -41,12 +44,22 @@ public class ReleaseTask {
         this.trackUrl = trackUrl;
     }
 
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
+
     @Override
     public String toString() {
         return "ReleaseTask{" +
                 "details='" + details + '\'' +
                 ", state=" + state +
                 ", trackUrl='" + trackUrl + '\'' +
+                ", prevState=" + prevState +
+                ", errorMessage='" + errorMessage + '\'' +
                 '}';
     }
 }

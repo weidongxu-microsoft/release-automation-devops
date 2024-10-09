@@ -6,8 +6,6 @@ import io.weidongxu.util.releaseautomation.store.LiteReleaseState;
 import io.weidongxu.util.releaseautomation.store.ReleaseTask;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-
 public class FileStoreTests {
 
     @Test
