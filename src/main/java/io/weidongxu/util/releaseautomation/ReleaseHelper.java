@@ -290,11 +290,14 @@ public class ReleaseHelper {
                 }
             }
 
-            // merge PR
-            pr.refresh();
             if (!pr.isMerged()) {
                 try {
-                    pr.merge("", pr.getHead().getSha(), GHPullRequest.MergeMethod.SQUASH);
+                    // merge PR
+                    // synchronize to sync base branch change for the PR, since multiple PRs may experience merging at the same time
+                    synchronized (this) {
+                        pr.refresh();
+                        pr.merge("", pr.getHead().getSha(), GHPullRequest.MergeMethod.SQUASH);
+                    }
                 } catch (Exception e) {
                     throw new ReleaseException(LiteReleaseState.PR_MERGE_FAILED, e);
                 }
