@@ -290,6 +290,7 @@ public class ReleaseHelper {
                 }
             }
 
+            pr.refresh();
             if (!pr.isMerged()) {
                 try {
                     // merge PR
@@ -454,7 +455,10 @@ public class ReleaseHelper {
                 OUT.println("Pull request auto merged: " + prNumber);
             } else {
                 // merge PR
-                pr.merge("", pr.getHead().getSha(), GHPullRequest.MergeMethod.SQUASH);
+                synchronized (this) {
+                    pr.refresh();
+                    pr.merge("", pr.getHead().getSha(), GHPullRequest.MergeMethod.SQUASH);
+                }
                 OUT.println("Pull request merged: " + prNumber);
             }
 
