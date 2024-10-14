@@ -15,7 +15,7 @@ public class FileStoreTests {
         configure.setSwagger("testSwagger");
         configure.setTag("test-tag");
         ReleaseTask task = new ReleaseTask(configure);
-        task.setState(LiteReleaseState.VERSION_PR_MERGED);
+        task.setState(LiteReleaseState.SUCCEEDED);
         taskStore.create(task);
         taskStore.close();
     }

@@ -253,13 +253,13 @@ public class ReleaseHelper {
             Utils.openUrl(prUrl);
 
             // wait for CI
-            task.setState(LiteReleaseState.PR_DRAFT);
+            task.setState(LiteReleaseState.CODE_GEN_PR_DRAFT);
             task.setTrackUrl(prUrl);
             taskStore.update(task);
 
             waitForChecks(pr, manager, prNumber, sdk);
 
-            task.setState(LiteReleaseState.PR_CI_SUCCEEDED);
+            task.setState(LiteReleaseState.CODE_GEN_PR_CI_SUCCEEDED);
             taskStore.update(task);
 
             if (mergePrConfirmation) {
@@ -269,23 +269,23 @@ public class ReleaseHelper {
                 // make PR ready
                 Utils.prReady(HTTP_PIPELINE, GITHUB_TOKEN, prNumber);
                 Thread.sleep(POLL_SHORT_INTERVAL_MINUTE * MILLISECOND_PER_MINUTE);
-                task.setState(LiteReleaseState.PR_READY);
+                task.setState(LiteReleaseState.CODE_GEN_PR_READY);
                 taskStore.update(task);
 
                 // approve PR
                 GHPullRequestReview review = pr.createReview().event(GHPullRequestReviewEvent.APPROVE).create();
-                task.setState(LiteReleaseState.PR_APPROVED);
+                task.setState(LiteReleaseState.CODE_GEN_PR_APPROVED);
                 taskStore.update(task);
             } else {
                 waitForSelfApproval(pr, task);
                 if (!pr.isMerged()) {
-                    task.setState(LiteReleaseState.PR_APPROVED);
+                    task.setState(LiteReleaseState.CODE_GEN_PR_APPROVED);
                     taskStore.update(task);
 
                     // make PR ready
                     Utils.prReady(HTTP_PIPELINE, GITHUB_TOKEN, prNumber);
                     Thread.sleep(POLL_SHORT_INTERVAL_MINUTE * MILLISECOND_PER_MINUTE);
-                    task.setState(LiteReleaseState.PR_READY);
+                    task.setState(LiteReleaseState.CODE_GEN_PR_READY);
                     taskStore.update(task);
                 }
             }
@@ -300,14 +300,14 @@ public class ReleaseHelper {
                         pr.merge("", pr.getHead().getSha(), GHPullRequest.MergeMethod.SQUASH);
                     }
                 } catch (Exception e) {
-                    throw new ReleaseException(LiteReleaseState.PR_MERGE_FAILED, e);
+                    throw new ReleaseException(LiteReleaseState.CODE_GEN_PR_MERGE_FAILED, e);
                 }
                 OUT.println("Pull request merged: " + prNumber);
             }
-            task.setState(LiteReleaseState.PR_MERGED);
+            task.setState(LiteReleaseState.CODE_GEN_PR_MERGED);
             taskStore.update(task);
         } else {
-            throw new ReleaseException(LiteReleaseState.LITE_GEN_FAILED, "github pull request not found");
+            throw new ReleaseException(LiteReleaseState.CODE_GEN_FAILED, "github pull request not found");
         }
     }
 
@@ -327,11 +327,11 @@ public class ReleaseHelper {
                 })) {
                     break;
                 } else if (pr.getState() == GHIssueState.CLOSED && !pr.isMerged()) {
-                    task.setState(LiteReleaseState.PR_CLOSED);
+                    task.setState(LiteReleaseState.CODE_GEN_PR_CLOSED);
                     taskStore.update(task);
                     throw new IllegalStateException(String.format("PR[%d] is closed, cancel release", pr.getNumber()));
                 } else if (pr.isMerged()) {
-                    task.setState(LiteReleaseState.PR_MERGED);
+                    task.setState(LiteReleaseState.CODE_GEN_PR_MERGED);
                     taskStore.update(task);
                     break;
                 } else {
@@ -443,7 +443,7 @@ public class ReleaseHelper {
             OUT.println("GitHub pull request: " + prUrl);
             Utils.openUrl(prUrl);
 
-            task.setState(LiteReleaseState.VERSION_PR);
+            task.setState(LiteReleaseState.VERSION_PR_APPROVED);
             task.setTrackUrl(prUrl);
             taskStore.update(task);
 
@@ -462,7 +462,7 @@ public class ReleaseHelper {
                 OUT.println("Pull request merged: " + prNumber);
             }
 
-            task.setState(LiteReleaseState.VERSION_PR_MERGED);
+            task.setState(LiteReleaseState.SUCCEEDED);
             taskStore.update(task);
         } else {
             throw new ReleaseException(LiteReleaseState.VERSION_PR_NOT_FOUND);
@@ -665,11 +665,11 @@ public class ReleaseHelper {
             run = manager.runs().runPipeline(ORGANIZATION, PROJECT_INTERNAL, LITE_CODEGEN_PIPELINE_ID,
                     new RunPipelineParameters().withVariables(variables).withTemplateParameters(templateParameters));
         } catch (Exception e) {
-            throw new ReleaseException(LiteReleaseState.LITE_GEN_FAILED, e);
+            throw new ReleaseException(LiteReleaseState.CODE_GEN_FAILED, e);
         }
         int buildId = run.id();
 
-        task.setState(LiteReleaseState.LITE_GEN);
+        task.setState(LiteReleaseState.CODE_GEN_PIPELINE);
         task.setTrackUrl(getBuildUrl(buildId));
         taskStore.update(task);
 
@@ -690,10 +690,10 @@ public class ReleaseHelper {
         }
 
         if (run.state() != RunState.COMPLETED) {
-            throw new ReleaseException(LiteReleaseState.LITE_GEN_FAILED, "lite gen failed for run: " + run.url());
+            throw new ReleaseException(LiteReleaseState.CODE_GEN_FAILED, "lite gen failed for run: " + run.url());
         }
 
-        task.setState(LiteReleaseState.LITE_GEN_SUCCEEDED);
+        task.setState(LiteReleaseState.CODE_GEN_SUCCEEDED);
         taskStore.update(task);
     }
 
