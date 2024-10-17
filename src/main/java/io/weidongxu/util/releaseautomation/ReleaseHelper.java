@@ -290,24 +290,42 @@ public class ReleaseHelper {
                 }
             }
 
-            pr.refresh();
-            if (!pr.isMerged()) {
-                try {
-                    // merge PR
-                    // synchronize to sync base branch change for the PR, since multiple PRs may experience merging at the same time
-                    synchronized (this) {
-                        pr.refresh();
-                        pr.merge("", pr.getHead().getSha(), GHPullRequest.MergeMethod.SQUASH);
-                    }
-                } catch (Exception e) {
-                    throw new ReleaseException(LiteReleaseState.CODE_GEN_PR_MERGE_FAILED, e);
-                }
-                OUT.println("Pull request merged: " + prNumber);
-            }
+            mergePR(pr, LiteReleaseState.CODE_GEN_PR_MERGE_FAILED);
             task.setState(LiteReleaseState.CODE_GEN_PR_MERGED);
             taskStore.update(task);
         } else {
             throw new ReleaseException(LiteReleaseState.CODE_GEN_FAILED, "github pull request not found");
+        }
+    }
+
+    private void mergePR(GHPullRequest pr, LiteReleaseState failState) throws IOException {
+        pr.refresh();
+        String baseBranchSha = pr.getBase().getSha();
+        if (!pr.isMerged()) {
+            try {
+                // merge PR
+                // synchronize to sync base branch change for the PR, since multiple PRs may experience merging at the same time
+                synchronized (this) {
+                    pr.refresh();
+                    boolean prMerged = false;
+                    while (!prMerged) {
+                        try {
+                            pr.merge("", pr.getHead().getSha(), GHPullRequest.MergeMethod.SQUASH);
+                            prMerged = true;
+                        } catch (Exception e) {
+                            if (e.getMessage() != null && e.getMessage().contains("\"405\"")) {
+                                Thread.sleep(1000);
+                            } else {
+                                throw e;
+                            }
+                        }
+
+                    }
+                }
+            } catch (Exception e) {
+                throw new ReleaseException(failState, e);
+            }
+            OUT.println("Pull request merged: " + pr.getNumber());
         }
     }
 
@@ -454,12 +472,7 @@ public class ReleaseHelper {
             if (Boolean.TRUE.equals(pr.isMerged())) {
                 OUT.println("Pull request auto merged: " + prNumber);
             } else {
-                // merge PR
-                synchronized (this) {
-                    pr.refresh();
-                    pr.merge("", pr.getHead().getSha(), GHPullRequest.MergeMethod.SQUASH);
-                }
-                OUT.println("Pull request merged: " + prNumber);
+                mergePR(pr, LiteReleaseState.VERSION_PR_MERGE_FAILED);
             }
 
             task.setState(LiteReleaseState.SUCCEEDED);
