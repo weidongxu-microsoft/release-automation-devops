@@ -12,7 +12,6 @@ import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.representer.Representer;
 
-import java.util.Dictionary;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -70,7 +69,7 @@ public class TspConfig {
                 TspConfig result = new TspConfig()
                         .withUrl(urlWithSha1)
                         .withPackageDir(config.getOptions().getJavaOptions().getPackageDir());
-                Matcher serviceDirMatcher = SERVICE_DIR.matcher(config.getParameters().getServiceDir().getDefaultDir());
+                Matcher serviceDirMatcher = SERVICE_DIR.matcher(CoreUtils.isNullOrEmpty(config.getOptions().getJavaOptions().getServiceDir()) ? config.getParameters().getServiceDir().getDefaultDir() : config.getOptions().getJavaOptions().getServiceDir());
                 if (serviceDirMatcher.matches()) {
                     result.withService(serviceDirMatcher.group(1));
                 }
@@ -196,14 +195,24 @@ public class TspConfig {
 
     public static class JavaOptions {
         private String packageDir;
+        private String serviceDir;
 
         @YamlProperty("package-dir")
         public String getPackageDir() {
             return packageDir;
         }
 
+        @YamlProperty("service-dir")
+        public String getServiceDir() {
+            return serviceDir;
+        }
+
         public void setPackageDir(String packageDir) {
             this.packageDir = packageDir;
+        }
+
+        public void setServiceDir(String serviceDir) {
+            this.serviceDir = serviceDir;
         }
 
         public void validate() {
