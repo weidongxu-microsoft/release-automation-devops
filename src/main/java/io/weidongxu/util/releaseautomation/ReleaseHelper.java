@@ -253,7 +253,9 @@ public class ReleaseHelper {
 
             String prUrl = "https://github.com/Azure/azure-sdk-for-java/pull/" + prNumber + "/files";
             OUT.println("GitHub pull request: " + prUrl);
-            Utils.openUrl(prUrl);
+            if (mergePrConfirmation) {
+                Utils.openUrl(prUrl);
+            }
 
             // wait for CI
             task.setState(LiteReleaseState.CODE_GEN_PR_DRAFT);
@@ -303,20 +305,20 @@ public class ReleaseHelper {
 
     private void mergePR(GHPullRequest pr, LiteReleaseState failState) throws IOException {
         pr.refresh();
-        String baseBranchSha = pr.getBase().getSha();
-        if (!pr.isMerged()) {
+        boolean prMerged = pr.isMerged();
+        if (!prMerged) {
             try {
                 // merge PR
                 // synchronize to sync base branch change for the PR, since multiple PRs may experience merging at the same time
                 synchronized (this) {
-                    boolean prMerged = false;
                     while (!prMerged) {
                         try {
-                            pr.refresh();
+                            pr = sdkRepository.getPullRequest(pr.getNumber());
                             pr.merge("", pr.getHead().getSha(), GHPullRequest.MergeMethod.SQUASH);
-                            prMerged = true;
+                            prMerged = pr.isMerged();
                         } catch (Exception e) {
                             if (e.getMessage() != null && e.getMessage().contains("\"405\"")) {
+                                System.out.printf("PR[%d] merge 405\n", pr.getNumber());
                                 Thread.sleep(1000);
                             } else {
                                 throw e;
