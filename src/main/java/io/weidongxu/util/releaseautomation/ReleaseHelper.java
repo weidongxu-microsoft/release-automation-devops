@@ -223,7 +223,10 @@ public class ReleaseHelper {
             mergeGithubVersionPR(sdkRepository, sdk, task);
 
             String sdkMavenUrl = MAVEN_ARTIFACT_PATH_PREFIX + "azure-resourcemanager-" + sdk + "/1.0.0-beta.1/versions";
-            Utils.openUrl(sdkMavenUrl);
+            task.setTrackUrl(sdkMavenUrl);
+            if (releaseConfirmation) {
+                Utils.openUrl(sdkMavenUrl);
+            }
         } catch (ReleaseException e) {
             LOGGER.error("release exception", e);
             task.setState(e.getState());
@@ -306,10 +309,10 @@ public class ReleaseHelper {
                 // merge PR
                 // synchronize to sync base branch change for the PR, since multiple PRs may experience merging at the same time
                 synchronized (this) {
-                    pr.refresh();
                     boolean prMerged = false;
                     while (!prMerged) {
                         try {
+                            pr.refresh();
                             pr.merge("", pr.getHead().getSha(), GHPullRequest.MergeMethod.SQUASH);
                             prMerged = true;
                         } catch (Exception e) {
@@ -459,7 +462,9 @@ public class ReleaseHelper {
 
             String prUrl = "https://github.com/Azure/azure-sdk-for-java/pull/" + prNumber;
             OUT.println("GitHub pull request: " + prUrl);
-            Utils.openUrl(prUrl);
+            if (releaseConfirmation) {
+                Utils.openUrl(prUrl);
+            }
 
             task.setState(LiteReleaseState.VERSION_PR_APPROVED);
             task.setTrackUrl(prUrl);
