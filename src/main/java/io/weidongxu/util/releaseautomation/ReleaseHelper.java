@@ -315,7 +315,7 @@ public class ReleaseHelper {
                         try {
                             pr = sdkRepository.getPullRequest(pr.getNumber());
                             pr.merge("", pr.getHead().getSha(), GHPullRequest.MergeMethod.SQUASH);
-                            prMerged = pr.isMerged();
+                            prMerged = true;
                         } catch (Exception e) {
                             if (e.getMessage() != null && e.getMessage().contains("\"405\"")) {
                                 System.out.printf("PR[%d] merge 405\n", pr.getNumber());
