@@ -12,11 +12,13 @@ public class ReleaseTask {
     private LiteReleaseState state;
     private String trackUrl;
     private String errorMessage;
+    private String sdkRepoBranch;
 
     public ReleaseTask(Configure configure) {
         Objects.requireNonNull(configure);
         this.details = configure.toString();
         this.id = UUID.randomUUID().toString();
+        this.sdkRepoBranch = configure.getSdkRepoBranch();
     }
 
     public String getId() {
@@ -25,6 +27,10 @@ public class ReleaseTask {
 
     public String getDetails() {
         return details;
+    }
+
+    public String getSdkRepoBranch() {
+        return sdkRepoBranch;
     }
 
     public LiteReleaseState getState() {

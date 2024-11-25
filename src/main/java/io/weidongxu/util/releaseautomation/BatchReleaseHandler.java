@@ -16,11 +16,13 @@ public class BatchReleaseHandler extends ReleaseHandler {
     private final ExecutorService executor;
     private final ReleaseHelper releaseHelper;
     private final TaskStore taskStore;
+    private String sdkRepoBranch;
 
     protected BatchReleaseHandler(Options options) throws IOException {
         this.executor = Executors.newFixedThreadPool(options.getParallelism(), new DefaultThreadFactory("batch-release-handler"));
         this.taskStore = new FileTaskStore();
         this.releaseHelper = new ReleaseHelper.Builder().withTaskStore(taskStore).build();
+        this.sdkRepoBranch = options.getSdkRepoBranch();
     }
 
     @Override
@@ -42,6 +44,7 @@ public class BatchReleaseHandler extends ReleaseHandler {
         List<ReleaseResult> resultList = new CopyOnWriteArrayList<>();
         tasks.forEach(task -> executor.submit(() -> {
             try {
+                task.setSdkRepoBranch(sdkRepoBranch);
                 releaseHelper.doRelease(task);
                 resultList.add(ReleaseResult.success(task));
             } catch (Exception e) {

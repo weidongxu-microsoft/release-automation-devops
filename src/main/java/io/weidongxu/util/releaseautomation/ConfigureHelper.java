@@ -1,5 +1,6 @@
 package io.weidongxu.util.releaseautomation;
 
+import io.weidongxu.util.releaseautomation.util.AnnotatedPropertyUtils;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.representer.Representer;
@@ -17,6 +18,7 @@ public class ConfigureHelper {
 
     static {
         Representer representer = new Representer(new DumperOptions());
+        representer.setPropertyUtils(new AnnotatedPropertyUtils());
         representer.getPropertyUtils().setSkipMissingProperties(true);
         YAML = new Yaml(representer);
     }

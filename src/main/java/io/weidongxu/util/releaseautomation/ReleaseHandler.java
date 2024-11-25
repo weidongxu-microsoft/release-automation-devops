@@ -1,5 +1,7 @@
 package io.weidongxu.util.releaseautomation;
 
+import io.weidongxu.util.releaseautomation.util.YamlProperty;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
@@ -24,6 +26,7 @@ public abstract class ReleaseHandler {
     public static class Options {
         private boolean batch;
         private int parallelism = 2 * Runtime.getRuntime().availableProcessors() + 1;
+        private String sdkRepoBranch = "main";
 
         public boolean isBatch() {
             return batch;
@@ -39,6 +42,15 @@ public abstract class ReleaseHandler {
 
         public void setParallelism(int parallelism) {
             this.parallelism = parallelism;
+        }
+
+        @YamlProperty("sdk-repo-branch")
+        public String getSdkRepoBranch() {
+            return sdkRepoBranch;
+        }
+
+        public void setSdkRepoBranch(String sdkRepoBranch) {
+            this.sdkRepoBranch = sdkRepoBranch;
         }
     }
 }

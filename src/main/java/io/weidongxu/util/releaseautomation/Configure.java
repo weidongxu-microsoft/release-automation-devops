@@ -31,6 +31,18 @@ public class Configure {
     // generate tests
     private Boolean tests;
 
+    // azure-sdk-for-java repository branch to run codegen pipeline
+    // this will not affect Automation PR's target branch, which will always be "main"
+    private String sdkRepoBranch = "main";
+
+    public String getSdkRepoBranch() {
+        return sdkRepoBranch;
+    }
+
+    public void setSdkRepoBranch(String sdkRepoBranch) {
+        this.sdkRepoBranch = sdkRepoBranch;
+    }
+
     public String getSwagger() {
         return swagger;
     }

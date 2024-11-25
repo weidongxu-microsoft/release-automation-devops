@@ -16,8 +16,10 @@ import com.azure.core.util.Configuration;
 import com.azure.core.util.CoreUtils;
 import com.azure.dev.DevManager;
 import com.azure.dev.models.Pipeline;
+import com.azure.dev.models.RepositoryResourceParameters;
 import com.azure.dev.models.Run;
 import com.azure.dev.models.RunPipelineParameters;
+import com.azure.dev.models.RunResourcesParameters;
 import com.azure.dev.models.RunState;
 import com.azure.dev.models.Timeline;
 import com.azure.dev.models.TimelineRecord;
@@ -683,7 +685,8 @@ public class ReleaseHelper {
         Run run;
         try {
             run = manager.runs().runPipeline(ORGANIZATION, PROJECT_INTERNAL, LITE_CODEGEN_PIPELINE_ID,
-                    new RunPipelineParameters().withVariables(variables).withTemplateParameters(templateParameters));
+                    new RunPipelineParameters().withVariables(variables).withTemplateParameters(templateParameters)
+                            .withResources(new RunResourcesParameters().withRepositories(Map.of("self", new RepositoryResourceParameters().withRefName(String.format("refs/heads/%s", task.getSdkRepoBranch()))))));
         } catch (Exception e) {
             throw new ReleaseException(LiteReleaseState.CODE_GEN_FAILED, e);
         }
