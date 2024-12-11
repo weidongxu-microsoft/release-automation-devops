@@ -108,6 +108,7 @@ public class ReleaseHelper {
         Map<String, String> templateParameters = new HashMap<>();
 
         ReleaseTask task = taskStore.create(new ReleaseTask(configure));
+        OUT.println("sdk-repo-branch: " + task.getSdkRepoBranch());
 
         try {
             if (!CoreUtils.isNullOrEmpty(tspConfigUrl)) { // generate from TypeSpec
@@ -312,22 +313,22 @@ public class ReleaseHelper {
             try {
                 // merge PR
                 // synchronize to sync base branch change for the PR, since multiple PRs may experience merging at the same time
-                synchronized (this) {
-                    while (!prMerged) {
-                        try {
+                while (!prMerged) {
+                    try {
+                        synchronized (this) {
                             pr = sdkRepository.getPullRequest(pr.getNumber());
                             pr.merge("", pr.getHead().getSha(), GHPullRequest.MergeMethod.SQUASH);
-                            prMerged = true;
-                        } catch (Exception e) {
-                            if (e.getMessage() != null && e.getMessage().contains("\"405\"")) {
-                                System.out.printf("PR[%d] merge 405\n", pr.getNumber());
-                                Thread.sleep(1000);
-                            } else {
-                                throw e;
-                            }
                         }
-
+                        prMerged = true;
+                    } catch (Exception e) {
+                        if (e.getMessage() != null && e.getMessage().contains("\"405\"")) {
+                            System.out.printf("PR[%d] merge 405\n", pr.getNumber());
+                            Thread.sleep(1000);
+                        } else {
+                            throw e;
+                        }
                     }
+
                 }
             } catch (Exception e) {
                 throw new ReleaseException(failState, e);
