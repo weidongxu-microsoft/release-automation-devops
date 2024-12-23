@@ -103,7 +103,7 @@ public class ReleaseHelper {
     public void doRelease(Configure configure) throws Exception {
         String tspConfigUrl = configure.getTspConfig();
         String sdk;
-        String prKeyword;
+        String prTitle = "[Automation] Generate Fluent Lite from ";
         Map<String, Variable> variables = new HashMap<>();
         Map<String, String> templateParameters = new HashMap<>();
 
@@ -118,7 +118,7 @@ public class ReleaseHelper {
                 if (CoreUtils.isNullOrEmpty(sdk)) {
                     throw new ReleaseException(LiteReleaseState.VERIFICATION_FAILED, "\"service\" must not be null if Generated from TypeSpec.");
                 }
-                prKeyword = sdk;
+                prTitle = String.format("%sTypeSpec %s", prTitle, sdk);
                 OUT.println("Releasing from TypeSpec, tsp-config file with commitID: \n" + tspConfig.getUrl());
                 OUT.println("sdk: " + sdk);
                 OUT.println("package-dir: " + tspConfig.getPackageDir());
@@ -131,7 +131,6 @@ public class ReleaseHelper {
                 templateParameters.put("RELEASE_TYPE", "TypeSpec");
             } else { // generate from Swagger
                 String swagger = configure.getSwagger();
-                prKeyword = swagger;
                 sdk = getSdkName(swagger);
                 if (!CoreUtils.isNullOrEmpty(configure.getService())) {
                     sdk = configure.getService();
@@ -171,6 +170,7 @@ public class ReleaseHelper {
                         }
                     }
                     OUT.println("tag: " + tag);
+                    prTitle = String.format("%sSwagger %s#%s", prTitle, sdk, tag);
 
                     if (configure.isAutoVersioning() && !tag.contains("-preview")) {
                         ReadmeConfigure readmeConfigure = Utils.getReadmeConfigure(HTTP_PIPELINE, swagger);
@@ -219,7 +219,7 @@ public class ReleaseHelper {
             OUT.println("wait 1 minutes");
             Thread.sleep(POLL_SHORT_INTERVAL_MINUTE * MILLISECOND_PER_MINUTE);
 
-            mergeGithubPR(sdkRepository, manager, prKeyword, sdk, task);
+            mergeGithubPR(sdkRepository, manager, prTitle, sdk, task);
 
             runLiteRelease(manager, sdk, task);
 
@@ -244,11 +244,11 @@ public class ReleaseHelper {
     }
 
 
-    private void mergeGithubPR(GHRepository repository, DevManager manager, String prKeyword, String sdk, ReleaseTask task) throws InterruptedException, IOException {
+    private void mergeGithubPR(GHRepository repository, DevManager manager, String prTitle, String sdk, ReleaseTask task) throws InterruptedException, IOException {
         List<GHPullRequest> prs = repository.getPullRequests(GHIssueState.OPEN);
 
         GHPullRequest pr = prs.stream()
-                .filter(p -> p.getTitle().startsWith("[Automation] Generate Fluent Lite from") && p.getTitle().contains(prKeyword))
+                .filter(p -> p.getTitle().equals(prTitle))
                 .findFirst().orElse(null);
 
         if (pr != null) {
