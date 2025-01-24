@@ -170,7 +170,7 @@ public class ReleaseHelper {
                         }
                     }
                     OUT.println("tag: " + tag);
-                    prTitle = String.format("%sSwagger %s#%s", prTitle, sdk, tag);
+                    prTitle = String.format("%sSwagger %s#%s", prTitle, swagger, tag);
 
                     if (configure.isAutoVersioning() && !tag.contains("-preview")) {
                         ReadmeConfigure readmeConfigure = Utils.getReadmeConfigure(HTTP_PIPELINE, swagger);
