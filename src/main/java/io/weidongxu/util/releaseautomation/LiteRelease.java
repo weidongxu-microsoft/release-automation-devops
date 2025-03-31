@@ -504,6 +504,8 @@ public class LiteRelease {
 
     private static void waitForCheckSuccess(GHPullRequest pr,
                                             int prNumber, String checkName, String fixedCommitSHA) throws InterruptedException, IOException {
+        final String pullRequestCheckName = "java - pullrequest";
+
         String commitSHA = fixedCommitSHA;
         if (commitSHA == null) {
             // refresh head commit
@@ -512,7 +514,8 @@ public class LiteRelease {
         }
         CheckRunListResult checkRunResult = Utils.getCheckRuns(HTTP_PIPELINE, GITHUB_TOKEN, commitSHA);
         CheckRun check = getCheck(checkRunResult.getCheckRuns(), checkName);
-        while (check == null || !"success".equals(check.getConclusion())) {
+        CheckRun pullRequestCheck = getCheck(checkRunResult.getCheckRuns(), pullRequestCheckName);
+        while (check == null || !"success".equals(check.getConclusion()) || pullRequestCheck == null || !"success".equals(pullRequestCheck.getConclusion())) {
             if (check == null) {
                 OUT.println("pr number: " + prNumber + ", wait for " + checkName);
             } else {
@@ -529,6 +532,7 @@ public class LiteRelease {
             }
             checkRunResult = Utils.getCheckRuns(HTTP_PIPELINE, GITHUB_TOKEN, commitSHA);
             check = getCheck(checkRunResult.getCheckRuns(), checkName);
+            pullRequestCheck = getCheck(checkRunResult.getCheckRuns(), pullRequestCheckName);
         }
     }
 
