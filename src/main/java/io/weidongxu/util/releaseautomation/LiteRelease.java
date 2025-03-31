@@ -119,7 +119,11 @@ public class LiteRelease {
 
         if (!CoreUtils.isNullOrEmpty(tspConfigUrl)) { // generate from TypeSpec
             TspConfig tspConfig = TspConfig.parse(specsRepository, HTTP_PIPELINE, tspConfigUrl);
-            sdk = tspConfig.getService();
+            if (!CoreUtils.isNullOrEmpty(configure.getService())) {
+                sdk = configure.getService();
+            } else {
+                sdk = tspConfig.getService();
+            }
             if (CoreUtils.isNullOrEmpty(sdk)) {
                 throw new IllegalArgumentException("\"service\" must not be null if Generated from TypeSpec.");
             }
