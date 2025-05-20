@@ -207,9 +207,6 @@ public class LiteRelease {
             if (!CoreUtils.isNullOrEmpty(configure.getSuffix())) {
                 variables.put("SUFFIX", new Variable().withValue(configure.getSuffix()));
             }
-            if (configure.getTests() == Boolean.TRUE) {
-                variables.put("AUTOREST_OPTIONS", new Variable().withValue("--generate-tests"));
-            }
 
             templateParameters.put("RELEASE_TYPE", "Swagger");
         }

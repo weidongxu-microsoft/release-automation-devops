@@ -86,12 +86,4 @@ public class Configure {
     public void setVersion(String version) {
         this.version = version;
     }
-
-    public Boolean getTests() {
-        return tests;
-    }
-
-    public void setTests(Boolean tests) {
-        this.tests = tests;
-    }
 }
