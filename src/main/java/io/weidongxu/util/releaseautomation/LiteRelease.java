@@ -78,6 +78,7 @@ public class LiteRelease {
     private static final String API_SPECS_YAML_PATH = "https://raw.githubusercontent.com/Azure/azure-sdk-for-java/main/eng/automation/api-specs.yaml";
 
     private static final String MAVEN_ARTIFACT_PATH_PREFIX = "https://central.sonatype.com/artifact/com.azure.resourcemanager/";
+    private static final String RESOURCEMANAGER_PACKAGE_PREFIX = "azure-resourcemanager-";
 
     private static final InputStream IN = System.in;
     private static final PrintStream OUT = System.out;
@@ -112,6 +113,9 @@ public class LiteRelease {
 
         Configure configure = getConfigure();
         String tspConfigUrl = configure.getTspConfig();
+        // e.g. for sdk/kubernetesconfiguration/azure-resourcemanager-kubernetesconfiguration-extensions
+        // service: kubernetesconfiguration
+        // sdk: kubernetesconfiguration-extensions
         String service;
         String sdk;
         String prKeyword;
@@ -135,16 +139,15 @@ public class LiteRelease {
                 variables.put("VERSION", new Variable().withValue(configure.getVersion()));
             }
             templateParameters.put("RELEASE_TYPE", "TypeSpec");
-            // TODO(xiaofei) determine SDK name
-            sdk = service;
+            sdk = tspConfig.getPackageDir().replace(RESOURCEMANAGER_PACKAGE_PREFIX, "");
         } else { // generate from Swagger
             String swagger = configure.getSwagger();
             // Generated PR title would contain swagger parameter.
             prKeyword = swagger;
-            Spec spec = getSpec(swagger);
-            service = spec.service;
-            String suffix = spec.suffix;
-            if (!spec.exists) {
+            Spec specConfigInSdkRepo = getSpecConfigInSdkRepo(swagger);
+            service = specConfigInSdkRepo.service;
+            String suffix = specConfigInSdkRepo.suffix;
+            if (!specConfigInSdkRepo.exists) {
                 if (!CoreUtils.isNullOrEmpty(configure.getService())) {
                     service = configure.getService();
                 }
@@ -235,9 +238,9 @@ public class LiteRelease {
 
         runLiteRelease(manager, service, sdk);
 
-        mergeGithubVersionPR(sdkRepository, service, sdk);
+        mergeGithubVersionPR(sdkRepository, service);
 
-        String sdkMavenUrl = MAVEN_ARTIFACT_PATH_PREFIX + "azure-resourcemanager-" + sdk + "/1.0.0-beta.1/versions";
+        String sdkMavenUrl = MAVEN_ARTIFACT_PATH_PREFIX + RESOURCEMANAGER_PACKAGE_PREFIX + sdk + "/1.0.0-beta.1/versions";
         Utils.openUrl(sdkMavenUrl);
 
         System.exit(0);
@@ -364,12 +367,12 @@ public class LiteRelease {
         }
     }
 
-    private static void mergeGithubVersionPR(GHRepository repository, String service, String sdk) throws InterruptedException, IOException {
+    private static void mergeGithubVersionPR(GHRepository repository, String service) throws InterruptedException, IOException {
         List<GHPullRequest> prs = repository.getPullRequests(GHIssueState.OPEN);
 
         GHPullRequest pr = prs.stream()
-                .filter(p -> p.getTitle().equals("Increment versions for " + sdk + " releases")
-                        || p.getTitle().equals("Increment version for " + sdk + " releases"))
+                .filter(p -> p.getTitle().equals("Increment versions for " + service + " releases")
+                        || p.getTitle().equals("Increment version for " + service + " releases"))
                 .findFirst().orElse(null);
 
         if (pr != null) {
@@ -549,7 +552,7 @@ public class LiteRelease {
         }
     }
 
-    private static Spec getSpec(String swaggerName) {
+    private static Spec getSpecConfigInSdkRepo(String swaggerName) {
         Matcher matcher = Pattern.compile("specification/([^/]+)/resource-manager(/.*)*/readme.md")
                 .matcher(swaggerName);
         if (matcher.matches()) {
