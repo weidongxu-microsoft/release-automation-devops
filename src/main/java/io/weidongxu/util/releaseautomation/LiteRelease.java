@@ -139,6 +139,8 @@ public class LiteRelease {
             sdk = service;
         } else { // generate from Swagger
             String swagger = configure.getSwagger();
+            // Generated PR title would contain swagger parameter.
+            prKeyword = swagger;
             Spec spec = getSpec(swagger);
             service = spec.service;
             String suffix = spec.suffix;
@@ -154,7 +156,6 @@ public class LiteRelease {
             if (!CoreUtils.isNullOrEmpty(suffix)) {
                 sdk = service + "-" + suffix;
             }
-            prKeyword = sdk;
 
             OUT.println("swagger: " + swagger);
             OUT.println("service: " + service);
