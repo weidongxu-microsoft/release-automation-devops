@@ -78,6 +78,7 @@ public class LiteRelease {
     private static final String API_SPECS_YAML_PATH = "https://raw.githubusercontent.com/Azure/azure-sdk-for-java/main/eng/automation/api-specs.yaml";
 
     private static final String MAVEN_ARTIFACT_PATH_PREFIX = "https://central.sonatype.com/artifact/com.azure.resourcemanager/";
+    private static final String RESOURCEMANAGER_PACKAGE_PREFIX = "azure-resourcemanager-";
 
     private static final InputStream IN = System.in;
     private static final PrintStream OUT = System.out;
@@ -112,6 +113,10 @@ public class LiteRelease {
 
         Configure configure = getConfigure();
         String tspConfigUrl = configure.getTspConfig();
+        // e.g. for sdk/kubernetesconfiguration/azure-resourcemanager-kubernetesconfiguration-extensions
+        // service: kubernetesconfiguration
+        // sdk: kubernetesconfiguration-extensions
+        String service;
         String sdk;
         String prKeyword;
         Map<String, Variable> variables = new HashMap<>();
@@ -119,30 +124,44 @@ public class LiteRelease {
 
         if (!CoreUtils.isNullOrEmpty(tspConfigUrl)) { // generate from TypeSpec
             TspConfig tspConfig = TspConfig.parse(specsRepository, HTTP_PIPELINE, tspConfigUrl);
-            sdk = tspConfig.getService();
-            if (CoreUtils.isNullOrEmpty(sdk)) {
+            service = tspConfig.getService();
+            if (CoreUtils.isNullOrEmpty(service)) {
                 throw new IllegalArgumentException("\"service\" must not be null if Generated from TypeSpec.");
             }
-            prKeyword = sdk;
+            prKeyword = service;
             OUT.println("Releasing from TypeSpec, tsp-config file with commitID: \n" + tspConfig.getUrl());
-            OUT.println("sdk: " + sdk);
+            OUT.println("service: " + service);
             OUT.println("package-dir: " + tspConfig.getPackageDir());
 
-            variables.put("README", new Variable().withValue(sdk));
+            variables.put("README", new Variable().withValue(service));
             variables.put("TSP_CONFIG", new Variable().withValue(tspConfig.getUrl()));
             if (!CoreUtils.isNullOrEmpty(configure.getVersion())) {
                 variables.put("VERSION", new Variable().withValue(configure.getVersion()));
             }
             templateParameters.put("RELEASE_TYPE", "TypeSpec");
+            sdk = tspConfig.getPackageDir().replace(RESOURCEMANAGER_PACKAGE_PREFIX, "");
         } else { // generate from Swagger
             String swagger = configure.getSwagger();
+            // Generated PR title would contain swagger parameter.
             prKeyword = swagger;
-            sdk = getSdkName(swagger);
-            if (!CoreUtils.isNullOrEmpty(configure.getService())) {
-                sdk = configure.getService();
+            Spec specConfigInSdkRepo = getSpecConfigInSdkRepo(swagger);
+            service = specConfigInSdkRepo.service;
+            String suffix = specConfigInSdkRepo.suffix;
+            if (!specConfigInSdkRepo.exists) {
+                if (!CoreUtils.isNullOrEmpty(configure.getService())) {
+                    service = configure.getService();
+                }
+                if (!CoreUtils.isNullOrEmpty(configure.getSuffix())) {
+                    suffix = configure.getSuffix();
+                }
+            }
+            sdk = service;
+            if (!CoreUtils.isNullOrEmpty(suffix)) {
+                sdk = service + "-" + suffix;
             }
 
             OUT.println("swagger: " + swagger);
+            OUT.println("service: " + service);
             OUT.println("sdk: " + sdk);
 
             String tag = configure.getTag();
@@ -185,7 +204,7 @@ public class LiteRelease {
 
                 if (!previewInputFileInTag) {
                     // if stable is released, and current tag is also stable
-                    VersionConfigure.parseVersion(HTTP_PIPELINE, sdk).ifPresent(sdkVersion -> {
+                    VersionConfigure.parseVersion(HTTP_PIPELINE, service).ifPresent(sdkVersion -> {
                         if (sdkVersion.isStableReleased()) {
                             configure.setAutoVersioning(false);
                             configure.setVersion(sdkVersion.getCurrentVersionAsStable());
@@ -215,13 +234,13 @@ public class LiteRelease {
         OUT.println("wait 1 minutes");
         Thread.sleep(POLL_SHORT_INTERVAL_MINUTE * MILLISECOND_PER_MINUTE);
 
-        mergeGithubPR(sdkRepository, manager, prKeyword, sdk);
+        mergeGithubPR(sdkRepository, manager, prKeyword, service);
 
-        runLiteRelease(manager, sdk);
+        runLiteRelease(manager, service, sdk);
 
-        mergeGithubVersionPR(sdkRepository, sdk);
+        mergeGithubVersionPR(sdkRepository, service);
 
-        String sdkMavenUrl = MAVEN_ARTIFACT_PATH_PREFIX + "azure-resourcemanager-" + sdk + "/1.0.0-beta.1/versions";
+        String sdkMavenUrl = MAVEN_ARTIFACT_PATH_PREFIX + RESOURCEMANAGER_PACKAGE_PREFIX + sdk + "/1.0.0-beta.1/versions";
         Utils.openUrl(sdkMavenUrl);
 
         System.exit(0);
@@ -244,7 +263,7 @@ public class LiteRelease {
         }
     }
 
-    private static void mergeGithubPR(GHRepository repository, DevManager manager, String prKeyword, String sdk) throws InterruptedException, IOException {
+    private static void mergeGithubPR(GHRepository repository, DevManager manager, String prKeyword, String service) throws InterruptedException, IOException {
         List<GHPullRequest> prs = repository.getPullRequests(GHIssueState.OPEN);
 
         GHPullRequest pr = prs.stream()
@@ -259,7 +278,7 @@ public class LiteRelease {
             Utils.openUrl(prUrl);
 
             // wait for CI
-            waitForChecks(pr, manager, prNumber, sdk);
+            waitForChecks(pr, manager, prNumber, service);
 
             if (PROMPT_CONFIRMATION) {
                 Utils.promptMessageAndWait(IN, OUT,
@@ -282,14 +301,14 @@ public class LiteRelease {
         }
     }
 
-    private static void runLiteRelease(DevManager manager, String sdk) throws InterruptedException {
-        List<String> releaseTemplateParameters = getReleaseTemplateParameters(manager, GITHUB_ORGANIZATION, GITHUB_PROJECT, sdk);
+    private static void runLiteRelease(DevManager manager, String service, String sdk) throws InterruptedException {
+        List<String> releaseTemplateParameters = getReleaseTemplateParameters(manager, GITHUB_ORGANIZATION, GITHUB_PROJECT, service);
         if (releaseTemplateParameters.isEmpty()) {
             LOGGER.warn("release parameters not found in ci.yml");
         }
 
         // find pipeline
-        Pipeline pipeline = findSdkPipeline(manager, sdk, false);
+        Pipeline pipeline = findSdkPipeline(manager, service, false);
 
         if (pipeline != null) {
             Map<String, Object> buildDefinition = Utils.getDefinition(manager, ORGANIZATION, PROJECT_INTERNAL, pipeline.id());
@@ -301,7 +320,7 @@ public class LiteRelease {
             Map<String, String> templateParameters = new HashMap<>();
             for (String releaseTemplateParameter : releaseTemplateParameters) {
                 templateParameters.put(releaseTemplateParameter,
-                        String.valueOf(releaseTemplateParameter.startsWith("release_azureresourcemanager")));
+                        String.valueOf(releaseTemplateParameter.startsWith("release_azureresourcemanager") && releaseTemplateParameter.contains(sdk.replace("-", ""))));
             }
 
             // run pipeline
@@ -344,16 +363,16 @@ public class LiteRelease {
                 state = getReleaseState(timeline);
             }
         } else {
-            throw new IllegalStateException("release pipeline not found for sdk: " + sdk);
+            throw new IllegalStateException("release pipeline not found for service: " + service);
         }
     }
 
-    private static void mergeGithubVersionPR(GHRepository repository, String sdk) throws InterruptedException, IOException {
+    private static void mergeGithubVersionPR(GHRepository repository, String service) throws InterruptedException, IOException {
         List<GHPullRequest> prs = repository.getPullRequests(GHIssueState.OPEN);
 
         GHPullRequest pr = prs.stream()
-                .filter(p -> p.getTitle().equals("Increment versions for " + sdk + " releases")
-                        || p.getTitle().equals("Increment version for " + sdk + " releases"))
+                .filter(p -> p.getTitle().equals("Increment versions for " + service + " releases")
+                        || p.getTitle().equals("Increment version for " + service + " releases"))
                 .findFirst().orElse(null);
 
         if (pr != null) {
@@ -533,7 +552,7 @@ public class LiteRelease {
         }
     }
 
-    private static String getSdkName(String swaggerName) {
+    private static Spec getSpecConfigInSdkRepo(String swaggerName) {
         Matcher matcher = Pattern.compile("specification/([^/]+)/resource-manager(/.*)*/readme.md")
                 .matcher(swaggerName);
         if (matcher.matches()) {
@@ -553,17 +572,23 @@ public class LiteRelease {
             Yaml yaml = new Yaml();
             Map<String, Object> config = yaml.load(configYaml);
 
-            String sdkName = swaggerName;
+            String serviceName = swaggerName;
+            String suffix = null;
+            boolean exists = false;
             if (config.containsKey(swaggerName)) {
+                exists = true;
                 Map<String, String> detail = (Map<String, String>) config.get(swaggerName);
                 if (detail.containsKey("service")) {
-                    sdkName = detail.get("service");
+                    serviceName = detail.get("service");
+                }
+                if (detail.containsKey("suffix")) {
+                    suffix = detail.get("suffix");
                 }
             }
 
-            sdkName = sdkName.toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9_]", "");
+            serviceName = serviceName.toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9_]", "");
 
-            return sdkName;
+            return new Spec(serviceName, suffix, exists);
         } else {
             response.close();
             throw new HttpResponseException(response);
@@ -662,5 +687,17 @@ public class LiteRelease {
         }
 
         return pipeline;
+    }
+
+    private static final class Spec {
+        private String service;
+        private String suffix;
+        private boolean exists;
+
+        Spec(String service, String suffix, boolean exists) {
+            this.service = service;
+            this.suffix = suffix;
+            this.exists = exists;
+        }
     }
 }
