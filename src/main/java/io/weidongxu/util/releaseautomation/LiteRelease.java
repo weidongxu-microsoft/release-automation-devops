@@ -440,17 +440,7 @@ public class LiteRelease {
         Thread.sleep(POLL_SHORT_INTERVAL_MINUTE * MILLISECOND_PER_MINUTE);
 
         Pipeline pipeline = findSdkPipeline(manager, sdk, true);
-
-        boolean ciPipelineReady = pipeline != null;
-
-//        if (ciPipelineReady) {
-//            Map<String, Object> buildDefinition = Utils.getDefinition(manager, ORGANIZATION, PROJECT_PUBLIC, pipeline.id());
-//            if (!Utils.isDefinitionEnabled(buildDefinition)) {
-//                ciPipelineEnabled = false;
-//                OUT.println("enable pipeline");
-//                Utils.enableDefinition(manager, ORGANIZATION, PROJECT_PUBLIC, pipeline.id(), buildDefinition);
-//            }
-//        }
+        final boolean ciPipelineReady = pipeline != null;
 
         if (!ciPipelineReady) {
             LOGGER.info("prepare pipeline");
