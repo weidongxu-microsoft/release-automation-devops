@@ -74,6 +74,7 @@ public class LiteRelease {
 
     private static final String CI_CHECK_ENFORCER_NAME = "https://aka.ms/azsdk/checkenforcer";
     private static final String CI_PREPARE_PIPELINES_NAME = "prepare-pipelines";
+    private static final String CI_PULL_REQUEST_NAME = "java - pullrequest";
 
     private static final String API_SPECS_YAML_PATH = "https://raw.githubusercontent.com/Azure/azure-sdk-for-java/main/eng/automation/api-specs.yaml";
 
@@ -282,7 +283,7 @@ public class LiteRelease {
 
             if (PROMPT_CONFIRMATION) {
                 Utils.promptMessageAndWait(IN, OUT,
-                        "'Yes' to approve and merge GitHub pull request: https://github.com/Azure/azure-sdk-for-java/pull/" + prNumber);
+                        "'Yes' to approve GitHub pull request: https://github.com/Azure/azure-sdk-for-java/pull/" + prNumber);
             }
 
             // make PR ready
@@ -291,6 +292,11 @@ public class LiteRelease {
 
             // approve PR
             GHPullRequestReview review = pr.createReview().event(GHPullRequestReviewEvent.APPROVE).create();
+
+            if (PROMPT_CONFIRMATION) {
+                Utils.promptMessageAndWait(IN, OUT,
+                        "'Yes' to merge GitHub pull request: https://github.com/Azure/azure-sdk-for-java/pull/" + prNumber);
+            }
 
             // merge PR
             pr.refresh();
@@ -433,22 +439,10 @@ public class LiteRelease {
         OUT.println("wait 1 minutes");
         Thread.sleep(POLL_SHORT_INTERVAL_MINUTE * MILLISECOND_PER_MINUTE);
 
-        Pipeline pipeline = findSdkPipeline(manager, sdk, true);
-        String javaSdkCheckName = pipeline != null ? pipeline.name() : ("java - " + sdk + " - ci");
+        Pipeline pipeline = findSdkPipeline(manager, sdk, false);
+        final boolean releasePipelineReady = pipeline != null;
 
-        boolean ciPipelineReady = pipeline != null;
-        boolean ciPipelineEnabled = true;
-
-        if (ciPipelineReady) {
-            Map<String, Object> buildDefinition = Utils.getDefinition(manager, ORGANIZATION, PROJECT_PUBLIC, pipeline.id());
-            if (!Utils.isDefinitionEnabled(buildDefinition)) {
-                ciPipelineEnabled = false;
-                OUT.println("enable pipeline");
-                Utils.enableDefinition(manager, ORGANIZATION, PROJECT_PUBLIC, pipeline.id(), buildDefinition);
-            }
-        }
-
-        if (!ciPipelineReady) {
+        if (!releasePipelineReady) {
             LOGGER.info("prepare pipeline");
 
             // comment to create sdk CI
@@ -457,18 +451,7 @@ public class LiteRelease {
             // wait for prepare pipelines
             pr.refresh();
             waitForCheckSuccess(pr, prNumber, CI_PREPARE_PIPELINES_NAME, pr.getHead().getSha());
-
-            // comment to run the newly created sdk CI
-            pr.comment("/azp run " + javaSdkCheckName);
         } else {
-            // comment to run the previously disabled sdk CI
-            if (!ciPipelineEnabled) {
-                pr.comment("/azp run " + javaSdkCheckName);
-                // wait a bit before potentially another "/azp run" comment
-                OUT.println("wait 1 minutes");
-                Thread.sleep(POLL_SHORT_INTERVAL_MINUTE * MILLISECOND_PER_MINUTE);
-            }
-
             // trigger live tests, if available
             String testPipelineName = "java - " + sdk + " - mgmt - tests";
             boolean testPipelineAvailable = manager.pipelines().list(ORGANIZATION, PROJECT_INTERNAL).stream()
@@ -480,7 +463,7 @@ public class LiteRelease {
         }
 
         // wait for sdk CI
-        waitForCheckSuccess(pr, prNumber, javaSdkCheckName);
+        waitForCheckSuccess(pr, prNumber, CI_PULL_REQUEST_NAME);
 
         // wait for check enforcer
         waitForCommitSuccess(pr, prNumber);
@@ -520,8 +503,6 @@ public class LiteRelease {
 
     private static void waitForCheckSuccess(GHPullRequest pr,
                                             int prNumber, String checkName, String fixedCommitSHA) throws InterruptedException, IOException {
-        final String pullRequestCheckName = "java - pullrequest";
-
         String commitSHA = fixedCommitSHA;
         if (commitSHA == null) {
             // refresh head commit
@@ -530,8 +511,7 @@ public class LiteRelease {
         }
         CheckRunListResult checkRunResult = Utils.getCheckRuns(HTTP_PIPELINE, GITHUB_TOKEN, commitSHA);
         CheckRun check = getCheck(checkRunResult.getCheckRuns(), checkName);
-        CheckRun pullRequestCheck = getCheck(checkRunResult.getCheckRuns(), pullRequestCheckName);
-        while (check == null || !"success".equals(check.getConclusion()) || pullRequestCheck == null || !"success".equals(pullRequestCheck.getConclusion())) {
+        while (check == null || !"success".equals(check.getConclusion())) {
             if (check == null) {
                 OUT.println("pr number: " + prNumber + ", wait for " + checkName);
             } else {
@@ -548,7 +528,6 @@ public class LiteRelease {
             }
             checkRunResult = Utils.getCheckRuns(HTTP_PIPELINE, GITHUB_TOKEN, commitSHA);
             check = getCheck(checkRunResult.getCheckRuns(), checkName);
-            pullRequestCheck = getCheck(checkRunResult.getCheckRuns(), pullRequestCheckName);
         }
     }
 
