@@ -439,10 +439,10 @@ public class LiteRelease {
         OUT.println("wait 1 minutes");
         Thread.sleep(POLL_SHORT_INTERVAL_MINUTE * MILLISECOND_PER_MINUTE);
 
-        Pipeline pipeline = findSdkPipeline(manager, sdk, true);
-        final boolean ciPipelineReady = pipeline != null;
+        Pipeline pipeline = findSdkPipeline(manager, sdk, false);
+        final boolean releasePipelineReady = pipeline != null;
 
-        if (!ciPipelineReady) {
+        if (!releasePipelineReady) {
             LOGGER.info("prepare pipeline");
 
             // comment to create sdk CI
