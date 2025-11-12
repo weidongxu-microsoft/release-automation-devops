@@ -15,7 +15,7 @@ public class TspConfigTests {
     public void parseTest() throws Exception {
         HttpPipeline httpPipeline = new HttpPipelineBuilder().build();
 
-        String urlWithMain = "https://github.com/Azure/azure-rest-api-specs/blob/main/specification/mongocluster/DocumentDB.MongoCluster.Management/tspconfig.yaml";
+        String urlWithMain = "https://github.com/Azure/azure-rest-api-specs/blob/main/specification/mongocluster/resource-manager/Microsoft.DocumentDB/MongoCluster/tspconfig.yaml";
         String urlWithSha = "https://github.com/Azure/azure-rest-api-specs/blob/7605afe88e3201dc25ce0881c2e49fe1b6bbdd54/specification/mongocluster/DocumentDB.MongoCluster.Management/tspconfig.yaml";
         String invalidUrl = "https://github.com/Azure/azure-rest-api-specs/blob/mybranch/specification/mongocluster/DocumentDB.MongoCluster.Management/tspconfig.yaml";
         String githubToken = Configuration.getGlobalConfiguration().get("GITHUB_PAT");
